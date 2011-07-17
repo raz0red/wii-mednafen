@@ -1,0 +1,574 @@
+#
+# Application message strings
+#
+
+msgid "(2d) Red/black"
+msgstr "(2D) r3D/bl@Ck"
+
+msgid "(2d) White/black"
+msgstr "(2D) wHi73/8L@ck"
+
+msgid "(3d) Green/red"
+msgstr "(3D) gR33n/R3d"
+
+msgid "(3d) Red/blue"
+msgstr "(3D) reD/8lU3"
+
+msgid "(3d) Red/cyan"
+msgstr "(3d) R3d/Cy@N"
+
+msgid "(3d) Red/electric cyan"
+msgstr "(3d) R3d/3L3C7RiC CY@N"
+
+msgid "(3d) Red/green"
+msgstr "(3d) r3D/gr33N"
+
+msgid "(3d) Yellow/blue"
+msgstr "(3D) y3Ll0w/8lU3"
+
+msgid "(default)"
+msgstr "(d3F@UL7)"
+
+msgid "(none)"
+msgstr "(N0N3)"
+
+msgid "1 cartridge found."
+msgstr "1 car7ridg3 f0UnD."
+
+msgid "1 state save found."
+msgstr "1 57@73 5aV3 f0unD."
+
+msgid "A/2 button"
+msgstr "@/2 8u770N"
+
+msgid "Accept changes"
+msgstr "acc3P7 CH@NGes"
+
+msgid "Advanced"
+msgstr "@dv@Nced"
+
+msgid "An error occurred attempting to delete saved state."
+msgstr "@N 3rRoR 0ccuRR3d @7t3mP7iNG to d3L3te $@v3D 57a73."
+
+msgid "An error occurred attempting to save state."
+msgstr "@n 3RR0R 0CcURR3d @77emp7iNG 70 s@ve $7@7e."
+
+msgid "An error occurred deleting cartridge settings."
+msgstr "@n 3rr0r 0cCurr3D D3le7inG c@R7rIdG3 s377inG$."
+
+msgid "An error occurred saving cartridge settings."
+msgstr "@n err0r 0CcurR3d $@VINg C@R7Ridg3 5e7tiNGs."
+
+msgid "Aspect ratio"
+msgstr "@5P3c7 ra7i0"
+
+msgid "Auto load"
+msgstr "@Ut0 L0@D"
+
+msgid "Auto save"
+msgstr "@u70 s@V3"
+
+msgid "B/1 button"
+msgstr "8/1 8U7t0n"
+
+msgid "Back"
+msgstr "8@CK"
+
+msgid "Cancel changes"
+msgstr "C@NC3l ch@Ng3$"
+
+msgid "Cartridge settings (current cartridge)"
+msgstr "c@r7rIDg3 s377ing$ (Curr3n7 C@r7RiDG3)"
+
+msgid "Classic"
+msgstr "CL@$$iC"
+
+msgid "Control settings"
+msgstr "c0N7R0L s377ing$"
+
+msgid "Controller"
+msgstr "C0NtR0Ll3r"
+
+msgid "Custom"
+msgstr "cu570m"
+
+msgid "D-pad/Analog"
+msgstr "D-P@D/@n@l0g"
+
+msgid "Debug mode"
+msgstr "d38uG M0De"
+
+msgid "Delete saved state (current cartridge)"
+msgstr "D3Le73 5@v3d 57@73 (curR3n7 c@r7RIDg3)"
+
+msgid "Delete settings"
+msgstr "d3l3t3 5e77INg5"
+
+msgid "Disabled"
+msgstr "Di$@8l3d"
+
+msgid "Display mode"
+msgstr "Di5pL@y M0D3"
+
+msgid "Display settings"
+msgstr "dI$pl@y 5377ing5"
+
+msgid "Enabled"
+msgstr "3NabLed"
+
+msgid "English"
+msgstr "eNGli$h"
+
+msgid "Error loading the specified save state file."
+msgstr "3rror l0@dInG tH3 $P3CIFI3D $@v3 57@t3 FIl3."
+
+msgid "Error opening roms directory."
+msgstr "err0r 0P3NInG Rom5 DIr3c70Ry."
+
+msgid "Error opening state saves directory."
+msgstr "3rr0R 0peninG 5t@73 $@v3s dir3C70rY."
+
+msgid "Exit"
+msgstr "3xi7"
+
+msgid "Frame skip"
+msgstr "fRaM3 skIp"
+
+msgid "Game Settings"
+msgstr "G@m3 $37tInG$"
+
+msgid "GameCube"
+msgstr "gaM3cu83"
+
+msgid "Hacker"
+msgstr "hack3r"
+
+msgid "Home"
+msgstr "H0m3"
+
+msgid "L-Down"
+msgstr "l-d0Wn"
+
+msgid "L-Left"
+msgstr "l-l3f7"
+
+msgid "L-Right"
+msgstr "L-righ7"
+
+msgid "L-Up"
+msgstr l-uP"
+
+msgid "Language"
+msgstr "l@nGU@G3"
+
+msgid "Load cartridge"
+msgstr "l0ad C@R7riDg3"
+
+msgid "Load saved state"
+msgstr "l0ad $@v3D $7a73"
+
+msgid "Locked"
+msgstr "l0CK3d"
+
+msgid "Minus"
+msgstr "mInu5"
+
+msgid "Minus/LTrigger"
+msgstr "Minu5/l7RIGg3r"
+
+msgid "No cartridges found."
+msgstr "no c@R7rIDg3$ F0UND."
+
+msgid "No state saves found."
+msgstr "n0 s7@t3 $@v3$ f0UnD."
+
+msgid "Page"
+msgstr "P@Ge"
+
+msgid "Pause"
+msgstr "p@u53"
+
+msgid "Plus"
+msgstr "plu$"
+
+msgid "Plus/RTrigger"
+msgstr "plus/r7Rigg3r"
+
+msgid "R-Down"
+msgstr "r-D0wN"
+
+msgid "R-Left"
+msgstr "R-l3f7"
+
+msgid "R-Right"
+msgstr "r-rigH7"
+
+msgid "R-Up"
+msgstr "r-Up"
+
+msgid "ROM patching"
+msgstr "r0m p@7cHIng"
+
+msgid "Reading game list..."
+msgstr "r3@DINg G@m3 li57..."
+
+msgid "Reading saved state list..."
+msgstr "R3adinG $@V3D 57@73 lI$7..."
+
+msgid "Render rate (%)"
+msgstr "r3Nd3r R@t3 (%)"
+
+msgid "Reset to defaults"
+msgstr "r3$37 70 D3f@Ul7$"
+
+msgid "Reset"
+msgstr "r3537"
+
+msgid "Resize screen"
+msgstr "r3siz3 5cre3N"
+
+msgid "Resume"
+msgstr "R35Um3"
+
+msgid "Revert to saved settings"
+msgstr "reV3r7 70 $@Ved 5et7InG5"
+
+msgid "Save settings"
+msgstr "s@V3 5377inG$"
+
+msgid "Save state (current cartridge)"
+msgstr "s@Ve $7@7e (cUrR3n7 C@r7ridg3)"
+
+msgid "Save state management"
+msgstr "$@v3 $t@73 m@N@g3MeN7"
+
+msgid "Screen size"
+msgstr "5cr33N 5IZ3"
+
+msgid "Scroll"
+msgstr "5cr0ll"
+
+msgid "Select"
+msgstr "s3L3C7"
+
+msgid "Sideways"
+msgstr "5id3w@y$"
+
+msgid "Start"
+msgstr "$7ar7"
+
+msgid "Successfully deleted cartridge settings."
+msgstr "$ucC3s$fully d3L373d caR7rIdG3 5377ings."
+
+msgid "Successfully reverted to saved settings."
+msgstr "5uCCe$5fULLy R3V3r73d t0 sav3d 5377iNg5."
+
+msgid "Successfully saved cartridge settings."
+msgstr "$Ucc3$sfullY 5@v3d C@R7riDg3 537tiNg5."
+
+msgid "Successly deleted saved state."
+msgstr "5UCC35sLY d3L373d $@V3d $7@7e."
+
+msgid "Successly saved state."
+msgstr "$UCCe$slY $@v3D 57@73."
+
+msgid "Supported"
+msgstr "$uPP0r73D"
+
+msgid "The file selected is not a valid saved state file."
+msgstr "7h3 file s3L3c73D i$ N07 @ V@lid 5@V3D $7a73 fIL3."
+
+msgid "The save specified is not valid."
+msgstr "the 5@v3 5p3cifIeD i$ n07 v@lId."
+
+msgid "Toggle A/R lock"
+msgstr "70ggL3 @/r l0cK"
+
+msgid "Top menu exit"
+msgstr "t0p m3nU 3XIt"
+
+msgid "Unable to find associated ROM file."
+msgstr "una8L3 70 fINd @5s0ci@73D rom fIl3."
+
+msgid "Unable to find the specified save state file."
+msgstr "Una8L3 70 finD tH3 $pecifI3d $av3 $7@73 fIl3."
+
+msgid "Unlocked"
+msgstr "uNL0CK3d"
+
+msgid "Upright"
+msgstr "uprIGh7"
+
+msgid "Wiimote (menu)"
+msgstr "wiim07e (menU)"
+
+msgid "Wiimote + Nunchuk"
+msgstr "wiIM073 + Nunchuk"
+
+msgid "Wiimote"
+msgstr "wiIm07e"
+
+msgid "Yes"
+msgstr "Y3$"
+
+msgid "cartridges found, displaying"
+msgstr "C@r7rIdg3s f0Und, dispL@yiNG"
+
+msgid "items found, displaying"
+msgstr "It3ms f0und, dI$pL@yInG"
+
+msgid "state saves found, displaying"
+msgstr "$7a7e saV35 f0UnD, DisPl@YiNg"
+
+msgid "to"
+msgstr "70"
+
+#
+# Cartridge database message strings
+#
+
+msgid "Activate spin/power meter"
+msgstr "@Ctiv@73 $piN/p0WeR m373R"
+
+msgid "Aim"
+msgstr "@im"
+
+msgid "Aim left"
+msgstr "@IM l3f7"
+
+msgid "Aim right"
+msgstr "@iM rIgH7"
+
+msgid "Ascend"
+msgstr "a5c3nd"
+
+msgid "Attack"
+msgstr "a77@ck"
+
+msgid "Auto fire"
+msgstr "@U70 fire"
+
+msgid "Bird's eye view"
+msgstr "8ird'5 ey3 vi3W"
+
+msgid "Bowl"
+msgstr "80wL"
+
+msgid "Cancel"
+msgstr "C@nc3l"
+
+msgid "Cast/reel in"
+msgstr "C@$7/r33L IN"
+
+msgid "Change altitude"
+msgstr "CH@Ng3 @L7i7Ud3"
+
+msgid "Change layer"
+msgstr "cH@nG3 LaY3R"
+
+msgid "Change perspective"
+msgstr "ch@Ng3 P3r5P3C7ive"
+
+msgid "Charge power"
+msgstr "Ch@rGe p0w3r"
+
+msgid "Decrease speed"
+msgstr "d3CR3a$3 5p3ed"
+
+msgid "Descend"
+msgstr "d3$c3nd"
+
+msgid "Destroy drone"
+msgstr "De$7Roy dr0N3"
+
+msgid "Drone 1"
+msgstr "dr0ne 1"
+
+msgid "Drone 2"
+msgstr "dr0N3 2"
+
+msgid "Drone 3"
+msgstr "dr0n3 3"
+
+msgid "Drone controls"
+msgstr "dR0N3 C0n7rol5"
+
+msgid "Drop faster"
+msgstr "dR0P f@$ter"
+
+msgid "Evasive maneuver"
+msgstr "3v@$iv3 M@n3uv3R"
+
+msgid "Execute"
+msgstr "3x3Cu73"
+
+msgid "Fire"
+msgstr "fir3"
+
+msgid "Fire down"
+msgstr "FIR3 D0Wn"
+
+msgid "Fire left"
+msgstr "fir3 l3F7"
+
+msgid "Fire right"
+msgstr "fIR3 rigH7"
+
+msgid "Fire up"
+msgstr "Fir3 uP"
+
+msgid "Fires cannon/homing missile"
+msgstr "fIr35 c@nn0N/H0MINg MI$5iL3"
+
+msgid "Fork ball/steal"
+msgstr "F0rK 8@lL/57eaL"
+
+msgid "Go left"
+msgstr "g0 l3Ft"
+
+msgid "Go right"
+msgstr "G0 Righ7"
+
+msgid "Hook fish"
+msgstr "h00K fi5H"
+
+msgid "Increase speed"
+msgstr "Incr3@$e $p33D"
+
+msgid "Jump"
+msgstr "JUMp"
+
+msgid "Left flipper"
+msgstr "lef7 FlIPp3R"
+
+msgid "Left punch"
+msgstr "L3f7 PuNCh"
+
+msgid "Left punch/block"
+msgstr "l3f7 puNcH/8loCk"
+
+msgid "Maneuver faster"
+msgstr "m@N3Uv3r F@57eR"
+
+msgid "Map"
+msgstr "M@p"
+
+msgid "Move"
+msgstr "m0v3"
+
+msgid "Move block"
+msgstr "M0v3 8loCK"
+
+msgid "Move cursor"
+msgstr "M0v3 CuR50R"
+
+msgid "Move forward"
+msgstr "m0v3 F0rW@rd"
+
+msgid "Move left"
+msgstr "m0v3 L3f7"
+
+msgid "Move right"
+msgstr "m0v3 RIGh7"
+
+msgid "Pause"
+msgstr "P@U5e"
+
+msgid "Pick off/bunt"
+msgstr "piCk 0Ff/8uN7"
+
+msgid "Reload"
+msgstr "r3Lo@D"
+
+msgid "Right flipper"
+msgstr "rIGht Flipp3r"
+
+msgid "Right punch"
+msgstr "rIght pUncH"
+
+msgid "Right punch/block"
+msgstr "riGH7 puNCH/8l0cK"
+
+msgid "Rotate"
+msgstr "R07@73"
+
+msgid "Rotate backward"
+msgstr "r07@73 8@CkW@rD"
+
+msgid "Rotate clockwise"
+msgstr "r07@73 CL0cKWI5e"
+
+msgid "Rotate container left"
+msgstr "r07@73 c0n7aiN3R l3Ft"
+
+msgid "Rotate container right"
+msgstr "r07@73 c0nt@In3r rIgh7"
+
+msgid "Rotate counter-clockwise"
+msgstr "r07@73 C0un73r-Cl0cKwi$e"
+
+msgid "Rotate forward"
+msgstr "R07a7e F0rW@Rd"
+
+msgid "Run"
+msgstr "run"
+
+msgid "Select unit"
+msgstr "$3L3c7 unI7"
+
+msgid "Shake"
+msgstr "$h@K3"
+
+msgid "Shoot"
+msgstr "$h007"
+
+msgid "Show menu"
+msgstr "$hoW m3Nu"
+
+msgid "Soft shot, lob"
+msgstr "$0f7 5H07, l08"
+
+msgid "Solid shot"
+msgstr "s0liD $H07"
+
+msgid "Sub screen"
+msgstr "$u8 5Cre3n"
+
+msgid "Swing left"
+msgstr "5wINg l3f7"
+
+msgid "Swing right"
+msgstr "$Wing RIght"
+
+msgid "Swing up"
+msgstr "5wIng uP"
+
+msgid "Switch camera"
+msgstr "5wi7ch C@M3r@"
+
+msgid "Throw"
+msgstr "7hR0W"
+
+msgid "Throw down"
+msgstr "thr0w D0Wn"
+
+msgid "Throw left"
+msgstr "7hroW L3F7"
+
+msgid "Throw right"
+msgstr "7hr0W riGh7"
+
+msgid "Throw up"
+msgstr "7hrow up"
+
+msgid "Throw/jump/dive/swing"
+msgstr "7Hr0w/JuMP/div3/5Wing"
+
+msgid "Toggle auto rotation"
+msgstr "70Ggl3 @U70 R0t@7i0n"
+
+msgid "Use power"
+msgstr "U53 p0wer"
+
+msgid "Use special"
+msgstr "U53 $PeCiaL"

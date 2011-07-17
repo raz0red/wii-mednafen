@@ -1,0 +1,189 @@
+#include "StandardCartSettingsMenuHelper.h"
+#include "StandardDatabaseManager.h"
+
+#include "gettext.h"
+
+#include "wii_app.h"
+#include "wii_sdl.h"
+#include "wii_mednafen.h"
+
+StandardCartSettingsMenuHelper::StandardCartSettingsMenuHelper( 
+  Emulator& emulator ) :
+  CartridgeSettingsMenuHelper( emulator ),
+  m_currentController( 0 )
+{
+}
+
+void StandardCartSettingsMenuHelper::addControllerNode( TREENODE* parent )
+{
+  TREENODE* child = wii_create_tree_node( NODETYPE_CONTROLLER, "Controller" );
+  wii_add_child( parent, child );
+}
+
+void StandardCartSettingsMenuHelper::addWiimoteSupportedNode( TREENODE* parent )
+{
+  TREENODE* child = wii_create_tree_node( 
+    NODETYPE_WIIMOTE_SUPPORTED, "Supported" );
+  wii_add_child( parent, child );
+}
+
+void StandardCartSettingsMenuHelper::addButtonMappingNodes( TREENODE* parent )
+{
+  int button;
+  for( button = NODETYPE_BUTTON1; button <= NODETYPE_BUTTON10; button++ )
+  {
+    TREENODE* child = wii_create_tree_node( (NODETYPE)button, "Button" );
+    wii_add_child( parent, child );
+  }
+}
+
+void StandardCartSettingsMenuHelper::getNodeName( 
+  TREENODE* node, char *buffer, char* value )
+{
+  CartridgeSettingsMenuHelper::getNodeName( node, buffer, value );
+
+  Emulator& emu = getEmulator();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)emu.getDbManager();
+  StandardDbEntry* entry = (StandardDbEntry*)dbManager.getEntry();
+  
+  switch( node->node_type )
+  {
+    case NODETYPE_WIIMOTE_SUPPORTED:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s",
+        ( entry->base.wiimoteSupported ?  "Yes" : "No" ) );
+      break;
+    case NODETYPE_CONTROLLER:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s",
+        StandardDatabaseManager::WII_CONTROLLER_NAMES[m_currentController] );
+      break;
+    case NODETYPE_BUTTON1:
+    case NODETYPE_BUTTON2:
+    case NODETYPE_BUTTON3:
+    case NODETYPE_BUTTON4:
+    case NODETYPE_BUTTON5:
+    case NODETYPE_BUTTON6:
+    case NODETYPE_BUTTON7:
+    case NODETYPE_BUTTON8:
+    case NODETYPE_BUTTON9:
+    case NODETYPE_BUTTON10:
+      {
+        int index = ( node->node_type - NODETYPE_BUTTON1 );
+        const char* name = 
+          dbManager.getMappedButton( 
+            entry->profile, m_currentController, index )->name;
+        if( name != NULL )
+        {
+          snprintf( buffer, WII_MENU_BUFF_SIZE, "%s", name );
+          u8 btn = entry->buttonMap[m_currentController][index];
+          const char* name = dbManager.getMappableButton( btn )->name;
+          const char* desc = ( btn != 0 ? entry->buttonDesc[btn] : "" );
+          if( desc[0] != '\0' )
+          {
+            snprintf( value, WII_MENU_BUFF_SIZE, "%s (%s)", 
+              gettextmsg(name), gettextmsg(desc) );
+          }
+          else
+          {
+            snprintf( value, WII_MENU_BUFF_SIZE, "%s", gettextmsg(name) );
+          }
+        }
+      }
+      break;     
+  }
+}
+
+void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
+{
+  CartridgeSettingsMenuHelper::selectNode( node );
+
+  char buff[WII_MAX_PATH];
+
+  Emulator& emu = getEmulator();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)emu.getDbManager();
+  StandardDbEntry* entry = (StandardDbEntry*)dbManager.getEntry();
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_WIIMOTE_SUPPORTED:
+      entry->base.wiimoteSupported ^= 1;
+      break;
+    case NODETYPE_CONTROLLER:
+      m_currentController++; 
+      if( m_currentController >= WII_CONTROLLER_COUNT )
+      {
+        m_currentController = 0;
+      }
+      break;
+    case NODETYPE_BUTTON1:
+    case NODETYPE_BUTTON2:
+    case NODETYPE_BUTTON3:
+    case NODETYPE_BUTTON4:
+    case NODETYPE_BUTTON5:
+    case NODETYPE_BUTTON6:
+    case NODETYPE_BUTTON7:
+    case NODETYPE_BUTTON8:
+    case NODETYPE_BUTTON9:
+    case NODETYPE_BUTTON10:
+      {
+        int index = ( node->node_type - NODETYPE_BUTTON1 );
+        const char* name = 
+          dbManager.getMappedButton( 
+            entry->profile, m_currentController, index )->name;
+        if( name != NULL )
+        {
+          u8 mappedBtn = 
+            entry->buttonMap[m_currentController][index];
+
+          mappedBtn++;
+          if( mappedBtn >= dbManager.getMappableButtonCount() )
+          {
+            mappedBtn = 0;
+          }
+
+          entry->buttonMap[m_currentController][index] = mappedBtn;
+        }
+      }
+      break;     
+  }
+
+  UNLOCK_RENDER_MUTEX();
+}
+
+bool StandardCartSettingsMenuHelper::isNodeVisible( TREENODE* node )
+{
+  if( !CartridgeSettingsMenuHelper::isNodeVisible( node ) )
+  {
+    return false;
+  }
+
+  Emulator& emu = getEmulator();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)emu.getDbManager();
+  StandardDbEntry* entry = (StandardDbEntry*)dbManager.getEntry();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_WIIMOTE_SUPPORTED:
+      return m_currentController == WII_CONTROLLER_MOTE;
+    case NODETYPE_BUTTON1:
+    case NODETYPE_BUTTON2:
+    case NODETYPE_BUTTON3:
+    case NODETYPE_BUTTON4:
+    case NODETYPE_BUTTON5:
+    case NODETYPE_BUTTON6:
+    case NODETYPE_BUTTON7:
+    case NODETYPE_BUTTON8:
+    case NODETYPE_BUTTON9:
+    case NODETYPE_BUTTON10:
+      return 
+        dbManager.getMappedButton( 
+            entry->profile, m_currentController, 
+              node->node_type - NODETYPE_BUTTON1 )->name != NULL;
+  }
+
+  return true;
+}

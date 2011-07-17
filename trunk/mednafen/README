@@ -1,0 +1,8 @@
+Some notes on the source code:
+
+	The following system headers are included by including "mednafen.h", and always will be, so don't include them manually.
+		assert.h	(included in "types.h")
+		inttypes.h	(included in "types.h")
+		stdlib.h
+		stdio.h
+		string.h
