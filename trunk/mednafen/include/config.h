@@ -544,14 +544,13 @@
 
 /* Define if we are compiling with GB emulation. */
 /* #undef WANT_GB_EMU */
+#define WANT_GB_EMU 1
 
 /* Define if we are compiling with internal CJK fonts. */
 /* #undef WANT_INTERNAL_CJK */
 
 /* Define if we are compiling with Lynx emulation. */
-#if 0
 #define WANT_LYNX_EMU 1
-#endif
 
 /* Define if we are compiling with Sega Genesis/MegaDrive emulation. */
 /* #undef WANT_MD_EMU */

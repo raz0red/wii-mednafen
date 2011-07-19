@@ -80,7 +80,7 @@ BOOL wii_mote_menu_vertical = TRUE;
 // Whether to return to the top menu after exiting a game
 BOOL wii_top_menu_exit = TRUE;
 // The stack containing the menus the user has navigated
-TREENODEPTR wii_menu_stack[4];
+TREENODEPTR wii_menu_stack[64];
 // The head of the menu stack
 s8 wii_menu_stack_head = -1;
 // The root of the menu

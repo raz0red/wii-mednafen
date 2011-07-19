@@ -116,7 +116,7 @@ int VirtualBoy::getModeIndex( const char* key )
     Vb3dMode mode = VB_MODES[i];
     if( !strcmp( mode.key, key ) )
     {
-      return i;
+      return i; 
     }
   }
 
@@ -127,7 +127,7 @@ int VirtualBoy::getModeIndex()
 {
   int index = getModeIndex( m_modeKey );
   if( index == -1 )
-  {
+  {  
     index = getModeIndex( DEFAULT_MODE_KEY );
   }
   return index;

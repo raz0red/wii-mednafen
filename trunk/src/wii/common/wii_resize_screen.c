@@ -357,8 +357,9 @@ void wii_resize_screen_draw_border( SDL_Surface* surface, int startY, int height
   wii_sdl_draw_rectangle(
     surface, 0, startY, surface->w, height, 
     SDL_MapRGB( surface->format, 0xff, 0xff, 0xff ), FALSE ); 
-
+#if 0
   wii_sdl_draw_rectangle(
     surface, 1, 1 + startY, surface->w-2, height-2,
     SDL_MapRGB( surface->format, 0, 0, 0 ), FALSE ); 
+#endif
 }

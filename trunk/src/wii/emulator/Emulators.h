@@ -4,6 +4,8 @@
 #include "Emulator.h"
 #include "VirtualBoy.h"
 #include "WonderSwan.h"
+#include "Lynx.h"
+#include "GameBoy.h"
 
 #include <map>
 #include <string>
@@ -18,6 +20,8 @@ private:
 public:
   VirtualBoy VirtualBoyEmu;
   WonderSwan WonderSwanEmu;
+  GameBoy GameBoyEmu;
+  Lynx LynxEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );

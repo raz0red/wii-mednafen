@@ -28,10 +28,13 @@ SOURCES		:=	\
     mednafen/src/string \
     mednafen/src/trio \
     mednafen/src/video \
+    mednafen/src/gb \
+    mednafen/src/lynx \
     mednafen/src/vb \
     mednafen/src/wswan \
     mednafen/src/hw_cpu/v810 \
     mednafen/src/hw_cpu/v810/fpu-new \
+    mednafen/src/hw_sound/gb_apu \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -40,13 +43,17 @@ SOURCES		:=	\
     src/wii/common/FreeTypeGX \
     src/wii/emulator \
     src/wii/emulator/helper \
+    src/wii/emulator/gb \
+    src/wii/emulator/lynx \
     src/wii/emulator/vb \
     src/wii/emulator/wswan
     
 DATA		:=	src/wii/res/fonts src/wii/res/gfx  
 INCLUDES	:= \
     mednafen/include \
+    mednafen/include/blip \
     mednafen/src/drivers \
+    mednafen/src/hw_sound \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -55,6 +62,8 @@ INCLUDES	:= \
     src/wii/common/FreeTypeGX \
     src/wii/emulator \
     src/wii/emulator/helper \
+    src/wii/emulator/gb \
+    src/wii/emulator/lynx \
     src/wii/emulator/vb \
     src/wii/emulator/wswan
 

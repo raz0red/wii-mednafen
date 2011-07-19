@@ -23,7 +23,7 @@ WonderSwan::WonderSwan() :
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
 
-  scale = 0.95;
+  scale = 1.0;
   m_rotatedScreenSize.w = 
     m_defaultRotatedScreenSize.w = ((WII_WIDTH>>1)*scale); 
   m_rotatedScreenSize.h = 
