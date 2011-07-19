@@ -69,7 +69,7 @@ extern BOOL wii_top_menu_exit;
 // The vsync mode
 extern int wii_vsync;
 // The stack containing the menus the user has navigated
-extern TREENODEPTR wii_menu_stack[4];
+extern TREENODEPTR wii_menu_stack[64];
 // The head of the menu stack
 extern s8 wii_menu_stack_head;
 // Whether to quite the menu loop

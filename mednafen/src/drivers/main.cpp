@@ -898,15 +898,15 @@ int LoadGame(const char *force_module, const char *path)
     //
     // Only initialize sound once
     //
-    static bool first_time = true;
-    if( first_time )
-    {
+    //static bool first_time = true;
+    //if( first_time )
+    //{
 #endif
       if(MDFN_GetSettingB("sound"))
         sound_active = InitSound(tmp);
 #ifdef WII
-      first_time = false;
-    }
+      //first_time = false;
+    //}
 #endif
 
     if(MDFN_GetSettingB("autosave"))
@@ -1039,6 +1039,9 @@ void DebuggerFudge(void)
 
 int64 Time64(void)
 {
+#ifdef WII
+  return SDL_GetTicks() * 1000;
+#else
   static bool cgt_fail_warning = 0;
 
 #if HAVE_CLOCK_GETTIME && ( _POSIX_MONOTONIC_CLOCK > 0 || defined(CLOCK_MONOTONIC))
@@ -1075,6 +1078,7 @@ int64 Time64(void)
 
   // Yeaaah, this isn't going to work so well.
   return((int64)time(NULL) * 1000000);
+#endif
 }
 
 int GameLoop(void *arg)

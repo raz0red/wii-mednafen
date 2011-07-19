@@ -45,6 +45,8 @@ distribution.
 extern "C" void WII_VideoStart();
 extern "C" void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 
+extern bool KillSound(void);
+
 /*
  * Starts the emulator for the specified rom file.
  *
@@ -87,6 +89,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
     wii_cartridge_hash_with_header[0] = '\0';
 
     emuRegistry.setCurrentEmulator( NULL ); // Reset the current emulator
+    KillSound(); // Kill sound?!?
     succeeded = ( wii_mednafen_load_game( romfile ) != 0 );    
 
     if( succeeded )

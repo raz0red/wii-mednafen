@@ -88,6 +88,6 @@ int Emulator::getRotation()
 
 u8 Emulator::getBpp()
 {
-  return 16;
+  return 32;
 }
 

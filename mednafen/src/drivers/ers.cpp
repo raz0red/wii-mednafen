@@ -32,6 +32,7 @@ void EmuRealSyncher::SetEmuClock(int64 EmuClock_arg)
 
 bool EmuRealSyncher::NeedFrameSkip(void)
 {
+#ifndef WII
   int64 RealTime = (int64)SDL_GetTicks() * EmuClock / 1000;
 
   // If emulation time has fallen behind real time a bit(due to Mednafen not getting enough host CPU time),
@@ -44,6 +45,7 @@ bool EmuRealSyncher::NeedFrameSkip(void)
   }
 
   LastNoFrameSkipTime = RealTime;
+#endif
   return(false);
 }
 
@@ -84,6 +86,7 @@ void EmuRealSyncher::Sync(void)
 
     RealTime = (int64)SDL_GetTicks() * EmuClock / 1000;
 
+#ifndef WII
     // If emulation time has fallen behind real time too far(due to Mednafen not getting enough host CPU time),
     // do a forced catchup, to prevent running way too fast for an excessive period of time(which makes the game as unplayable
     // as it would be when emulation was running way too slow for an excessive period of time)
@@ -96,6 +99,7 @@ void EmuRealSyncher::Sync(void)
 
     if(SleepTime >= 0)
       SDL_Delay(SleepTime);
+#endif
 
   } while(RealTime < EmuTime);
 }

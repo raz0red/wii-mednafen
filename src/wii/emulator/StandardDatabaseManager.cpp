@@ -92,6 +92,10 @@ void StandardDatabaseManager::readEntryValue(
   if( !strcmp( name, "profile" ) )
   {
     entry->profile = Util_sscandec( value );
+    // This is a hack for now. Requires that profile be read prior to the 
+    // button mappings... The other option is to write out all button 
+    // mappings (don't skip the defaults).
+    resetButtons(); 
   }
 
   int i;

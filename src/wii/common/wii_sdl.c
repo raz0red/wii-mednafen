@@ -254,6 +254,7 @@ void wii_sdl_draw_rectangle(
   if( w <= 0 || h <= 0 ) return;
 
   BOOL is8 = surface->format->BytesPerPixel == 1;
+  BOOL is16 = surface->format->BytesPerPixel == 2;
 
   int xo, yo;
   if( exor )
@@ -261,45 +262,37 @@ void wii_sdl_draw_rectangle(
     for( xo = x + 1; xo < (w - 1); xo++ ) 
     {
       if( is8 )
-      {
         *((u8*)wii_sdl_get_vram_addr( surface, xo, y )) ^= border;
-      }
-      else
-      {
+      else if( is16 )
         *((u16*)wii_sdl_get_vram_addr( surface, xo, y )) ^= border;
-      }      
+      else
+        *((u32*)wii_sdl_get_vram_addr( surface, xo, y )) ^= border;
       if( h > 1 )
       {
         if( is8 )
-        {
           *((u8*)wii_sdl_get_vram_addr( surface, xo, h-1 )) ^= border;
-        }
-        else
-        {
+        else if( is16 )
           *((u16*)wii_sdl_get_vram_addr( surface, xo, h-1 )) ^= border;        
-        }          
+        else
+          *((u32*)wii_sdl_get_vram_addr( surface, xo, h-1 )) ^= border;        
       }
     }
     for( yo = y; yo < h; yo++ ) 
     {
       if( is8 )
-      {
         *((u8*)wii_sdl_get_vram_addr( surface, x, yo )) ^= border;
-      }
-      else
-      {
+      else if( is16 )
         *((u16*)wii_sdl_get_vram_addr( surface, x, yo )) ^= border;
-      }                
+      else
+        *((u32*)wii_sdl_get_vram_addr( surface, x, yo )) ^= border;
       if( w > 1 )
       {
         if( is8 )
-        {
           *((u8*)wii_sdl_get_vram_addr( surface, w-1, yo )) ^= border;
-        }
-        else
-        {
+        else if( is16 )
           *((u16*)wii_sdl_get_vram_addr( surface, w-1, yo )) ^= border;
-        }                  
+        else
+          *((u32*)wii_sdl_get_vram_addr( surface, w-1, yo )) ^= border;
       }
     }
   }
@@ -308,45 +301,37 @@ void wii_sdl_draw_rectangle(
     for( xo = x + 1; xo < (w - 1); xo++ ) 
     {
       if( is8 )
-      {
         *((u8*)wii_sdl_get_vram_addr( surface, xo, y )) = border;
-      }
-      else
-      {
+      else if( is16 )
         *((u16*)wii_sdl_get_vram_addr( surface, xo, y )) = border;
-      }      
+      else
+        *((u32*)wii_sdl_get_vram_addr( surface, xo, y )) = border;
       if( h > 1 )
       {
         if( is8 )
-        {
           *((u8*)wii_sdl_get_vram_addr( surface, xo, h-1 )) = border;
-        }
-        else
-        {
+        else if( is16 )
           *((u16*)wii_sdl_get_vram_addr( surface, xo, h-1 )) = border;        
-        }          
+        else
+          *((u32*)wii_sdl_get_vram_addr( surface, xo, h-1 )) = border;        
       }
     }
     for( yo = y; yo < h; yo++ ) 
     {
       if( is8 )
-      {
         *((u8*)wii_sdl_get_vram_addr( surface, x, yo )) = border;
-      }
-      else
-      {
+      else if( is16 )
         *((u16*)wii_sdl_get_vram_addr( surface, x, yo )) = border;
-      }                
+      else
+        *((u32*)wii_sdl_get_vram_addr( surface, x, yo )) = border;
       if( w > 1 )
       {
         if( is8 )
-        {
           *((u8*)wii_sdl_get_vram_addr( surface, w-1, yo )) = border;
-        }
-        else
-        {
+        else if( is16 )
           *((u16*)wii_sdl_get_vram_addr( surface, w-1, yo )) = border;
-        }                  
+        else
+          *((u32*)wii_sdl_get_vram_addr( surface, w-1, yo )) = border;
       }
     }
   }
