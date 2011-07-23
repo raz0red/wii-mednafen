@@ -981,26 +981,8 @@ namespace MDFN_IEN_VB
   static MDFN_Surface *surface;
   static bool skip;
 
-  // The current sum for skipping
-  int vb_skip_sum = 0;
-
   void VIP_StartFrame(EmulateSpecStruct *espec)
   {
-    mednafen_skip_frame = 0;
-    int render_rate = emuRegistry.VirtualBoyEmu.getRenderRate();
-    if( render_rate != -1 )
-    {
-      vb_skip_sum += render_rate;
-      if( vb_skip_sum >= 100 )
-      {
-        vb_skip_sum %= 100;
-      }
-      else
-      {
-        mednafen_skip_frame = 1;              
-      }
-    }
-
     // puts("Start frame");
 
     if(espec->VideoFormatChanged || VidSettingsDirty)
@@ -1463,7 +1445,7 @@ namespace MDFN_IEN_VB
           }
           else
           {
-            if( !mednafen_skip_frame )
+            if( !skip )
             {
             VIP_DrawBlock(DrawingBlock, DrawingBuffers[0] + 8, DrawingBuffers[1] + 8);
 
@@ -1573,8 +1555,6 @@ namespace MDFN_IEN_VB
               GameFrameCounter = 0;
             }
 
-            if( !mednafen_skip_frame )
-            {
             if(!skip && InstantDisplayHack)
             {
               // Ugly kludge, fix in the future.
@@ -1606,7 +1586,6 @@ namespace MDFN_IEN_VB
               Repeat = save_Repeat;
               RecalcBrightnessCache();
             }            
-            }
 
             VB_ExitLoop();
           }

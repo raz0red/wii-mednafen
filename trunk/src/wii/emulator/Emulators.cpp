@@ -9,6 +9,8 @@ Emulators::Emulators() :
   m_emuMap[WonderSwanEmu.getKey()] = &(WonderSwanEmu);
   m_emuMap[LynxEmu.getKey()] = &(LynxEmu);
   m_emuMap[GameBoyEmu.getKey()] = &(GameBoyEmu);
+  m_emuMap[GameBoyAdvanceEmu.getKey()] = &(GameBoyAdvanceEmu);
+  m_emuMap[NesEmu.getKey()] = &(NesEmu);
 }
 
 Emulator* Emulators::getEmulator( const char* key )

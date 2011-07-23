@@ -229,8 +229,10 @@ static int RawWrite(SexyAL_device *device, const void *data, uint32_t len)
 
   uint32_t cw_tmp;
 
-  while(Get_RCW(device, &cw_tmp, true) && cw_tmp == ~0U)
+  while(Get_RCW(device, &cw_tmp, true) && cw_tmp == ~0U )
+  {
     SDL_Delay(1);
+  }
 
   return(1);
 }
@@ -258,10 +260,13 @@ static int Clear(SexyAL_device *device)
   return(1);
 }
 
+SexyAL_device* theDevice = NULL;
+
 static int RawClose(SexyAL_device *device)
 {
   if(device)
   {
+#if 0
     if(device->private_data)
     {
       SDLWrap *sw = (SDLWrap *)device->private_data;
@@ -270,13 +275,16 @@ static int RawClose(SexyAL_device *device)
       SDL_CloseAudio();
       free(device->private_data);
 
+#if 0
       if(sw->StandAlone)
       {
         SDL_Quit();
         //puts("SDL quit");
       }
+#endif
     }
     free(device);
+#endif
     return(1);
   }
   return(0);
@@ -290,6 +298,8 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
   const char *env_standalone;
   int iflags;
   int StandAlone = 0;
+
+  if( theDevice ) return theDevice;
 
   env_standalone = getenv("SEXYAL_SDL_STANDALONE");
   if(env_standalone && atoi(env_standalone))
@@ -327,6 +337,7 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
   }
 
   sw = (SDLWrap *)calloc(1, sizeof(SDLWrap));
+  memset( sw, 0, sizeof(SDLWrap) );
 
   sw->StandAlone = StandAlone;
 
@@ -420,6 +431,9 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
 
   sw->StartPaused = 1;
   //SDL_PauseAudio(0);
+
+  theDevice = device;
+
   return(device);
 }
 

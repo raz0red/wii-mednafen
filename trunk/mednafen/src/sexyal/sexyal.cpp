@@ -204,16 +204,20 @@ static SexyAL_device *Open(SexyAL *iface, const char *id, SexyAL_format *format,
       id += strlen("sexyal-literal-");
   }
 
+#if 0
   assert(0 == buffering->buffer_size);
   assert(0 == buffering->period_size);
   assert(0 == buffering->latency);
+#endif
 
   if(!(ret = driver->Open(id, format, buffering)))
     return(0);
 
+#if 0
   assert(0 != buffering->buffer_size);
   //assert(0 != buffering->period_size);
   assert(0 != buffering->latency);
+#endif
 
   buffering->ms = (uint64_t)buffering->buffer_size * 1000 / format->rate;
   buffering->period_us = (uint64_t)buffering->period_size * (1000 * 1000) / format->rate;

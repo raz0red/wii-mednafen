@@ -287,9 +287,6 @@ void VirtualBoy::onPostLoad()
 
 void VirtualBoy::onPreLoop()
 {
-  // Reset frame skip information
-  MDFN_IEN_VB::vb_skip_sum = 0;
-
   const Vb3dMode mode = getMode();
   if( isCustomMode( &mode ) )
   {
@@ -314,8 +311,8 @@ bool VirtualBoy::updateDebugText(
   {
     renderRate = 100;
   }
-  snprintf( output, len, "%s (s:%d) (p:%d)", 
-    defaultOutput, renderRate, m_currentRomPatched ? 1 : 0 );
+  snprintf( output, len, "%s (p:%d)",  /*(s:%d)*/
+    defaultOutput, /*renderRate,*/ m_currentRomPatched ? 1 : 0 );
 
   return true;
 }

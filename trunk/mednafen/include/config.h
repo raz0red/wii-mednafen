@@ -541,6 +541,7 @@
 
 /* Define if we are compiling with GBA emulation. */
 /* #undef WANT_GBA_EMU */
+#define WANT_GBA_EMU 1
 
 /* Define if we are compiling with GB emulation. */
 /* #undef WANT_GB_EMU */
@@ -557,6 +558,7 @@
 
 /* Define if we are compiling with NES emulation. */
 /* #undef WANT_NES_EMU */
+#define WANT_NES_EMU 1
 
 /* Define if we are compiling with NGP emulation. */
 /* #undef WANT_NGP_EMU */
