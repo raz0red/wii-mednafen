@@ -894,20 +894,8 @@ int LoadGame(const char *force_module, const char *path)
 #endif
     sound_active = 0;
 
-#ifdef WII
-    //
-    // Only initialize sound once
-    //
-    //static bool first_time = true;
-    //if( first_time )
-    //{
-#endif
-      if(MDFN_GetSettingB("sound"))
-        sound_active = InitSound(tmp);
-#ifdef WII
-      //first_time = false;
-    //}
-#endif
+    if(MDFN_GetSettingB("sound"))
+      sound_active = InitSound(tmp);
 
     if(MDFN_GetSettingB("autosave"))
       MDFNI_LoadState(NULL, "mcq");
@@ -1014,6 +1002,7 @@ void DoFrameAdvance(void)
 
 static int GameLoopPaused = 0;
 
+#ifndef WII
 void DebuggerFudge(void)
 {
   LockGameMutex(0);
@@ -1036,6 +1025,7 @@ void DebuggerFudge(void)
 
   LockGameMutex(1);
 }
+#endif
 
 int64 Time64(void)
 {
@@ -1098,7 +1088,6 @@ int GameLoop(void *arg)
       if(!GameThreadRun) return(1);	// Might happen if video initialization failed
       SDL_Delay(1);
     }
-#endif
 
     do
     {
@@ -1108,7 +1097,6 @@ int GameLoop(void *arg)
       }
     } while(InFrameAdvance && !NeedFrameAdvance);
 
-#ifndef WII
     if(MDFNDnetplay && !(NoWaiting & 0x2))	// TODO: Hacky, clean up.
       ers.SetETtoRT();
 #endif
@@ -1177,6 +1165,7 @@ int GameLoop(void *arg)
       sound = espec.SoundBuf + (espec.SoundBufSizeALMS * CurGame->soundchan);
       ssize = espec.SoundBufSize - espec.SoundBufSizeALMS;
     }
+
     LockGameMutex(0);
     FPS_IncVirtual();
     if(!fskip)
@@ -1584,13 +1573,14 @@ static void UpdateSoundSync(int16 *Buffer, int Count)
   else
   {
     bool nothrottle = MDFN_GetSettingB("nothrottle");
-
 #ifndef WII
     if(!NoWaiting && !nothrottle && GameThreadRun && !MDFNDnetplay)
 #else
     if(!NoWaiting && !nothrottle && GameThreadRun )
 #endif
+    {
       ers.Sync();
+    }
   }
 }
 
@@ -1600,9 +1590,12 @@ void MDFND_MidSync(const EmulateSpecStruct *espec)
 
   UpdateSoundSync(espec->SoundBuf + (espec->SoundBufSizeALMS * CurGame->soundchan), espec->SoundBufSize - espec->SoundBufSizeALMS);
 
+#ifndef WII
   MDFND_UpdateInput(true, false);
+#endif
 }
 
+extern SDL_mutex *prerender_mutex;
 
 void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
 {
@@ -1644,6 +1637,8 @@ void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
     for fast-forwarding to respond well(since keyboard updates are
     handled in the main thread) on slower systems or when using a higher fast-forwarding speed ratio.
     */
+    //while( VTReady && GameThreadRun ) SDL_Delay(1);
+
 #ifndef WII
     if( (last_btime + 100) < SDL_GetTicks())
     {
@@ -1651,15 +1646,19 @@ void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
       while(VTReady && GameThreadRun) SDL_Delay(1);
     }
 #else
+#if 0
     if( VTReady )
     {
       BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
       VTReady = NULL;
     }
 #endif
+#endif
 
-    if(!VTReady)
-    {
+    //if(!VTReady)
+    //{
+//VIDEO_WaitVSync();
+
       VTLWReady = VTLineWidths[VTBackBuffer];
       VTDRReady = &VTDisplayRects[VTBackBuffer];
       VTReady = VTBuffer[VTBackBuffer];
@@ -1669,7 +1668,7 @@ void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
       last_btime = SDL_GetTicks();
 #endif
       FPS_IncBlitted();
-    }
+    //}
   }
 #ifndef WII
   else if(IsConsoleCheatConfigActive() && !VTReady)

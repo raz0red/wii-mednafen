@@ -32,24 +32,18 @@ SDL_Surface *screen = NULL;
   int destPitch = (screen->pitch/screen->format->BytesPerPixel)-msurface->w; \
   int srcPitch = msurface->pitch32-msurface->w;                              \
   dest += screen->offset/screen->format->BytesPerPixel;                      \
+  int width = msurface->w * screen->format->BytesPerPixel;                   \
   for( int y = 0; y < msurface->h; y++ )                                     \
   {                                                                          \
-    for( int x = 0; x < msurface->w; x++ )                                   \
-    {                                                                        \
-      *dest++ = *src++;                                                      \
-    }                                                                        \
-    dest+=destPitch;                                                         \
-    src+=srcPitch;                                                           \
-  }                        
+    memcpy( dest, src, width );                                              \
+    dest+=(msurface->w+destPitch);                                           \
+    src+=(msurface->w+srcPitch);                                             \
+  }  
 
 int mednafen_skip_frame = 0;
 
 void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)
 {
-  // Whether we are skipping the current frame
-  // TODO: Move this to a better location
-  if( mednafen_skip_frame ) return;
-
   if(!screen) return;
 
   u8 bpp = emuRegistry.getCurrentEmulator()->getBpp();

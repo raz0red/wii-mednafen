@@ -53,6 +53,7 @@ void WII_VideoStart();
 void WII_VideoStop();
 void WII_SetRotation( int rot );
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
+void WII_SetPreRenderCallback( void (*cb)(void) );
 extern Mtx gx_view;
 }
 
@@ -93,16 +94,19 @@ static gx_imagedata* mote_not_supported_idata = NULL;
 
 static void free_video()
 {
-   if(VTBuffer[0])
+  for( int i = 0; i < 2; i++ )
   {
-    delete VTBuffer[0];
-    VTBuffer[0] = NULL;
-  }
+    if(VTBuffer[i])
+    {
+      delete VTBuffer[i];
+      VTBuffer[i] = NULL;
+    }
 
-  if(VTLineWidths[0])
-  {
-    free(VTLineWidths[0]);
-    VTLineWidths[0] = NULL;
+    if(VTLineWidths[i])
+    {
+      free(VTLineWidths[i]);
+      VTLineWidths[i] = NULL;
+    }
   }
 }
 
@@ -192,12 +196,28 @@ static void reset_video()
   VTLWReady = NULL;
 
   VTBuffer[0] = new MDFN_Surface( NULL, size->w, size->h, size->w, nf );
-  VTBuffer[1] = VTBuffer[0];
+  VTBuffer[1] = new MDFN_Surface( NULL, size->w, size->h, size->w, nf );
   VTLineWidths[0] = (MDFN_Rect *)calloc( size->h, sizeof(MDFN_Rect));
-  VTLineWidths[1] = VTLineWidths[0];
+  VTLineWidths[1] = (MDFN_Rect *)calloc( size->h, sizeof(MDFN_Rect));
 
   // Set the screen to our back surface
   screen = back_surface;  
+}
+
+extern void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths);
+
+static void precallback()
+{
+  while( !VTReady && GameThreadRun )
+  {
+    SDL_Delay(1);
+  }
+
+  if( VTReady && GameThreadRun )
+  {
+    BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
+    VTReady = NULL;
+  }
 }
 
 /*
@@ -233,7 +253,11 @@ void wii_mednafen_emu_loop( BOOL resume )
   GameThreadRun = 1;
   NeedVideoChange = 0;
 
+  WII_SetPreRenderCallback( precallback );
+
   GameLoop( NULL );
+
+  WII_SetPreRenderCallback( NULL);
 
   PauseSound( 1 );
   wii_gx_pop_callback();     

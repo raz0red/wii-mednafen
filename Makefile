@@ -29,7 +29,13 @@ SOURCES		:=	\
     mednafen/src/trio \
     mednafen/src/video \
     mednafen/src/gb \
+    mednafen/src/gba \
     mednafen/src/lynx \
+    mednafen/src/nes \
+    mednafen/src/nes/boards \
+    mednafen/src/nes/input \
+    mednafen/src/nes/ntsc \
+    mednafen/src/nes/ppu \
     mednafen/src/vb \
     mednafen/src/wswan \
     mednafen/src/hw_cpu/v810 \
@@ -44,7 +50,9 @@ SOURCES		:=	\
     src/wii/emulator \
     src/wii/emulator/helper \
     src/wii/emulator/gb \
+    src/wii/emulator/gba \
     src/wii/emulator/lynx \
+    src/wii/emulator/nes \
     src/wii/emulator/vb \
     src/wii/emulator/wswan
     
@@ -63,7 +71,9 @@ INCLUDES	:= \
     src/wii/emulator \
     src/wii/emulator/helper \
     src/wii/emulator/gb \
+    src/wii/emulator/gba \
     src/wii/emulator/lynx \
+    src/wii/emulator/nes \
     src/wii/emulator/vb \
     src/wii/emulator/wswan
 
@@ -75,7 +85,8 @@ CFLAGS	= \
   -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -funsafe-math-optimizations \
   -DWII \
   -DVB_BPP=8 \
-  -DWSWAN_BPP=16
+  -DWSWAN_BPP=16 \
+  -DGBA_BPP=16
 #  -DWII_NETTRACE \
 #  -DUSB_WIILOAD 
       

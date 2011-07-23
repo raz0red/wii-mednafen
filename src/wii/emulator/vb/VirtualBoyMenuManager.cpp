@@ -43,6 +43,7 @@ VirtualBoyMenuManager::VirtualBoyMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
   m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
 
+#if 0
   // Display sub-menu
   TREENODE *cartDisplay = 
     m_cartSettingsMenuHelper.addDisplaySettingsNode(
@@ -53,6 +54,7 @@ VirtualBoyMenuManager::VirtualBoyMenuManager( Emulator &emulator ) :
 
   child = wii_create_tree_node( NODETYPE_CART_RENDER_RATE, "Render rate (%)" );
   wii_add_child( cartDisplay, child );
+#endif
 
   // Advanced sub-menu
   TREENODE *cartadvanced = 

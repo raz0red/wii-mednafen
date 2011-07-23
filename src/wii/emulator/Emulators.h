@@ -6,6 +6,8 @@
 #include "WonderSwan.h"
 #include "Lynx.h"
 #include "GameBoy.h"
+#include "GameBoyAdvance.h"
+#include "Nes.h"
 
 #include <map>
 #include <string>
@@ -21,7 +23,9 @@ public:
   VirtualBoy VirtualBoyEmu;
   WonderSwan WonderSwanEmu;
   GameBoy GameBoyEmu;
+  GameBoyAdvance GameBoyAdvanceEmu;
   Lynx LynxEmu;
+  Nes NesEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );
