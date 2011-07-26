@@ -568,6 +568,7 @@
 
 /* Define if we are compiling with separate fast PCE emulation. */
 /* #undef WANT_PCE_FAST_EMU */
+#define WANT_PCE_FAST_EMU 1
 
 /* Define if we are compiling with PC-FX emulation. */
 /* #undef WANT_PCFX_EMU */

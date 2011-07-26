@@ -74,7 +74,7 @@ extern volatile MDFN_Surface *VTBuffer[2];
 extern MDFN_Rect *VTLineWidths[2];
 extern SDL_Surface *screen;
 extern volatile int NeedVideoChange;
-extern int mednafen_skip_frame;
+extern MDFNGI *MDFNGameInfo;
 
 extern int LoadGame(const char *force_module, const char *path);
 extern int GameLoop(void *arg);
@@ -215,6 +215,14 @@ static void precallback()
 
   if( VTReady && GameThreadRun )
   {
+#if 0
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d\n", 
+  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h );
+#endif
+#endif
+    Emulator* emu = emuRegistry.getCurrentEmulator();
+    emu->resizeScreen( false ); 
     BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
     VTReady = NULL;
   }
@@ -227,8 +235,6 @@ static void precallback()
  */
 void wii_mednafen_emu_loop( BOOL resume )
 {
-  mednafen_skip_frame = 0;
-
   reset_video();
 
   Emulator* emu = emuRegistry.getCurrentEmulator();
@@ -241,11 +247,7 @@ void wii_mednafen_emu_loop( BOOL resume )
   wii_sdl_black_back_surface();
   wii_gx_push_callback( &gxrender_callback, TRUE );  
 
-  Rect* screenSize = emu->getRotation() ?
-    emu->getRotatedScreenSize() : emu->getScreenSize();
-
-  WII_ChangeSquare( screenSize->w, screenSize->h, 0, 0 );
-  WII_SetRotation( emu->getRotation() * 90 );
+  emu->resizeScreen( true );  
 
   ClearSound();
   PauseSound( 0 );

@@ -61,7 +61,7 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
     // Essentially blanks the screen
     wii_gx_push_callback( NULL, FALSE );
 
-    wii_resize_screen_draw_border( back_surface, 0, back_surface->h );
+    //wii_resize_screen_draw_border( back_surface, 0, back_surface->h );
     wii_sdl_flip(); 
 
     Rect* defaultScreenSize =
@@ -70,13 +70,13 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
     Rect* screenSize = 
       emu.getRotation() ?
         emu.getRotatedScreenSize() : emu.getScreenSize();
-
+    float ratio = emu.getCurrentScreenSizeRatio();
     resize_info rinfo = 
-      { defaultScreenSize->w, defaultScreenSize->h, 
-        screenSize->w, screenSize->h };
+      { defaultScreenSize->w * ratio, defaultScreenSize->h, 
+        screenSize->w * ratio, screenSize->h };
     wii_resize_screen_gui( &rinfo );
-    screenSize->w = rinfo.currentX;
-    screenSize->h = rinfo.currentY;
+    screenSize->w = ( rinfo.currentX / ratio );
+    screenSize->h = ( rinfo.currentY );
 
     wii_gx_pop_callback();
   }

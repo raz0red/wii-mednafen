@@ -7,6 +7,7 @@
 #include "Lynx.h"
 #include "GameBoy.h"
 #include "GameBoyAdvance.h"
+#include "PCEFast.h"
 #include "Nes.h"
 
 #include <map>
@@ -26,6 +27,7 @@ public:
   GameBoyAdvance GameBoyAdvanceEmu;
   Lynx LynxEmu;
   Nes NesEmu;
+  PCEFast PCEFastEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );

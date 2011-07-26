@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "Nes.h"
+#include "PCEFast.h"
 #include "wii_util.h"
 #include "wii_input.h"
 #include "wii_hw_buttons.h"
@@ -8,39 +8,43 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
-Nes::Nes() : 
-  Emulator( "nes", "NES" ),
+PCEFast::PCEFast() : 
+  Emulator( "pce_fast", "PC Engine" ),
   m_configManager( *this ),
   m_dbManager( *this ),
   m_menuManager( *this )
 {
   // The emulator screen size
-  m_emulatorScreenSize.w = 256;
-  m_emulatorScreenSize.h = 256;
+  m_emulatorScreenSize.w = 512;
+  m_emulatorScreenSize.h = 242;
+
+  // The base multi-res screen size
+  m_baseMultiResScreenSize.w = 256;
+  m_baseMultiResScreenSize.h = m_emulatorScreenSize.h;
 
   // Set user screen sizes
-  float hscale = 2.0;
-  float wscale = 2.5;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*wscale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*hscale);
+  float scalew = 2.5;
+  float scaleh = 2.0;
+  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
+  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
 }
 
-ConfigManager& Nes::getConfigManager()
+ConfigManager& PCEFast::getConfigManager()
 {
   return m_configManager;
 }
 
-DatabaseManager& Nes::getDbManager()
+DatabaseManager& PCEFast::getDbManager()
 {
   return m_dbManager;
 }
 
-MenuManager& Nes::getMenuManager()
+MenuManager& PCEFast::getMenuManager()
 {
   return m_menuManager;
 }
 
-void Nes::updateControls()
+void PCEFast::updateControls()
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -92,7 +96,7 @@ void Nes::updateControls()
   
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
-  for( int i = 0; i < NES_BUTTON_COUNT; i++ )
+  for( int i = 0; i < PCE_BUTTON_COUNT; i++ )
   {
     if( ( held &
           ( ( isClassic ? 
@@ -107,44 +111,54 @@ void Nes::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= NesDbManager::NES_BUTTONS[ i ].button;
+      result |= PCEFastDbManager::PCE_BUTTONS[ i ].button;
     }
   }    
 
   if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
       ( gcHeld & GC_BUTTON_RIGHT ) ||
       wii_analog_right( expX, gcX ) )
-    result|=NES_RIGHT;
+    result|=PCE_RIGHT;
 
   if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
       ( gcHeld & GC_BUTTON_LEFT ) ||                       
       wii_analog_left( expX, gcX ) )
-    result|=NES_LEFT;
+    result|=PCE_LEFT;
 
   if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
       ( gcHeld & GC_BUTTON_UP ) ||
       wii_analog_up( expY, gcY ) )
-    result|=NES_UP;
+    result|=PCE_UP;
 
   if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
       ( gcHeld & GC_BUTTON_DOWN ) ||
       wii_analog_down( expY, gcY ) )
-    result|=NES_DOWN;
+    result|=PCE_DOWN;
 
   m_padData = result;
 }
 
-void Nes::onPostLoad()
+void PCEFast::onPostLoad()
 {
 }
 
-bool Nes::updateDebugText( 
+bool PCEFast::updateDebugText( 
   char* output, const char* defaultOutput, int len )
 {
   return false;
 }
 
-bool Nes::isRotationSupported()
+bool PCEFast::isRotationSupported()
 {
   return false;
+}
+
+bool PCEFast::isMultiRes()
+{
+  return true;
+}
+
+u8 PCEFast::getBpp()
+{
+  return PCE_FAST_BPP;
 }

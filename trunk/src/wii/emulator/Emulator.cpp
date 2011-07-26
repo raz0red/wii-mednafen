@@ -3,6 +3,20 @@
 #include "DatabaseManager.h"
 #include "wii_mednafen_main.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
+extern volatile MDFN_Rect *VTDRReady;
+extern volatile MDFN_Surface *VTReady;
+
+extern "C" 
+{
+void WII_SetRotation( int rot );
+void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
+}
+
 Emulator::Emulator( const char* key, const char* name ) : 
   m_key( key ),
   m_name( name ),
@@ -33,6 +47,15 @@ Rect* Emulator::getDefaultRotatedScreenSize()
 Rect* Emulator::getEmulatorScreenSize()
 {
   return &m_emulatorScreenSize;
+}
+
+Rect* Emulator::getBaseMultiResSize()
+{
+  if( isMultiRes() )
+  {
+    return &m_baseMultiResScreenSize;
+  }
+  return getEmulatorScreenSize();
 }
 
 const char* Emulator::getKey()
@@ -84,6 +107,54 @@ bool Emulator::isRotationSupported()
 int Emulator::getRotation()
 {
   return MDFN_ROTATE0;
+}
+
+bool Emulator::isMultiRes()
+{
+  return false;
+}
+
+float Emulator::getCurrentScreenSizeRatio()
+{  
+  return isMultiRes() ? 
+    (float)m_baseMultiResScreenSize.w / (float)VTDRReady->w :
+    1.0;
+}
+
+void Emulator::resizeScreen( bool force )
+{  
+  if( isMultiRes() )
+  {
+    // Multi-res doesn't currently support rotation...
+    if( force )
+    {
+      m_lastSize.w = m_lastSize.h = 0;
+      WII_ChangeSquare( m_screenSize.w, m_screenSize.h, 0, 0 );
+    }
+    else
+    {
+      if( VTReady && ( VTDRReady->w != m_lastSize.w ) )
+      {
+        float ratio = getCurrentScreenSizeRatio();
+        WII_ChangeSquare( 
+          m_screenSize.w * ratio, m_screenSize.h, 0, 0 );
+        m_lastSize.w = VTDRReady->w;
+        m_lastSize.h = VTDRReady->h;
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, 
+  "resizing to: w:%dx%d, ratio:%f\n", VTDRReady->w, VTDRReady->h, ratio );
+#endif
+      }
+    }
+  }
+  else
+  {
+    Rect* screenSize = getRotation() ?
+      getRotatedScreenSize() : getScreenSize();
+    WII_ChangeSquare( screenSize->w, screenSize->h, 0, 0 );
+  }
+
+  WII_SetRotation( getRotation() * 90 );
 }
 
 u8 Emulator::getBpp()
