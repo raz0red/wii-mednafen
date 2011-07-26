@@ -477,7 +477,7 @@ static MDFNSetting NESSettings[] =
 #ifndef WII
   { "nes.clipsides", MDFNSF_NOFLAGS, gettext_noop("Clip left+right 8 pixel columns."), NULL, MDFNST_BOOL, "0" },
 #else
-  { "nes.clipsides", MDFNSF_NOFLAGS, gettext_noop("Clip left+right 8 pixel columns."), NULL, MDFNST_BOOL, "1" },
+  { "nes.clipsides", MDFNSF_NOFLAGS, gettext_noop("Clip left+right 8 pixel columns."), NULL, MDFNST_BOOL, "0" },
 #endif
   { "nes.slstart", MDFNSF_NOFLAGS, gettext_noop("First displayed scanline in NTSC mode."), NULL, MDFNST_UINT, "8", "0", "239" },
   { "nes.slend", MDFNSF_NOFLAGS, gettext_noop("Last displayed scanlines in NTSC mode."), NULL, MDFNST_UINT, "231", "0", "239" },

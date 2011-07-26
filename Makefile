@@ -18,6 +18,11 @@ include $(DEVKITPPC)/wii_rules
 #---------------------------------------------------------------------------------
 TARGET      :=  boot
 BUILD		:=	build
+
+DATA		:=	\
+    src/wii/res/fonts \
+    src/wii/res/gfx
+
 SOURCES		:=	\
     mednafen/src \
     mednafen/src/compress \
@@ -32,6 +37,7 @@ SOURCES		:=	\
     mednafen/src/gba \
     mednafen/src/lynx \
     mednafen/src/nes \
+    mednafen/src/pce_fast \
     mednafen/src/nes/boards \
     mednafen/src/nes/input \
     mednafen/src/nes/ntsc \
@@ -41,6 +47,8 @@ SOURCES		:=	\
     mednafen/src/hw_cpu/v810 \
     mednafen/src/hw_cpu/v810/fpu-new \
     mednafen/src/hw_sound/gb_apu \
+    mednafen/src/hw_sound/pce_psg \
+    mednafen/src/hw_misc/arcade_card \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -54,14 +62,15 @@ SOURCES		:=	\
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
     src/wii/emulator/vb \
-    src/wii/emulator/wswan
-    
-DATA		:=	src/wii/res/fonts src/wii/res/gfx  
+    src/wii/emulator/pcefast \
+    src/wii/emulator/wswan   
+
 INCLUDES	:= \
     mednafen/include \
     mednafen/include/blip \
     mednafen/src/drivers \
     mednafen/src/hw_sound \
+    mednafen/src/hw_misc \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -75,18 +84,21 @@ INCLUDES	:= \
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
     src/wii/emulator/vb \
+    src/wii/emulator/pcefast \
     src/wii/emulator/wswan
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------  
-#CFLAGS  -Wall -DWII_NETTRACE -funsafe-math-optimizations -DWII_NETTRACE -DTRACK_UNIQUE_MSGIDS
+#CFLAGS  -Wall -DWII_NETTRACE -funsafe-math-optimizations -DWII_NETTRACE -DTRACK_UNIQUE_MSGIDS -funsafe-math-optimizations
+
 CFLAGS	= \
-  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -funsafe-math-optimizations \
+  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -fno-strict-overflow -fsigned-char -funsafe-math-optimizations \
   -DWII \
   -DVB_BPP=8 \
   -DWSWAN_BPP=16 \
-  -DGBA_BPP=16
+  -DGBA_BPP=16 \
+  -DPCE_FAST_BPP=16
 #  -DWII_NETTRACE \
 #  -DUSB_WIILOAD 
       

@@ -51,7 +51,6 @@ void MDFN_InitFontData(void)
   unsigned int inx;
 
   memset(FontDataCache, 0, sizeof(FontDataCache));
-#ifndef WII
 
   for(inx=x=0;x<65536;x++)
   {
@@ -107,7 +106,6 @@ void MDFN_InitFontData(void)
       inx++;
     }
   }
-#endif
 #endif
 }
 

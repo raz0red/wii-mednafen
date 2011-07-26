@@ -1295,12 +1295,14 @@ void PauseGameLoop(bool p)
 
 void SendCEvent(unsigned int code, void *data1, void *data2)
 {
+#ifndef WII
   SDL_Event evt;
   evt.user.type = SDL_USEREVENT;
   evt.user.code = code;
   evt.user.data1 = data1;
   evt.user.data2 = data2;
   SDL_PushEvent(&evt);
+#endif
 }
 
 void SDL_MDFN_ShowCursor(int toggle)

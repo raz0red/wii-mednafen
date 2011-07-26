@@ -28,16 +28,21 @@
 
 SDL_Surface *screen = NULL;
 
-#define COPY_SCREEN                                                          \
-  int destPitch = (screen->pitch/screen->format->BytesPerPixel)-msurface->w; \
-  int srcPitch = msurface->pitch32-msurface->w;                              \
-  dest += screen->offset/screen->format->BytesPerPixel;                      \
-  int width = msurface->w * screen->format->BytesPerPixel;                   \
-  for( int y = 0; y < msurface->h; y++ )                                     \
-  {                                                                          \
-    memcpy( dest, src, width );                                              \
-    dest+=(msurface->w+destPitch);                                           \
-    src+=(msurface->w+srcPitch);                                             \
+#define COPY_SCREEN                                                \
+  int indent = ( msurface->w - DisplayRect->w ) >> 1;              \
+  int topindent = ( msurface->h - DisplayRect->h ) >> 1;           \
+  int destPitch = screen->pitch/screen->format->BytesPerPixel;     \
+  int srcPitch = msurface->pitch32;                                \
+  int width = ( msurface->w - ( indent << 1 ) ) *                  \
+    screen->format->BytesPerPixel;                                 \
+  dest += screen->offset/screen->format->BytesPerPixel +           \
+    (destPitch * topindent) + indent;                              \
+  src += srcPitch * DisplayRect->y;                                \
+  for( int y = 0; y < DisplayRect->h; y++ )                        \
+  {                                                                \
+    memcpy( dest, src, width );                                    \
+    dest+=destPitch;                                               \
+    src+=srcPitch;                                                 \
   }  
 
 int mednafen_skip_frame = 0;
