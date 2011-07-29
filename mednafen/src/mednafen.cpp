@@ -40,12 +40,13 @@
 
 #include	"string/escape.h"
 
+#include	"cdrom/cdromif.h"
+
 #ifndef WII
 #include	"netplay.h"
 #include	"netplay-driver.h"
 #include	"qtrecord.h"
 #include	"sound/WAVRecord.h"
-#include	"cdrom/cdromif.h"
 #include	"movie.h"
 #endif
 
@@ -274,13 +275,13 @@ void MDFNI_StopAVRecord(void)
 
 #ifndef WII
       MDFN_StateEvilEnd();
+#endif
 
       if(CDInUse)
       {
         CDIF_Close();
         CDInUse = 0;
       }
-#endif
     }
 #ifndef WII
     TBlur_Kill();
@@ -351,9 +352,7 @@ void MDFNI_StopAVRecord(void)
   extern MDFNGI EmulatedSMS, EmulatedGG;
 #endif
 
-#ifndef WII
   extern MDFNGI EmulatedCDPlay;
-#endif
 
   std::vector<MDFNGI *> MDFNSystems;
   static std::list<MDFNGI *> MDFNSystemsPrio;
@@ -390,7 +389,6 @@ void MDFNI_StopAVRecord(void)
     fclose(fp);
   }
 
-#ifndef WII
   // TODO: LoadCommon()
 
   MDFNGI *MDFNI_LoadCD(const char *force_module, const char *devicename)
@@ -503,14 +501,16 @@ void MDFNI_StopAVRecord(void)
 #endif
 
     MDFNSS_CheckStates();
+#ifndef WII
     MDFNMOV_CheckMovies();
+#endif
 
     MDFN_ResetMessages();   // Save state, status messages, etc.
 
+#ifndef WII
     TBlur_Init();
-
     MDFN_StateEvilBegin();
-
+#endif
 
     if(MDFNGameInfo->GameType != GMT_PLAYER)
     {
@@ -523,7 +523,6 @@ void MDFNI_StopAVRecord(void)
 
     return(MDFNGameInfo);
   }
-#endif
 
   // Return FALSE on fatal error(IPS file found but couldn't be applied),
   // or TRUE on success(IPS patching succeeded, or IPS file not found).
@@ -565,7 +564,6 @@ void MDFNI_StopAVRecord(void)
     struct stat stat_buf;
     std::vector<FileExtensionSpecStruct> valid_iae;
 
-#ifndef WII
     if(strlen(name) > 4 && (!strcasecmp(name + strlen(name) - 4, ".cue") || !strcasecmp(name + strlen(name) - 4, ".toc")))
     {
       return(MDFNI_LoadCD(force_module, name));
@@ -575,7 +573,6 @@ void MDFNI_StopAVRecord(void)
     {
       return(MDFNI_LoadCD(force_module, name));
     }
-#endif
 
     MDFNI_CloseGame();
 
@@ -897,9 +894,7 @@ void MDFNI_StopAVRecord(void)
       &EmulatedGG,
 #endif
 
-#ifndef WII
       &EmulatedCDPlay
-#endif
     };
     std::string i_modules_string, e_modules_string;
 

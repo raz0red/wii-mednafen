@@ -21,9 +21,7 @@
 #include "pce_psg/pce_psg.h"
 #include "input.h"
 #include "huc.h"
-#ifndef WII
 #include "../cdrom/pcecd.h"
-#endif
 #include "hes.h"
 #include "tsushin.h"
 #include "arcade_card/arcade_card.h"
@@ -142,10 +140,8 @@ static DECLFW(IOWrite)
 		if(arcade_card)
 		 arcade_card->Write(A & 0x1FFF, V);
 	       }
-#ifndef WII
 	       else
 	        PCECD_Write(HuCPU.timestamp * 3, A, V); 
-#endif
 	       break;
   //case 0x1C00: break; // Expansion
   //default: printf("Eep: %04x\n", A); break;
@@ -161,7 +157,6 @@ static void PCECDIRQCB(bool asserted)
   HuC6280_IRQEnd(MDFN_IQIRQ2);
 }
 
-#ifndef WII
 bool PCE_InitCD(void)
 {
  PCECD_Settings cd_settings;
@@ -181,7 +176,6 @@ bool PCE_InitCD(void)
 
  return(PCECD_Init(&cd_settings, PCECDIRQCB, PCE_MASTER_CLOCK, pce_overclocked, &sbuf[0], &sbuf[1]));
 }
-#endif
 
 
 static int LoadCommon(void);
@@ -487,10 +481,8 @@ static void Emulate(EmulateSpecStruct *espec)
  }
  VDC_RunFrame(espec->surface, &espec->DisplayRect, espec->LineWidths, IsHES ? 1 : espec->skip);
 
-#ifndef WII
  if(PCE_IsCD)
   PCECD_Run(HuCPU.timestamp * 3);
-#endif
 
  psg->EndFrame(HuCPU.timestamp / pce_overclocked);
 
@@ -509,10 +501,8 @@ static void Emulate(EmulateSpecStruct *espec)
 
  HuC6280_ResetTS();
 
-#ifndef WII
  if(PCE_IsCD)
   PCECD_ResetTS();
-#endif
 
  if(IsHES && !espec->skip)
   HES_Draw(espec->surface, &espec->DisplayRect, espec->SoundBuf, espec->SoundBufSize);
@@ -565,10 +555,8 @@ void PCE_Power(void)
  psg->Power(HuCPU.timestamp / pce_overclocked);
  HuC_Power();
 
-#ifndef WII
  if(PCE_IsCD)
   PCECD_Power(HuCPU.timestamp * 3);
-#endif
 }
 
 static void DoSimpleCommand(int cmd)
@@ -634,13 +622,8 @@ MDFNGI EmulatedPCE_Fast =
  &PCEInputInfo,
  Load,
  TestMagic,
-#ifndef WII
  LoadCD,
  TestMagicCD,
-#else
- NULL, 
- NULL,
-#endif
  CloseGame,
  VDC_ToggleLayer,
  NULL,

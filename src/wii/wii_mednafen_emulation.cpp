@@ -36,6 +36,7 @@ distribution.
 #include "wii_mednafen_main.h"
 
 #include "Emulators.h"
+#include "../../../mednafen/src/md5.h"
 
 #ifdef WII_NETTRACE
 #include <network.h>
@@ -94,6 +95,16 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
 
     if( succeeded )
     { 
+      if( wii_cartridge_hash[0] == '\0' )
+      {
+        strcpy( 
+          wii_cartridge_hash_with_header, 
+          md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
+        strcpy( 
+          wii_cartridge_hash, 
+          md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
+      }
+
       // Set the current emulaotr
       emulator =
         emuRegistry.setCurrentEmulator( MDFNGameInfo->shortname );

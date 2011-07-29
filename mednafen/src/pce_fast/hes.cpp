@@ -164,12 +164,10 @@ int PCE_HESLoad(const uint8 *buf, uint32 size)
 
  HuCPUFastMap[0xFF] = IBP_Bank - (0xFF * 8192);
 
-#ifndef WII
  // FIXME:  If a HES rip tries to execute a SCSI command, the CD emulation code will probably crash.  Obviously, a HES rip shouldn't do this,
  // but Mednafen shouldn't crash either. ;)
  PCE_IsCD = 1;
  PCE_InitCD();
-#endif
 
  ROMWriteWarningGiven = FALSE;
 

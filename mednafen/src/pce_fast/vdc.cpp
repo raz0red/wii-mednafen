@@ -1466,12 +1466,10 @@ void VDC_RunFrame(MDFN_Surface *surface, MDFN_Rect *DisplayRect, MDFN_Rect *Line
 
   HuC6280_Run(455 - line_leadin1 - 2);
 
-#ifndef WII
   if(PCE_IsCD)
   {
    PCECD_Run(HuCPU.timestamp * 3);
   }
-#endif
   for(int chip = 0; chip < VDC_TotalChips; chip++)
   {
    vdc = vdc_chips[chip];
