@@ -609,9 +609,13 @@ static void gsf_load_func(void *data, uint32 len)
  uint32 *md = (uint32 *)data;
  uint32 entry_point, gsf_offset, size;
 
- entry_point = md[0];
- gsf_offset = md[1];
- size = md[2];
+ entry_point = le32toh( md[0] );
+ gsf_offset = le32toh( md[1] );
+ size = le32toh( md[2] );
+
+#ifdef WII_NETTRACE
+ net_print_string( NULL, 0, "###### %d %d %d\n", entry_point, gsf_offset, size );
+#endif
 
  gsf_offset &= 0x00FFFFFF;
 

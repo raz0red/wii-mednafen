@@ -25,5 +25,6 @@ uint32 DrawTextTrans(uint32 *dest, int pitch, uint32 width, const UTF8 *textmsg,
 uint32 DrawTextTrans(uint32 *dest, int pitch, uint32 width, const UTF32 *textmsg, uint32 fgcolor, int centered, uint32 which_font = MDFN_FONT_9x18_18x18);
 
 uint32 DrawTextTransShadow(uint32 *dest, int pitch, uint32 width, const UTF8 *textmsg, uint32 fgcolor, uint32 shadcolor, int centered, uint32 which_font = MDFN_FONT_9x18_18x18);
+uint32 DrawTextTransShadow(uint16 *dest, int pitch, uint32 width, const UTF8 *textmsg, uint32 fgcolor, uint32 shadcolor, int centered, uint32 which_font = MDFN_FONT_9x18_18x18);
 
 #endif

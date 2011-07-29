@@ -218,7 +218,7 @@ static int RawWrite(SexyAL_device *device, const void *data, uint32_t len)
 
     data_u8 += maxcopy;
     len -= maxcopy;
-  }
+  }  
   SDL_UnlockAudio();
 
   if(sw->StartPaused)

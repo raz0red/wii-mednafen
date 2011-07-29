@@ -71,6 +71,10 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     Util_strlcpy( wii_language, value, sizeof(wii_language) );
   }
+  else if( strcmp( name, "video_filter" ) == 0 )
+  {
+    wii_filter = Util_sscandec( value );
+  }
   else
   {
     // Read configuration value for emulators
@@ -91,6 +95,7 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "auto_save_state=%d\n", wii_auto_save_state );
   fprintf( fp, "sel_offset=%d\n", wii_menu_sel_offset );    
   fprintf( fp, "mote_menu_vertical=%d\n", wii_mote_menu_vertical );  
+  fprintf( fp, "video_filter=%d\n", wii_filter );
   fprintf( fp, "language=%s\n", wii_language );
 
   // Write configuration settings for emulators

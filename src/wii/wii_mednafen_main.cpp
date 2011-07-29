@@ -52,6 +52,7 @@ extern "C"
 void WII_VideoStart();
 void WII_VideoStop();
 void WII_SetRotation( int rot );
+void WII_SetFilter( BOOL filter );
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 void WII_SetPreRenderCallback( void (*cb)(void) );
 extern Mtx gx_view;
@@ -88,6 +89,7 @@ extern void MakeInputSettings(std::vector <MDFNSetting> &settings);
 extern void DeleteInternalArgs(void);
 extern void KillInputSettings(void);
 extern void CalcFramerates(char *virtfps, char *drawnfps, char *blitfps, size_t maxlen);
+extern void FPS_IncBlitted(void);
 
 // The wiimote not supported image data
 static gx_imagedata* mote_not_supported_idata = NULL;
@@ -173,6 +175,8 @@ int wii_mednafen_load_game( char* game )
   return LoadGame( NULL, game );
 }
 
+static MDFN_PixelFormat nf;
+
 static void reset_video()
 {
   free_video();
@@ -185,9 +189,38 @@ static void reset_video()
     SDL_SetVideoMode( size->w, size->h, bpp,
       SDL_HWSURFACE | SDL_HWPALETTE | SDL_FULLSCREEN );
 
-  MDFN_PixelFormat nf;
+  memset( &nf, 0x0, sizeof( MDFN_PixelFormat ) );
   nf.bpp = bpp;
   nf.colorspace = MDFN_COLORSPACE_RGB;
+
+  if( nf.bpp == 32 ) 
+  {
+    u8 rs = back_surface->format->Rshift;
+    u8 gs = back_surface->format->Gshift;
+    u8 bs = back_surface->format->Bshift;
+    u8 as = 0;
+
+    // Find unused 8-bits to use as our alpha channel
+    while(as == rs || as == gs || as == bs) 
+    {
+      as += 8;
+    }
+    nf.Ashift = as;
+    nf.Rshift = rs;
+    nf.Gshift = gs;
+    nf.Bshift = bs;
+  }
+  else if( nf.bpp == 16 )
+  {
+    nf.Rshift = 11;
+    nf.Gshift = 5;
+    nf.Bshift = 0;
+    nf.Ashift = 16;    
+    nf.Rprec = 5;
+    nf.Gprec = 6;
+    nf.Bprec = 5;
+    nf.Aprec = 8;
+  }
 
   MDFN_printf(_("BPP: %d\n"), nf.bpp);
 
@@ -217,13 +250,14 @@ static void precallback()
   {
 #if 0
 #ifdef WII_NETTRACE
-net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d\n", 
-  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h );
+net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d\n", 
+  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h, VTReady->w, VTReady->h );
 #endif
 #endif
     Emulator* emu = emuRegistry.getCurrentEmulator();
     emu->resizeScreen( false ); 
     BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
+    FPS_IncBlitted();
     VTReady = NULL;
   }
 }
@@ -247,6 +281,7 @@ void wii_mednafen_emu_loop( BOOL resume )
   wii_sdl_black_back_surface();
   wii_gx_push_callback( &gxrender_callback, TRUE );  
 
+  WII_SetFilter( wii_filter );
   emu->resizeScreen( true );  
 
   ClearSound();
