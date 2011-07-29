@@ -33,6 +33,7 @@ public:
   MenuManager& getMenuManager();
   void updateControls();
   bool isRotationSupported();
+  u8 getBpp();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

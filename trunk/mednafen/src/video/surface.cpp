@@ -63,7 +63,6 @@ void MDFN_Surface::Init(void *const p_pixels, const uint32 p_width, const uint32
 
   memcpy(&format, &nf, sizeof(MDFN_PixelFormat));
 
-#ifndef WII
   if(nf.bpp == 8)
   {
 
@@ -82,7 +81,6 @@ void MDFN_Surface::Init(void *const p_pixels, const uint32 p_width, const uint32
     format.Bprec = 8;
     format.Aprec = 8;
   }
-#endif
 
   pixels8 = NULL;
   pixels16 = NULL; 

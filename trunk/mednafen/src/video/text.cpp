@@ -246,7 +246,60 @@ static uint32 DoRealDraw(uint32 *dest, uint32 pitch, uint32 width, uint32 fgcolo
   return(pixwidth);
 }
 
+static uint32 DoRealDraw(uint16 *dest, uint32 pitch, uint32 width, uint32 fgcolor, int centered, uint32 slen, const uint32 pixwidth,
+                         uint32 glyph_height, const uint8 *glyph_ptrs[], const uint8 glyph_width[], const uint8 glyph_ov_width[])
+{
+  uint32 x;
+
+  pitch /= sizeof(uint16);
+  if(centered)
+  {
+    int32 poot = width - pixwidth;
+
+    dest += poot / 2;
+  }
+
+  for(x=0;x<slen;x++)
+  {
+    unsigned int gx, gy;
+    const uint8 *src_glyph = glyph_ptrs[x];
+    unsigned int gy_mul = (glyph_width[x] >> 3) + 1;
+
+    for(gy = 0; gy < glyph_height; gy++)
+    {
+      for(gx=0;gx<glyph_width[x];gx++)
+      {
+        if((src_glyph[gy * gy_mul + (gx >> 3)] << (gx & 0x7)) & 0x80)
+          dest[gy * pitch + gx] = fgcolor;
+      }
+    }
+    dest += glyph_ov_width[x];
+  }
+
+  return(pixwidth);
+}
+
 uint32 DrawTextTrans(uint32 *dest, int pitch, uint32 width, const UTF8 *msg, uint32 fgcolor, int centered, uint32 which_font)
+{
+  uint32 slen;
+  uint32 pixwidth;
+  uint32 max_glyph_len = strlen((char *)msg);
+  const uint8 *glyph_ptrs[max_glyph_len];
+  uint8 glyph_width[max_glyph_len];
+  uint8 glyph_ov_width[max_glyph_len];
+
+  const UTF8 *src_begin = (UTF8 *)msg;
+  UTF32 utf32_buf[max_glyph_len];
+  UTF32 *tstart = utf32_buf;
+
+  ConvertUTF8toUTF32(&src_begin, (UTF8*)msg + max_glyph_len, &tstart, &tstart[max_glyph_len], lenientConversion);
+  slen = (tstart - utf32_buf);
+  DrawTextSub(utf32_buf, slen, glyph_ptrs, glyph_width, glyph_ov_width, width, pixwidth, which_font);
+
+  return(DoRealDraw(dest, pitch, width, fgcolor, centered, slen, pixwidth, FontDescriptors[which_font].glyph_height, glyph_ptrs, glyph_width, glyph_ov_width));
+}
+
+uint32 DrawTextTrans(uint16 *dest, int pitch, uint32 width, const UTF8 *msg, uint32 fgcolor, int centered, uint32 which_font)
 {
   uint32 slen;
   uint32 pixwidth;
@@ -281,8 +334,29 @@ uint32 DrawTextTrans(uint32 *dest, int pitch, uint32 width, const UTF32 *msg, ui
   return(DoRealDraw(dest, pitch, width, fgcolor, centered, slen, pixwidth, FontDescriptors[which_font].glyph_height, glyph_ptrs, glyph_width, glyph_ov_width));
 }
 
+uint32 DrawTextTrans(uint16 *dest, int pitch, uint32 width, const UTF32 *msg, uint32 fgcolor, int centered, uint32 which_font)
+{
+  uint32 slen;
+  uint32 pixwidth;
+  uint32 max_glyph_len = utf32_strlen((UTF32 *)msg);
+  const uint8 *glyph_ptrs[max_glyph_len];
+  uint8 glyph_width[max_glyph_len];
+  uint8 glyph_ov_width[max_glyph_len];
+
+  slen = utf32_strlen((UTF32 *)msg);
+  DrawTextSub((UTF32*)msg, slen, glyph_ptrs, glyph_width, glyph_ov_width, ~0, pixwidth, which_font);
+
+  return(DoRealDraw(dest, pitch, width, fgcolor, centered, slen, pixwidth, FontDescriptors[which_font].glyph_height, glyph_ptrs, glyph_width, glyph_ov_width));
+}
+
 uint32 DrawTextTransShadow(uint32 *dest, int pitch, uint32 width, const UTF8 *textmsg, uint32 fgcolor, uint32 shadcolor, int centered, uint32 which_font)
 {
   DrawTextTrans(dest + 1 + (pitch >> 2), pitch, width, textmsg, shadcolor, centered, which_font);
+  return(DrawTextTrans(dest, pitch, width, textmsg, fgcolor, centered, which_font));
+}
+
+uint32 DrawTextTransShadow(uint16 *dest, int pitch, uint32 width, const UTF8 *textmsg, uint32 fgcolor, uint32 shadcolor, int centered, uint32 which_font)
+{
+  DrawTextTrans(dest + 1 + (pitch >> 1), pitch, width, textmsg, shadcolor, centered, which_font);
   return(DrawTextTrans(dest, pitch, width, textmsg, fgcolor, centered, which_font));
 }

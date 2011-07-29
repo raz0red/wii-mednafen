@@ -212,6 +212,13 @@ void wii_mednafen_menu_init()
     "Advanced" );
   wii_add_child( wii_menu_root, advanced );    
 
+  child = wii_create_tree_node( NODETYPE_FILTER, 
+    "Video filter" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( advanced, child );
+
   child = wii_create_tree_node( NODETYPE_DEBUG_MODE, 
     "Debug mode" );
   wii_add_child( advanced, child );
@@ -328,6 +335,7 @@ void wii_menu_handle_get_node_name(
     case NODETYPE_TOP_MENU_EXIT:
     case NODETYPE_AUTO_LOAD_STATE:
     case NODETYPE_AUTO_SAVE_STATE:
+    case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
       {
         BOOL enabled = FALSE;
@@ -338,6 +346,9 @@ void wii_menu_handle_get_node_name(
             break;
           case NODETYPE_DEBUG_MODE:
             enabled = wii_debug;
+            break;
+          case NODETYPE_FILTER:
+            enabled = wii_filter;
             break;
           case NODETYPE_TOP_MENU_EXIT:
             enabled = wii_top_menu_exit;
@@ -451,6 +462,9 @@ void wii_menu_handle_select_node( TREENODE *node )
         break;
       case NODETYPE_DEBUG_MODE:
         wii_debug ^= 1;
+        break;
+      case NODETYPE_FILTER:
+        wii_filter ^= 1;
         break;
       case NODETYPE_AUTO_LOAD_STATE:
         wii_auto_load_state ^= 1;

@@ -47,6 +47,8 @@ extern char wii_cartridge_hash[33];
 extern char wii_cartridge_hash_with_header[33];
 // Whether to display debug info (FPS, etc.)
 extern BOOL wii_debug;
+// Whether to filter the display
+extern BOOL wii_filter;
 // Hardware buttons (reset, power, etc.)
 extern u8 wii_hw_button;
 // Auto load state?

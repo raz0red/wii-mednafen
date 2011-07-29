@@ -27,7 +27,11 @@ static int TotalSongs;
 
 static INLINE void DrawLine(MDFN_Surface *surface, uint32 color, uint32 bmatch, uint32 breplace, int x1, int y1, int x2, int y2)
 {
+#if PLAYER_BPP==16
+ uint16 *buf = surface->pixels16;
+#else
  uint32 *buf = surface->pixels;
+#endif
  float dy_dx = (float)(y2 - y1) / (x2 - x1);
  int x;
 
@@ -95,6 +99,7 @@ int Player_Init(int tsongs, UTF8 *album, UTF8 *artist, UTF8 *copyright, UTF8 **s
 
  TotalSongs = tsongs;
 
+#ifndef WII
  MDFNGameInfo->nominal_width = 384;
  MDFNGameInfo->nominal_height = 240;
 
@@ -103,6 +108,7 @@ int Player_Init(int tsongs, UTF8 *album, UTF8 *artist, UTF8 *copyright, UTF8 **s
 
  MDFNGameInfo->lcm_width = 384;
  MDFNGameInfo->lcm_height = 240;
+#endif
 
  MDFNGameInfo->GameType = GMT_PLAYER;
 
@@ -111,7 +117,12 @@ int Player_Init(int tsongs, UTF8 *album, UTF8 *artist, UTF8 *copyright, UTF8 **s
 
 void Player_Draw(MDFN_Surface *surface, MDFN_Rect *dr, int CurrentSong, int16 *samples, int32 sampcount)
 {
+#if PLAYER_BPP==16
+ uint16 *XBuf = surface->pixels16;
+#else
  uint32 *XBuf = surface->pixels;
+#endif
+
  //MDFN_Rect *dr = &MDFNGameInfo->DisplayRect;
  int x,y;
  const uint32 text_color = surface->MakeColor(0xE8, 0xE8, 0xE8);
@@ -123,18 +134,28 @@ void Player_Draw(MDFN_Surface *surface, MDFN_Rect *dr, int CurrentSong, int16 *s
 
  dr->x = 0;
  dr->y = 0;
+#ifndef WII
  dr->w = 384;
  dr->h = 240;
+#else
+ dr->w = MDFNGameInfo->nominal_width;
+ dr->h = MDFNGameInfo->nominal_height;
+#endif
 
  // Draw the background color
  for(y = 0; y < dr->h; y++)
-  MDFN_FastU32MemsetM8(&XBuf[y * surface->pitch32], bg_color, dr->w);
+ {
+#if PLAYER_BPP==16
+      MDFN_FastU16MemsetM8(&XBuf[y * surface->pitch32], bg_color, dr->w);
+#else
+      MDFN_FastU32MemsetM8(&XBuf[y * surface->pitch32], bg_color, dr->w);
+#endif
+ }
 
  // Now we draw the waveform data.  It should be centered vertically, and extend the screen horizontally from left to right.
  int32 x_scale;
  float y_scale;
  int lastX, lastY;
-
 
  x_scale = (sampcount << 8) / dr->w;
 
@@ -168,19 +189,25 @@ void Player_Draw(MDFN_Surface *surface, MDFN_Rect *dr, int CurrentSong, int16 *s
   }
  }
 
+#if PLAYER_BPP==16
+int len = surface->pitch32 * sizeof(uint16);
+#else
+int len = surface->pitch32 * sizeof(uint32);
+#endif
+
  // Quick warning:  DrawTextTransShadow() has the possibility of drawing past the visible display area by 1 pixel on each axis.  This should only be a cosmetic issue
  // if 1-pixel line overflowing occurs onto the next line(most likely with NES, where width == pitch).  Fixme in the future?
  XBuf += 2 * surface->pitch32;
  if(AlbumName)
-  DrawTextTransShadow(XBuf, surface->pitch32 * sizeof(uint32), dr->w, AlbumName, text_color, text_shadow_color, 1);
+  DrawTextTransShadow(XBuf, len, dr->w, AlbumName, text_color, text_shadow_color, 2);
 
  XBuf += (13 + 2) * surface->pitch32;
  if(Artist)
-  DrawTextTransShadow(XBuf, surface->pitch32 * sizeof(uint32), dr->w, Artist, text_color, text_shadow_color, 1);
+  DrawTextTransShadow(XBuf, len, dr->w, Artist, text_color, text_shadow_color, 2);
 
  XBuf += (13 + 2) * surface->pitch32;
  if(Copyright)
-  DrawTextTransShadow(XBuf, surface->pitch32 * sizeof(uint32), dr->w, Copyright, text_color, text_shadow_color, 1);
+  DrawTextTransShadow(XBuf, len, dr->w, Copyright, text_color, text_shadow_color, 2);
 
  XBuf += (13 * 2) * surface->pitch32;
  
@@ -191,13 +218,13 @@ void Player_Draw(MDFN_Surface *surface, MDFN_Rect *dr, int CurrentSong, int16 *s
   tmpsong = (UTF8 *)_("Song:");
 
  if(tmpsong)
-  DrawTextTransShadow(XBuf, surface->pitch32 * sizeof(uint32), dr->w, tmpsong, text_color, text_shadow_color, 1);
+  DrawTextTransShadow(XBuf, len, dr->w, tmpsong, text_color, text_shadow_color, 2);
  
  XBuf += (13 + 2) * surface->pitch32;
  if(TotalSongs > 1)
  {
   char snbuf[32];
   snprintf(snbuf, 32, "<%d/%d>", CurrentSong + 1, TotalSongs);
-  DrawTextTransShadow(XBuf, surface->pitch32 * sizeof(uint32), dr->w, (uint8*)snbuf, text_color, text_shadow_color, 1);
+  DrawTextTransShadow(XBuf, len, dr->w, (uint8*)snbuf, text_color, text_shadow_color, 2);
  }
 }

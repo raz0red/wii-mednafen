@@ -1307,6 +1307,7 @@ void SendCEvent(unsigned int code, void *data1, void *data2)
 
 void SDL_MDFN_ShowCursor(int toggle)
 {
+#ifndef WII
   int *toog = (int *)malloc(sizeof(int));
   *toog = toggle;
 
@@ -1315,7 +1316,7 @@ void SDL_MDFN_ShowCursor(int toggle)
   evt.user.code = CEVT_SHOWCURSOR;
   evt.user.data1 = toog;
   SDL_PushEvent(&evt);
-
+#endif
 }
 
 void GT_ToggleFS(void)
@@ -1669,7 +1670,7 @@ void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
 #ifndef WII
       last_btime = SDL_GetTicks();
 #endif
-      FPS_IncBlitted();
+      //FPS_IncBlitted();
     //}
   }
 #ifndef WII

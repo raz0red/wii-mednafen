@@ -43,7 +43,7 @@ SDL_Surface *screen = NULL;
     memcpy( dest, src, width );                                    \
     dest+=destPitch;                                               \
     src+=srcPitch;                                                 \
-  }  
+  }
 
 int mednafen_skip_frame = 0;
 

@@ -45,5 +45,14 @@ static INLINE void MDFN_FastU32MemsetM8(uint32 *array, uint32 value_32, unsigned
   //printf("%08x %d\n", (int)(long long)array, u32len);
 }
 
+static INLINE void MDFN_FastU16MemsetM8(uint16 *array, uint16 value_32, unsigned int u16len)
+{
+  for(uint16 *ai = array; ai < array + u16len; ai += 2)
+  {
+    ai[0] = value_32;
+    ai[1] = value_32;
+  }
+}
+
 #define _MDFN_MEMORY_H
 #endif

@@ -19,7 +19,7 @@ GameBoyAdvance::GameBoyAdvance() :
   m_emulatorScreenSize.h = 160;
 
   // Set user screen sizes
-  float scale = 1.0;
+  float scale = 1.3;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
 }

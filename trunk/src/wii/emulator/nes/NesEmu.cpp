@@ -148,3 +148,8 @@ bool Nes::isRotationSupported()
 {
   return false;
 }
+
+u8 Nes::getBpp()
+{
+  return NES_BPP;
+}

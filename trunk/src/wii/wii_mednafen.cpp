@@ -50,6 +50,8 @@ char wii_cartridge_hash[33];
 char wii_cartridge_hash_with_header[33];
 // Whether to display debug info (FPS, etc.)
 BOOL wii_debug = FALSE;
+// Whether to filter the display
+BOOL wii_filter = FALSE;
 // Auto save state?
 BOOL wii_auto_save_state = FALSE;
 // Auto load state?

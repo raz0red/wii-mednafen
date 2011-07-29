@@ -1133,7 +1133,7 @@ void VDC_RunFrame(MDFN_Surface *surface, MDFN_Rect *DisplayRect, MDFN_Rect *Line
  vdc_t *vdc = vdc_chips[0];
  int max_dc = 0;
 
-#if PCE_FAST_BPP==16
+#if 0
  {
   MDFN_PixelFormat nf;
 
@@ -1149,9 +1149,7 @@ void VDC_RunFrame(MDFN_Surface *surface, MDFN_Rect *DisplayRect, MDFN_Rect *Line
   nf.Bprec = 5;
   nf.Aprec = 8;
 
-#if 0
-  surface->SetFormat(nf, false);
-#endif
+//  surface->SetFormat(nf, false);
   VDC_SetPixelFormat(nf);
  }
 #endif
