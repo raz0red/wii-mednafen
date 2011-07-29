@@ -96,7 +96,6 @@
                if(!PCE_IsCD)
                 return(0xFF);
 
-#ifndef WII
                if((A & 0x1E00) == 0x1A00)
                {
                 if(arcade_card)
@@ -110,8 +109,6 @@
 
                 return(PCECD_Read(HuCPU.timestamp * 3, A, next_cd_event));                
 	       }
-#endif	       
-
 
  EXP:
                if(IsHES)

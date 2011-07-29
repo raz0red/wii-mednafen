@@ -857,7 +857,6 @@ int LoadGame(const char *force_module, const char *path)
   pending_save_movie = 0;
   pending_snapshot = 0;
 
-#ifndef WII
   if(loadcd)
   {
     const char *system = loadcd;
@@ -870,12 +869,9 @@ int LoadGame(const char *force_module, const char *path)
   }
   else
   {
-#endif
     if(!(tmp=MDFNI_LoadGame(force_module, path)))
       return 0;
-#ifndef WII
   }
-#endif
   CurGame = tmp;
   InitGameInput(tmp);
 

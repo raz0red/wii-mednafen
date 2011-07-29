@@ -49,6 +49,9 @@ SOURCES		:=	\
     mednafen/src/hw_sound/gb_apu \
     mednafen/src/hw_sound/pce_psg \
     mednafen/src/hw_misc/arcade_card \
+    mednafen/src/mpcdec \
+    mednafen/src/cdrom \
+    mednafen/src/tremor \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -90,10 +93,10 @@ INCLUDES	:= \
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------  
-#CFLAGS  -Wall -DWII_NETTRACE -funsafe-math-optimizations -DWII_NETTRACE -DTRACK_UNIQUE_MSGIDS -funsafe-math-optimizations
+#CFLAGS  -Wall -DWII_NETTRACE -DWII_NETTRACE -DTRACK_UNIQUE_MSGIDS 
 
 CFLAGS	= \
-  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -fno-strict-overflow -fsigned-char -funsafe-math-optimizations \
+  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -fno-strict-overflow -fsigned-char \
   -DWII \
   -DVB_BPP=8 \
   -DWSWAN_BPP=16 \
@@ -101,8 +104,8 @@ CFLAGS	= \
   -DPCE_FAST_BPP=16 \
   -DNES_BPP=16 \
   -DPLAYER_BPP=16
-#  -DWII_NETTRACE \
-#  -DUSB_WIILOAD 
+#  -DUSB_WIILOAD \
+#  -DWII_NETTRACE 
       
 CXXFLAGS	=	$(CFLAGS) 
 

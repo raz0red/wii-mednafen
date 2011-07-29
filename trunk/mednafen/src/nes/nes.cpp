@@ -302,15 +302,6 @@ static int Load(const char *name, MDFNFILE *fp)
 
         MDFN_InitPalette(NESIsVSUni ? MDFN_VSUniGetPaletteNum() : 0);
 
- #ifdef WII
-  strcpy( 
-    wii_cartridge_hash_with_header, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-  strcpy( 
-    wii_cartridge_hash, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-#endif
-
         return(1);
 }
 
@@ -474,11 +465,7 @@ static MDFNSetting NESSettings[] =
   { "nes.pal", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Enable PAL(50Hz) NES emulation."), NULL, MDFNST_BOOL, "0" },
   { "nes.gg", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Enable Game Genie emulation."), NULL, MDFNST_BOOL, "0" },
   { "nes.ggrom", MDFNSF_EMU_STATE, gettext_noop("Path to Game Genie ROM image."), NULL, MDFNST_STRING, "gg.rom" },
-#ifndef WII
   { "nes.clipsides", MDFNSF_NOFLAGS, gettext_noop("Clip left+right 8 pixel columns."), NULL, MDFNST_BOOL, "0" },
-#else
-  { "nes.clipsides", MDFNSF_NOFLAGS, gettext_noop("Clip left+right 8 pixel columns."), NULL, MDFNST_BOOL, "0" },
-#endif
   { "nes.slstart", MDFNSF_NOFLAGS, gettext_noop("First displayed scanline in NTSC mode."), NULL, MDFNST_UINT, "8", "0", "239" },
   { "nes.slend", MDFNSF_NOFLAGS, gettext_noop("Last displayed scanlines in NTSC mode."), NULL, MDFNST_UINT, "231", "0", "239" },
   { "nes.slstartp", MDFNSF_NOFLAGS, gettext_noop("First displayed scanline in PAL mode."), NULL, MDFNST_UINT, "0", "0", "239" },

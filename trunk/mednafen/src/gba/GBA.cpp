@@ -747,15 +747,6 @@ net_print_string( NULL, 0, "Rom: %x\n", rom );
    MDFN_printf(_("ROM CRC32: 0x%08x\n"), (unsigned int)crc32(0, fp->data, size));
    MDFN_printf(_("ROM MD5:   0x%s\n"), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str());
 
- #ifdef WII
-  strcpy( 
-    wii_cartridge_hash_with_header, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-  strcpy( 
-    wii_cartridge_hash, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-#endif
-
    uint16 *temp = (uint16 *)(rom+((size+1)&~1));
    int i;
 

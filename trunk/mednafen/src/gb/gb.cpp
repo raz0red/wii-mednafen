@@ -2000,15 +2000,6 @@ static int Load(const char *name, MDFNFILE *fp)
  MDFN_printf(_("RAM Size:  0x%02x(%s)\n"), gbRom[0x149], GetGBRAMSizeString(gbRom[0x149]));
  MDFN_printf(_("Version:   0x%02x\n"), gbRom[0x14C]);
 
- #ifdef WII
-  strcpy( 
-    wii_cartridge_hash_with_header, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-  strcpy( 
-    wii_cartridge_hash, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-#endif
-
  MDFNMP_Init(128, (65536 + 32768) / 128); // + 32768 for GBC WRAM for supported GameShark cheats with RAM page numbers
 
  MDFNGBSOUND_Init();

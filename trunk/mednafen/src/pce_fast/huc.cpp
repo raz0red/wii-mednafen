@@ -56,11 +56,7 @@ static DECLFR(ACPhysRead)
 
 static DECLFR(SaveRAMRead)
 {
-#ifndef WII
  if((!PCE_IsCD || PCECD_IsBRAMEnabled()) && (A & 8191) < 2048)
-#else
- if((!PCE_IsCD) && (A & 8191) < 2048)
-#endif
   return(SaveRAM[A & 2047]);
  else
   return(0xFF);
@@ -68,11 +64,7 @@ static DECLFR(SaveRAMRead)
 
 static DECLFW(SaveRAMWrite)
 {
-#ifndef WII
  if((!PCE_IsCD || PCECD_IsBRAMEnabled()) && (A & 8191) < 2048)
-#else
- if((!PCE_IsCD) && (A & 8191) < 2048)
-#endif
   SaveRAM[A & 2047] = V;
 }
 
@@ -133,15 +125,6 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
  MDFN_printf(_("ROM:       %dKiB\n"), (len + 1023) / 1024);
  MDFN_printf(_("ROM CRC32: 0x%04x\n"), crc32);
  MDFN_printf(_("ROM MD5:   0x%s\n"), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str());
-
-#ifdef WII
-  strcpy( 
-    wii_cartridge_hash_with_header, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-  strcpy( 
-    wii_cartridge_hash, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-#endif
 
  if(!(HuCROM = (uint8 *)MDFN_malloc(m_len, _("HuCard ROM"))))
  {
@@ -405,7 +388,6 @@ int HuC_StateAction(StateMem *sm, int load, int data_only)
 
  if(load)
   HuCSF2Latch &= 0x3;
-#ifndef WII
  if(PCE_IsCD)
  {
   ret &= PCECD_StateAction(sm, load, data_only);
@@ -413,7 +395,6 @@ int HuC_StateAction(StateMem *sm, int load, int data_only)
   if(arcade_card)
    ret &= arcade_card->StateAction(sm, load, data_only);
  }
-#endif
  return(ret);
 }
 
@@ -443,12 +424,10 @@ void HuCClose(void)
   arcade_card = NULL;
  }
 
-#ifndef WII
  if(PCE_IsCD)
  {
   PCECD_Close();
  }
-#endif
 
  if(HuCROM)
  {
