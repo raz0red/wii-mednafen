@@ -572,6 +572,7 @@
 
 /* Define if we are compiling with PC-FX emulation. */
 /* #undef WANT_PCFX_EMU */
+#define WANT_PCFX_EMU 1
 
 /* Define if we are compiling with SMS+GG emulation. */
 /* #undef WANT_SMS_EMU */

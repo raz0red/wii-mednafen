@@ -12,6 +12,7 @@ Emulators::Emulators() :
   m_emuMap[GameBoyAdvanceEmu.getKey()] = &(GameBoyAdvanceEmu);
   m_emuMap[NesEmu.getKey()] = &(NesEmu);
   m_emuMap[PCEFastEmu.getKey()] = &(PCEFastEmu);
+  m_emuMap[PCFXEmu.getKey()] = &(PCFXEmu);
 }
 
 Emulator* Emulators::getEmulator( const char* key )

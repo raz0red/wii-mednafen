@@ -228,10 +228,14 @@ static void reset_video()
   VTDRReady = NULL;
   VTLWReady = NULL;
 
-  VTBuffer[0] = new MDFN_Surface( NULL, size->w, size->h, size->w, nf );
-  VTBuffer[1] = new MDFN_Surface( NULL, size->w, size->h, size->w, nf );
-  VTLineWidths[0] = (MDFN_Rect *)calloc( size->h, sizeof(MDFN_Rect));
-  VTLineWidths[1] = (MDFN_Rect *)calloc( size->h, sizeof(MDFN_Rect));
+  VTBuffer[0] = new MDFN_Surface( NULL, 
+    MDFNGameInfo->fb_width, MDFNGameInfo->fb_height, MDFNGameInfo->fb_width, nf );
+  VTBuffer[1] = new MDFN_Surface( NULL, 
+    MDFNGameInfo->fb_width, MDFNGameInfo->fb_height, MDFNGameInfo->fb_width, nf );
+  VTLineWidths[0] = (MDFN_Rect *)
+    calloc( MDFNGameInfo->fb_height, sizeof(MDFN_Rect));
+  VTLineWidths[1] = (MDFN_Rect *)
+    calloc( MDFNGameInfo->fb_height, sizeof(MDFN_Rect));
 
   // Set the screen to our back surface
   screen = back_surface;  
@@ -250,8 +254,8 @@ static void precallback()
   {
 #if 0
 #ifdef WII_NETTRACE
-net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d\n", 
-  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h, VTReady->w, VTReady->h );
+net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d %d\n", 
+  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h, VTReady->w, VTReady->h, VTLWReady[0].w, ~0 );
 #endif
 #endif
     Emulator* emu = emuRegistry.getCurrentEmulator();

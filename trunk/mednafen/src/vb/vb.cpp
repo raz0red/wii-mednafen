@@ -71,7 +71,7 @@ static uint8 *GPROM = NULL;
 static uint32 GPROM_Mask;
 static uint8 *GPROM_NonPatched = NULL;
 
-static V810 VB_V810 MDFN_SECTION("v810_core");
+static V810VB VB_V810 MDFN_SECTION("v810_core");
 
 VSU *VB_VSU = NULL;
 static uint32 VSU_CycleFix;
@@ -2231,7 +2231,6 @@ static int Load(const char *name, MDFNFILE *fp)
 
 static void CloseGame(void)
 {
-#if 0
  // Only save cart RAM if it has been modified.
  for(unsigned int i = 0; i < GPRAM_Mask + 1; i++)
  {
@@ -2244,7 +2243,6 @@ static void CloseGame(void)
    break;
   }
  }
-#endif
  //VIP_Kill();
  
  if(VB_VSU)
@@ -2592,15 +2590,15 @@ found freely through public domain sources.
 #include <string.h>
 #include <errno.h>
 
-#include "../hw_cpu/v810/v810_opt.h"
-#include "../hw_cpu/v810/v810_cpu.h"
-#include "../hw_cpu/v810/v810_cpuD.h"
+#include "../hw_cpu/v810_vb/v810_opt.h"
+#include "../hw_cpu/v810_vb/v810_cpu.h"
+#include "../hw_cpu/v810_vb/v810_cpuD.h"
 
 #if 0
 #include <map>
 static uint32 prev_old = 0;
 static uint32 prev_new = 0;
-void V810::IdleLoopTest(uint32 old_pc, uint32 new_pc)
+void V810VB::IdleLoopTest(uint32 old_pc, uint32 new_pc)
 {
  static std::map<uint32, bool> loop_addresses;
  static uint32 iter_counter = 0;
@@ -2627,12 +2625,12 @@ void V810::IdleLoopTest(uint32 old_pc, uint32 new_pc)
  memcpy(prev_S_REG, S_REG, sizeof(S_REG));
 }
 
-void V810::IdleLoopMurder(void)
+void V810VB::IdleLoopMurder(void)
 {
  prev_old = prev_new = 0xFFFFFFFF;
 }
 
-void V810::IdleLoopManslaughter(uint32 addr)
+void V810VB::IdleLoopManslaughter(uint32 addr)
 {
  if(((addr >> 24) & 0x7) == 0x2)
  {
@@ -2640,7 +2638,7 @@ void V810::IdleLoopManslaughter(uint32 addr)
  }
 }
 
-void V810::IdleLoopAssault(uint32 jump_pc)
+void V810VB::IdleLoopAssault(uint32 jump_pc)
 {
  if(((jump_pc >> 24) & 0x7) != 0x7)
   prev_old = prev_new = 0xFFFFFFFF;
@@ -2649,30 +2647,30 @@ void V810::IdleLoopAssault(uint32 jump_pc)
 
 #else
 
-INLINE void V810::IdleLoopTest(uint32 old_pc, uint32 new_pc)
+INLINE void V810VB::IdleLoopTest(uint32 old_pc, uint32 new_pc)
 {
 
 }
 
-INLINE void V810::IdleLoopMurder(void)
+INLINE void V810VB::IdleLoopMurder(void)
 {
 
 }
 
-INLINE void V810::IdleLoopManslaughter(uint32 addr)
+INLINE void V810VB::IdleLoopManslaughter(uint32 addr)
 {
 
 
 }
 
-INLINE void V810::IdleLoopAssault(uint32 jump_pc)
+INLINE void V810VB::IdleLoopAssault(uint32 jump_pc)
 {
 
 
 }
 #endif
 
-INLINE void V810::RecalcIPendingCache(void)
+INLINE void V810VB::RecalcIPendingCache(void)
 {
  IPendingCache = 0;
 
@@ -2714,18 +2712,18 @@ using namespace MDFN_IEN_VB;
 
 //#include "fpu-new/softfloat.h"
 
-V810::V810()
+V810VB::V810VB()
 {
  memset(FastMap, 0, sizeof(FastMap));
 }
 
-V810::~V810()
+V810VB::~V810VB()
 {
 
 }
 
 // Reinitialize the defaults in the CPU
-void V810::Reset() 
+void V810VB::Reset() 
 {
  v810_timestamp = 0;
  next_event_ts = 0x7FFFFFFF; // fixme
@@ -2755,7 +2753,7 @@ void V810::Reset()
  RecalcIPendingCache();
 }
 
-bool V810::Init(V810_Emu_Mode mode, bool vb_mode)
+bool V810VB::Init(V810_Emu_Mode mode, bool vb_mode)
 {
  EmuMode = mode;
  VBMode = vb_mode;
@@ -2780,7 +2778,7 @@ bool V810::Init(V810_Emu_Mode mode, bool vb_mode)
  return(TRUE);
 }
 
-void V810::Kill(void)
+void V810VB::Kill(void)
 {
  for(unsigned int i = 0; i < FastMapAllocList.size(); i++)
   MDFN_free(FastMapAllocList[i]);
@@ -2788,7 +2786,7 @@ void V810::Kill(void)
  FastMapAllocList.clear();
 }
 
-void V810::SetInt(int level)
+void V810VB::SetInt(int level)
 {
  assert(level >= -1 && level <= 15);
 
@@ -2796,7 +2794,7 @@ void V810::SetInt(int level)
  RecalcIPendingCache();
 }
 
-uint8 *V810::SetFastMap(uint32 addresses[], uint32 length, unsigned int num_addresses, const char *name)
+uint8 *V810VB::SetFastMap(uint32 addresses[], uint32 length, unsigned int num_addresses, const char *name)
 {
  uint8 *ret = NULL;
 
@@ -2833,7 +2831,7 @@ uint8 *V810::SetFastMap(uint32 addresses[], uint32 length, unsigned int num_addr
 }
 
 
-INLINE void V810::SetFlag(uint32 n, bool condition)
+INLINE void V810VB::SetFlag(uint32 n, bool condition)
 {
  S_REG[PSW] &= ~n;
 
@@ -2841,7 +2839,7 @@ INLINE void V810::SetFlag(uint32 n, bool condition)
   S_REG[PSW] |= n;
 }
 	
-INLINE void V810::SetSZ(uint32 value)
+INLINE void V810VB::SetSZ(uint32 value)
 {
  SetFlag(PSW_Z, !value);
  SetFlag(PSW_S, value & 0x80000000);
@@ -2849,7 +2847,7 @@ INLINE void V810::SetSZ(uint32 value)
 
 #define SetPREG(n, val) { P_REG[n] = val; }
 
-INLINE void V810::SetSREG(v810_timestamp_t &timestamp, unsigned int which, uint32 value)
+INLINE void V810VB::SetSREG(v810_timestamp_t &timestamp, unsigned int which, uint32 value)
 {
 	switch(which)
 	{
@@ -2908,7 +2906,7 @@ INLINE void V810::SetSREG(v810_timestamp_t &timestamp, unsigned int which, uint3
 	}
 }
 
-INLINE uint32 V810::GetSREG(unsigned int which)
+INLINE uint32 V810VB::GetSREG(unsigned int which)
 {
 	uint32 ret;
 
@@ -2951,14 +2949,14 @@ INLINE uint32 V810::GetSREG(unsigned int which)
 #define RB_RDOP(PC_offset, ...) (*(uint16 *)&PC_ptr[PC_offset])
 #endif
 
-v810_timestamp_t V810::Run(int32 MDFN_FASTCALL (*event_handler)(const v810_timestamp_t timestamp))
+v810_timestamp_t V810VB::Run(int32 MDFN_FASTCALL (*event_handler)(const v810_timestamp_t timestamp))
 {
  Running = true;
 
  #define RB_ADDBT(n)
  #define RB_CPUHOOK(n)
 
- #include "../hw_cpu/v810/v810_oploop.inc"
+ #include "../hw_cpu/v810_vb/v810_oploop.inc"
 
  #undef RB_CPUHOOK
  #undef RB_ADDBT
@@ -2966,30 +2964,30 @@ v810_timestamp_t V810::Run(int32 MDFN_FASTCALL (*event_handler)(const v810_times
  return(v810_timestamp);
 }
 
-void V810::Exit(void)
+void V810VB::Exit(void)
 {
  Running = false;
 }
 
-uint32 V810::GetPC(void)
+uint32 V810VB::GetPC(void)
 {
  return(PC_ptr - PC_base);
 }
 
-void V810::SetPC(uint32 new_pc)
+void V810VB::SetPC(uint32 new_pc)
 {
  PC_ptr = &FastMap[new_pc >> V810_FAST_MAP_SHIFT][new_pc];
  PC_base = PC_ptr - new_pc;
 }
 
-uint32 V810::GetPR(const unsigned int which)
+uint32 V810VB::GetPR(const unsigned int which)
 {
  assert(which <= 0x1F);
 
  return(which ? P_REG[which] : 0);
 }
 
-void V810::SetPR(const unsigned int which, uint32 value)
+void V810VB::SetPR(const unsigned int which, uint32 value)
 {
  assert(which <= 0x1F);
 
@@ -2997,14 +2995,14 @@ void V810::SetPR(const unsigned int which, uint32 value)
   P_REG[which] = value;
 }
 
-uint32 V810::GetSR(const unsigned int which)
+uint32 V810VB::GetSR(const unsigned int which)
 {
  assert(which <= 0x1F);
 
  return(GetSREG(which));
 }
 
-void V810::SetSR(const unsigned int which, uint32 value)
+void V810VB::SetSR(const unsigned int which, uint32 value)
 {
  assert(which <= 0x1F);
 
@@ -3023,7 +3021,7 @@ void V810::SetSR(const unsigned int which, uint32 value)
 #define BSTR_OP_ORN dst_cache |= (((src_cache >> srcoff) & 1) ^ 1) << dstoff;
 #define BSTR_OP_ANDN dst_cache &= ~(((src_cache >> srcoff) & 1) << dstoff);
 
-INLINE uint32 V810::BSTR_RWORD(v810_timestamp_t &timestamp, uint32 A)
+INLINE uint32 V810VB::BSTR_RWORD(v810_timestamp_t &timestamp, uint32 A)
 {
  {
   uint32 ret;
@@ -3037,7 +3035,7 @@ INLINE uint32 V810::BSTR_RWORD(v810_timestamp_t &timestamp, uint32 A)
  }
 }
 
-INLINE void V810::BSTR_WWORD(v810_timestamp_t &timestamp, uint32 A, uint32 V)
+INLINE void V810VB::BSTR_WWORD(v810_timestamp_t &timestamp, uint32 A, uint32 V)
 {
  {
   timestamp += 2;
@@ -3087,7 +3085,7 @@ INLINE void V810::BSTR_WWORD(v810_timestamp_t &timestamp, uint32 A, uint32 V)
                  BSTR_WWORD(timestamp, dst, dst_cache);		\
 		}
 
-INLINE bool V810::Do_BSTR_Search(v810_timestamp_t &timestamp, const int inc_mul, unsigned int bit_test)
+INLINE bool V810VB::Do_BSTR_Search(v810_timestamp_t &timestamp, const int inc_mul, unsigned int bit_test)
 {
         uint32 srcoff = (P_REG[27] & 0x1F);
         uint32 len = P_REG[28];
@@ -3156,7 +3154,7 @@ INLINE bool V810::Do_BSTR_Search(v810_timestamp_t &timestamp, const int inc_mul,
         return((bool)len);      // Continue the search if any bits are left to search.
 }
 
-bool V810::bstr_subop(v810_timestamp_t &timestamp, int sub_op, int arg1)
+bool V810VB::bstr_subop(v810_timestamp_t &timestamp, int sub_op, int arg1)
 {
  if((sub_op >= 0x10) || (!(sub_op & 0x8) && sub_op >= 0x4))
  {
@@ -3214,7 +3212,7 @@ bool V810::bstr_subop(v810_timestamp_t &timestamp, int sub_op, int arg1)
  return(false);
 }
 
-INLINE void V810::SetFPUOPNonFPUFlags(uint32 result)
+INLINE void V810VB::SetFPUOPNonFPUFlags(uint32 result)
 {
                  // Now, handle flag setting
                  SetFlag(PSW_OV, 0);
@@ -3235,7 +3233,7 @@ INLINE void V810::SetFPUOPNonFPUFlags(uint32 result)
                  //printf("MEOW: %08x\n", S_REG[PSW] & (PSW_S | PSW_CY));
 }
 
-INLINE bool V810::CheckFPInputException(uint32 fpval)
+INLINE bool V810VB::CheckFPInputException(uint32 fpval)
 {
  // Zero isn't a subnormal! (OR IS IT *DUN DUN DUNNN* ;b)
  if(!(fpval & 0x7FFFFFFF))
@@ -3258,7 +3256,7 @@ INLINE bool V810::CheckFPInputException(uint32 fpval)
  return(false);	// No, no exception occurred.
 }
 
-bool V810::FPU_DoesExceptionKillResult(void)
+bool V810VB::FPU_DoesExceptionKillResult(void)
 {
  if(float_exception_flags & float_flag_invalid)
   return(true);
@@ -3280,7 +3278,7 @@ bool V810::FPU_DoesExceptionKillResult(void)
  return(false);
 }
 
-void V810::FPU_DoException(void)
+void V810VB::FPU_DoException(void)
 {
  if(float_exception_flags & float_flag_invalid)
  {
@@ -3331,7 +3329,7 @@ void V810::FPU_DoException(void)
  }
 }
 
-bool V810::IsSubnormal(uint32 fpval)
+bool V810VB::IsSubnormal(uint32 fpval)
 {
  if( ((fpval >> 23) & 0xFF) == 0 && (fpval & ((1 << 23) - 1)) )
   return(true);
@@ -3339,7 +3337,7 @@ bool V810::IsSubnormal(uint32 fpval)
  return(false);
 }
 
-INLINE void V810::FPU_Math_Template(float32 (*func)(float32, float32), uint32 arg1, uint32 arg2)
+INLINE void V810VB::FPU_Math_Template(float32 (*func)(float32, float32), uint32 arg1, uint32 arg2)
 {
  if(CheckFPInputException(P_REG[arg1]) || CheckFPInputException(P_REG[arg2]))
  {
@@ -3373,7 +3371,7 @@ INLINE void V810::FPU_Math_Template(float32 (*func)(float32, float32), uint32 ar
  }
 }
 
-void V810::fpu_subop(v810_timestamp_t &timestamp, int sub_op, int arg1, int arg2)
+void V810VB::fpu_subop(v810_timestamp_t &timestamp, int sub_op, int arg1, int arg2)
 {
  //printf("FPU: %02x\n", sub_op);
  if(VBMode)
@@ -3547,7 +3545,7 @@ void V810::fpu_subop(v810_timestamp_t &timestamp, int sub_op, int arg1, int arg2
 }
 
 // Generate exception
-void V810::Exception(uint32 handler, uint16 eCode) 
+void V810VB::Exception(uint32 handler, uint16 eCode) 
 {
  // Exception overhead is unknown.
 
@@ -3594,7 +3592,7 @@ void V810::Exception(uint32 handler, uint16 eCode)
     }
 }
 
-int V810::StateAction(StateMem *sm, int load, int data_only)
+int V810VB::StateAction(StateMem *sm, int load, int data_only)
 {
  uint32 PC_tmp = GetPC();
  SFORMAT StateRegs[] =

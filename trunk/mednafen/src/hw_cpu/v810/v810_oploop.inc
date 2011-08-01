@@ -28,6 +28,7 @@
     //#endif
 
     uint32 opcode;
+    uint32 tmp2;
     int val = 0;
 
 
@@ -41,7 +42,7 @@
 
      assert(timestamp_rl <= next_event_ts);
 
-     if(!IPendingCache)
+     if(!WillInterruptOccur())
      {
       if(Halted)
       {
@@ -57,7 +58,17 @@
 
      while(timestamp_rl < next_event_ts)
      {
+	if(ilevel >= 0)
+	{ 
+	 int temp_clocks = Int(ilevel);
+	 timestamp_rl += temp_clocks;	//ADDCLOCK(temp_clocks);
+	}
+
         P_REG[0] = 0; //Zero the Zero Reg!!!
+
+	//v810_timestamp = timestamp_rl;
+	RB_CPUHOOK(RB_GETPC());
+	//timestamp_rl = v810_timestamp;
 
 	{
 	 //printf("%08x\n", RB_GETPC());
@@ -68,14 +79,14 @@
 
 	  timestamp_rl = timestamp;
 	 }
-	 opcode = (tmpop >> 9) | IPendingCache;
+       	 opcode = tmpop >> 9;
+//printf("%02x\n", opcode >> 1);
+	static const void *const op_goto_table[128] =
+	{
+	 #include "v810_op_table.inc"
+	};
 
-        static const void *const op_goto_table[256] = //MDFN_SECTION("v810_core") =
-        {
-         #include "v810_op_table.inc"
-        };
-
-	goto *op_goto_table[opcode];
+	goto *op_goto_table[tmpop >> 9];
 
 	// Bit string subopcodes
         #define DO_AM_BSTR()							\
@@ -141,8 +152,7 @@
 
 	BEGIN_OP(MOV);
 	    ADDCLOCK(1);
-            //SetPREG(arg2, P_REG[arg1]);
-			asm("mr %[inreg],%[outreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg1]));
+            SetPREG(arg2, P_REG[arg1]);
 	END_OP();
 
 
@@ -153,8 +163,7 @@
              SetFlag(PSW_OV, ((P_REG[arg2]^(~P_REG[arg1]))&(P_REG[arg2]^temp))&0x80000000);
              SetFlag(PSW_CY, temp < P_REG[arg2]);
 
-             //SetPREG(arg2, temp);
-			 asm("mr %[inreg],%[outreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (temp));
+             SetPREG(arg2, temp);
 	     SetSZ(P_REG[arg2]);
 	END_OP();
 
@@ -166,8 +175,7 @@
              SetFlag(PSW_OV, ((P_REG[arg2]^P_REG[arg1])&(P_REG[arg2]^temp))&0x80000000);
              SetFlag(PSW_CY, temp > P_REG[arg2]);
 
-	     //SetPREG(arg2, temp);
-		 asm("mr %[inreg],%[outreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (temp));
+	     SetPREG(arg2, temp);
 	     SetSZ(P_REG[arg2]);
 	END_OP();
 
@@ -189,8 +197,7 @@
             // set CY before we destroy the regisrer info....
             SetFlag(PSW_CY, (val != 0) && ((P_REG[arg2] >> (32 - val))&0x01) );
 	    SetFlag(PSW_OV, FALSE);
-            //SetPREG(arg2, P_REG[arg2] << val);
-			asm("slw %[outreg],%[inreg],%[shiftreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg2]) , [shiftreg]"r" (val));
+            SetPREG(arg2, P_REG[arg2] << val);
 	    SetSZ(P_REG[arg2]);            
 	END_OP();
 			
@@ -200,8 +207,7 @@
             // set CY before we destroy the regisrer info....
             SetFlag(PSW_CY, (val) && ((P_REG[arg2] >> (val-1))&0x01));
 	    SetFlag(PSW_OV, FALSE);
-	    //SetPREG(arg2, P_REG[arg2] >> val);
-		asm("srw %[outreg],%[inreg],%[shiftreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg2]) , [shiftreg]"r" (val));
+	    SetPREG(arg2, P_REG[arg2] >> val);
 	    SetSZ(P_REG[arg2]);
 	END_OP();
 
@@ -211,6 +217,11 @@
 
             ADDCLOCK(3);
             RB_SETPC((P_REG[arg1] & 0xFFFFFFFE));
+	    if(RB_AccurateMode)
+	    {
+	     BRANCH_ALIGN_CHECK(PC);
+	    }
+	    RB_ADDBT(RB_GETPC());
 	END_OP();
 
 	BEGIN_OP(SAR);
@@ -220,32 +231,28 @@
 	    SetFlag(PSW_CY, (val) && ((P_REG[arg2]>>(val-1))&0x01) );
 	    SetFlag(PSW_OV, FALSE);
 
-	    //SetPREG(arg2, (uint32) ((int32)P_REG[arg2] >> val));
-		asm("sraw %[outreg],%[inreg],%[shiftreg]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg2]) , [shiftreg]"r" (val));
+	    SetPREG(arg2, (uint32) ((int32)P_REG[arg2] >> val));
             
 	    SetSZ(P_REG[arg2]);
 	END_OP();
 
 	BEGIN_OP(OR);
             ADDCLOCK(1);
-            //SetPREG(arg2, P_REG[arg1] | P_REG[arg2]);
-			asm("or %[outreg],%[inreg],%[inreg2]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg1]), [inreg2]"r" (P_REG[arg2]));
+            SetPREG(arg2, P_REG[arg1] | P_REG[arg2]);
 	    SetFlag(PSW_OV, FALSE);
 	    SetSZ(P_REG[arg2]);
 	END_OP();
 
 	BEGIN_OP(AND);
             ADDCLOCK(1);
-            //SetPREG(arg2, P_REG[arg1] & P_REG[arg2]);
-			asm("and %[outreg],%[inreg],%[inreg2]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg1]), [inreg2]"r" (P_REG[arg2]));
+            SetPREG(arg2, P_REG[arg1] & P_REG[arg2]);
 	    SetFlag(PSW_OV, FALSE);
 	    SetSZ(P_REG[arg2]);
 	END_OP();
 
 	BEGIN_OP(XOR);
             ADDCLOCK(1);
-	    //SetPREG(arg2, P_REG[arg1] ^ P_REG[arg2]);
-		asm("xor %[outreg],%[inreg],%[inreg2]" : [outreg]"=r" (P_REG[arg2]) : [inreg]"r" (P_REG[arg1]), [inreg2]"r" (P_REG[arg2]));
+	    SetPREG(arg2, P_REG[arg1] ^ P_REG[arg2]);
 	    SetFlag(PSW_OV, FALSE);
 	    SetSZ(P_REG[arg2]);
 	END_OP();
@@ -393,10 +400,10 @@
 	    {
              ADDCLOCK(1);
              S_REG[PSW] = S_REG[PSW] &~ PSW_ID;
-	     RecalcIPendingCache();
 	    }
 	    else
 	    {
+	     puts("EI");
 	     ADDCLOCK(1);
 	     RB_DECPCBY2();
              Exception(INVALID_OP_HANDLER_ADDR, ECODE_INVALID_OP);
@@ -412,10 +419,10 @@
             {
              ADDCLOCK(1);
              S_REG[PSW] |= PSW_ID;
-	     IPendingCache = 0;
 	    }
 	    else
             {
+	     puts("DI");
              ADDCLOCK(1);
 	     RB_DECPCBY2();
              Exception(INVALID_OP_HANDLER_ADDR, ECODE_INVALID_OP);
@@ -427,29 +434,19 @@
 	#define COND_BRANCH(cond)			\
 		if(cond) 				\
 		{ 					\
-		 IdleLoopTest(RB_GETPC(), RB_GETPC() + (sign_9(arg1) & 0xFFFFFFFE));			\
 		 ADDCLOCK(3);				\
 		 RB_PCRELCHANGE(sign_9(arg1) & 0xFFFFFFFE);	\
+		 if(RB_AccurateMode)			\
+		 {					\
+		  BRANCH_ALIGN_CHECK(PC);		\
+		 }					\
+		 RB_ADDBT(RB_GETPC());			\
 		}					\
 		else					\
 		{					\
-		 IdleLoopTest(RB_GETPC(), RB_GETPC() + 2);	\
 		 ADDCLOCK(1);				\
 		 RB_INCPCBY2();				\
 		}
-
-        #define COND_BRANCH_WAITSPECIAL(cond)           \
-                if(cond)                                \
-                {                                       \
-		 if(timestamp < next_event_ts) { timestamp = next_event_ts; }	\
-                 ADDCLOCK(3);                           \
-                 RB_PCRELCHANGE(sign_9(arg1) & 0xFFFFFFFE);     \
-                }                                       \
-                else                                    \
-                {                                       \
-                 ADDCLOCK(1);                           \
-                 RB_INCPCBY2();                         \
-                }
 
 	BEGIN_OP(BV);
 		COND_BRANCH(TESTCOND_V);
@@ -515,14 +512,22 @@
 	BEGIN_OP(JR);
             ADDCLOCK(3);
             RB_PCRELCHANGE(sign_26(arg1) & 0xFFFFFFFE);
-            IdleLoopAssault(RB_GETPC());
+            if(RB_AccurateMode)
+            {
+             BRANCH_ALIGN_CHECK(PC);
+            }
+            RB_ADDBT(RB_GETPC());
 	END_OP();
 
 	BEGIN_OP(JAL);
             ADDCLOCK(3);
 	    P_REG[31] = RB_GETPC() + 4;
             RB_PCRELCHANGE(sign_26(arg1) & 0xFFFFFFFE);
-	    IdleLoopAssault(RB_GETPC());
+            if(RB_AccurateMode)
+            {
+             BRANCH_ALIGN_CHECK(PC);
+            }
+            RB_ADDBT(RB_GETPC());
 	END_OP();
 
 	BEGIN_OP(MOVEA);
@@ -570,9 +575,8 @@
 	// LD.B
 	BEGIN_OP(LD_B);
 		        ADDCLOCK(1);
-			uint32 tmp2 = (sign_16(arg1)+P_REG[arg2])&0xFFFFFFFF;
+			tmp2 = (sign_16(arg1)+P_REG[arg2])&0xFFFFFFFF;
 			
-		        IdleLoopManslaughter(tmp2);
 			SetPREG(arg3, sign_8(MemRead8(timestamp, tmp2)));
 
 			//should be 3 clocks when executed alone, 2 when precedes another LD, or 1
@@ -594,10 +598,8 @@
 	// LD.H
 	BEGIN_OP(LD_H);
                         ADDCLOCK(1);
-			uint32 tmp2 = (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFE;
+			tmp2 = (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFE;
 		        SetPREG(arg3, sign_16(MemRead16(timestamp, tmp2)));
-
-			IdleLoopManslaughter(tmp2);
 
 		        if(lastop >= 0)
 			{
@@ -618,11 +620,27 @@
 	BEGIN_OP(LD_W);
                         ADDCLOCK(1);
 
-                        uint32 tmp2 = (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFC;
+                        tmp2 = (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFC;
 
-                         SetPREG(arg3, MemRead32(timestamp, tmp2));
-
-			IdleLoopManslaughter(tmp2);
+	                if(MemReadBus32[tmp2 >> 24])
+			{
+			 SetPREG(arg3, MemRead32(timestamp, tmp2));
+			
+			 if(lastop >= 0)
+			 {
+				if(lastop == LASTOP_LD)
+				{
+				 ADDCLOCK(1);
+				}
+				else
+				{
+				 ADDCLOCK(2);
+				}
+			 }
+			}
+			else
+			{
+                         SetPREG(arg3, MemRead16(timestamp, tmp2) | (MemRead16(timestamp, tmp2 | 2) << 16));
 
                          if(lastop >= 0)
                          {
@@ -635,15 +653,13 @@
 				 ADDCLOCK(4);
 				}
                          }
+			}
 			lastop = LASTOP_LD;
 	END_OP_SKIPLO();
 
 	// ST.B
 	BEGIN_OP(ST_B);
              ADDCLOCK(1);
-
-	     IdleLoopMurder();
-
              MemWrite8(timestamp, sign_16(arg2)+P_REG[arg3], P_REG[arg1] & 0xFF);
 
              if(lastop == LASTOP_ST)
@@ -657,8 +673,6 @@
 	BEGIN_OP(ST_H);
              ADDCLOCK(1);
 
-	     IdleLoopMurder();
-
              MemWrite16(timestamp, (sign_16(arg2)+P_REG[arg3])&0xFFFFFFFE, P_REG[arg1] & 0xFFFF);
 
              if(lastop == LASTOP_ST)
@@ -671,15 +685,26 @@
 	// ST.W
 	BEGIN_OP(ST_W);
              ADDCLOCK(1);
-  	     uint32 tmp2 = (sign_16(arg2)+P_REG[arg3]) & 0xFFFFFFFC;
+  	     tmp2 = (sign_16(arg2)+P_REG[arg3]) & 0xFFFFFFFC;
 
-	     IdleLoopMurder();
-
-             MemWrite32(timestamp, tmp2, P_REG[arg1]);
-
-             if(lastop == LASTOP_ST)
+	     if(MemWriteBus32[tmp2 >> 24])
 	     {
-	      ADDCLOCK(3);
+	      MemWrite32(timestamp, tmp2, P_REG[arg1]);
+
+              if(lastop == LASTOP_ST)
+	      {
+	       ADDCLOCK(1);
+	      }
+	     }
+	     else
+	     {
+              MemWrite16(timestamp, tmp2, P_REG[arg1] & 0xFFFF);
+              MemWrite16(timestamp, tmp2 | 2, P_REG[arg1] >> 16);
+
+              if(lastop == LASTOP_ST)
+	      {
+	       ADDCLOCK(3);
+	      }
 	     }
 	     lastop = LASTOP_ST;
 	END_OP_SKIPLO();
@@ -688,8 +713,7 @@
 	BEGIN_OP(IN_B);
 	    {
              ADDCLOCK(3);
-             SetPREG(arg3, MemRead8(timestamp, sign_16(arg1)+P_REG[arg2]));
-	     IdleLoopManslaughter(sign_16(arg1)+P_REG[arg2]);
+             SetPREG(arg3, IORead8(timestamp, sign_16(arg1)+P_REG[arg2]));
 	    }
 	    lastop = LASTOP_IN;
 	END_OP_SKIPLO();
@@ -699,8 +723,7 @@
 	BEGIN_OP(IN_H);
 	    {
              ADDCLOCK(3);
-             SetPREG(arg3, MemRead16(timestamp, (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFE));
-	     IdleLoopManslaughter((sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFE);
+             SetPREG(arg3, IORead16(timestamp, (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFE));
 	    }
 	    lastop = LASTOP_IN;
 	END_OP_SKIPLO();
@@ -708,12 +731,17 @@
 
 	// IN.W
 	BEGIN_OP(IN_W);
+	     if(IORead32)
+	     {
+              ADDCLOCK(3);
+              SetPREG(arg3, IORead32(timestamp, (sign_16(arg1)+P_REG[arg2]) & 0xFFFFFFFC));
+	     }
+	     else
 	     {
 	      uint32 eff_addr = (sign_16(arg1) + P_REG[arg2]) & 0xFFFFFFFC;
 
 	      ADDCLOCK(5);
-              SetPREG(arg3, MemRead32(timestamp, eff_addr));
-	      IdleLoopManslaughter(eff_addr);
+              SetPREG(arg3, IORead16(timestamp, eff_addr) | ((IORead16(timestamp, eff_addr | 2) << 16)));
 	     }
 	     lastop = LASTOP_IN;
 	END_OP_SKIPLO();
@@ -722,10 +750,7 @@
 	// OUT.B
 	BEGIN_OP(OUT_B);
              ADDCLOCK(1);
-
-	     IdleLoopMurder();
-
-             MemWrite8(timestamp, sign_16(arg2)+P_REG[arg3],P_REG[arg1]&0xFF);
+             IOWrite8(timestamp, sign_16(arg2)+P_REG[arg3],P_REG[arg1]&0xFF);
 
 	     if(lastop == LASTOP_OUT)
 	     {
@@ -738,10 +763,7 @@
 	// OUT.H
 	BEGIN_OP(OUT_H);
              ADDCLOCK(1);
-
-	     IdleLoopMurder();
-
-             MemWrite16(timestamp, (sign_16(arg2)+P_REG[arg3])&0xFFFFFFFE,P_REG[arg1]&0xFFFF);
+             IOWrite16(timestamp, (sign_16(arg2)+P_REG[arg3])&0xFFFFFFFE,P_REG[arg1]&0xFFFF);
 
              if(lastop == LASTOP_OUT)
              {
@@ -755,17 +777,25 @@
 	BEGIN_OP(OUT_W);
              ADDCLOCK(1);
 
-
-	     IdleLoopMurder();
-
+	     if(IOWrite32)
+              IOWrite32(timestamp, (sign_16(arg2)+P_REG[arg3])&0xFFFFFFFC,P_REG[arg1]);
+	     else
 	     {
 	      uint32 eff_addr = (sign_16(arg2)+P_REG[arg3])&0xFFFFFFFC;
-              MemWrite32(timestamp, eff_addr, P_REG[arg1]);
+              IOWrite16(timestamp, eff_addr, P_REG[arg1] & 0xFFFF);
+              IOWrite16(timestamp, eff_addr | 2, P_REG[arg1] >> 16);
 	     }
 
              if(lastop == LASTOP_OUT)
              {
-	      ADDCLOCK(3);
+	      if(IOWrite32)
+              {
+	       ADDCLOCK(1);
+	      }
+	      else
+	      {
+	       ADDCLOCK(3);
+	      }	      
              }
 	     lastop = LASTOP_OUT;
 	END_OP_SKIPLO();
@@ -789,8 +819,8 @@
             } else { 	//Read the EI Reg Interupt
                 RB_SETPC(S_REG[EIPC] & 0xFFFFFFFE);
                 S_REG[PSW] = S_REG[EIPSW];
-		RecalcIPendingCache();
             }
+            RB_ADDBT(RB_GETPC());
 	END_OP();
 
 	BEGIN_OP(MUL);
@@ -912,31 +942,6 @@
             //printf("Untested opcode: HALT\n");
 	END_OP();
 
-        BEGIN_OP(WAIT_BE);
-                COND_BRANCH_WAITSPECIAL(TESTCOND_E);
-        END_OP();
-
-        BEGIN_OP(WAIT_BNE);
-                COND_BRANCH_WAITSPECIAL(TESTCOND_NE);
-        END_OP();
-
-        BEGIN_OP(WAIT_BP);
-                COND_BRANCH_WAITSPECIAL(TESTCOND_P);
-        END_OP();
-
-        BEGIN_OP(WAIT_BL);
-                COND_BRANCH_WAITSPECIAL(TESTCOND_L);
-        END_OP();
-
-	BEGIN_OP(WAIT_BR);
-		COND_BRANCH_WAITSPECIAL(true);
-	END_OP();
-
-        BEGIN_OP(WAIT_BLT);
-                COND_BRANCH_WAITSPECIAL(TESTCOND_LT);
-        END_OP();
-
-
 	BEGIN_OP(TRAP);
             (void)arg2;         // arg2 is unused.
 
@@ -960,7 +965,10 @@
              addr = sign_16(arg1) + P_REG[arg2];
 	     addr &= ~3;
 
-	     tmp = MemRead16(timestamp, addr) | (MemRead16(timestamp, addr | 2) << 16);
+	     if(MemReadBus32[addr >> 24])
+	      tmp = MemRead32(timestamp, addr);
+	     else
+	      tmp = MemRead16(timestamp, addr) | (MemRead16(timestamp, addr | 2) << 16);
 
              compare_temp = P_REG[arg3] - tmp;
 
@@ -973,9 +981,13 @@
 	     else
 	      to_write = tmp;
 
-             MemWrite16(timestamp, addr, to_write & 0xFFFF);
-             MemWrite16(timestamp, addr | 2, to_write >> 16);
-
+	     if(MemWriteBus32[addr >> 24])
+	      MemWrite32(timestamp, addr, to_write);
+	     else
+	     {
+              MemWrite16(timestamp, addr, to_write & 0xFFFF);
+              MemWrite16(timestamp, addr | 2, to_write >> 16);
+	     }
 	     P_REG[arg3] = tmp;
 	    }
 
@@ -983,49 +995,10 @@
 
 	END_OP();
 
-
-
-	op_INT_HANDLER:
-	{
-	 int iNum = ilevel;
-
-	 S_REG[EIPC]  = GetPC();
-	 S_REG[EIPSW] = S_REG[PSW];
-
-	 SetPC(0xFFFFFE00 | (iNum << 4));
-    
-	 S_REG[ECR] = 0xFE00 | (iNum << 4);
-
-	 S_REG[PSW] |= PSW_EP;
-	 S_REG[PSW] |= PSW_ID;
-	 S_REG[PSW] &= ~PSW_AE;
-
-	 // Now, set need to set the interrupt enable level to he level that is being processed + 1,
-	 // saturating at 15.
-	 iNum++;
-
-	 if(iNum > 0x0F) 
-	  iNum = 0x0F;
-
-	 S_REG[PSW] &= ~PSW_IA;
-	 S_REG[PSW] |= iNum << 16;
-
-	 // Accepting an interrupt takes us out of normal HALT status, of course!
-	 Halted = HALT_NONE;
-
-	 // Invalidate our bitstring state(forces the instruction to be re-read, and the r/w buffers reloaded).
-	 in_bstr = FALSE;
-	 have_src_cache = FALSE;
-	 have_dst_cache = FALSE;
-
-	 IPendingCache = 0;
-
- 	 goto OpFinished;
-	}
-
-
 	BEGIN_OP(INVALID);
 	    RB_DECPCBY2();
+	    if(!RB_AccurateMode)
+	    {
 	     RB_SETPC(RB_GETPC());
 	     if((uint32)(RB_RDOP(0, 0) >> 9) != opcode)
 	     {
@@ -1037,6 +1010,13 @@
               Exception(INVALID_OP_HANDLER_ADDR, ECODE_INVALID_OP);
               CHECK_HALTED();
 	     }
+	    }
+	    else
+	    {
+	     ADDCLOCK(1);
+	     Exception(INVALID_OP_HANDLER_ADDR, ECODE_INVALID_OP);
+	     CHECK_HALTED();
+	    }
 	END_OP();
 
 	}

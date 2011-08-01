@@ -443,7 +443,6 @@ static RegGroupType MiscRegsGroup =
 
 void WSwan_MemoryKill(void)
 {
-#ifndef WII
  if((sram_size || eeprom_size) && !SkipSL)
  {
   std::vector<PtrLengthPair> EvilRams;
@@ -456,7 +455,6 @@ void WSwan_MemoryKill(void)
 
   MDFN_DumpToFile(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), 6, EvilRams);
  }
-#endif
 
  if(wsSRAM)
  {

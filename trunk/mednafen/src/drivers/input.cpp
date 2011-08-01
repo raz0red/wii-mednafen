@@ -34,6 +34,8 @@
 #include "cheat.h"
 #include "debugger.h"
 #include "help.h"
+#else
+#include "Emulators.h"
 #endif
 
 #include <math.h>
@@ -808,6 +810,7 @@ static uint32 ICDeadDelay = 0;
 
 static void UpdatePhysicalDeviceState(void)
 {
+#ifndef WII
   int mouse_x, mouse_y;
 
   MouseData[2] = SDL_GetMouseState(&mouse_x, &mouse_y);
@@ -825,6 +828,7 @@ static void UpdatePhysicalDeviceState(void)
 
   memcpy(keys, SDL_GetKeyState(0), MKK_COUNT);
   SDL_JoystickUpdate();
+#endif
 
   CurTicks = SDL_GetTicks();
 }
@@ -1371,7 +1375,17 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
   if(UpdateRapidFire)
     rapid = (rapid + 1) % (autofirefreq + 1);
 
+#ifdef WII
+  Emulator* emu = emuRegistry.getCurrentEmulator();
+  if( emu != NULL )
+  {
+    emu->updateControls();
+  }
+#endif
+
+#ifndef WII
   int RotateInput = -1;
+#endif
 
   // Do stuff here
   for(unsigned int x = 0; x < NumPorts; x++)
@@ -1381,6 +1395,7 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
 
     memset(PortData[x], 0, PortDataSize[x]);
 
+#ifndef WII
     if(IConfig != none)
       continue;
 
@@ -1413,6 +1428,15 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
           tptr[(bo & 0x7FFFFFFF) / 8] |= 1 << (bo & 7);
       }
     }
+#else
+    if( x == 0 )
+    {
+      uint8 *tptr = (uint8 *)PortData[x];
+      u16 padData = emuRegistry.getCurrentEmulator()->getPadData();
+      tptr[0] = padData & 0xFF;
+      tptr[1] = ( padData >> 8 ) & 0xFF;    
+    }
+#endif
 
     // Handle button exclusion!
     for(unsigned int butt = 0; butt < PortButtConfig[x].size(); butt++)
@@ -1434,6 +1458,7 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       }
     }
 
+#ifndef WII
     // Now, axis data...
     for(int tmi = 0; tmi < PortDevice[x]->NumInputs; tmi++)
     {
@@ -1458,9 +1483,12 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
         break;
       }
     }
+#endif
   }
 
+#ifndef WII
   memset(BarcodeWorldData, 0, sizeof(BarcodeWorldData));
+#endif
 }
 
 void InitGameInput(MDFNGI *gi)

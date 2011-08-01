@@ -75,6 +75,17 @@ static bool IsAbsolutePath(const char *path)
     }
 #endif
 
+#ifdef WII
+  int len = strlen(path);
+  for( int i = 0; i < 5 && i < len; i++ )
+  {
+    if( path[i] == ':' )
+    {
+      return TRUE;
+    }
+  }
+#endif
+
     return(FALSE);
 }
 

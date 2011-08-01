@@ -264,9 +264,6 @@ void VirtualBoy::updateControls()
       wii_analog_down( expRY, gcRY ) )
     result|=VB_R_DOWN;
 
-  // Always have to do this...
-  result|=0x0002;
-
   m_padData = result;
 }
 

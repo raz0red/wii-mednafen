@@ -212,7 +212,7 @@ MDFNSetting DriverSettings[] =
 #endif
 #endif
   ,"1", "1000" },
-  { "sound.rate", MDFNSF_NOFLAGS, gettext_noop("Specifies the sound playback rate, in frames per second(\"Hz\")."), NULL, MDFNST_UINT, "32000", "22050", "48000"},
+  { "sound.rate", MDFNSF_NOFLAGS, gettext_noop("Specifies the sound playback rate, in frames per second(\"Hz\")."), NULL, MDFNST_UINT, "48000", "22050", "48000"},
 
 #ifdef WANT_DEBUGGER
   { "debugger.autostepmode", MDFNSF_NOFLAGS, gettext_noop("Automatically go into the debugger's step mode after a game is loaded."), NULL, MDFNST_BOOL, "0" },
@@ -1588,10 +1588,7 @@ void MDFND_MidSync(const EmulateSpecStruct *espec)
   ers.AddEmuTime((espec->MasterCycles - espec->MasterCyclesALMS) / CurGameSpeed, false);
 
   UpdateSoundSync(espec->SoundBuf + (espec->SoundBufSizeALMS * CurGame->soundchan), espec->SoundBufSize - espec->SoundBufSizeALMS);
-
-#ifndef WII
   MDFND_UpdateInput(true, false);
-#endif
 }
 
 extern SDL_mutex *prerender_mutex;
@@ -1599,16 +1596,7 @@ extern SDL_mutex *prerender_mutex;
 void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
 {
   UpdateSoundSync(Buffer, Count);
-
-#ifndef WII
   MDFND_UpdateInput();
-#else
-  Emulator* emu = emuRegistry.getCurrentEmulator();
-  if( emu != NULL )
-  {
-    emu->updateControls();
-  }
-#endif
 
   if(surface)
   {

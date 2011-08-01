@@ -28,21 +28,46 @@
 
 SDL_Surface *screen = NULL;
 
-#define COPY_SCREEN                                                \
-  int indent = ( msurface->w - DisplayRect->w ) >> 1;              \
-  int topindent = ( msurface->h - DisplayRect->h ) >> 1;           \
-  int destPitch = screen->pitch/screen->format->BytesPerPixel;     \
-  int srcPitch = msurface->pitch32;                                \
-  int width = ( msurface->w - ( indent << 1 ) ) *                  \
-    screen->format->BytesPerPixel;                                 \
-  dest += screen->offset/screen->format->BytesPerPixel +           \
-    (destPitch * topindent) + indent;                              \
-  src += srcPitch * DisplayRect->y;                                \
-  for( int y = 0; y < DisplayRect->h; y++ )                        \
-  {                                                                \
-    memcpy( dest, src, width );                                    \
-    dest+=destPitch;                                               \
-    src+=srcPitch;                                                 \
+static void ScaleLineAvg8(u8 *Target, u8 *Source, int SrcWidth, int TgtWidth, float threshold);
+static void ScaleLineAvg16(u16 *Target, u16 *Source, int SrcWidth, int TgtWidth, float threshold);
+static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth, float threshold);
+
+#define COPY_SCREEN                                                 \
+  int indent = ( screen->w - DisplayRect->w ) >> 1;                 \
+  int topindent = ( screen->h - DisplayRect->h ) >> 1;              \
+  int destPitch = screen->pitch/screen->format->BytesPerPixel;      \
+  int srcPitch = msurface->pitch32;                                 \
+  int width = DisplayRect->w * screen->format->BytesPerPixel;       \
+  int bpp = screen->format->BytesPerPixel;                          \
+  dest += screen->offset/screen->format->BytesPerPixel +            \
+  (destPitch * topindent) + indent;                                 \
+  src += srcPitch * DisplayRect->y;                                 \
+  if( LineWidths[0].w == ~0 )                                       \
+  {                                                                 \
+    for( int y = 0; y < DisplayRect->h; y++ )                       \
+    {                                                               \
+      memcpy( dest, src, width );                                   \
+      dest+=destPitch;                                              \
+      src+=srcPitch;                                                \
+    }                                                               \
+  }                                                                 \
+  else                                                              \
+  {                                                                 \
+    for( int y = DisplayRect->y;                                    \
+         y < ( DisplayRect->h + DisplayRect->y ); y++ )             \
+    {                                                               \
+      if( LineWidths[y].w != DisplayRect->w )                       \
+      {                                                             \
+        scale( dest, src + LineWidths[y].x,                         \
+            LineWidths[y].w, DisplayRect->w, 0.5f );                \
+      }                                                             \
+      else                                                          \
+      {                                                             \
+        memcpy( dest, src, width );                                 \
+      }                                                             \
+      dest+=destPitch;                                              \
+      src+=srcPitch;                                                \
+    }                                                               \
   }
 
 int mednafen_skip_frame = 0;
@@ -54,28 +79,119 @@ void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN
   u8 bpp = emuRegistry.getCurrentEmulator()->getBpp();
   switch( bpp )
   {
-    case 8:
-      {
-        u8* dest = (u8*)screen->pixels;
-        u8* src = msurface->pixels8;
-        COPY_SCREEN
-      }
-      break;
-    case 16:
-      {
-        u16* dest = (u16*)screen->pixels;
-        u16* src = msurface->pixels16;
-        COPY_SCREEN
-      }
-      break;
-    default:
-      {
-        u32* dest = (u32*)screen->pixels;
-        u32* src = msurface->pixels;
-        COPY_SCREEN
-      }
-      break;
+  case 8:
+    {
+      u8* dest = (u8*)screen->pixels;
+      u8* src = msurface->pixels8;
+      void (*scale)(u8*,u8*,int,int,float) = ScaleLineAvg8;
+      COPY_SCREEN
+    }
+    break;
+  case 16:
+    {
+      u16* dest = (u16*)screen->pixels;
+      u16* src = msurface->pixels16;
+      void (*scale)(u16*,u16*,int,int,float) = ScaleLineAvg16;
+      COPY_SCREEN
+    }
+    break;
+  default:
+    {
+      u32* dest = (u32*)screen->pixels;
+      u32* src = msurface->pixels;
+      void (*scale)(u32*,u32*,int,int,float) = ScaleLineAvg32;
+      COPY_SCREEN
+    }
+    break;
   }
 
   SDL_Flip(screen); 
+}
+
+//
+// !!! SUPER LAME HACK !!! 
+// This is just temporary until I spend time to address the fact that PCE
+// can change resolution mid-frame.
+//
+
+#define average(a, b)  (((a)+(b))>>1)
+void ScaleLineAvg8(u8 *Target, u8 *Source, int SrcWidth, int TgtWidth, float threshold)
+{
+  int NumPixels = TgtWidth;						
+  int IntPart = SrcWidth / TgtWidth;	
+  int FractPart = SrcWidth % TgtWidth;
+  int Mid = TgtWidth * threshold;	    
+  int E = 0;									        
+  int skip;
+  u8 p;
+  skip = (TgtWidth < SrcWidth) ? 0 : TgtWidth / (2*SrcWidth) + 1;
+  NumPixels -= skip;
+  while (NumPixels-- > 0) {
+    p = *Source;		
+    if (E >= Mid)		
+      p = (u8)average(p, *(Source+1));
+    *Target++ = p;	
+    Source += IntPart;
+    E += FractPart;		
+    if (E >= TgtWidth) {
+      E -= TgtWidth;		
+      Source++;					
+    } 
+  } 
+  while (skip-- > 0)	
+    *Target++ = *Source;
+}
+
+void ScaleLineAvg16(u16 *Target, u16 *Source, int SrcWidth, int TgtWidth, float threshold)
+{
+  int NumPixels = TgtWidth;					
+  int IntPart = SrcWidth / TgtWidth;
+  int FractPart = SrcWidth % TgtWidth;
+  int Mid = TgtWidth * threshold;	    
+  int E = 0;									        
+  int skip;			
+  u16 p;				
+  skip = (TgtWidth < SrcWidth) ? 0 : TgtWidth / (2*SrcWidth) + 1;
+  NumPixels -= skip;
+  while (NumPixels-- > 0) {
+    p = *Source;								
+    if (E >= Mid)								
+      p = (u16)average(p, *(Source+1));		
+    *Target++ = p;						
+    Source += IntPart;				
+    E += FractPart;						
+    if (E >= TgtWidth) {			
+      E -= TgtWidth;					
+      Source++;								
+    }
+  } 
+  while (skip-- > 0)							
+    *Target++ = *Source;					
+}
+
+void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth, float threshold)
+{
+  int NumPixels = TgtWidth;						
+  int IntPart = SrcWidth / TgtWidth;	  
+  int FractPart = SrcWidth % TgtWidth;	
+  int Mid = TgtWidth * threshold;	      
+  int E = 0;									          
+  int skip;	
+  u32 p;		
+  skip = (TgtWidth < SrcWidth) ? 0 : TgtWidth / (2*SrcWidth) + 1;
+  NumPixels -= skip;
+  while (NumPixels-- > 0) {
+    p = *Source;					
+    if (E >= Mid)					
+      p = (u32)average(p, *(Source+1));	
+    *Target++ = p;					
+    Source += IntPart;			
+    E += FractPart;					
+    if (E >= TgtWidth) {		
+      E -= TgtWidth;				
+      Source++;							
+    }
+  }
+  while (skip-- > 0)			
+    *Target++ = *Source;	
 }
