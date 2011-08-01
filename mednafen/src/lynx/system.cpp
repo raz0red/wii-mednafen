@@ -279,11 +279,7 @@ static void Emulate(EmulateSpecStruct *espec)
   lynxie->mMikie->miksynth.volume(0.50);
  }
 
-#ifndef WII
  uint16 butt_data = chee[0] | (chee[1] << 8);
-#else
-  uint16 butt_data = emuRegistry.LynxEmu.getPadData();
-#endif
 
  lynxie->SetButtonData(butt_data);
 

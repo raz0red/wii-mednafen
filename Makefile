@@ -22,7 +22,7 @@ BUILD		:=	build
 DATA		:=	\
     src/wii/res/fonts \
     src/wii/res/gfx
-
+   
 SOURCES		:=	\
     mednafen/src \
     mednafen/src/compress \
@@ -42,6 +42,8 @@ SOURCES		:=	\
     mednafen/src/nes/input \
     mednafen/src/nes/ntsc \
     mednafen/src/nes/ppu \
+    mednafen/src/pcfx \
+    mednafen/src/pcfx/input \
     mednafen/src/vb \
     mednafen/src/wswan \
     mednafen/src/hw_cpu/v810 \
@@ -49,6 +51,7 @@ SOURCES		:=	\
     mednafen/src/hw_sound/gb_apu \
     mednafen/src/hw_sound/pce_psg \
     mednafen/src/hw_misc/arcade_card \
+    mednafen/src/hw_video/huc6270 \
     mednafen/src/mpcdec \
     mednafen/src/cdrom \
     mednafen/src/tremor \
@@ -66,6 +69,7 @@ SOURCES		:=	\
     src/wii/emulator/nes \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
+    src/wii/emulator/pcfx \
     src/wii/emulator/wswan   
 
 INCLUDES	:= \
@@ -74,6 +78,8 @@ INCLUDES	:= \
     mednafen/src/drivers \
     mednafen/src/hw_sound \
     mednafen/src/hw_misc \
+    mednafen/src/hw_cpu \
+    mednafen/src/hw_video \
     src/wii \
     src/wii/common \
     src/wii/common/netprint \
@@ -88,6 +94,7 @@ INCLUDES	:= \
     src/wii/emulator/nes \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
+    src/wii/emulator/pcfx \
     src/wii/emulator/wswan
 
 #---------------------------------------------------------------------------------

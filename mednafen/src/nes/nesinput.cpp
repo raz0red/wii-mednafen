@@ -641,11 +641,7 @@ static uint8 ReadFami4(int w, uint8 ret)
 
 static void UpdateGamepad(int w, void *data)
 {
-#ifndef WII
  joy[w] = *(uint8*)data;
-#else
-  joy[0] = emuRegistry.NesEmu.getPadData();
-#endif
 }
 
 static INPUTCFC FAMI4C = { ReadFami4,0,StrobeFami4,0,0,0, StateActionGPFC, 4, 1 };

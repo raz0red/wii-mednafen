@@ -1723,9 +1723,7 @@ static SFORMAT gbSaveGameStruct[] =
 
 static void CloseGame(void)
 {
-#ifndef WII
  gbWriteBatteryFile(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str());
-#endif
 
  if(gbRam != NULL) 
  {
@@ -2211,10 +2209,6 @@ static void Emulate(EmulateSpecStruct *espec)
  //{
  //  systemUpdateMotionSensor();
  //}
-
-#ifdef WII
-  *paddie = emuRegistry.GameBoyEmu.getPadData();
-#endif
 
  if(*paddie != gbJoymask)
  {

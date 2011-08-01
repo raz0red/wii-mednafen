@@ -78,15 +78,7 @@ void INPUT_Frame(void)
  {
   if(InputTypes[x] == 1)
   {
-    uint16 new_data;
-#ifndef WII
-   new_data = data_ptr[x][0] | (data_ptr[x][1] << 8);
-#else
-   if( x == 0 ) 
-     new_data = emuRegistry.PCEFastEmu.getPadData();
-   else
-     new_data = 0;
-#endif
+    uint16 new_data = data_ptr[x][0] | (data_ptr[x][1] << 8);
 
 #ifndef WII
    if((new_data & 0x1000) && !(pce_jp_data[x] & 0x1000))

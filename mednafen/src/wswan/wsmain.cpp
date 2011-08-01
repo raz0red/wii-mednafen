@@ -88,12 +88,8 @@ static void Emulate(EmulateSpecStruct *espec)
  if(espec->SoundFormatChanged)
   WSwan_SetSoundRate(espec->SoundRate);
 
-#ifndef WII
  uint16 butt_data = chee[0] | (chee[1] << 8);
  WSButtonStatus = butt_data;
-#else
-  WSButtonStatus = emuRegistry.WonderSwanEmu.getPadData();
-#endif
 
  MDFNMP_ApplyPeriodicCheats();
 

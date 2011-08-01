@@ -51,10 +51,7 @@
 #include <network.h>
 #include "net_print.h"  
 #endif
-
 #include "wii_mednafen.h"
-
-extern uint16 gbaPadData;
 
 static bool CPUInit(const std::string bios_fn);
 static void CPUReset(void);
@@ -590,10 +587,8 @@ static void CloseGame(void)
 {
  if(!pi)
  {
-#ifndef WII
   GBA_EEPROM_SaveFile(MDFN_MakeFName(MDFNMKF_SAV, 0, "eep").c_str());
   CPUWriteBatteryFile(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str());
-#endif
  }
 
  // Call CPUCleanUp() to deallocate memory AFTER the backup memory is saved.
@@ -3286,12 +3281,7 @@ static void Emulate(EmulateSpecStruct *espec)
  }
  #endif
 
-#ifndef WII
  padbufblah = padq[0] | (padq[1] << 8);
-#else
-  padbufblah = gbaPadData;
-#endif
-
  frameready = 0;
 
 HelloSkipper = espec->skip;

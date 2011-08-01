@@ -140,11 +140,7 @@ void VBINPUT_Write(v810_timestamp_t timestamp, uint32 A, uint8 V)
 }
   void VBINPUT_Frame(void)
   {
-#ifdef WII
-    PadData = emuRegistry.VirtualBoyEmu.getPadData();
-#else
     PadData = (MDFN_de16lsb(data_ptr) << 2) | 0x2;
-#endif
   }
 
   v810_timestamp_t VBINPUT_Update(const v810_timestamp_t timestamp)

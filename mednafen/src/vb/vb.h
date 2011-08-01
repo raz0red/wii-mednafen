@@ -2,7 +2,7 @@
 #define __VB_VB_H
 
 #include "../mednafen.h"
-#include "../hw_cpu/v810/v810_cpu.h"
+#include "../hw_cpu/v810_vb/v810_cpu.h"
 #include <trio/trio.h>
 
 namespace MDFN_IEN_VB

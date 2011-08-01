@@ -70,16 +70,3 @@
 
 
 #define DO_INVALID_AM(); DO_AM_UDEF();
-
-
-#define DO_WAIT_BE_AM();     DO_AM_III();
-#define DO_WAIT_BNE_AM();    DO_AM_III();
-
-#define DO_WAIT_BP_AM();    DO_AM_III();
-
-#define DO_WAIT_BL_AM();    DO_AM_III();
-
-#define DO_WAIT_BLT_AM();    DO_AM_III();
-
-#define DO_WAIT_BR_AM();    DO_AM_III();
-
