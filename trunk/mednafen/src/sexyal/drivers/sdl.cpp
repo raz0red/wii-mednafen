@@ -100,7 +100,6 @@ static void fillaudio(void *udata, uint8_t *stream, int len)
     {
       int maxcopy = tocopy;
 
-
       if((maxcopy + sw->BufferRead) > sw->RealBufferSize_Raw)
       {
         maxcopy = sw->RealBufferSize_Raw - sw->BufferRead;
@@ -260,7 +259,7 @@ static int Clear(SexyAL_device *device)
   return(1);
 }
 
-SexyAL_device* theDevice = NULL;
+static SexyAL_device* theDevice = NULL;
 
 static int RawClose(SexyAL_device *device)
 {
@@ -361,7 +360,7 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
   //#endif
 
   if(SDL_OpenAudio(&desired, &obtained) < 0)
-  {
+  { 
     puts(SDL_GetError());
     RawClose(device);
     return(0);
@@ -397,7 +396,7 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
   sw->EPMaxVal = obtained.samples; //8192;
 
   sw->BufferSize = (format->rate * buffering->ms / 1000) - obtained.samples * 2;
-
+ 
   if(sw->BufferSize < obtained.samples)
     sw->BufferSize = obtained.samples;
 

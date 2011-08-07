@@ -160,5 +160,5 @@ bool PCFX::isMultiRes()
 
 u8 PCFX::getBpp()
 {
-  return 32;
+  return PCFX_BPP;
 }

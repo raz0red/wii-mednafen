@@ -34,6 +34,7 @@ distribution.
 
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
+#include "wii_mednafen_snapshot.h"
 
 #include "Emulators.h"
 #include "../../../mednafen/src/md5.h"
@@ -63,23 +64,10 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   // Write out the current config
   wii_write_config();
 
+  // Set auto load/save state
+  MDFNI_SetSettingB( "autosave", wii_auto_load_save_state );
+
   bool succeeded = true;
-  char autosavename[WII_MAX_PATH] = "";
-
-  // Determine the name of the save file
-  if( wii_auto_save_state || wii_auto_load_state )
-  {
-    wii_snapshot_handle_get_name( romfile, autosavename );
-  }
-
-  // If a specific save file was not specified, and we are auto-loading 
-  // see if a save file exists
-  if( ( savefile == NULL ) &&
-      ( wii_auto_load_state && 
-        wii_check_snapshot( autosavename ) == 0 ) )
-  {
-    savefile = autosavename;
-  }        
 
   Emulator *emulator;
 
@@ -88,6 +76,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   {
     wii_cartridge_hash[0] = '\0'; // Reset the cartridge hash
     wii_cartridge_hash_with_header[0] = '\0';
+    wii_snapshot_reset(); // Reset snapshot related state
 
     emuRegistry.setCurrentEmulator( NULL ); // Reset the current emulator
     KillSound(); // Kill Sound?
@@ -147,7 +136,6 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
         else
         {
           succeeded = MDFNI_LoadState( savefile, NULL );                    
-
           if( !succeeded )
           {
             wii_set_status_message(
@@ -160,6 +148,9 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
 
   if( succeeded )
   {
+    // Reset status message count
+    wii_status_message_count = 0;
+
     int retVal = 1;
     if( !resume && !reset )
     {
@@ -178,11 +169,6 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
       // Start the emulator loop
       wii_mednafen_emu_loop( resume );            
 
-      // Auto save?
-      if( wii_auto_save_state )
-      {
-        wii_save_snapshot( autosavename, TRUE );
-      }        
     }
 
     // Store the name of the last rom (for resuming later)        

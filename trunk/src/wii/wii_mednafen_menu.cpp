@@ -24,6 +24,8 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
+#include "main.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -48,37 +50,21 @@ distribution.
 #include "net_print.h"  
 #endif
 
+// Mednafen external references
+extern MDFNGI *MDFNGameInfo;
+
 // Have we read the games list yet?
 static BOOL games_read = FALSE;
-// Have we read the save state list yet?
-static BOOL save_states_read = FALSE;
 // The index of the last rom that was run
 static s16 last_rom_index = 1;
-// Whether the save exists
-static BOOL saveexists = FALSE;
-// The last save name
-static char lastsavename[WII_MAX_PATH] = "";
 // The language menu
 static TREENODE *language_menu;
 // The current language index
 static u8 language_index = 0;
 
 // Forward refs
-static void wii_read_save_state_list( TREENODE *menu );
 static void wii_read_game_list( TREENODE *menu );
 static void read_lang_list( TREENODE *menu );
-
-/*
- * Saves the current games state to the specified save file
- *
- * savefile The name of the save file to write state to. If this value is NULL,
- *          the default save name for the last rom is used.
- */
-static void save_snapshot( const char *savefile, BOOL status_update )
-{
-  wii_save_snapshot( savefile, status_update );
-  lastsavename[0] = '\0'; // Force recheck of save state
-}
 
 /*
  * Loads the currently selected language
@@ -153,53 +139,40 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_LOAD_ROM, "Load game" );
   wii_add_child( wii_menu_root, child );
 
-  child = wii_create_tree_node( NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER, "" );
-  wii_add_child( wii_menu_root, child );
-
-  TREENODE *cart_settings = wii_create_tree_node( 
-    NODETYPE_CARTRIDGE_SETTINGS_CURRENT, "Cartridge settings (current cartridge)" );
-  wii_add_child( wii_menu_root, cart_settings );    
-
-  TREENODE *emulator_settings = wii_create_tree_node( 
-    NODETYPE_EMULATOR_SETTINGS, "Emulator settings" );                                                        
-  wii_add_child( wii_menu_root, emulator_settings );
-
-  child = wii_create_tree_node( NODETYPE_SPACER, "" );
-  wii_add_child( wii_menu_root, child );
-
   //
   // Save state management
   //
 
-  TREENODE *state = wii_create_tree_node( 
-    NODETYPE_SAVE_STATE_MANAGEMENT, "Save state management" );
-  wii_add_child( wii_menu_root, state );
+  child = wii_create_tree_node( NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER, "" );
+  wii_add_child( wii_menu_root, child );
+  
+  TREENODE* states = wii_create_tree_node( 
+    NODETYPE_CARTRIDGE_SAVE_STATES, "Save states" );
+  wii_add_child( wii_menu_root, states );
 
-  child = wii_create_tree_node( NODETYPE_AUTO_LOAD_STATE, 
-    "Auto load" );
-  wii_add_child( state, child );
-
-  child = wii_create_tree_node( NODETYPE_AUTO_SAVE_STATE, 
-    "Auto save" );
-  wii_add_child( state, child );
-
-  child = wii_create_tree_node( NODETYPE_SPACER, "" );
-  wii_add_child( state, child );
-
-  child = wii_create_tree_node( NODETYPE_LOAD_STATE, 
-    "Load saved state" );
-  wii_add_child( state, child );
+  child = wii_create_tree_node( 
+    NODETYPE_CARTRIDGE_SAVE_STATES_SLOT, "Slot" );
+  wii_add_child( states, child );
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
-  wii_add_child( state, child );
+  wii_add_child( states, child );
 
-  child = wii_create_tree_node( NODETYPE_SAVE_STATE, 
-    "Save state (current cartridge)" );
-  wii_add_child( state, child );
+  child = wii_create_tree_node( NODETYPE_SAVE_STATE, "Save state" );
+  wii_add_child( states, child );
 
-  child = wii_create_tree_node( NODETYPE_DELETE_STATE, 
-    "Delete saved state (current cartridge)" );
-  wii_add_child( state, child );
+  child = wii_create_tree_node( NODETYPE_LOAD_STATE, "Load state" );
+  wii_add_child( states, child );
+
+  TREENODE *cart_settings = wii_create_tree_node( 
+    NODETYPE_CARTRIDGE_SETTINGS_CURRENT, "Cartridge settings" );
+  wii_add_child( wii_menu_root, cart_settings );    
+
+  child = wii_create_tree_node( NODETYPE_EMULATOR_SETTINGS_SPACER, "" );
+  wii_add_child( wii_menu_root, child );
+
+  TREENODE *emulator_settings = wii_create_tree_node( 
+    NODETYPE_EMULATOR_SETTINGS, "Emulator settings" );                                                        
+  wii_add_child( wii_menu_root, emulator_settings );
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( wii_menu_root, child );
@@ -218,6 +191,15 @@ void wii_mednafen_menu_init()
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
+
+#if 0
+  child = wii_create_tree_node( NODETYPE_AUTO_LOAD_SAVE, 
+    "Auto load/save state" );
+  wii_add_child( advanced, child );  
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( advanced, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_DEBUG_MODE, 
     "Debug mode" );
@@ -261,12 +243,6 @@ void wii_menu_handle_get_header( TREENODE* menu, char *buffer )
         snprintf( buffer, WII_MENU_BUFF_SIZE, gettextmsg("Reading game list...") );                
       }
       break;
-    case NODETYPE_LOAD_STATE:
-      if( !save_states_read )
-      {
-        snprintf( buffer, WII_MENU_BUFF_SIZE, gettextmsg("Reading saved state list...") );                            
-      }
-      break;
     default:
       /* do nothing */
       break;
@@ -291,13 +267,6 @@ void wii_menu_handle_get_footer( TREENODE* menu, char *buffer )
           menu, "cartridge", "cartridges", buffer );
       }
       break;
-    case NODETYPE_LOAD_STATE:
-       if( save_states_read )
-       {
-        wii_get_list_footer( 
-          menu, "state save", "state saves", buffer );
-       }
-      break;
     default:
       break;
   }
@@ -320,6 +289,22 @@ void wii_menu_handle_get_node_name(
 
   switch( node->node_type )
   {
+    case NODETYPE_CARTRIDGE_SAVE_STATES_SLOT:
+      {
+        BOOL isLatest;
+        int current = wii_snapshot_current( &isLatest );
+        current++;
+        if( !isLatest )
+        {
+          snprintf( value, WII_MENU_BUFF_SIZE, "%d", current );
+        }
+        else
+        {
+          snprintf( value, WII_MENU_BUFF_SIZE, "%d (%s)", 
+            current, gettextmsg( "Latest" ) );
+        }
+      }
+      break;
     case NODETYPE_EMULATOR_SETTINGS:
       snprintf( 
         buffer, WII_MENU_BUFF_SIZE, "%s (%s)", 
@@ -333,14 +318,16 @@ void wii_menu_handle_get_node_name(
       break;
     case NODETYPE_DEBUG_MODE:
     case NODETYPE_TOP_MENU_EXIT:
-    case NODETYPE_AUTO_LOAD_STATE:
-    case NODETYPE_AUTO_SAVE_STATE:
     case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
+    case NODETYPE_AUTO_LOAD_SAVE:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_AUTO_LOAD_SAVE:
+            enabled = wii_auto_load_save_state;
+            break;
           case NODETYPE_VSYNC:
             enabled = ( wii_vsync == VSYNC_ENABLED );
             break;
@@ -352,12 +339,6 @@ void wii_menu_handle_get_node_name(
             break;
           case NODETYPE_TOP_MENU_EXIT:
             enabled = wii_top_menu_exit;
-            break;
-          case NODETYPE_AUTO_LOAD_STATE:
-            enabled = wii_auto_load_state;
-            break;
-          case NODETYPE_AUTO_SAVE_STATE:
-            enabled = wii_auto_save_state;
             break;
           default:
             /* do nothing */
@@ -407,19 +388,22 @@ void wii_menu_handle_select_node( TREENODE *node )
 
   if( node->node_type == NODETYPE_ROM ||
       node->node_type == NODETYPE_RESUME ||
-      node->node_type == NODETYPE_RESET ||
-      node->node_type == NODETYPE_STATE_SAVE )
+      node->node_type == NODETYPE_LOAD_STATE ||
+      node->node_type == NODETYPE_RESET )
   {   
     // Essentially blanks the screen
     wii_gx_push_callback( NULL, FALSE );
 
     switch( node->node_type )
     {
+      case NODETYPE_LOAD_STATE:
+        wii_start_snapshot();
+        break;
       case NODETYPE_ROM:            
         snprintf( 
           buff, sizeof(buff), "%s%s", wii_get_roms_dir(), node->name ); 
         last_rom_index = wii_menu_get_current_index();
-        wii_start_emulation( buff, NULL, false, false );
+        wii_start_emulation( buff, "", false, false );
         break;
       case NODETYPE_RESUME:
         wii_resume_emulation();
@@ -427,17 +411,11 @@ void wii_menu_handle_select_node( TREENODE *node )
       case NODETYPE_RESET:
         wii_reset_emulation();
         break;
-      case NODETYPE_STATE_SAVE:
-        snprintf( 
-          buff, sizeof(buff), "%s%s", wii_get_saves_dir(), node->name );  
-        wii_start_snapshot( buff );
-        break;
       default:
         /* do nothing */
         break;
     }
 
-    lastsavename[0] = '\0'; // Force recheck of save state
     wii_gx_pop_callback();
   }
   else
@@ -446,6 +424,12 @@ void wii_menu_handle_select_node( TREENODE *node )
 
     switch( node->node_type )
     {
+      case NODETYPE_SAVE_STATE:
+        wii_save_snapshot( NULL, TRUE );
+        break;
+      case NODETYPE_CARTRIDGE_SAVE_STATES_SLOT:
+        wii_snapshot_next();
+        break;
       case NODETYPE_SELECT_LANG:
         language_index++;
         if( language_index >= language_menu->child_count )
@@ -453,7 +437,10 @@ void wii_menu_handle_select_node( TREENODE *node )
           language_index = 0;
         }
         select_language();
-      break;
+        break;
+      case NODETYPE_AUTO_LOAD_SAVE:
+        wii_auto_load_save_state ^= 1;
+        break;
       case NODETYPE_TOP_MENU_EXIT:
         wii_top_menu_exit ^= 1;
         break;
@@ -466,20 +453,21 @@ void wii_menu_handle_select_node( TREENODE *node )
       case NODETYPE_FILTER:
         wii_filter ^= 1;
         break;
-      case NODETYPE_AUTO_LOAD_STATE:
-        wii_auto_load_state ^= 1;
-        break;
-      case NODETYPE_AUTO_SAVE_STATE:
-        wii_auto_save_state ^= 1;
-        break;
-      case NODETYPE_SAVE_STATE_MANAGEMENT:
       case NODETYPE_ADVANCED:
+      case NODETYPE_CARTRIDGE_SAVE_STATES:
       case NODETYPE_LOAD_ROM:               
         wii_menu_push( node );
         if( node->node_type == NODETYPE_LOAD_ROM )
         {
           wii_menu_move( node, last_rom_index );
         }
+        else if( node->node_type == NODETYPE_CARTRIDGE_SAVE_STATES )
+        {
+          // Initialize the "current" value prior to displaying
+          // the menu...
+          BOOL foo;
+          wii_snapshot_current( &foo );
+        }          
         break;
       case NODETYPE_CARTRIDGE_SETTINGS_CURRENT:
         {
@@ -509,19 +497,6 @@ void wii_menu_handle_select_node( TREENODE *node )
           }
         }
         break;
-      case NODETYPE_LOAD_STATE:
-        wii_menu_clear_children( node );
-        wii_menu_push( node );
-        save_states_read = FALSE;
-        break;
-      case NODETYPE_SAVE_STATE:
-        save_snapshot( NULL, TRUE );
-        lastsavename[0] = '\0'; // Force recheck of save state
-        break;
-      case NODETYPE_DELETE_STATE:
-        wii_delete_snapshot();
-        lastsavename[0] = '\0'; // Force recheck of save state
-        break;
       default:
         /* do nothing */
         break;
@@ -541,10 +516,14 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
 {
   switch( node->node_type )
   {
-    case NODETYPE_SAVE_STATE:
+    case NODETYPE_LOAD_STATE:
+      return wii_snapshot_current_exists();
     case NODETYPE_RESET:
     case NODETYPE_RESUME:
+    case NODETYPE_EMULATOR_SETTINGS_SPACER:
       return wii_last_rom != NULL;
+    case NODETYPE_CARTRIDGE_SAVE_STATES:
+      return wii_last_rom != NULL && MDFNGameInfo->StateAction != NULL;
     case NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER:
       {
         Emulator* emu = emuRegistry.getCurrentEmulator();
@@ -563,26 +542,12 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
           wii_last_rom != NULL;
       }
     case NODETYPE_EMULATOR_SETTINGS:
-    case NODETYPE_EMULATOR_SETTINGS_SPACER:
       {
         Emulator* emu = emuRegistry.getCurrentEmulator();
         return 
           emu != NULL && 
           emu->getMenuManager().getEmulatorMenu() != NULL;
       }
-    case NODETYPE_DELETE_STATE:
-      if( wii_last_rom != NULL )
-      {
-        char savename[WII_MAX_PATH] = "";
-        wii_snapshot_handle_get_name( wii_last_rom, savename );
-        if( lastsavename[0] == '\0' || strcmp( savename, lastsavename ) )
-        {
-          saveexists = Util_fileexists( savename );
-          Util_strlcpy( lastsavename, savename, WII_MAX_PATH );
-        }
-        return saveexists;
-      }
-      return FALSE;
     default:
       {
         Emulator* emu = emuRegistry.getCurrentEmulator();
@@ -604,7 +569,8 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
  */
 BOOL wii_menu_handle_is_node_selectable( TREENODE *node )
 {
-  if( node->node_type == NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER )
+  if( node->node_type == NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER ||      
+      node->node_type == NODETYPE_EMULATOR_SETTINGS_SPACER )
   {
     return FALSE;
   }
@@ -634,18 +600,6 @@ void wii_menu_handle_update( TREENODE *menu )
         UNLOCK_RENDER_MUTEX();
       }
       break;
-    case NODETYPE_LOAD_STATE:
-      if( !save_states_read )
-      {
-        LOCK_RENDER_MUTEX();
-
-        wii_read_save_state_list( menu );    
-        wii_menu_reset_indexes();    
-        wii_menu_move( menu, 1 );
-
-        UNLOCK_RENDER_MUTEX();
-      }
-      break;
     default:
       /* do nothing */
       break;
@@ -659,35 +613,26 @@ void wii_menu_handle_update( TREENODE *menu )
  */
 static void read_lang_list( TREENODE *menu )
 {
-  DIR_ITER *langdir = diropen( wii_get_lang_dir() );
+  DIR *langdir = opendir( wii_get_lang_dir() );
   if( langdir != NULL)
   {
-    struct stat statbuf;
+    struct dirent* entry = NULL;
     char ext[WII_MAX_PATH];
-    char filepath[WII_MAX_PATH];
-    while( dirnext( langdir, filepath, &statbuf ) == 0 )
+    while( ( entry = readdir( langdir ) ) != NULL )
     {               
-      if( strcmp( ".", filepath ) && strcmp( "..", filepath ) )
+      if( ( strcmp( ".", entry->d_name ) && strcmp( "..", entry->d_name ) ) &&
+          ( entry->d_type != DT_DIR ) )
       {				                
-        Util_getextension( filepath, ext );
-        if( !strcmp( ext, WII_LANG_EXT ) && !S_ISDIR( statbuf.st_mode ) )
+        Util_getextension( entry->d_name, ext );
+        if( !strcmp( ext, WII_LANG_EXT ) )
         {
-          char dirpart[WII_MAX_PATH];
-          char filepart[WII_MAX_PATH];
-          Util_splitpath( filepath, dirpart, filepart );
-
-          int idx = strlen(filepart) - strlen(WII_LANG_EXT) - 1;
-          if( idx > 0 )
-          {
-            filepart[ idx ] = '\0';
-            TREENODE *child = 
-              wii_create_tree_node( NODETYPE_LANG, filepart );
+          TREENODE *child = 
+              wii_create_tree_node( NODETYPE_LANG, entry->d_name );
             wii_add_child( menu, child );
-          }
-        }	
+        }
       }
     }
-    dirclose( langdir );
+    closedir( langdir );
   }
   else
   {
@@ -707,23 +652,22 @@ static void read_lang_list( TREENODE *menu )
  */
 static void wii_read_game_list( TREENODE *menu )
 {
-  DIR_ITER *romdir = diropen( wii_get_roms_dir() );
+  DIR *romdir = opendir( wii_get_roms_dir() );
   if( romdir != NULL)
   {
-    struct stat statbuf;
-    char filepath[WII_MAX_PATH];
-    while( dirnext( romdir, filepath, &statbuf ) == 0 )
+    struct dirent* entry = NULL;
+    while( ( entry = readdir( romdir ) ) != NULL )
     {               
-      if( ( strcmp( ".", filepath ) && strcmp( "..", filepath ) ) &&
-          !S_ISDIR( statbuf.st_mode ) )
+      if( ( strcmp( ".", entry->d_name ) && strcmp( "..", entry->d_name ) ) &&
+          ( entry->d_type != DT_DIR ) )
       {				                
         TREENODE *child = 
-          wii_create_tree_node( NODETYPE_ROM, filepath );
+          wii_create_tree_node( NODETYPE_ROM, entry->d_name );
 
         wii_add_child( menu, child );
       }
     }
-    dirclose( romdir );
+    closedir( romdir );
   }
   else
   {
@@ -735,52 +679,6 @@ static void wii_read_game_list( TREENODE *menu )
     sizeof(*(menu->children)), wii_menu_name_compare );
 
   games_read = 1;
-}
-
-/*
- * Reads the list of snapshots into the specified menu
- *
- * menu     The menu to read the snapshots into
- */
-static void wii_read_save_state_list( TREENODE *menu )
-{
-  DIR_ITER *ssdir = diropen( wii_get_saves_dir() );
-  if( ssdir != NULL)
-  {   
-    struct stat statbuf;
-    char ext[WII_MAX_PATH];
-    char filepath[WII_MAX_PATH];
-    while( dirnext( ssdir, filepath, &statbuf ) == 0 ) 
-    {            
-      if( strcmp( ".", filepath ) && strcmp( "..", filepath ) )
-      {			                
-        Util_getextension( filepath, ext );
-        if( !strcmp( ext, WII_SAVE_GAME_EXT ) && 
-            !S_ISDIR( statbuf.st_mode ) )
-        {
-          // TODO: Check to see if a rom exists for the snapshot
-          // TODO: Provide option to display cart info from 
-          //       header
-          TREENODE *child = 
-            wii_create_tree_node( NODETYPE_STATE_SAVE, filepath );
-
-          wii_add_child( menu, child );
-        }				
-      }
-    }
-
-    dirclose( ssdir );
-  }
-  else
-  {
-    wii_set_status_message( "Error opening state saves directory." );
-  }
-
-  // Sort the games list
-  qsort( menu->children, menu->child_count, 
-    sizeof(*(menu->children)), wii_menu_name_compare );
-
-  save_states_read = TRUE;
 }
 
 /*

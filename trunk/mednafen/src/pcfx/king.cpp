@@ -47,6 +47,10 @@
 #include "../video.h"
 #include "../clamp.h"
 
+#if PCFX_BPP==16
+#include "wii_sdl.h"
+#endif 
+
 #ifdef __MMX__
 #include <mmintrin.h>
 #endif
@@ -105,7 +109,11 @@ typedef struct
  uint32 interlaced_count;                /* Number of contiguous(set to 0 if interlacing is disabled) frame starts that happened
 					    with interlacing mode enabled.
 					 */
+#if PCFX_BPP==16
+ uint16 *LastField;	//[1024 * 256];
+#else
  uint32 *LastField;	//[1024 * 256];
+#endif
  MDFN_Rect LastLineWidths[256];
  //bool LastFieldValid = 0;
 
@@ -1764,9 +1772,13 @@ bool KING_Init(void)
 
  SCSICD_Init(SCSICD_PCFX, 3, &FXsbuf[0], &FXsbuf[1], 153600 * MDFN_GetSettingUI("pcfx.cdspeed"), 21477273, KING_CDIRQ, KING_StuffSubchannels);
 
-
+#if PCFX_BPP==16
+ if(!(fx_vce.LastField = (uint16 *)MDFN_calloc(1024 * 256, sizeof(uint16), _("Interlaced mode last field buffer"))))
+  return(0);
+#else
  if(!(fx_vce.LastField = (uint32 *)MDFN_calloc(1024 * 256, sizeof(uint32), _("Interlaced mode last field buffer"))))
   return(0);
+#endif
 
  return(1);
 }
@@ -1786,7 +1798,11 @@ void KING_Close(void)
 
 void KING_Reset(void)
 {
+#if PCFX_BPP==16
+ uint16 *lf_save = fx_vce.LastField;
+#else
  uint32 *lf_save = fx_vce.LastField;
+#endif
 
  memset(&fx_vce, 0, sizeof(fx_vce));
  memset(king, 0, sizeof(king_t));
@@ -2387,7 +2403,11 @@ static uint32 INLINE YUV888_TO_RGB888(uint32 yuv)
  g = clamp_to_u8(g);
  b = clamp_to_u8(b);
 
+#if PCFX_BPP==16
+ return wii_sdl_rgb( r, g, b );
+#else
  return((r << rs) | (g << gs) | (b << bs));
+#endif
 }
 
 static uint32 INLINE YUV888_TO_YCbCr888(uint32 yuv)
@@ -2663,7 +2683,11 @@ static void MixVDC(void)
 
 static void MixLayers(void)
 {
+#if PCFX_BPP==16
+ uint16 *pXBuf = surface->pixels16;
+#else
  uint32 *pXBuf = surface->pixels;
+#endif
 
     // Now we have to mix everything together... I'm scared, mommy.
     // We have, vdc_linebuffer[0] and bg_linebuffer
@@ -2713,7 +2737,11 @@ static void MixLayers(void)
      coeff_cache_v_back[x] = vce_rendercache.coefficient_mul_table_uv[(vce_rendercache.coefficients[x * 2 + 1] >> 0) & 0xF];
     }
 
+#if PCFX_BPP==16
+    uint16 *target;
+#else
     uint32 *target;
+#endif
     uint32 BPC_Cache = (LAYER_NONE << 28); // Backmost pixel color(cache)
 
     if(fx_vce.interlaced_count == 2)
@@ -2898,19 +2926,30 @@ static void MixLayers(void)
 
     if(fx_vce.interlaced_count == 2)
     {
+#if PCFX_BPP==16
+     uint16 *target2 = pXBuf + surface->pitch32 * ((fx_vce.raster_counter - 22) * 2 + (fx_vce.odd_field ^ 1));
+#else
      uint32 *target2 = pXBuf + surface->pitch32 * ((fx_vce.raster_counter - 22) * 2 + (fx_vce.odd_field ^ 1));
-
+#endif
      LineWidths[(fx_vce.raster_counter - 22) * 2 + fx_vce.odd_field] = *DisplayRect;
      LineWidths[(fx_vce.raster_counter - 22) * 2 + (fx_vce.odd_field ^ 1)] = fx_vce.LastLineWidths[fx_vce.raster_counter - 22];
 
+#if PCFX_BPP==16
+     memcpy(target2, &fx_vce.LastField[(fx_vce.raster_counter - 22) * 1024], 1024 * sizeof(uint16));
+#else
      memcpy(target2, &fx_vce.LastField[(fx_vce.raster_counter - 22) * 1024], 1024 * sizeof(uint32));
+#endif
     }
     else
      LineWidths[fx_vce.raster_counter - 22] = *DisplayRect;
 
     if(fx_vce.interlaced_count)
     {
+#if PCFX_BPP==16
+     memcpy(&fx_vce.LastField[(fx_vce.raster_counter - 22) * 1024], target, 1024 * sizeof(uint16));
+#else
      memcpy(&fx_vce.LastField[(fx_vce.raster_counter - 22) * 1024], target, 1024 * sizeof(uint32));
+#endif
      fx_vce.LastLineWidths[fx_vce.raster_counter - 22] = *DisplayRect;
     }
 

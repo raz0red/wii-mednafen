@@ -473,6 +473,12 @@ void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
  MDFNMP_AddRAM(wsRAMSize, 0x00000, wsRAM);
 
  if(sram_size)
+ {
+  wsSRAM = (uint8*)malloc(sram_size);
+  memset(wsSRAM, 0, sram_size);
+ }
+
+ if(sram_size)
   MDFNMP_AddRAM(sram_size, 0x10000, wsSRAM);
 
  #ifdef WANT_DEBUGGER
@@ -492,11 +498,13 @@ void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
  // WSwan_EEPROMInit() will also clear wsEEPROM
  WSwan_EEPROMInit(MDFN_GetSettingS("wswan.name").c_str(), byear, bmonth, bday, sex, blood);
 
+#if 0
  if(sram_size)
  {
   wsSRAM = (uint8*)malloc(sram_size);
   memset(wsSRAM, 0, sram_size);
  }
+#endif
 
  if((sram_size || eeprom_size) && !SkipSL)
  {

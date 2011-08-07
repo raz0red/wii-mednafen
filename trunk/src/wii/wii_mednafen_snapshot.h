@@ -34,6 +34,11 @@ distribution.
  *
  * savefile The name of the save file to load. 
  */
-extern BOOL wii_start_snapshot( char *savefile );
+extern BOOL wii_start_snapshot();
+
+extern void wii_snapshot_reset();
+extern int wii_snapshot_current( BOOL* isLatest );
+extern BOOL wii_snapshot_current_exists();
+extern int wii_snapshot_next();
 
 #endif

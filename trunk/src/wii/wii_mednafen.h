@@ -51,12 +51,10 @@ extern BOOL wii_debug;
 extern BOOL wii_filter;
 // Hardware buttons (reset, power, etc.)
 extern u8 wii_hw_button;
-// Auto load state?
-extern BOOL wii_auto_load_state;
-// Auto save state?
-extern BOOL wii_auto_save_state;
 // The current language
 extern char wii_language[WII_MAX_PATH];
+// Whether to auto load/save state
+extern BOOL wii_auto_load_save_state;
 
 /*
  * Returns the roms directory
@@ -64,13 +62,6 @@ extern char wii_language[WII_MAX_PATH];
  * return   The roms directory
  */
 extern char* wii_get_roms_dir();
-
-/*
- * Returns the saves directory
- *
- * return   The saves directory
- */
-extern char* wii_get_saves_dir();
 
 /*
  * Returns the lang directory
