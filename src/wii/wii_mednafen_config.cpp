@@ -47,14 +47,6 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_top_menu_exit = Util_sscandec( value );				
   }
-  else if( strcmp( name, "auto_load_state" ) == 0 )
-  {
-    wii_auto_load_state = Util_sscandec( value );				
-  }
-  else if( strcmp( name, "auto_save_state" ) == 0 )
-  {
-    wii_auto_save_state = Util_sscandec( value );				
-  }
   else if( strcmp( name, "sel_offset" ) == 0 )
   {
     wii_menu_sel_offset = Util_sscandec( value );
@@ -91,8 +83,6 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
 {
   fprintf( fp, "debug=%d\n", wii_debug );
   fprintf( fp, "top_menu_exit=%d\n", wii_top_menu_exit );
-  fprintf( fp, "auto_load_state=%d\n", wii_auto_load_state );
-  fprintf( fp, "auto_save_state=%d\n", wii_auto_save_state );
   fprintf( fp, "sel_offset=%d\n", wii_menu_sel_offset );    
   fprintf( fp, "mote_menu_vertical=%d\n", wii_mote_menu_vertical );  
   fprintf( fp, "video_filter=%d\n", wii_filter );

@@ -4,7 +4,7 @@
 #include "video.h"
 #include "state-common.h"
 
-void MDFNI_SelectState(int);
+StateStatusStruct* MDFNI_SelectState(int);
 
 /* "fname" overrides the default save state filename code if non-NULL. */
 /* If suffix is set, just override the default suffix(nc0-nc9) */

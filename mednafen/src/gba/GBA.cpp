@@ -3028,7 +3028,7 @@ void CPULoop(MDFN_Surface *surface, int ticks)
 #else
               uint8 *dest = surface->pixels8 + VCOUNT * surface->pitch32;
 #endif
-              uint32 *src = lineMix;
+              uint16 *src = lineMix; // Wii - This was changed to uint16...
               (*renderLine)();
               for(int x = 120; x; x--)
               {
@@ -3245,8 +3245,24 @@ void CPULoop(MDFN_Surface *surface, int ticks)
   }
 }
 
+MDFN_ALIGN(16) uint16 clearLine[240] = { 0 };
+MDFN_ALIGN(16) uint32 clearArray[240] = { 0 }; 
+
 static void Emulate(EmulateSpecStruct *espec)
 {
+  if( clearLine[0] == 0 )
+  {
+    for(int x = 0; x < 240; x++) {
+      clearLine[x] = 0x7fff;
+    }
+  }
+  if( clearArray[0] == 0 )
+  {
+    for(int x = 0; x < 240; x++) {
+      clearArray[x] = 0x80000000;
+    }
+  }
+
  espec->DisplayRect.x = 0;
  espec->DisplayRect.y = 0;
  espec->DisplayRect.w = 240;
@@ -3284,7 +3300,7 @@ static void Emulate(EmulateSpecStruct *espec)
  padbufblah = padq[0] | (padq[1] << 8);
  frameready = 0;
 
-HelloSkipper = espec->skip;
+ HelloSkipper = espec->skip;
 
  if(pi) HelloSkipper = 1;
 

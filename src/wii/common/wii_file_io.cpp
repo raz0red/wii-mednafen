@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2011
+Copyright (C) 2010
 raz0red (www.twitchasylum.com)
 
 This software is provided 'as-is', without any express or implied
@@ -26,35 +26,34 @@ distribution.
 #include <fat.h>
 #include <sdcard/wiisd_io.h>
 #include <ogc/usbstorage.h>
-
-#include "wii_app.h"
-#include "wii_file_io.h"
-#include "wii_filesystem.h"
+#include <sdl.h>
 
 #ifdef WII_NETTRACE
 #include <network.h>
 #include "net_print.h"  
 #endif
 
+#include "wii_app.h"
+
 // Is the file system mounted?
-static bool mounted = FALSE;
-IO::SD sd;
-IO::USB usb;
+static BOOL mounted = FALSE;
 
 /*
-* Unmounts the file system
-*/
+ * Unmounts the file system
+ */
 void wii_unmount()
 {
   if( mounted )
   {
     if( wii_is_usb )
     {
-      usb.Unmount();
+      fatUnmount( "usb:/" );
+      __io_usbstorage.shutdown(); 
     }
     else
     {
-      sd.Unmount();
+      fatUnmount( "sd:/" );
+      __io_wiisd.shutdown();
     }
 
     mounted = FALSE;
@@ -62,34 +61,73 @@ void wii_unmount()
 }
 
 /*
-* Mounts the file system
-*
-* return    Whether we mounted the file system successfully
-*/
-bool wii_mount()
+ * Mounts the file system
+ *
+ * return    Whether we mounted the file system successfully
+ */
+BOOL wii_mount()
 {
-  bool ret = false;
   if( !mounted )
   {
     if( wii_is_usb )
     {
-      usb.Startup();
-      mounted = usb.Mount();
+      if( !__io_usbstorage.startup() || 
+          !fatMountSimple( "usb", &__io_usbstorage ) )
+      {
+        return FALSE;
+      }
     }
     else
     {
-      mounted = sd.Mount();
+      if( !__io_wiisd.startup() || 
+          !fatMountSimple( "sd", &__io_wiisd ) )
+      {
+        return FALSE;
+      }
     }
+
+    chdir( wii_get_app_path() );
+
+    mounted = TRUE;
   }
 
-  return mounted;
+  return TRUE;
 }
 
-/*
-* Remounts the file system
-*/
-void wii_remount()
+static u32 lastKeepAlive = 0;
+static u32 keepAliveCount = 0;
+static char keepAliveFile[WII_MAX_PATH] = "";
+#define KEEP_ALIVE (60 * 1000 * 5)
+
+void wii_usb_keepalive()
 {
-  wii_unmount();
-  wii_mount();    
+#if 0
+  if( wii_is_usb )
+  {
+    if( keepAliveFile[0] == '\0' )
+    {
+      wii_get_app_relative( "usb.tmp", keepAliveFile );
+    }
+
+    u32 time = SDL_GetTicks();
+    if( ( time - lastKeepAlive ) > KEEP_ALIVE )
+    {
+      lastKeepAlive = time;
+      keepAliveCount++;
+      keepAliveCount %= 100;
+      FILE* f = fopen( keepAliveFile, "w" );
+      BOOL success = 0;
+      if( f )
+      {
+        fputc( keepAliveCount, f );
+        fclose( f );
+        success = 1;
+      }
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, 
+        "usb keepalive:%s, %d\n", keepAliveFile, success );  
+#endif
+    }
+  }
+#endif
 }

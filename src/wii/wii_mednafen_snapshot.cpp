@@ -25,6 +25,7 @@ distribution.
 */
 
 #include "main.h"
+#include "../../mednafen/src/general.h"
 
 #include <stdio.h>
 
@@ -36,97 +37,113 @@ distribution.
 #include "wii_mednafen_main.h"
 
 // Mednafen externs
-extern volatile MDFN_Surface *VTBuffer[2];
-extern MDFN_Rect VTDisplayRects[2];
-extern MDFN_Rect *VTLineWidths[2];
+extern volatile MDFN_Surface *VTReady;
+extern volatile MDFN_Rect *VTLWReady;
+extern volatile MDFN_Rect *VTDRReady;
 
-/*
- * Determines the save name for the specified rom file
- *
- * romfile  The name of the rom file
- * buffer   The buffer to write the save name to
- */
+static StateStatusStruct* stateStatus = NULL;
+
+void wii_snapshot_reset()
+{
+  if( stateStatus != NULL ) 
+  {
+    StateStatusStruct *ss = stateStatus;
+    stateStatus = NULL;
+    if( ss->gfx != NULL )
+    {
+      free( ss->gfx );
+    }
+    free( ss );    
+  }
+}
+
+int wii_snapshot_current( BOOL* isLatest )
+{
+  *isLatest = FALSE;
+  if( stateStatus == NULL )
+  {
+    stateStatus = MDFNI_SelectState( 0 );
+  }
+
+  if( stateStatus != NULL )
+  {
+    int curr = stateStatus->current;
+    *isLatest = (       
+      ( curr == stateStatus->recently_saved ) &&
+      stateStatus->status[stateStatus->current] );
+    return curr;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+BOOL wii_snapshot_current_exists()
+{
+  return stateStatus != NULL &&
+    stateStatus->status[stateStatus->current];
+}
+
+static void refresh()
+{
+  if( stateStatus != NULL )
+  {
+    int index = stateStatus->current;
+    wii_snapshot_reset();
+    stateStatus = MDFNI_SelectState( index );
+  }
+}
+
+int wii_snapshot_next()
+{
+  int nextState = stateStatus != NULL? 
+    ( stateStatus->current + 1 ) : 0;
+
+  if( nextState == 10 )
+  {
+    nextState = 0;
+  }
+ 
+  wii_snapshot_reset();
+  stateStatus = MDFNI_SelectState( nextState );
+}
+
 extern "C" void wii_snapshot_handle_get_name( 
   const char *romfile, char *buffer )
 {
-  char filename[WII_MAX_PATH];            
-  Util_splitpath( romfile, NULL, filename );
-  snprintf( buffer, WII_MAX_PATH, "%s%s.%s",  
-    wii_get_saves_dir(), filename, WII_SAVE_GAME_EXT );
+  Util_strlcpy( 
+    buffer, 
+    MDFN_MakeFName(MDFNMKF_STATE,stateStatus->current,NULL).c_str(),
+    WII_MAX_PATH );
 }
 
-/*
- * Saves with the specified save name
- *
- * filename   The name of the save file
- * return     Whether the save was successful
- */
 extern "C" BOOL wii_snapshot_handle_save( char* filename )
-{
-  return
+{  
+  BOOL success = 
     MDFNI_SaveState(
-      filename, 
-      NULL, 
-      (const MDFN_Surface*)VTBuffer[0], 
-      NULL, 
-      NULL );
+      filename, NULL, 
+      (const MDFN_Surface*)VTReady, 
+      (const MDFN_Rect*)VTDRReady,       
+      (const MDFN_Rect*)VTLWReady );
+  if( success )
+  {
+    refresh();
+  }
 }
 
-/*
- * Starts the emulator for the specified snapshot file.
- *
- * savefile The name of the save file to load. 
- */
-BOOL wii_start_snapshot( char *savefile )
+BOOL wii_start_snapshot()
 {
-  BOOL succeeded = FALSE;
-  BOOL seterror = FALSE;
-
-  // Determine the extension
-  char ext[WII_MAX_PATH];
-  Util_getextension( savefile, ext );
-
-  if( !strcmp( ext, WII_SAVE_GAME_EXT ) )
+  BOOL succeeded = MDFNI_LoadState( NULL, NULL );                    
+  if( !succeeded )
   {
-    char savename[WII_MAX_PATH];
-
-    // Get the save name (without extension)
-    Util_splitpath( savefile, NULL, savename );
-
-    int namelen = strlen( savename );
-    int extlen = strlen( WII_SAVE_GAME_EXT );
-
-    if( namelen > extlen )
-    {
-      // build the associated rom name
-      savename[namelen - extlen - 1] = '\0';
-
-      char romfile[WII_MAX_PATH];
-      snprintf( romfile, WII_MAX_PATH, "%s%s", wii_get_roms_dir(), savename );
-
-      int exists = Util_fileexists( romfile );
-
-      // Ensure the rom exists
-      if( !exists )            
-      {
-        wii_set_status_message(
-          "Unable to find associated ROM file." );                
-        seterror = TRUE;
-      }
-      else
-      {
-        // launch the emulator for the save
-        wii_start_emulation( romfile, savefile );
-        succeeded = TRUE;
-      }
-    }
+    wii_set_status_message(
+      "Error loading the specified save state file." );                
+  }
+  else
+  {
+    wii_resume_emulation(); 
   }
 
-  if( !succeeded && !seterror )
-  {
-    wii_set_status_message( 
-      "The file selected is not a valid saved state file." );    
-  }
-
-  return succeeded;
+  return TRUE;
 }

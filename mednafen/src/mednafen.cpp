@@ -111,7 +111,7 @@ static MDFNSetting MednafenSettings[] =
 #ifndef WII
   { "filesys.disablesavegz", MDFNSF_NOFLAGS, gettext_noop("Disable gzip compression when saving save states and backup memory."), NULL, MDFNST_BOOL, "0" },
 #else
-  { "filesys.disablesavegz", MDFNSF_NOFLAGS, gettext_noop("Disable gzip compression when saving save states and backup memory."), NULL, MDFNST_BOOL, "1" },
+  { "filesys.disablesavegz", MDFNSF_NOFLAGS, gettext_noop("Disable gzip compression when saving save states and backup memory."), NULL, MDFNST_BOOL, "0" },
 #endif
   { "qtrecord.w_double_threshold", MDFNSF_NOFLAGS, gettext_noop("Double the raw image's width if it's below this threshold."), NULL, MDFNST_UINT, "384", "0", "1073741824" },
   { "qtrecord.h_double_threshold", MDFNSF_NOFLAGS, gettext_noop("Double the raw image's height if it's below this threshold."), NULL, MDFNST_UINT, "256", "0", "1073741824" },
@@ -354,7 +354,9 @@ void MDFNI_StopAVRecord(void)
   extern MDFNGI EmulatedSMS, EmulatedGG;
 #endif
 
+#ifndef WII
   extern MDFNGI EmulatedCDPlay;
+#endif 
 
   std::vector<MDFNGI *> MDFNSystems;
   static std::list<MDFNGI *> MDFNSystemsPrio;
@@ -896,7 +898,9 @@ void MDFNI_StopAVRecord(void)
       &EmulatedGG,
 #endif
 
+#ifndef WII
       &EmulatedCDPlay
+#endif
     };
     std::string i_modules_string, e_modules_string;
 

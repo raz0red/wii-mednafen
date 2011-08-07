@@ -449,8 +449,7 @@ static void wii_menu_render( TREENODE *menu )
         BOOL hasValue = value[0] != '\0';
         
         snprintf( buffer2, WII_MENU_BUFF_SIZE, "%s%s", 
-          ( node->node_type != NODETYPE_STATE_SAVE && 
-            node->node_type != NODETYPE_ROM ?
+          ( node->node_type != NODETYPE_ROM ?
               gettextmsg( buffer ) :
               buffer ), 
           hasValue ? " " : "" );

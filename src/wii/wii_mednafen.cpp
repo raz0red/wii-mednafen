@@ -52,10 +52,8 @@ char wii_cartridge_hash_with_header[33];
 BOOL wii_debug = FALSE;
 // Whether to filter the display
 BOOL wii_filter = FALSE;
-// Auto save state?
-BOOL wii_auto_save_state = FALSE;
-// Auto load state?
-BOOL wii_auto_load_state = TRUE;
+// Whether to auto load/save state
+BOOL wii_auto_load_save_state = FALSE;
 // The current language
 char wii_language[WII_MAX_PATH] = "";
 
@@ -127,25 +125,6 @@ char* wii_get_roms_dir()
   }
 
   return roms_dir;
-}
-
-// The saves dir
-static char saves_dir[WII_MAX_PATH] = "";
-
-/*
- * Returns the saves directory
- *
- * return   The saves directory
- */
-char* wii_get_saves_dir()
-{
-  if( saves_dir[0] == '\0' )
-  {
-    snprintf( 
-      saves_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_SAVES_DIR );
-  }
-
-  return saves_dir;
 }
 
 // The lang dir

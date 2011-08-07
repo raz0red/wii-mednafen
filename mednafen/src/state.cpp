@@ -34,6 +34,11 @@
 #include "netplay.h"
 #endif
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 static int SaveStateStatus[10];
 
 #define RLSB 		MDFNSTATE_RLSB	//0x80000000
@@ -540,101 +545,105 @@ int MDFNSS_StateAction(StateMem *st, int load, int data_only, SFORMAT *sf, const
 
 int MDFNSS_SaveSM(StateMem *st, int wantpreview, int data_only, const MDFN_Surface *surface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)
 {
-        static uint8 header[32]="MEDNAFENSVESTATE";
-	int neowidth = 0, neoheight = 0;
+  static uint8 header[32]="MEDNAFENSVESTATE";
+  int neowidth = 0, neoheight = 0;
 
-	if(wantpreview)
-	{
-	 bool is_multires = FALSE;
+#ifndef WII
+  if(wantpreview)
+  {
+    bool is_multires = FALSE;
 
-	 // We'll want to use the nominal width if the source rectangle is > 25% off on either axis, or the source image has
-	 // multiple horizontal resolutions.
-	 neowidth = MDFNGameInfo->nominal_width;
-	 neoheight = MDFNGameInfo->nominal_height;
+    // We'll want to use the nominal width if the source rectangle is > 25% off on either axis, or the source image has
+    // multiple horizontal resolutions.
+    neowidth = MDFNGameInfo->nominal_width;
+    neoheight = MDFNGameInfo->nominal_height;
 
-	 if(LineWidths[0].w != ~0)
- 	 {
-	  uint32 first_w = LineWidths[DisplayRect->y].w;
+    if(LineWidths[0].w != ~0)
+    {
+      uint32 first_w = LineWidths[DisplayRect->y].w;
 
-	  for(int y = 0; y < DisplayRect->h; y++)
-	   if(LineWidths[DisplayRect->y + y].w != first_w)
-	   {
-	    puts("Multires!");
-	    is_multires = TRUE;
-	   }
-	 }
-
-	 if(!is_multires)
-	 {
-	  if(((double)DisplayRect->w / MDFNGameInfo->nominal_width) > 0.75  && ((double)DisplayRect->w / MDFNGameInfo->nominal_width) < 1.25)
-	   neowidth = DisplayRect->w;
-
-          if(((double)DisplayRect->h / MDFNGameInfo->nominal_height) > 0.75  && ((double)DisplayRect->h / MDFNGameInfo->nominal_height) < 1.25)
-	   neoheight = DisplayRect->h;
-	 }
-	}
-
-	if(!data_only)
-	{
-         memset(header+16,0,16);
-	 MDFN_en32lsb(header + 16, MEDNAFEN_VERSION_NUMERIC);
-	 MDFN_en32lsb(header + 24, neowidth);
-	 MDFN_en32lsb(header + 28, neoheight);
-	 smem_write(st, header, 32);
-	}
-
-	if(wantpreview)
-	{
-         uint8 *previewbuffer = (uint8 *)malloc(4 * neowidth * neoheight);
-	 MDFN_Surface *dest_surface = new MDFN_Surface((uint32 *)previewbuffer, neowidth, neoheight, neowidth, surface->format);
-	 MDFN_Rect dest_rect;
-
-	 dest_rect.x = 0;
-	 dest_rect.y = 0;
-	 dest_rect.w = neowidth;
-	 dest_rect.h = neoheight;
-
-	 MDFN_ResizeSurface(surface, DisplayRect, (LineWidths[0].w != ~0) ? LineWidths : NULL, dest_surface, &dest_rect);
-
-	 {
-	  uint32 a, b = 0;
-	  for(a = 0; a < neowidth * neoheight * 4; a+=4)
-	  {
-	   uint32 c = *(uint32 *)&previewbuffer[a];
-	   int nr, ng, nb;
-
-	   surface->DecodeColor(c, nr, ng, nb);
-
-	   previewbuffer[b + 0] = nr;
-	   previewbuffer[b + 1] = ng;
-           previewbuffer[b + 2] = nb;
-	   b += 3;
-	  }
-	 }
-
-         smem_write(st, previewbuffer, 3 * neowidth * neoheight);
-
-	 free(previewbuffer);
-	 delete dest_surface;
-	}
-
-        // State rewinding code path hack, FIXME
-        if(data_only)
+      for(int y = 0; y < DisplayRect->h; y++)
+        if(LineWidths[DisplayRect->y + y].w != first_w)
         {
-         if(!MDFN_RawInputStateAction(st, 0, data_only))
-          return(0);
+          puts("Multires!");
+          is_multires = TRUE;
         }
+    }
 
-	if(!MDFNGameInfo->StateAction(st, 0, data_only))
-	 return(0);
+    if(!is_multires)
+    {
+      if(((double)DisplayRect->w / MDFNGameInfo->nominal_width) > 0.75  && ((double)DisplayRect->w / MDFNGameInfo->nominal_width) < 1.25)
+        neowidth = DisplayRect->w;
 
-	if(!data_only)
-	{
-	 uint32 sizy = smem_tell(st);
-	 smem_seek(st, 16 + 4, SEEK_SET);
-	 smem_write32le(st, sizy);
-	}
-	return(1);
+      if(((double)DisplayRect->h / MDFNGameInfo->nominal_height) > 0.75  && ((double)DisplayRect->h / MDFNGameInfo->nominal_height) < 1.25)
+        neoheight = DisplayRect->h;
+    }
+  }
+#endif
+
+  if(!data_only)
+  {
+    memset(header+16,0,16);
+    MDFN_en32lsb(header + 16, MEDNAFEN_VERSION_NUMERIC);
+    MDFN_en32lsb(header + 24, neowidth);
+    MDFN_en32lsb(header + 28, neoheight);
+    smem_write(st, header, 32);
+  }
+
+#ifndef WII
+  if(wantpreview)
+  {
+    uint8 *previewbuffer = (uint8 *)malloc(4 * neowidth * neoheight);
+    MDFN_Surface *dest_surface = new MDFN_Surface((uint32 *)previewbuffer, neowidth, neoheight, neowidth, surface->format);
+    MDFN_Rect dest_rect;
+
+    dest_rect.x = 0;
+    dest_rect.y = 0;
+    dest_rect.w = neowidth;
+    dest_rect.h = neoheight;
+
+    MDFN_ResizeSurface(surface, DisplayRect, (LineWidths[0].w != ~0) ? LineWidths : NULL, dest_surface, &dest_rect);
+
+    {
+      uint32 a, b = 0;
+      for(a = 0; a < neowidth * neoheight * 4; a+=4)
+      {
+        uint32 c = *(uint32 *)&previewbuffer[a];
+        int nr, ng, nb;
+
+        surface->DecodeColor(c, nr, ng, nb);
+
+        previewbuffer[b + 0] = nr;
+        previewbuffer[b + 1] = ng;
+        previewbuffer[b + 2] = nb;
+        b += 3;
+      }
+    }
+
+    smem_write(st, previewbuffer, 3 * neowidth * neoheight);
+
+    free(previewbuffer);
+    delete dest_surface;
+  }
+#endif
+
+  // State rewinding code path hack, FIXME
+  if(data_only)
+  {
+    if(!MDFN_RawInputStateAction(st, 0, data_only))
+      return(0);
+  }
+
+  if(!MDFNGameInfo->StateAction(st, 0, data_only))
+    return(0);
+
+  if(!data_only)
+  {
+    uint32 sizy = smem_tell(st);
+    smem_seek(st, 16 + 4, SEEK_SET);
+    smem_write32le(st, sizy);
+  }
+  return(1);
 }
 
 int MDFNSS_Save(const char *fname, const char *suffix, const MDFN_Surface *surface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)
@@ -866,11 +875,15 @@ void MDFNSS_CheckStates(void)
 void MDFNSS_GetStateInfo(const char *filename, StateStatusStruct *status)
 {
  gzFile fp;
- uint32 StateShowPBWidth;
- uint32 StateShowPBHeight;
+ uint32 StateShowPBWidth = 0;
+ uint32 StateShowPBHeight = 0;
  uint8 *previewbuffer = NULL;
 
  fp = gzopen(filename, "rb");
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, "GetStateInfo: %s, %d\n", filename, fp );
+#endif
+
  if(fp)
  {
   uint8 header[32];
@@ -892,8 +905,10 @@ void MDFNSS_GetStateInfo(const char *filename, StateStatusStruct *status)
    gzread(fp, previewbuffer, 3 * width * height);
 
    StateShowPBWidth = width;
-   StateShowPBHeight = height;
+   StateShowPBHeight = height;   
   }
+
+  gzclose(fp);
  }
  else
  {
@@ -906,16 +921,15 @@ void MDFNSS_GetStateInfo(const char *filename, StateStatusStruct *status)
  status->h = StateShowPBHeight;
 }
 
-void MDFNI_SelectState(int w)
+StateStatusStruct* MDFNI_SelectState(int w)
 {
  if(!MDFNGameInfo->StateAction) 
-  return;
-
+  return NULL;
 
  if(w == -1) 
  {  
   MDFND_SetStateStatus(NULL);
-  return; 
+  return NULL; 
  }
 #ifndef WII
  MDFNI_SelectMovie(-1);
@@ -938,12 +952,16 @@ void MDFNI_SelectState(int w)
  StateStatusStruct *status = (StateStatusStruct*)MDFN_calloc(1, sizeof(StateStatusStruct), _("Save state status"));
  
  memcpy(status->status, SaveStateStatus, 10 * sizeof(int));
-
+ 
  status->current = CurrentState;
  status->recently_saved = RecentlySavedState;
+ status->gfx = NULL;
 
  MDFNSS_GetStateInfo(MDFN_MakeFName(MDFNMKF_STATE,CurrentState,NULL).c_str(), status);
+#ifndef WII
  MDFND_SetStateStatus(status);
+#endif
+ return status;
 }  
 
 int MDFNI_SaveState(const char *fname, const char *suffix, const MDFN_Surface *surface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)

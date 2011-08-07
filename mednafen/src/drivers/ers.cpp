@@ -18,7 +18,7 @@ void EmuRealSyncher::SetEmuClock(int64 EmuClock_arg)
 {
   EmuClock = EmuClock_arg;
 
-  NoFrameSkipTH = 50 * EmuClock / 1000;
+  NoFrameSkipTH = 50 * EmuClock / 1000; //50
   ForcedCatchupTH = 75 * EmuClock / 1000;
 
   // This is overwritten in the auto-frame-rate detection code.

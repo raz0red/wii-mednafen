@@ -45,6 +45,7 @@ SexyAL_device *SexyALI_JACK_Open(const char *id, SexyAL_format *format, SexyAL_b
 SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 SexyAL_device *SexyALI_DSound_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 SexyAL_device *SexyALI_Dummy_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
+SexyAL_device *SexyALI_WII_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 
 #ifdef HAVE_ALSA
 SexyAL_enumdevice *SexyALI_ALSA_EnumerateDevices(void);
@@ -163,6 +164,10 @@ static SexyAL_driver drivers[] =
 
 #if HAVE_JACK
   { SEXYAL_TYPE_JACK, "JACK", "jack", SexyALI_JACK_Open, NULL },
+#endif
+
+#ifdef WII
+  { SEXYAL_TYPE_WII, "WII", "wii", SexyALI_WII_Open, NULL },
 #endif
 
   { SEXYAL_TYPE_DUMMY, "Dummy", "dummy", SexyALI_Dummy_Open, NULL },

@@ -115,6 +115,9 @@ static MDFNSetting_EnumList SDriver_List[] =
   { "oss", -1, "Open Sound System", gettext_noop("A recommended driver, and the default for non-Linux UN*X/POSIX/BSD systems, or anywhere ALSA is unavailable. If the ALSA driver gives you problems, you can try using this one instead.\n\nIf you are using OSSv4 or newer, you should edit \"/usr/lib/oss/conf/osscore.conf\", uncomment the max_intrate= line, and change the value from 100(default) to 1000(or higher if you know what you're doing), and restart OSS. Otherwise, performance will be poor, and the sound buffer size in Mednafen will be orders of magnitude larger than specified.\n\nIf the sound buffer size is still excessively larger than what is specified via the \"sound.buffer_time\" setting, you can try setting \"sound.period_time\" to 2666, and as a last resort, 5333, to work around a design flaw/limitation/choice in the OSS API and OSS implementation.") },
   { "dsound", -1, "DirectSound", gettext_noop("A recommended driver, and the default for Microsoft Windows.") },
   { "sdl", -1, "Simple Directmedia Layer", gettext_noop("This driver is not recommended, but it serves as a backup driver if the others aren't available. Its performance is generally sub-par, requiring higher latency or faster CPUs/SMP for glitch-free playback, except where the OS provides a sound callback API itself, such as with Mac OS X and BeOS.") },
+#ifdef WII
+  { "wii", -1, "Wii Native Audio", gettext_noop("Wii native audio driver.") },
+#endif
   { "jack", -1, "JACK", gettext_noop("Somewhat experimental driver, unusably buggy until Mednafen 0.8.C. The \"sound.buffer_time\" setting controls the size of the local sound buffer, not the server's sound buffer, and the latency reported during startup is for the local sound buffer only. Please note that video card drivers(in the kernel or X), and hardware-accelerated OpenGL, may interfere with jackd's ability to effectively run with realtime response.") },
 
   { NULL, 0 },
@@ -195,7 +198,7 @@ MDFNSetting DriverSettings[] =
 #ifndef WII
   { "sound.driver", MDFNSF_NOFLAGS, gettext_noop("Select sound driver."), gettext_noop("The following choices are possible, sorted by preference, high to low, when \"default\" driver is used, but dependent on being compiled in."), MDFNST_ENUM, "default", NULL, NULL, NULL, NULL, SDriver_List },
 #else
-  { "sound.driver", MDFNSF_NOFLAGS, gettext_noop("Select sound driver."), gettext_noop("The following choices are possible, sorted by preference, high to low, when \"default\" driver is used, but dependent on being compiled in."), MDFNST_ENUM, "sdl", NULL, NULL, NULL, NULL, SDriver_List },
+  { "sound.driver", MDFNSF_NOFLAGS, gettext_noop("Select sound driver."), gettext_noop("The following choices are possible, sorted by preference, high to low, when \"default\" driver is used, but dependent on being compiled in."), MDFNST_ENUM, "wii", NULL, NULL, NULL, NULL, SDriver_List },
 #endif
   { "sound.device", MDFNSF_NOFLAGS, gettext_noop("Select sound output device."), NULL, MDFNST_STRING, "default", NULL, NULL },
   { "sound.volume", MDFNSF_NOFLAGS, gettext_noop("Sound volume level, in percent."), NULL, MDFNST_UINT, "100", "0", "150" },
@@ -1133,6 +1136,8 @@ int GameLoop(void *arg)
         if( sskip++ == 10 )
         {
           sskip = -1;
+          espec.SoundFormatChanged = true;
+          espec.VideoFormatChanged = true;
         }        
       }
       else
@@ -1624,36 +1629,22 @@ void MDFND_Update(MDFN_Surface *surface, int16 *Buffer, int Count)
     for fast-forwarding to respond well(since keyboard updates are
     handled in the main thread) on slower systems or when using a higher fast-forwarding speed ratio.
     */
-    //while( VTReady && GameThreadRun ) SDL_Delay(1);
-
 #ifndef WII
     if( (last_btime + 100) < SDL_GetTicks())
     {
       //puts("Eep");
       while(VTReady && GameThreadRun) SDL_Delay(1);
     }
-#else
-#if 0
-    if( VTReady )
-    {
-      BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
-      VTReady = NULL;
-    }
-#endif
 #endif
 
     //if(!VTReady)
     //{
-//VIDEO_WaitVSync();
-
       VTLWReady = VTLineWidths[VTBackBuffer];
       VTDRReady = &VTDisplayRects[VTBackBuffer];
       VTReady = VTBuffer[VTBackBuffer];
 
       VTBackBuffer ^= 1;
-#ifndef WII
       last_btime = SDL_GetTicks();
-#endif
       //FPS_IncBlitted();
     //}
   }
