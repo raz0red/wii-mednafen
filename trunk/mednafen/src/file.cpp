@@ -494,9 +494,13 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
       const char *ld = strrchr(path, '.');
       f_ext = strdup(ld ? ld + 1 : "");
     }
-#ifndef WII
     else                  /* Probably gzip */
     {
+#ifdef WII
+      MDFN_PrintError(_("Unable to open file type."));
+      if( t ) fclose( (FILE *)t );
+      return 0;
+#else
       int fd;
 
       fd = dup(fileno( (FILE *)t));
@@ -526,8 +530,8 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
       }
       f_ext = strdup(ld ? ld + 1 : "");
       free(tmp_path);
-    } // End gzip handling
 #endif
+    } // End gzip handling
   } // End normal and gzip file handling else to zip
 
   // FIXME:  Handle extension fixing for cases where loaded filename is like "moo.moo/lalala"
