@@ -64,6 +64,13 @@ extern BOOL wii_auto_load_save_state;
 extern char* wii_get_roms_dir();
 
 /*
+ * Sets the current rom directory
+ *
+ * newDir   The new roms directory
+ */
+void wii_set_roms_dir( const char* newDir );
+
+/*
  * Returns the lang directory
  *
  * return   The roms directory

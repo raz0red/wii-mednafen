@@ -59,6 +59,8 @@ static BOOL games_read = FALSE;
 static s16 last_rom_index = 1;
 // The language menu
 static TREENODE *language_menu;
+// The roms node
+static TREENODE *roms_menu;
 // The current language index
 static u8 language_index = 0;
 
@@ -137,6 +139,7 @@ void wii_mednafen_menu_init()
   wii_add_child( wii_menu_root, child );
 
   child = wii_create_tree_node( NODETYPE_LOAD_ROM, "Load game" );
+  roms_menu = child;
   wii_add_child( wii_menu_root, child );
 
   //
@@ -237,10 +240,12 @@ void wii_menu_handle_get_header( TREENODE* menu, char *buffer )
 {
   switch( menu->node_type )
   {
-    case NODETYPE_LOAD_ROM:
+    case NODETYPE_UPDIR:
+    case NODETYPE_DIR:
+    case NODETYPE_LOAD_ROM:    
       if( !games_read )
       {
-        snprintf( buffer, WII_MENU_BUFF_SIZE, gettextmsg("Reading game list...") );                
+        snprintf( buffer, WII_MENU_BUFF_SIZE, gettextmsg("Reading game list...") );                      
       }
       break;
     default:
@@ -260,11 +265,13 @@ void wii_menu_handle_get_footer( TREENODE* menu, char *buffer )
 {
   switch( menu->node_type )
   {
+    case NODETYPE_UPDIR:
+    case NODETYPE_DIR:
     case NODETYPE_LOAD_ROM:
       if( games_read )
       {
         wii_get_list_footer( 
-          menu, "cartridge", "cartridges", buffer );
+          roms_menu, "item", "items", buffer );
       }
       break;
     default:
@@ -289,6 +296,9 @@ void wii_menu_handle_get_node_name(
 
   switch( node->node_type )
   {
+    case NODETYPE_DIR:
+      snprintf( buffer, WII_MENU_BUFF_SIZE, "[%s]", node->name );
+      break;
     case NODETYPE_CARTRIDGE_SAVE_STATES_SLOT:
       {
         BOOL isLatest;
@@ -453,13 +463,43 @@ void wii_menu_handle_select_node( TREENODE *node )
       case NODETYPE_FILTER:
         wii_filter ^= 1;
         break;
+      case NODETYPE_UPDIR:
+      case NODETYPE_DIR:
+        if( node->node_type == NODETYPE_UPDIR )
+        {
+          const char* romsDir = wii_get_roms_dir();
+          int len = strlen( romsDir );
+          if( len > 1 && romsDir[len-1] == '/' )
+          {
+            char dirpart[WII_MAX_PATH];
+            char filepart[WII_MAX_PATH];
+            Util_splitpath( romsDir, dirpart, filepart );
+            len = strlen(dirpart);
+            dirpart[len] = '/';
+            dirpart[len+1] = '\0';
+            wii_set_roms_dir( dirpart );
+          }
+        }
+        else
+        {
+          char newDir[WII_MAX_PATH];
+          snprintf( newDir, sizeof(newDir), "%s%s/", 
+            wii_get_roms_dir(), node->name );
+          wii_set_roms_dir( newDir );
+        }
+        games_read = FALSE;
+        last_rom_index = 1;
+        break;
       case NODETYPE_ADVANCED:
       case NODETYPE_CARTRIDGE_SAVE_STATES:
       case NODETYPE_LOAD_ROM:               
         wii_menu_push( node );
         if( node->node_type == NODETYPE_LOAD_ROM )
         {
-          wii_menu_move( node, last_rom_index );
+          if( games_read )
+          {
+            wii_menu_move( node, last_rom_index );  
+          }
         }
         else if( node->node_type == NODETYPE_CARTRIDGE_SAVE_STATES )
         {
@@ -588,14 +628,16 @@ void wii_menu_handle_update( TREENODE *menu )
 {
   switch( menu->node_type )
   {
+    case NODETYPE_UPDIR:
+    case NODETYPE_DIR:
     case NODETYPE_LOAD_ROM:
       if( !games_read )
       {
         LOCK_RENDER_MUTEX();
 
-        wii_read_game_list( menu );  
+        wii_read_game_list( roms_menu );  
         wii_menu_reset_indexes();    
-        wii_menu_move( menu, 1 );
+        wii_menu_move( roms_menu, 2 );
 
         UNLOCK_RENDER_MUTEX();
       }
@@ -644,6 +686,20 @@ static void read_lang_list( TREENODE *menu )
     sizeof(*(menu->children)), wii_menu_name_compare );
 }
 
+/*
+* Used for comparing menu names when sorting (qsort)
+*
+* a        The first tree node to compare
+* b        The second tree node to compare
+* return   The result of the comparison
+*/
+static int game_name_compare( const void *a, const void *b )
+{
+  TREENODE** aptr = (TREENODE**)a;
+  TREENODE** bptr = (TREENODE**)b;
+  int type = (*aptr)->node_type - (*bptr)->node_type;
+  return type != 0 ? type : stricmp( (*aptr)->name, (*bptr)->name );
+}
 
 /*
  * Reads the list of games into the specified menu
@@ -652,17 +708,31 @@ static void read_lang_list( TREENODE *menu )
  */
 static void wii_read_game_list( TREENODE *menu )
 {
-  DIR *romdir = opendir( wii_get_roms_dir() );
+  const char* roms = wii_get_roms_dir();
+  DIR *romdir = opendir( roms );
   if( romdir != NULL)
   {
+    wii_menu_clear_children( menu ); // Clear the children
+
+    int len = strlen(roms);
+    if( len > 2 )
+    {
+      if( roms[len-1] == '/' && roms[len-2] != ':' )
+      {
+        wii_add_child(
+          menu, wii_create_tree_node( NODETYPE_UPDIR, "[..]" ) );
+      }
+    }
+
     struct dirent* entry = NULL;
     while( ( entry = readdir( romdir ) ) != NULL )
     {               
-      if( ( strcmp( ".", entry->d_name ) && strcmp( "..", entry->d_name ) ) &&
-          ( entry->d_type != DT_DIR ) )
+      if( ( strcmp( ".", entry->d_name ) && strcmp( "..", entry->d_name ) ) )
       {				                
         TREENODE *child = 
-          wii_create_tree_node( NODETYPE_ROM, entry->d_name );
+          wii_create_tree_node( 
+            ( entry->d_type == DT_DIR ? NODETYPE_DIR : NODETYPE_ROM ), 
+            entry->d_name );
 
         wii_add_child( menu, child );
       }
@@ -671,14 +741,14 @@ static void wii_read_game_list( TREENODE *menu )
   }
   else
   {
-    wii_set_status_message( "Error opening roms directory." );
+    wii_set_status_message( "Error opening directory." );
   }
 
   // Sort the games list
   qsort( menu->children, menu->child_count, 
-    sizeof(*(menu->children)), wii_menu_name_compare );
+    sizeof(*(menu->children)), game_name_compare );
 
-  games_read = 1;
+  games_read = TRUE;
 }
 
 /*

@@ -40,6 +40,11 @@ distribution.
 
 #include "Emulators.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 extern "C" {
   void WII_VideoStop();
 }
@@ -125,6 +130,19 @@ char* wii_get_roms_dir()
   }
 
   return roms_dir;
+}
+
+/*
+ * Sets the current rom directory
+ *
+ * newDir   The new roms directory
+ */
+void wii_set_roms_dir( const char* newDir )
+{
+  Util_strlcpy( roms_dir, newDir, sizeof(roms_dir) );
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "RomsDir: %s\n", roms_dir );
+#endif
 }
 
 // The lang dir
