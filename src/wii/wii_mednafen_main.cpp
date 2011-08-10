@@ -28,7 +28,6 @@ distribution.
 #include "sound.h"
 
 #include "wii_app.h"
-#include "wii_file_io.h"
 #include "wii_gx.h"
 #include "wii_main.h"
 #include "wii_sdl.h"
@@ -247,7 +246,7 @@ extern void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, con
 
 static void precallback()
 {
-  wii_usb_keepalive(); // Attempt to keep the USB drive from sleeping...
+  //wii_usb_keepalive(); // Attempt to keep the USB drive from sleeping...
 
   while( !VTReady && GameThreadRun )
   {

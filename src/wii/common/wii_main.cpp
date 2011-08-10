@@ -46,10 +46,9 @@ distribution.
 #include "wii_app.h"
 #include "wii_hw_buttons.h"
 #include "wii_input.h"
-#include "wii_file_io.h"
-//#include "wii_freetype.h"
 #include "wii_video.h"
 #include "wii_sdl.h"
+#include "fileop.h"
 
 #include "gettext.h"
 
@@ -970,24 +969,9 @@ int main(int argc,char *argv[])
 
   // Initialize the Wii
   wii_set_app_path( argc, argv );  
-
+    
   // Try to mount the file system
-  int retry = 20;
-  BOOL mounted = FALSE;
-  while( retry > 0 )
-  {
-    mounted = wii_mount();
-    if( mounted )
-    {
-      break;
-    }
-
-    usleep( 1000 * 1000 ); // 1 second
-    retry--;
-  }
-
-  // Try to mount the file system
-  if( !mounted ) 
+  if( !ChangeInterface( wii_get_app_path(), FS_RETRY_COUNT ) ) 
   {
     printf( "Unable to mount %s\n\n", wii_get_fs_prefix() );
     printf( "Press A to exit..." );
