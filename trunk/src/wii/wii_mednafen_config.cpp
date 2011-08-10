@@ -30,6 +30,7 @@ distribution.
 #include "wii_mednafen.h"
 
 #include "Emulators.h"
+#include "networkop.h"
 
 /*
 * Handles reading a particular configuration value
@@ -67,6 +68,26 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_filter = Util_sscandec( value );
   }
+  else if( strcmp( name, "roms_dir" ) == 0 )
+  {
+    wii_set_roms_dir( value );
+  }
+  else if( strcmp( name, "share_ip" ) == 0 )
+  {
+    setSmbAddress( value );
+  }
+  else if( strcmp( name, "share_name" ) == 0 )
+  {
+    setSmbShare( value );
+  }
+  else if( strcmp( name, "share_user" ) == 0 )
+  {
+    setSmbUser( value );
+  }
+  else if( strcmp( name, "share_pass" ) == 0 )
+  {
+    setSmbPassword( value );
+  }
   else
   {
     // Read configuration value for emulators
@@ -81,12 +102,17 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
 */
 extern "C" void wii_config_handle_write_config( FILE *fp )
 {
+  fprintf( fp, "share_ip=%s\n", getSmbAddress() );
+  fprintf( fp, "share_name=%s\n", getSmbShare() );
+  fprintf( fp, "share_user=%s\n", getSmbUser() );    
+  fprintf( fp, "share_pass=%s\n", getSmbPassword() );  
   fprintf( fp, "debug=%d\n", wii_debug );
   fprintf( fp, "top_menu_exit=%d\n", wii_top_menu_exit );
   fprintf( fp, "sel_offset=%d\n", wii_menu_sel_offset );    
   fprintf( fp, "mote_menu_vertical=%d\n", wii_mote_menu_vertical );  
   fprintf( fp, "video_filter=%d\n", wii_filter );
   fprintf( fp, "language=%s\n", wii_language );
+  fprintf( fp, "roms_dir=%s\n", wii_get_roms_dir() );
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

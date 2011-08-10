@@ -61,12 +61,18 @@ BOOL wii_filter = FALSE;
 BOOL wii_auto_load_save_state = FALSE;
 // The current language
 char wii_language[WII_MAX_PATH] = "";
+// The roms dir
+static char roms_dir[WII_MAX_PATH] = "";
 
 /*
  * Initializes the application
  */
 void wii_handle_init()
 {  
+  // Set the default roms dir
+  snprintf( 
+    roms_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_ROMS_DIR );
+
   // Read the config values
   wii_read_config();
 
@@ -113,9 +119,6 @@ void wii_handle_run()
   wii_menu_show();
 }
 
-// The roms dir
-static char roms_dir[WII_MAX_PATH] = "";
-
 /*
  * Returns the roms directory
  *
@@ -123,12 +126,6 @@ static char roms_dir[WII_MAX_PATH] = "";
  */
 char* wii_get_roms_dir()
 {
-  if( roms_dir[0] == '\0' )
-  {
-    snprintf( 
-      roms_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_ROMS_DIR );
-  }
-
   return roms_dir;
 }
 
@@ -141,7 +138,7 @@ void wii_set_roms_dir( const char* newDir )
 {
   Util_strlcpy( roms_dir, newDir, sizeof(roms_dir) );
 #ifdef WII_NETTRACE
-  net_print_string( NULL, 0, "RomsDir: %s\n", roms_dir );
+  net_print_string( NULL, 0, "RomsDir: \"%s\"\n", roms_dir );
 #endif
 }
 
