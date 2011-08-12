@@ -18,6 +18,8 @@
 #define NES_LEFT   0x0040
 #define NES_UP     0x0010
 #define NES_DOWN   0x0020
+#define NES_A_R    0x0001 | BTN_RAPID
+#define NES_B_R    0x0002 | BTN_RAPID
 
 class Nes : public Emulator
 {
@@ -31,7 +33,7 @@ public:
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
-  void updateControls();
+  void updateControls( bool isRapid );
   bool isRotationSupported();
   u8 getBpp();
 

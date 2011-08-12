@@ -18,6 +18,8 @@ typedef struct Rect {
   u16 h;
 } Rect;
 
+#define BTN_RAPID 0x80000000
+
 class Emulator
 {
 private:
@@ -42,7 +44,7 @@ public:
   virtual ConfigManager& getConfigManager() = 0;
   virtual DatabaseManager& getDbManager() = 0;
   virtual MenuManager& getMenuManager() = 0;
-  virtual void updateControls() = 0;
+  virtual void updateControls( bool isRapid ) = 0;
   virtual void onPostLoad();
   virtual bool onShowControlsScreen();
   virtual void onPreLoop();

@@ -149,7 +149,7 @@ int VirtualBoy::getRenderRate()
     entry->renderRate : - 1;
 }
 
-void VirtualBoy::updateControls()
+void VirtualBoy::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -216,7 +216,11 @@ void VirtualBoy::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= VirtualBoyDbManager::VB_BUTTONS[ i ].button;
+      u32 val = VirtualBoyDbManager::VB_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }   
     }
   }    
 

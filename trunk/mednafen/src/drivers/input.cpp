@@ -1379,7 +1379,7 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
   Emulator* emu = emuRegistry.getCurrentEmulator();
   if( emu != NULL )
   {
-    emu->updateControls();
+    emu->updateControls( rapid >= (autofirefreq + 1) / 2 );
   }
 #endif
 

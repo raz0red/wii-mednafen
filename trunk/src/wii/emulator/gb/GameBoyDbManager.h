@@ -3,7 +3,7 @@
 
 #include "StandardDatabaseManager.h"
 
-#define GB_BUTTON_COUNT         9
+#define GB_BUTTON_COUNT         11
 
 /*
  * GameBoy database entry 

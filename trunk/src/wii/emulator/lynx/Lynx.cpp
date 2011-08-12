@@ -45,7 +45,7 @@ MenuManager& Lynx::getMenuManager()
   return m_menuManager;
 }
 
-void Lynx::updateControls()
+void Lynx::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -112,7 +112,11 @@ void Lynx::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= LynxDbManager::LYNX_BUTTONS[ i ].button;
+      u32 val = LynxDbManager::LYNX_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }
     }
   }    
 

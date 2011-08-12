@@ -44,7 +44,7 @@ MenuManager& PCFX::getMenuManager()
   return m_menuManager;
 }
 
-void PCFX::updateControls()
+void PCFX::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();

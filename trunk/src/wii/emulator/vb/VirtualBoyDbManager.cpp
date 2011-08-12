@@ -16,6 +16,8 @@
 #define VBK_MAP_RRIGHT  12
 #define VBK_MAP_RUP     13
 #define VBK_MAP_RDOWN   14
+#define VBK_MAP_A_R     15
+#define VBK_MAP_B_R     16
 
 const MappableButton VirtualBoyDbManager::VB_BUTTONS[VB_BUTTON_COUNT] = 
 {
@@ -33,7 +35,9 @@ const MappableButton VirtualBoyDbManager::VB_BUTTONS[VB_BUTTON_COUNT] =
   { "R-Left",   VB_R_LEFT      },
   { "R-Right",  VB_R_RIGHT     },
   { "R-Up",     VB_R_UP        },
-  { "R-Down",   VB_R_DOWN      }
+  { "R-Down",   VB_R_DOWN      },
+  { "A",        VB_KEY_A_R     }, 
+  { "B",        VB_KEY_B_R     }, 
 };
 
 const WiiButton VirtualBoyDbManager::WII_BUTTONS

@@ -4,7 +4,7 @@
 
 #include "StandardDatabaseManager.h"
 
-#define PCE_BUTTON_COUNT         13
+#define PCE_BUTTON_COUNT         15
 
 /*
  * PCE database entry 

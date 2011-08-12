@@ -14,6 +14,8 @@
 #define GBA_MAP_RIGHT   8
 #define GBA_MAP_UP      9
 #define GBA_MAP_DOWN    10
+#define GBA_MAP_A_R     11
+#define GBA_MAP_B_R     12
 
 const MappableButton GameBoyAdvanceDbManager::GBA_BUTTONS[GBA_BUTTON_COUNT] = 
 {
@@ -27,7 +29,10 @@ const MappableButton GameBoyAdvanceDbManager::GBA_BUTTONS[GBA_BUTTON_COUNT] =
   { "Left",     GBA_LEFT    },
   { "Right",    GBA_RIGHT   },
   { "Up",       GBA_UP      },
-  { "Down",     GBA_DOWN    }
+  { "Down",     GBA_DOWN    },
+  { "A",        GBA_A_R     }, 
+  { "B",        GBA_B_R     } 
+
 };
 
 const WiiButton GameBoyAdvanceDbManager::

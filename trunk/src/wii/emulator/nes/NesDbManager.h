@@ -3,7 +3,7 @@
 
 #include "StandardDatabaseManager.h"
 
-#define NES_BUTTON_COUNT         9
+#define NES_BUTTON_COUNT        11
 
 /*
  * NES database entry 

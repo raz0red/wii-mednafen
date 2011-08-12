@@ -21,8 +21,10 @@
 #define WS_START  0x0100
 #define WS_A      0x0200
 #define WS_B      0x0400
+#define WS_A_R    WS_A | BTN_RAPID
+#define WS_B_R    WS_B | BTN_RAPID
 
-  class WonderSwan : public Emulator
+class WonderSwan : public Emulator
 {
 private:
   WonderSwanConfigManager m_configManager;
@@ -34,7 +36,7 @@ public:
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
-  void updateControls();
+  void updateControls( bool isRapid );
   bool isRotationSupported();
   int getRotation();
 

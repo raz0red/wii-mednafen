@@ -22,6 +22,8 @@
 #define PCE_IV     0x0200
 #define PCE_V      0x0400
 #define PCE_VI     0x0800
+#define PCE_I_R    PCE_I  | BTN_RAPID
+#define PCE_II_R   PCE_II | BTN_RAPID
 
 #if 0
  { "mode_select", "2/6 Mode Select", 6, IDIT_BUTTON, NULL }, // ???
@@ -39,7 +41,7 @@ public:
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
-  void updateControls();
+  void updateControls( bool isRapid );
   bool isRotationSupported();
   bool isMultiRes();
   u8 getBpp();

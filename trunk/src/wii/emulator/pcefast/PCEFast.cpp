@@ -44,7 +44,7 @@ MenuManager& PCEFast::getMenuManager()
   return m_menuManager;
 }
 
-void PCEFast::updateControls()
+void PCEFast::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -111,7 +111,11 @@ void PCEFast::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= PCEFastDbManager::PCE_BUTTONS[ i ].button;
+      u32 val = PCEFastDbManager::PCE_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }
     }
   }    
 
