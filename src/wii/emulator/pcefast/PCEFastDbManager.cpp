@@ -17,6 +17,8 @@
 #define PCE_MAP_IV     10
 #define PCE_MAP_V      11
 #define PCE_MAP_VI     12
+#define PCE_MAP_I_R    13
+#define PCE_MAP_II_R   14
 
 const MappableButton PCEFastDbManager::PCE_BUTTONS[PCE_BUTTON_COUNT] = 
 {
@@ -32,7 +34,9 @@ const MappableButton PCEFastDbManager::PCE_BUTTONS[PCE_BUTTON_COUNT] =
   { "III",      PCE_III     },
   { "IV",       PCE_IV      },
   { "V",        PCE_V       },
-  { "VI",       PCE_VI      }
+  { "VI",       PCE_VI      },
+  { "I",        PCE_I_R     },
+  { "II",       PCE_II_R    }
 };
 
 const WiiButton PCEFastDbManager::

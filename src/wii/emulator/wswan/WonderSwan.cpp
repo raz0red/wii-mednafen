@@ -45,7 +45,7 @@ MenuManager& WonderSwan::getMenuManager()
   return m_menuManager;
 }
 
-void WonderSwan::updateControls()
+void WonderSwan::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -112,7 +112,11 @@ void WonderSwan::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= WonderSwanDbManager::WS_BUTTONS[ i ].button;
+      u32 val = WonderSwanDbManager::WS_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }
     }
   }    
 

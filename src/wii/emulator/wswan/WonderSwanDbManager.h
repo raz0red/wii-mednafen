@@ -6,7 +6,7 @@
 #define WII_PROFILE_NORMAL      0
 #define WII_PROFILE_ROTATED90   1
 
-#define WS_BUTTON_COUNT         12
+#define WS_BUTTON_COUNT         14
 #define WII_PROFILE_COUNT       2
 
 /*

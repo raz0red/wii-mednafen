@@ -3,7 +3,7 @@
 
 #include "StandardDatabaseManager.h"
 
-#define GBA_BUTTON_COUNT         11
+#define GBA_BUTTON_COUNT         13
 
 /*
  * GameBoy Advance database entry 

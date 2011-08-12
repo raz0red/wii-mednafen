@@ -76,16 +76,30 @@ void StandardCartSettingsMenuHelper::getNodeName(
         {
           snprintf( buffer, WII_MENU_BUFF_SIZE, "%s", name );
           u8 btn = entry->buttonMap[m_currentController][index];
-          const char* name = dbManager.getMappableButton( btn )->name;
+          const MappableButton* mappedBtn = dbManager.getMappableButton( btn ); 
+          const char* name = mappedBtn->name;
+          u32 val = mappedBtn->button;
+          
+          char btnName[WII_MENU_BUFF_SIZE];
+          if( val & BTN_RAPID )
+          {
+            snprintf( btnName, sizeof(btnName), "%s-%s",
+              gettextmsg(name), gettextmsg("Rapid") );
+          }
+          else
+          {
+            Util_strlcpy( btnName, gettextmsg(name), sizeof(btnName) );
+          }
+
           const char* desc = ( btn != 0 ? entry->buttonDesc[btn] : "" );
           if( desc[0] != '\0' )
           {
             snprintf( value, WII_MENU_BUFF_SIZE, "%s (%s)", 
-              gettextmsg(name), gettextmsg(desc) );
+              btnName, gettextmsg(desc) );
           }
           else
           {
-            snprintf( value, WII_MENU_BUFF_SIZE, "%s", gettextmsg(name) );
+            snprintf( value, WII_MENU_BUFF_SIZE, "%s", btnName );
           }
         }
       }

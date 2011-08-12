@@ -3,7 +3,7 @@
 
 #include "StandardDatabaseManager.h"
 
-#define LYNX_BUTTON_COUNT         10
+#define LYNX_BUTTON_COUNT         14
 
 /*
  * Lynx database entry 

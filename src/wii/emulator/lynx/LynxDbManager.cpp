@@ -13,19 +13,29 @@
 #define LYNX_MAP_RIGHT   7
 #define LYNX_MAP_UP      8
 #define LYNX_MAP_DOWN    9
+#define LYNX_MAP_A_R     10
+#define LYNX_MAP_B_R     11
+#define LYNX_MAP_OPT1_R  12
+#define LYNX_MAP_OPT2_R  13
+
 
 const MappableButton LynxDbManager::LYNX_BUTTONS[LYNX_BUTTON_COUNT] = 
 {
-  { "(none)",   LYNX_NONE  },
-  { "A",        LYNX_A     }, 
-  { "B",        LYNX_B     }, 
-  { "Option 1", LYNX_OPT1  },
-  { "Option 2", LYNX_OPT2  },
-  { "Pause",    LYNX_PAUSE },
-  { "Left",     LYNX_LEFT  },
-  { "Right",    LYNX_RIGHT },
-  { "Up",       LYNX_UP    },
-  { "Down",     LYNX_DOWN  }
+  { "(none)",   LYNX_NONE     },
+  { "A",        LYNX_A        }, 
+  { "B",        LYNX_B        }, 
+  { "Option 1", LYNX_OPT1     },
+  { "Option 2", LYNX_OPT2     },
+  { "Pause",    LYNX_PAUSE    },
+  { "Left",     LYNX_LEFT     },
+  { "Right",    LYNX_RIGHT    },
+  { "Up",       LYNX_UP       },
+  { "Down",     LYNX_DOWN     },
+  { "A",        LYNX_A_R      }, 
+  { "B",        LYNX_B_R      }, 
+  { "Option 1", LYNX_OPT1_R   },
+  { "Option 2", LYNX_OPT2_R   }
+
 };
 
 const WiiButton LynxDbManager::

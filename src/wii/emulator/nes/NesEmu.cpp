@@ -40,7 +40,7 @@ MenuManager& Nes::getMenuManager()
   return m_menuManager;
 }
 
-void Nes::updateControls()
+void Nes::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -107,8 +107,12 @@ void Nes::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= NesDbManager::NES_BUTTONS[ i ].button;
-    }
+      u32 val = NesDbManager::NES_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }
+    }  
   }    
 
   if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||

@@ -14,21 +14,25 @@
 #define WSK_MAP_Y2      9
 #define WSK_MAP_Y3      10
 #define WSK_MAP_Y4      11
+#define WSK_MAP_A_R     12
+#define WSK_MAP_B_R     13
 
 const MappableButton WonderSwanDbManager::WS_BUTTONS[WS_BUTTON_COUNT] = 
 {
-  { "(none)",   WS_NONE  },
-  { "A",        WS_A     }, 
-  { "B",        WS_B     }, 
-  { "Start",    WS_START },
-  { "X1",       WS_X1    },
-  { "X2",       WS_X2    },
-  { "X3",       WS_X3    },
-  { "X4",       WS_X4    },
-  { "Y1",       WS_Y1    },
-  { "Y2",       WS_Y2    },
-  { "Y3",       WS_Y3    },
-  { "Y4",       WS_Y4    },
+  { "(none)", WS_NONE  },
+  { "A",      WS_A     }, 
+  { "B",      WS_B     }, 
+  { "Start",  WS_START },
+  { "X1",     WS_X1    },
+  { "X2",     WS_X2    },
+  { "X3",     WS_X3    },
+  { "X4",     WS_X4    },
+  { "Y1",     WS_Y1    },
+  { "Y2",     WS_Y2    },
+  { "Y3",     WS_Y3    },
+  { "Y4",     WS_Y4    },
+  { "A",      WS_A_R   }, 
+  { "B",      WS_B_R   } 
 };
 
 const WiiButton WonderSwanDbManager::

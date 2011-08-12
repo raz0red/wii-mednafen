@@ -12,7 +12,7 @@
 #define ROM_PATCH_ENABLED    1
 #define ROM_PATCH_DISABLED   2
 
-#define VB_BUTTON_COUNT       15
+#define VB_BUTTON_COUNT       17
 
 /*
  * VB database entry 

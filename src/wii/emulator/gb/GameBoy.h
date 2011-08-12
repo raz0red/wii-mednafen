@@ -18,6 +18,9 @@
 #define GB_RIGHT  0x0010
 #define GB_UP     0x0040
 #define GB_DOWN   0x0080
+#define GB_A_R    GB_A | BTN_RAPID
+#define GB_B_R    GB_B | BTN_RAPID
+
 
 class GameBoy : public Emulator
 {
@@ -31,7 +34,7 @@ public:
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
-  void updateControls();
+  void updateControls( bool isRapid );
   bool isRotationSupported();
 
   void onPostLoad();

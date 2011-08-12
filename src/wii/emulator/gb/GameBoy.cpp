@@ -39,7 +39,7 @@ MenuManager& GameBoy::getMenuManager()
   return m_menuManager;
 }
 
-void GameBoy::updateControls()
+void GameBoy::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
@@ -106,7 +106,11 @@ void GameBoy::updateControls()
             entry->appliedButtonMap[
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
-      result |= GameBoyDbManager::GB_BUTTONS[ i ].button;
+      u32 val = GameBoyDbManager::GB_BUTTONS[ i ].button;
+      if( !( val & BTN_RAPID ) || isRapid )
+      {
+        result |= ( val & 0xFFFF );
+      }
     }
   }    
 

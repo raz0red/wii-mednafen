@@ -12,6 +12,8 @@
 #define NES_MAP_RIGHT   6
 #define NES_MAP_UP      7
 #define NES_MAP_DOWN    8
+#define NES_MAP_A_R     9
+#define NES_MAP_B_R     10
 
 const MappableButton NesDbManager::NES_BUTTONS[NES_BUTTON_COUNT] = 
 {
@@ -23,7 +25,9 @@ const MappableButton NesDbManager::NES_BUTTONS[NES_BUTTON_COUNT] =
   { "Left",     NES_LEFT    },
   { "Right",    NES_RIGHT   },
   { "Up",       NES_UP      },
-  { "Down",     NES_DOWN    }
+  { "Down",     NES_DOWN    },
+  { "A",        NES_A_R     }, 
+  { "B",        NES_B_R     }
 };
 
 const WiiButton NesDbManager::
