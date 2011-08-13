@@ -1429,10 +1429,10 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       }
     }
 #else
-    if( x == 0 )
+    if( x < 4 )
     {
       uint8 *tptr = (uint8 *)PortData[x];
-      u16 padData = emuRegistry.getCurrentEmulator()->getPadData();
+      u16 padData = emuRegistry.getCurrentEmulator()->getPadData()[x];
       tptr[0] = padData & 0xFF;
       tptr[1] = ( padData >> 8 ) & 0xFF;    
     }
