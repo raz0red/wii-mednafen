@@ -51,8 +51,7 @@ static int MixerCollect( u8 *outbuffer, int len )
   int done = 0;
 
   // Always clear output buffer
-  memset(outbuffer, 0, len);
-
+  memset(outbuffer, 0x0, len);
   while ( ( mixtail != mixhead ) && ( done < len ) )
   {
     *dst++ = src[mixtail++];

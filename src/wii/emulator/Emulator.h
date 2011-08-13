@@ -28,7 +28,7 @@ private:
   Rect m_lastSize;
 
 protected:
-  u16 m_padData;
+  u16 m_padData[4];
   Rect m_emulatorScreenSize;
   Rect m_screenSize;
   Rect m_defaultScreenSize;
@@ -62,7 +62,7 @@ public:
   Rect* getDefaultScreenSize();  
   Rect* getRotatedScreenSize();
   Rect* getDefaultRotatedScreenSize();  
-  u16 getPadData();
+  u16* getPadData();
 };
 
 #endif

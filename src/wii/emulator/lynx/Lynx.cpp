@@ -165,7 +165,7 @@ void Lynx::updateControls( bool isRapid )
       wii_analog_down( expY, gcY ) )
     result|=down;
 
-  m_padData = result;
+  m_padData[0] = result;
 }
 
 void Lynx::onPostLoad()

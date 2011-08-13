@@ -19,9 +19,9 @@ void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 
 Emulator::Emulator( const char* key, const char* name ) : 
   m_key( key ),
-  m_name( name ),
-  m_padData( 0 )
+  m_name( name ) 
 {
+  memset( m_padData, 0, sizeof(u32)<<2 );
 }
 
 Rect* Emulator::getScreenSize()
@@ -68,7 +68,7 @@ const char* Emulator::getName()
   return m_name;
 }
 
-u16 Emulator::getPadData()
+u16* Emulator::getPadData()
 {
   return m_padData;
 }

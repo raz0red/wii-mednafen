@@ -39,8 +39,6 @@ MenuManager& GameBoyAdvance::getMenuManager()
   return m_menuManager;
 }
 
-u16 gbaPadData;
-
 void GameBoyAdvance::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
@@ -136,9 +134,7 @@ void GameBoyAdvance::updateControls( bool isRapid )
       wii_analog_down( expY, gcY ) )
     result|=GBA_DOWN;
 
-  m_padData = result;
-
-  gbaPadData = m_padData;
+  m_padData[0] = result;
 }
 
 void GameBoyAdvance::onPostLoad()

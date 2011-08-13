@@ -134,7 +134,7 @@ void GameBoy::updateControls( bool isRapid )
       wii_analog_down( expY, gcY ) )
     result|=GB_DOWN;
 
-  m_padData = result;
+  m_padData[0] = result;
 }
 
 void GameBoy::onPostLoad()

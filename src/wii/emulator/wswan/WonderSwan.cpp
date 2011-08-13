@@ -145,7 +145,7 @@ void WonderSwan::updateControls( bool isRapid )
       wii_analog_down( expY, gcY ) )
     result|=( rot ? WS_Y4 : WS_X3 );
 
-  m_padData = result;
+  m_padData[0] = result;
 }
 
 void WonderSwan::onPostLoad()

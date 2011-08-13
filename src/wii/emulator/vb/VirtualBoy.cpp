@@ -268,7 +268,7 @@ void VirtualBoy::updateControls( bool isRapid )
       wii_analog_down( expRY, gcRY ) )
     result|=VB_R_DOWN;
 
-  m_padData = result;
+  m_padData[0] = result;
 }
 
 void VirtualBoy::onPostLoad()

@@ -49,97 +49,103 @@ void PCEFast::updateControls( bool isRapid )
   WPAD_ScanPads();
   PAD_ScanPads();
 
-  // Check the state of the controllers
-  u32 pressed = WPAD_ButtonsDown( 0 );
-  u32 held = WPAD_ButtonsHeld( 0 );  
-  u32 gcPressed = PAD_ButtonsDown( 0 );
-  u32 gcHeld = PAD_ButtonsHeld( 0 );
-
-  // Classic or Nunchuck?
-  expansion_t exp;
-  WPAD_Expansion( 0, &exp );          
-
-  BOOL isClassic = ( exp.type == WPAD_EXP_CLASSIC );
-  BOOL isNunchuk = ( exp.type == WPAD_EXP_NUNCHUK );
-
-  // Mask off the Wiimote d-pad depending on whether a nunchuk
-  // is connected. (Wiimote d-pad is left when nunchuk is not
-  // connected, right when it is).
-  u32 heldLeft = ( isNunchuk ? ( held & ~0x0F00 ) : held );
-  u32 heldRight = ( !isNunchuk ? ( held & ~0x0F00 ) : held );
-
-  // Analog for Wii controls
-  float expX = wii_exp_analog_val( &exp, TRUE, FALSE );
-  float expY = wii_exp_analog_val( &exp, FALSE, FALSE );
-  float expRX = isClassic ? wii_exp_analog_val( &exp, TRUE, TRUE ) : 0;
-  float expRY = isClassic ? wii_exp_analog_val( &exp, FALSE, TRUE ) : 0;
-
-  // Analog for Gamecube controls
-  s8 gcX = PAD_StickX( 0 );
-  s8 gcY = PAD_StickY( 0 );
-  s8 gcRX = PAD_SubStickX( 0 );
-  s8 gcRY = PAD_SubStickY( 0 );
-
-  // Check for home
-  if( ( pressed & WII_BUTTON_HOME ) ||
-    ( gcPressed & GC_BUTTON_HOME ) ||
-    wii_hw_button )
+  for( int c = 0; c < 4; c++ )
   {
-    GameThreadRun = 0;
-  }
+    // Check the state of the controllers
+    u32 pressed = WPAD_ButtonsDown( c );
+    u32 held = WPAD_ButtonsHeld( c );  
+    u32 gcPressed = PAD_ButtonsDown( c );
+    u32 gcHeld = PAD_ButtonsHeld( c );
 
-  u16 result = 0;
+    // Classic or Nunchuck?
+    expansion_t exp;
+    WPAD_Expansion( c, &exp );          
 
-  //
-  // Mapped buttons
-  //
-  
-  StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+    BOOL isClassic = ( exp.type == WPAD_EXP_CLASSIC );
+    BOOL isNunchuk = ( exp.type == WPAD_EXP_NUNCHUK );
 
-  for( int i = 0; i < PCE_BUTTON_COUNT; i++ )
-  {
-    if( ( held &
-          ( ( isClassic ? 
-                entry->appliedButtonMap[ 
-                  WII_CONTROLLER_CLASSIC ][ i ] : 0 ) |
-            ( isNunchuk ?
-                entry->appliedButtonMap[
-                  WII_CONTROLLER_CHUK ][ i ] :
-                entry->appliedButtonMap[
-                  WII_CONTROLLER_MOTE ][ i ] ) ) ) ||
-        ( gcHeld &
-            entry->appliedButtonMap[
-              WII_CONTROLLER_CUBE ][ i ] ) )
+    // Mask off the Wiimote d-pad depending on whether a nunchuk
+    // is connected. (Wiimote d-pad is left when nunchuk is not
+    // connected, right when it is).
+    u32 heldLeft = ( isNunchuk ? ( held & ~0x0F00 ) : held );
+    u32 heldRight = ( !isNunchuk ? ( held & ~0x0F00 ) : held );
+
+    // Analog for Wii controls
+    float expX = wii_exp_analog_val( &exp, TRUE, FALSE );
+    float expY = wii_exp_analog_val( &exp, FALSE, FALSE );
+    float expRX = isClassic ? wii_exp_analog_val( &exp, TRUE, TRUE ) : 0;
+    float expRY = isClassic ? wii_exp_analog_val( &exp, FALSE, TRUE ) : 0;
+
+    // Analog for Gamecube controls
+    s8 gcX = PAD_StickX( c );
+    s8 gcY = PAD_StickY( c );
+    s8 gcRX = PAD_SubStickX( c );
+    s8 gcRY = PAD_SubStickY( c );
+
+    if( c == 0 )
     {
-      u32 val = PCEFastDbManager::PCE_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      // Check for home
+      if( ( pressed & WII_BUTTON_HOME ) ||
+        ( gcPressed & GC_BUTTON_HOME ) ||
+        wii_hw_button )
       {
-        result |= ( val & 0xFFFF );
+        GameThreadRun = 0;
       }
     }
-  }    
 
-  if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
-      ( gcHeld & GC_BUTTON_RIGHT ) ||
-      wii_analog_right( expX, gcX ) )
-    result|=PCE_RIGHT;
+    u16 result = 0;
 
-  if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
-      ( gcHeld & GC_BUTTON_LEFT ) ||                       
-      wii_analog_left( expX, gcX ) )
-    result|=PCE_LEFT;
+    //
+    // Mapped buttons
+    //
+    
+    StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
-  if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
-      ( gcHeld & GC_BUTTON_UP ) ||
-      wii_analog_up( expY, gcY ) )
-    result|=PCE_UP;
+    for( int i = 0; i < PCE_BUTTON_COUNT; i++ )
+    {
+      if( ( held &
+            ( ( isClassic ? 
+                  entry->appliedButtonMap[ 
+                    WII_CONTROLLER_CLASSIC ][ i ] : 0 ) |
+              ( isNunchuk ?
+                  entry->appliedButtonMap[
+                    WII_CONTROLLER_CHUK ][ i ] :
+                  entry->appliedButtonMap[
+                    WII_CONTROLLER_MOTE ][ i ] ) ) ) ||
+          ( gcHeld &
+              entry->appliedButtonMap[
+                WII_CONTROLLER_CUBE ][ i ] ) )
+      {
+        u32 val = PCEFastDbManager::PCE_BUTTONS[ i ].button;
+        if( !( val & BTN_RAPID ) || isRapid )
+        {
+          result |= ( val & 0xFFFF );
+        }
+      }
+    }    
 
-  if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
-      ( gcHeld & GC_BUTTON_DOWN ) ||
-      wii_analog_down( expY, gcY ) )
-    result|=PCE_DOWN;
+    if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
+        ( gcHeld & GC_BUTTON_RIGHT ) ||
+        wii_analog_right( expX, gcX ) )
+      result|=PCE_RIGHT;
 
-  m_padData = result;
+    if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
+        ( gcHeld & GC_BUTTON_LEFT ) ||                       
+        wii_analog_left( expX, gcX ) )
+      result|=PCE_LEFT;
+
+    if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
+        ( gcHeld & GC_BUTTON_UP ) ||
+        wii_analog_up( expY, gcY ) )
+      result|=PCE_UP;
+
+    if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
+        ( gcHeld & GC_BUTTON_DOWN ) ||
+        wii_analog_down( expY, gcY ) )
+      result|=PCE_DOWN;
+
+    m_padData[c] = result;
+  }
 }
 
 void PCEFast::onPostLoad()
