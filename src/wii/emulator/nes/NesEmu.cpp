@@ -8,6 +8,11 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 Nes::Nes() : 
   Emulator( "nes", "NES" ),
   m_configManager( *this ),
@@ -40,10 +45,36 @@ MenuManager& Nes::getMenuManager()
   return m_menuManager;
 }
 
+extern bool NESIsVSUni;
+extern void MDFN_VSUniCoin();
+extern MDFNGI *MDFNGameInfo;
+extern int FDS_DiskInsert(int oride);
+extern int FDS_DiskEject(void);
+extern int FDS_DiskSelect(void);
+
+static int flipdisk = 0;
+
 void Nes::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
+
+  if( flipdisk )
+  {
+    switch( flipdisk )
+    {
+      case 30:
+        FDS_DiskEject();
+        break;
+      case 20:
+        FDS_DiskSelect();
+        break;
+      case 10:
+	FDS_DiskInsert(-1);
+        break;
+    }
+    flipdisk--;
+  }
 
   for( int c = 0; c < 4; c++ )
   {
@@ -113,9 +144,20 @@ void Nes::updateControls( bool isRapid )
                 WII_CONTROLLER_CUBE ][ i ] ) )
       {
         u32 val = NesDbManager::NES_BUTTONS[ i ].button;
-        if( !( val & BTN_RAPID ) || isRapid )
+        if( val & NES_SPECIAL )
         {
-          result |= ( val & 0xFFFF );
+          if( NESIsVSUni )
+          {
+            MDFN_VSUniCoin();
+          }
+          else if( MDFNGameInfo->GameType == GMT_DISK && !flipdisk )
+          {
+            flipdisk = 30;
+          }
+        }
+        else if( !( val & BTN_RAPID ) || isRapid )
+        {
+          result |= ( val & 0xFFFF );          
         }
       }  
     }    
@@ -146,6 +188,7 @@ void Nes::updateControls( bool isRapid )
 
 void Nes::onPostLoad()
 {
+  flipdisk = 0;
 }
 
 bool Nes::updateDebugText( 
