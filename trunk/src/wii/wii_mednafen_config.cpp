@@ -1,8 +1,7 @@
 /*
 WiiMednafen : Wii port of the Mednafen emulator
 
-Copyright (C) 2011
-raz0red and Arikado
+Copyright (C) 2011 raz0red
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any
