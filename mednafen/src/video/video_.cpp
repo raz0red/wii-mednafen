@@ -89,7 +89,6 @@ void MDFNI_SaveSnapshot(const MDFN_Surface *src, const MDFN_Rect *rect, const MD
 
 void MDFN_DispMessage(const char *format, ...) throw()
 {
-#ifndef WII
   va_list ap;
   va_start(ap,format);
   char *msg = NULL;
@@ -98,7 +97,6 @@ void MDFN_DispMessage(const char *format, ...) throw()
   va_end(ap);
 
   MDFND_DispMessage((UTF8*)msg);
-#endif
 }
 
 void MDFN_ResetMessages(void)

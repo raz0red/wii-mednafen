@@ -53,6 +53,7 @@ extern int FDS_DiskEject(void);
 extern int FDS_DiskSelect(void);
 
 static int flipdisk = 0;
+static bool specialheld = false;
 
 void Nes::updateControls( bool isRapid )
 {
@@ -76,6 +77,7 @@ void Nes::updateControls( bool isRapid )
     flipdisk--;
   }
 
+  bool special = false;
   for( int c = 0; c < 4; c++ )
   {
     // Check the state of the controllers
@@ -145,21 +147,29 @@ void Nes::updateControls( bool isRapid )
       {
         u32 val = NesDbManager::NES_BUTTONS[ i ].button;
         if( val & NES_SPECIAL )
+        {          
+          special = true;
+          if( !specialheld )
+          {
+            specialheld = true;
+            if( NESIsVSUni )
+            {
+              MDFN_VSUniCoin();
+            }
+            else if( MDFNGameInfo->GameType == GMT_DISK && !flipdisk )
+            {
+              flipdisk = 30;
+            }
+          }                    
+        }
+        else 
         {
-          if( NESIsVSUni )
+          if( !( val & BTN_RAPID ) || isRapid )
           {
-            MDFN_VSUniCoin();
-          }
-          else if( MDFNGameInfo->GameType == GMT_DISK && !flipdisk )
-          {
-            flipdisk = 30;
+            result |= ( val & 0xFFFF );          
           }
         }
-        else if( !( val & BTN_RAPID ) || isRapid )
-        {
-          result |= ( val & 0xFFFF );          
-        }
-      }  
+      }        
     }    
 
     if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
@@ -184,11 +194,17 @@ void Nes::updateControls( bool isRapid )
 
     m_padData[c] = result;
   }
+
+  if( !special )
+  {
+    specialheld = false;
+  }
 }
 
 void Nes::onPostLoad()
 {
   flipdisk = 0;
+  specialheld = false;
 }
 
 bool Nes::updateDebugText( 
