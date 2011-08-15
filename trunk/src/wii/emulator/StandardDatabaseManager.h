@@ -25,7 +25,6 @@ typedef struct StandardDbEntry
   char buttonDesc[32][255];
 } StandardDbEntry;
 
-
 class StandardDatabaseManager : public DatabaseManager
 {
 protected:
