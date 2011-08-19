@@ -939,6 +939,43 @@ int wii_vsync_enabled()
     ( wii_is_pal && wii_get_max_frames() <= 50 ) );
 }
 
+#ifdef WII_NETTRACE
+static int __out_write(struct _reent *r, int fd, const char *ptr, size_t len) 
+{         
+  if (!ptr || len <= 0)
+  {
+    return -1;
+  }
+  char message[512];
+  Util_strlcpy( message, ptr, sizeof(message) < len ? sizeof(message) : len );
+  net_print_string( NULL, 0, "%s\n", message );      
+  return len;
+}
+
+const devoptab_t dot_out = {
+  "stdout", // device name
+  0, // size of file structure
+  NULL, // device open
+  NULL, // device close
+  __out_write,// device write
+  NULL, // device read
+  NULL, // device seek
+  NULL, // device fstat
+  NULL, // device stat
+  NULL, // device link
+  NULL, // device unlink
+  NULL, // device chdir
+  NULL, // device rename
+  NULL, // device mkdir
+  0, // dirStateSize
+  NULL, // device diropen_r
+  NULL, // device dirreset_r
+  NULL, // device dirnext_r
+  NULL, // device dirclose_r
+  NULL // device statvfs_r
+};
+#endif
+
 /*
 * Main 
 */
@@ -960,9 +997,12 @@ int main(int argc,char *argv[])
     snprintf( val, sizeof( val ), "arg[%d]: %s\n", i, argv[i] );
     net_print_string(__FILE__,__LINE__, val );
   }
+
+  devoptab_list[STD_OUT] = &dot_out;
+  devoptab_list[STD_ERR] = &dot_out;
 #endif
 
-  printf( "\x1b[5;0H" );
+  //printf( "\x1b[5;0H" );
 
   main_argc = argc;
   main_argv = argv;
@@ -973,9 +1013,14 @@ int main(int argc,char *argv[])
   // Try to mount the file system
   if( !ChangeInterface( wii_get_app_path(), FS_RETRY_COUNT ) ) 
   {
+    CON_Init(xfb[0],20,20,vmode->fbWidth,vmode->xfbHeight,vmode->fbWidth*VI_DISPLAY_PIX_SZ);
+    printf( "\x1b[5;0H" );
     printf( "Unable to mount %s\n\n", wii_get_fs_prefix() );
     printf( "Press A to exit..." );
     wii_pause();
+#ifdef WII_NETTRACE
+    net_print_close();
+#endif
     exit( 0 ); // unable to mount file system
   }
 

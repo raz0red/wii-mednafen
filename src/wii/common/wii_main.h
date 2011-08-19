@@ -86,7 +86,9 @@ extern RGBA wii_menu_sel_color;
 extern BOOL wii_is_pal;
 
 // The display mode (from SDL)
-extern GXRModeObj *vmode;	
+extern GXRModeObj *vmode;
+// Frame buffers (from SDL)
+extern unsigned int *xfb[2];
 
 /*
  * Creates and returns a new menu tree node

@@ -42,12 +42,15 @@ SOURCES		:=	\
     mednafen/src/nes/input \
     mednafen/src/nes/ntsc \
     mednafen/src/nes/ppu \
+    mednafen/src/ngp \
+    mednafen/src/ngp/TLCS-900h \
     mednafen/src/pcfx \
     mednafen/src/pcfx/input \
     mednafen/src/vb \
     mednafen/src/wswan \
     mednafen/src/hw_cpu/v810 \
     mednafen/src/hw_cpu/v810/fpu-new \
+    mednafen/src/hw_cpu/z80-fuse \
     mednafen/src/hw_sound/gb_apu \
     mednafen/src/hw_sound/pce_psg \
     mednafen/src/hw_misc/arcade_card \
@@ -67,6 +70,7 @@ SOURCES		:=	\
     src/wii/emulator/gba \
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
+    src/wii/emulator/ngp \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
@@ -76,6 +80,8 @@ INCLUDES	:= \
     mednafen/include \
     mednafen/include/blip \
     mednafen/src/drivers \
+    mednafen/src/ngp \
+    mednafen/src/ngp/TLCS-900h \
     mednafen/src/hw_sound \
     mednafen/src/hw_misc \
     mednafen/src/hw_cpu \
@@ -92,6 +98,7 @@ INCLUDES	:= \
     src/wii/emulator/gba \
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
+    src/wii/emulator/ngp \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
@@ -111,9 +118,9 @@ CFLAGS	= \
   -DPCE_FAST_BPP=16 \
   -DNES_BPP=16 \
   -DPCFX_BPP=16 \
-  -DPLAYER_BPP=16 \
-  -DUSB_WIILOAD \
-  -DWII_NETTRACE
+  -DPLAYER_BPP=16
+#  -DUSB_WIILOAD \
+#  -DWII_NETTRACE
       
 CXXFLAGS	=	$(CFLAGS) 
 

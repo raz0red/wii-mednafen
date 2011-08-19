@@ -9,6 +9,7 @@
 #include "GameBoyAdvance.h"
 #include "PCEFast.h"
 #include "PCFX.h"
+#include "NeoGeoPocket.h"
 #include "Nes.h"
 
 #include <map>
@@ -30,6 +31,7 @@ public:
   Nes NesEmu;
   PCEFast PCEFastEmu;
   PCFX PCFXEmu;
+  NeoGeoPocket NeoGeoPocketEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );
