@@ -365,31 +365,31 @@ int32 NES_Resampler::Do(int16 *in, int16 *out, uint32 maxoutlen, uint32 inlen, i
 NES_Resampler::~NES_Resampler()
 {
  if(PhaseWhich)
-  free(PhaseWhich);
+  MDFN_free(PhaseWhich);
 
  if(PhaseNext)
-  free(PhaseNext);
+  MDFN_free(PhaseNext);
 
  if(PhaseStep)
-  free(PhaseStep);
+  MDFN_free(PhaseStep);
 
  if(PhaseStepSave)
-  free(PhaseStepSave);
+  MDFN_free(PhaseStepSave);
 
  if(FIR_Coeffs_Real)
  {
   for(unsigned int i = 0; i < NumAlignments * NumPhases; i++)
    if(FIR_Coeffs_Real[i])
-    free(FIR_Coeffs_Real[i]);
+    MDFN_free(FIR_Coeffs_Real[i]);
 
-  free(FIR_Coeffs_Real);
+  MDFN_free(FIR_Coeffs_Real);
  }
 
  if(FIR_Coeffs)
-  free(FIR_Coeffs);
+  MDFN_free(FIR_Coeffs);
 
  if(FIR_CoCounts)
-  free(FIR_CoCounts);
+  MDFN_free(FIR_CoCounts);
 }
 
 void NES_Resampler::SetVolume(double newvolume)
@@ -514,10 +514,10 @@ NES_Resampler::NES_Resampler(double input_rate, double output_rate, double rate_
   ratio = 1 / s_ratio;
   NumPhases = count;
 
-  PhaseWhich = (uint32 *)malloc(sizeof(uint32) * NumPhases);
-  PhaseNext = (uint32 *)malloc(sizeof(uint32) * NumPhases);
-  PhaseStep = (uint32 *)malloc(sizeof(uint32) * NumPhases);
-  PhaseStepSave = (uint32 *)malloc(sizeof(uint32) * NumPhases);
+  PhaseWhich = (uint32 *)MDFN_malloc(sizeof(uint32) * NumPhases, "PhaseWhich");
+  PhaseNext = (uint32 *)MDFN_malloc(sizeof(uint32) * NumPhases, "PhaseNext");
+  PhaseStep = (uint32 *)MDFN_malloc(sizeof(uint32) * NumPhases, "PhaseStep");
+  PhaseStepSave = (uint32 *)MDFN_malloc(sizeof(uint32) * NumPhases, "PhaseStepSave");
 
   uint32 last_indoo = 0;
   for(unsigned int i = 0; i < NumPhases; i++)
@@ -548,12 +548,12 @@ NES_Resampler::NES_Resampler(double input_rate, double output_rate, double rate_
   MDFN_printf("Cutoff frequency is <= 0: %f\n", cutoff);
  }
 
- FIR_Coeffs = (int16 **)malloc(sizeof(int16 **) * NumAlignments * NumPhases);
- FIR_Coeffs_Real = (int16 **)malloc(sizeof(int16 **) * NumAlignments * NumPhases);
+ FIR_Coeffs = (int16 **)MDFN_malloc(sizeof(int16 **) * NumAlignments * NumPhases, "FIR_Coeffs");
+ FIR_Coeffs_Real = (int16 **)MDFN_malloc(sizeof(int16 **) * NumAlignments * NumPhases, "FIR_Coeffs_Real");
 
  for(unsigned int i = 0; i < NumAlignments * NumPhases; i++)
  {
-  uint8 *tmp_ptr = (uint8 *)calloc(sizeof(int16) * NumCoeffs_Padded + 16, 1);
+  uint8 *tmp_ptr = (uint8 *)MDFN_calloc(sizeof(int16) * NumCoeffs_Padded + 16, 1, "tmp_ptr");
 
   FIR_Coeffs_Real[i] = (int16 *)tmp_ptr;
   tmp_ptr += 0xF;
@@ -564,12 +564,12 @@ NES_Resampler::NES_Resampler(double input_rate, double output_rate, double rate_
  MDFN_printf("FIR table memory usage: %d bytes\n", (int)((sizeof(int16) * NumCoeffs_Padded + 16) * NumAlignments * NumPhases));
 
 
- FilterBuf = (double *)malloc(sizeof(double) * NumCoeffs * NumPhases);
+ FilterBuf = (double *)MDFN_malloc(sizeof(double) * NumCoeffs * NumPhases, "FilterBuf");
  gen_sinc(FilterBuf, NumCoeffs * NumPhases, cutoff, k_beta);
  normalize(FilterBuf, NumCoeffs * NumPhases); 
 
 
- FIR_CoCounts = (uint32 *)calloc(NumAlignments, sizeof(uint32));
+ FIR_CoCounts = (uint32 *)MDFN_calloc(NumAlignments, sizeof(uint32), "FIR_CoCounts");
  FIR_CoCounts[0] = NumCoeffs;
 
  for(unsigned int phase = 0; phase < NumPhases; phase++)
@@ -607,7 +607,7 @@ NES_Resampler::NES_Resampler(double input_rate, double output_rate, double rate_
   }
  }
 
- free(FilterBuf);
+ MDFN_free(FilterBuf);
  FilterBuf = NULL;
 
  InputIndex = 0;

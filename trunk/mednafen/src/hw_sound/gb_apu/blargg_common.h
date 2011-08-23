@@ -5,6 +5,9 @@
 #ifndef BLARGG_COMMON_H
 #define BLARGG_COMMON_H
 
+#include "main.h"
+#include "../../memory.h"
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -47,14 +50,14 @@ class blargg_vector {
 	size_t size_;
 public:
 	blargg_vector() : begin_( 0 ), size_( 0 ) { }
-	~blargg_vector() { free( begin_ ); }
+	~blargg_vector() { MDFN_free( begin_ ); }
 	size_t size() const { return size_; }
 	T* begin() const { return begin_; }
 	T* end() const { return begin_ + size_; }
 	blargg_err_t resize( size_t n )
 	{
 		// TODO: blargg_common.cpp to hold this as an outline function, ugh
-		void* p = realloc( begin_, n * sizeof (T) );
+		void* p = MDFN_realloc( begin_, n * sizeof (T), "blargg" );
 		if ( p )
 			begin_ = (T*) p;
 		else if ( n > size_ ) // realloc failure only a problem if expanding
@@ -62,7 +65,7 @@ public:
 		size_ = n;
 		return 0;
 	}
-	void clear() { void* p = begin_; begin_ = 0; size_ = 0; free( p ); }
+	void clear() { void* p = begin_; begin_ = 0; size_ = 0; MDFN_free( p ); }
 	T& operator [] ( size_t n ) const
 	{
 		assert( n <= size_ ); // <= to allow past-the-end value
@@ -78,8 +81,8 @@ public:
 		#define BLARGG_THROWS( spec )
 	#endif
 	#define BLARGG_DISABLE_NOTHROW \
-		void* operator new ( size_t s ) BLARGG_THROWS(()) { return malloc( s ); }\
-		void operator delete ( void* p ) { free( p ); }
+		void* operator new ( size_t s ) BLARGG_THROWS(()) { return MDFN_malloc( s, "blargg_new" ); }\
+		void operator delete ( void* p ) { MDFN_free( p ); }
 	#define BLARGG_NEW new
 #else
 	#include <new>

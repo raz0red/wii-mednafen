@@ -84,11 +84,11 @@ int LoadNSFE(NSFINFO *nfe, const uint8 *buf, int32 size, int info_only)
    if(chunk_size) { nfe->StartingSong = *buf; buf++; size--; chunk_size--; }
    else nfe->StartingSong = 0;
 
-   nfe->SongNames = (UTF8 **)malloc(sizeof(char *) * nfe->TotalSongs);
+   nfe->SongNames = (UTF8 **)MDFN_malloc(sizeof(char *) * nfe->TotalSongs, "SongNames");
    memset(nfe->SongNames, 0, sizeof(char *) * nfe->TotalSongs);
 
-   nfe->SongLengths = (int32 *)malloc(sizeof(int32) * nfe->TotalSongs);
-   nfe->SongFades = (int32 *)malloc(sizeof(int32) * nfe->TotalSongs);
+   nfe->SongLengths = (int32 *)MDFN_malloc(sizeof(int32) * nfe->TotalSongs, "SongLengths");
+   nfe->SongFades = (int32 *)MDFN_malloc(sizeof(int32) * nfe->TotalSongs, "SongFades");
    {
     int x;
     for(x=0; x<nfe->TotalSongs; x++) {nfe->SongLengths[x] = -1; nfe->SongFades[x] = -1; }
@@ -112,7 +112,7 @@ int LoadNSFE(NSFINFO *nfe, const uint8 *buf, int32 size, int info_only)
 
     if(!info_only)
     {
-     if(!(nfe->NSFDATA=(uint8 *)malloc(nfe->NSFMaxBank*4096)))
+     if(!(nfe->NSFDATA=(uint8 *)MDFN_malloc(nfe->NSFMaxBank*4096, "NSFDATA")))
       return 0;
      memset(nfe->NSFDATA,0x00,nfe->NSFMaxBank*4096);
      memcpy(nfe->NSFDATA+(nfe->LoadAddr&0xfff),nbuf,nfe->NSFSize);
@@ -195,7 +195,7 @@ int LoadNSFE(NSFINFO *nfe, const uint8 *buf, int32 size, int info_only)
 	// if necessary.
   {
    //printf("Boop: %.4s\n",tb);
-   nfe->NSFExtra = (uint8 *)realloc(nfe->NSFExtra, nfe->NSFExtraSize + 8 + chunk_size);
+   nfe->NSFExtra = (uint8 *)MDFN_realloc(nfe->NSFExtra, nfe->NSFExtraSize + 8 + chunk_size, "NSFExtra");
    memcpy(nfe->NSFExtra + nfe->NSFExtraSize, buf - 8, 8 + chunk_size);
    nfe->NSFExtraSize += 8 + chunk_size;
   }
@@ -221,7 +221,7 @@ uint8 *MDFNI_CreateNSFE(NSFINFO *nfe, uint32 *totalsize)
 	{	\
 	  uint32 additional = cursize + size - malloced;	\
 	  if(additional < 8192) additional = 8192;	\
-	  buffer = (uint8*)realloc(buffer, malloced + additional);	\
+	  buffer = (uint8*)MDFN_realloc(buffer, malloced + additional, "ANED buffer");	\
 	  malloced += additional;	\
 	}	\
 	memcpy(buffer + cursize, data, size);	\
@@ -231,7 +231,7 @@ uint8 *MDFNI_CreateNSFE(NSFINFO *nfe, uint32 *totalsize)
   cursize = 0;
   malloced = 0;
   chunkbufsize = 0;
-  buffer = (uint8 *)malloc(8192);;
+  buffer = (uint8 *)MDFN_malloc(8192, "buffer");;
 
   #define ANED8(v) { uint8 tmp=v; ANED(&tmp,1); }
   #define ANED32(v) { uint8 t32[4]; t32[0]=v; t32[1]=v>>8; t32[2]=v>>16; t32[3]=v>>24; ANED(t32,4); }

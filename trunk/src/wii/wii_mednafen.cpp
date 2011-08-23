@@ -39,6 +39,10 @@ distribution.
 
 #include "Emulators.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 #ifdef WII_NETTRACE
 #include <network.h>
 #include "net_print.h"  
@@ -68,6 +72,10 @@ static char roms_dir[WII_MAX_PATH] = "";
  */
 void wii_handle_init()
 {  
+#ifdef MEM2
+  InitMem2Manager();
+#endif
+
   // Set the default roms dir
   snprintf( 
     roms_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_ROMS_DIR );

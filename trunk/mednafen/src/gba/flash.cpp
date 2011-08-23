@@ -21,6 +21,10 @@
 #include "flash.h"
 #include "sram.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 #if 0
 #include <memory.h>
 #endif
@@ -63,7 +67,11 @@ int GBA_Flash_StateAction(StateMem *sm, int load, int data_only)
 
 bool GBA_Flash_Init(void)
 {
- if(!(flashSaveMemory = (uint8 *)MDFN_malloc(0x20000, _("flash memory"))))
+//#ifdef MEM2
+//  if(!(flashSaveMemory = (uint8 *)Mem2ManagerAlloc(0x20000, _("flash memory"))))
+//#else
+  if(!(flashSaveMemory = (uint8 *)MDFN_malloc(0x20000, _("flash memory"))))
+//#endif
   return(0);
 
  memset(flashSaveMemory, 0x00, 0x20000);
@@ -74,7 +82,9 @@ void GBA_Flash_Kill(void)
 {
  if(flashSaveMemory)
  {
-  free(flashSaveMemory);
+//#ifndef MEM2
+  MDFN_free(flashSaveMemory);
+//#endif
   flashSaveMemory = NULL;
  }
 }

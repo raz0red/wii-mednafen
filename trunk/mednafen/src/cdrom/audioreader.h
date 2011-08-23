@@ -16,7 +16,7 @@ class MDFN_Object
 
         static void *operator new(size_t bcount)
         {
-         void *ret = calloc(1, bcount);
+         void *ret = MDFN_calloc(1, bcount, "audioread1");
 
 	 if(!ret)
 	 {
@@ -28,7 +28,7 @@ class MDFN_Object
 
         static void operator delete(void *ptr)
         {
-         free(ptr);
+         MDFN_free(ptr);
         }
 };
 

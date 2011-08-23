@@ -730,7 +730,7 @@ int Mapper165_Init(CartInfo *info)
   return(0);
 
  cwrap=M165PPU;
- if(!(CHRRAM = (uint8*)malloc(4096)))
+ if(!(CHRRAM = (uint8*)MDFN_malloc(4096,"CHRRAM")))
  {
   GenMMC3Close();
   return(0);
@@ -1077,7 +1077,7 @@ int Mapper74_Init(CartInfo *info)
 
  info->Power = M74_Power;
 
- if(!(CHRRAM=(uint8*)malloc(2048)))
+ if(!(CHRRAM=(uint8*)MDFN_malloc(2048,"CHRRAM")))
  {
   GenMMC3Close();
   return(0);
@@ -1101,7 +1101,7 @@ int Mapper148_Init(CartInfo *info)
   return(0);
  cwrap=m148kie;
  pwrap=m74p;
- if(!(CHRRAM=(uint8*)malloc(2048)))
+ if(!(CHRRAM=(uint8*)MDFN_malloc(2048,"CHRRAM")))
  {
   GenMMC3Close();
   return(0);
@@ -1449,7 +1449,7 @@ static int GenMMC3_Init(CartInfo *info, int prg, int chr, int wram, int battery)
  if(wram)
  {
   mmc3opts|=1;
-  if(!(WRAM=(uint8*)malloc(wram*1024)))
+  if(!(WRAM=(uint8*)MDFN_malloc(wram*1024,"WRAM")))
   {
    GenMMC3Close();
    return(0);
@@ -1466,7 +1466,7 @@ static int GenMMC3_Init(CartInfo *info, int prg, int chr, int wram, int battery)
 
  if(!chr)
  {
-  if(!(CHRRAM=(uint8*)malloc(8192)))
+  if(!(CHRRAM=(uint8*)MDFN_malloc(8192,"CHRRAM")))
   {
    GenMMC3Close();
    return(0);
@@ -1558,7 +1558,7 @@ int Mapper119_Init(CartInfo *info)
  if(!(GenMMC3_Init(info, 512, 64, 0, 0)))
   return(0);
  cwrap=TQWRAP;
- if(!(CHRRAM=(uint8*)malloc(8192)))
+ if(!(CHRRAM=(uint8*)MDFN_malloc(8192,"CHRRAM")))
  {
   GenMMC3Close();
   return(0);
@@ -1625,7 +1625,7 @@ int TQROM_Init(CartInfo *info)
  if(!(GenMMC3_Init(info, 512, 64, 0, 0)))
   return(0);
  cwrap=TQWRAP;
- if(!(CHRRAM=(uint8*)malloc(8192)))
+ if(!(CHRRAM=(uint8*)MDFN_malloc(8192,"CHRRAM")))
  {
   GenMMC3Close();
   return(0);

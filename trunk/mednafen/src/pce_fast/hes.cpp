@@ -234,6 +234,18 @@ void HES_Close(void)
   MDFN_free(rom);
   rom = NULL;
  }
+#ifdef WII
+ if(rom_backup)
+ {
+  MDFN_free(rom_backup);
+  rom_backup = NULL;
+ }
+
+ if(PCE_IsCD)
+ {
+  PCECD_Close();
+ }
+#endif
 }
 
 

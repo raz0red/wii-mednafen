@@ -43,6 +43,10 @@ distribution.
 #include "net_print.h"  
 #endif
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 extern "C" void WII_VideoStart();
 extern "C" void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 
@@ -73,6 +77,10 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   // Start emulation
   if( !resume )
   {
+#ifdef MEM2
+    Mem2ManagerReset(); // Reset the MEM2 manager
+#endif
+
     wii_cartridge_hash[0] = '\0'; // Reset the cartridge hash
     wii_cartridge_hash_with_header[0] = '\0';
     wii_snapshot_reset(); // Reset snapshot related state

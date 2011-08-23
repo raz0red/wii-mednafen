@@ -1391,7 +1391,7 @@ void MDFNPPU_Init(void)
   else if(preset == "monochrome")
    setup = nes_ntsc_monochrome;
 
-  NTSCBlitter = (nes_ntsc_emph_t *)calloc(1, sizeof(nes_ntsc_emph_t));
+  NTSCBlitter = (nes_ntsc_emph_t *)MDFN_calloc(1, sizeof(nes_ntsc_emph_t),"NTSCBlitter");
   nes_ntsc_init_emph(NTSCBlitter, &setup);  
   
  }

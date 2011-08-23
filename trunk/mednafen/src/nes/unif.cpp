@@ -94,15 +94,15 @@ static void FreeUNIF(void)
 {
  int x;
  if(UNIFchrrama)
-  {free(UNIFchrrama);UNIFchrrama=0;}
+  {MDFN_free(UNIFchrrama);UNIFchrrama=0;}
  if(exntar)
- { free(exntar); exntar = 0; }
+ { MDFN_free(exntar); exntar = 0; }
  if(boardname)
-  {free(boardname);boardname=0;}
+  {MDFN_free(boardname);boardname=0;}
  for(x=0;x<32;x++)
  {
   if(malloced[x])
-   {free(malloced[x]);malloced[x]=0;}
+   {MDFN_free(malloced[x]);malloced[x]=0;}
  }
 }
 
@@ -124,7 +124,7 @@ static void InitBoardMirroring(void)
   SetupCartMirroring(mirrortodo,1,0);
  else if(mirrortodo==0x4)
  {
-  exntar = (uint8 *)malloc(2048);
+  exntar = (uint8 *)MDFN_malloc(2048, "exntar");
   SetupCartMirroring(4,1,exntar);
  }
  else
@@ -163,7 +163,7 @@ static int NAME(MDFNFILE *fp)
 
  if(!MDFNGameInfo->name)
  {
-  MDFNGameInfo->name=(uint8 *)malloc(strlen(namebuf)+1);
+  MDFNGameInfo->name=(uint8 *)MDFN_malloc(strlen(namebuf)+1, "name");
   strcpy((char *)MDFNGameInfo->name,namebuf);
  }
  return(1);
@@ -273,9 +273,9 @@ static int LoadPRG(MDFNFILE *fp)
   return(0);
  MDFN_printf(_("PRG ROM %d size: %d"),z,(int) uchead.info);
  if(malloced[z])
-  free(malloced[z]);
+  MDFN_free(malloced[z]);
  t=FixRomSize(uchead.info,2048);
- if(!(malloced[z]=(uint8 *)malloc(t)))
+ if(!(malloced[z]=(uint8 *)MDFN_malloc(t,"malloced")))
   return(0);
  mallocedsizes[z]=t;
  memset(malloced[z]+uchead.info,0xFF,t-uchead.info);
@@ -293,7 +293,7 @@ static int LoadPRG(MDFNFILE *fp)
 
 static int SetBoardName(MDFNFILE *fp)
 {
- if(!(boardname=(uint8 *)malloc(uchead.info+1)))
+ if(!(boardname=(uint8 *)MDFN_malloc(uchead.info+1, "boardname")))
   return(0);
 
  fp->fread(boardname,1,uchead.info);
@@ -314,9 +314,9 @@ static int LoadCHR(MDFNFILE *fp)
   return(0);
  MDFN_printf(_("CHR ROM %d size: %d"),z,(int) uchead.info);
  if(malloced[16+z])
-  free(malloced[16+z]);
+  MDFN_free(malloced[16+z]);
  t=FixRomSize(uchead.info,8192);
- if(!(malloced[16+z]=(uint8 *)malloc(t)))
+ if(!(malloced[16+z]=(uint8 *)MDFN_malloc(t,"malloced")))
   return(0);
  mallocedsizes[16+z]=t;
  memset(malloced[16+z]+uchead.info,0xFF,t-uchead.info);
@@ -484,7 +484,7 @@ static int InitializeBoard(void)
 	CHRRAMSize = 32768;
       else
 	CHRRAMSize = 8192;
-      if((UNIFchrrama=(uint8 *)malloc(CHRRAMSize)))
+      if((UNIFchrrama=(uint8 *)MDFN_malloc(CHRRAMSize,"UNIFchrrama")))
       {
        SetupCartCHRMapping(0,UNIFchrrama,CHRRAMSize,1);
       }

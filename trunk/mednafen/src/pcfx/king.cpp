@@ -51,6 +51,10 @@
 #include "wii_sdl.h"
 #endif 
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 #ifdef __MMX__
 #include <mmintrin.h>
 #endif
@@ -1702,8 +1706,12 @@ extern Blip_Buffer FXsbuf[2]; // FIXME, externals are evil!
 
 bool KING_Init(void)
 {
+#ifdef MEM2
+ if(!(king = (king_t*)Mem2ManagerAlloc(sizeof(king_t), _("KING Data"))))
+#else
  if(!(king = (king_t*)MDFN_malloc(sizeof(king_t), _("KING Data"))))
-  return(0);
+#endif
+   return(0);
 
  HighDotClockWidth = MDFN_GetSettingUI("pcfx.high_dotclock_width");
  BGLayerDisable = 0;
@@ -1773,11 +1781,19 @@ bool KING_Init(void)
  SCSICD_Init(SCSICD_PCFX, 3, &FXsbuf[0], &FXsbuf[1], 153600 * MDFN_GetSettingUI("pcfx.cdspeed"), 21477273, KING_CDIRQ, KING_StuffSubchannels);
 
 #if PCFX_BPP==16
+#ifdef MEM2
+ if(!(fx_vce.LastField = (uint16 *)Mem2ManagerCalloc(1024 * 256, sizeof(uint16), _("Interlaced mode last field buffer"))))
+#else
  if(!(fx_vce.LastField = (uint16 *)MDFN_calloc(1024 * 256, sizeof(uint16), _("Interlaced mode last field buffer"))))
-  return(0);
+#endif
+   return(0);
+#else
+#ifdef MEM2
+ if(!(fx_vce.LastField = (uint32 *)Mem2ManagerCalloc(1024 * 256, sizeof(uint32), _("Interlaced mode last field buffer"))))
 #else
  if(!(fx_vce.LastField = (uint32 *)MDFN_calloc(1024 * 256, sizeof(uint32), _("Interlaced mode last field buffer"))))
-  return(0);
+#endif
+   return(0);
 #endif
 
  return(1);
@@ -1785,12 +1801,16 @@ bool KING_Init(void)
 
 void KING_Close(void)
 {
+#ifndef MEM2
  if(fx_vce.LastField)
   MDFN_free(fx_vce.LastField);
+#endif
 
  if(king)
  {
-  free(king);
+#ifndef MEM2
+  MDFN_free(king);
+#endif
   king = NULL;
  }
 }

@@ -5,11 +5,12 @@
 #define MDFN_malloc(size, purpose) MDFN_malloc_real(size, purpose, __FILE__, __LINE__)
 #define MDFN_calloc(nmemb, size, purpose) MDFN_calloc_real(nmemb, size, purpose, __FILE__, __LINE__)
 #define MDFN_realloc(ptr, size, purpose) MDFN_realloc_real(ptr, size, purpose, __FILE__, __LINE__)
+#define MDFN_free(ptr) MDFN_free_real(ptr, __FILE__, __LINE__)
 
 void *MDFN_malloc_real(uint32 size, const char *purpose, const char *_file, const int _line);
 void *MDFN_calloc_real(uint32 nmemb, uint32 size, const char *purpose, const char *_file, const int _line);
 void *MDFN_realloc_real(void *ptr, uint32 size, const char *purpose, const char *_file, const int _line);
-void MDFN_free(void *ptr);
+void MDFN_free_real(void *ptr, const char *_file, const int _line);
 
 static INLINE void MDFN_FastU32MemsetM8(uint32 *array, uint32 value_32, unsigned int u32len)
 {

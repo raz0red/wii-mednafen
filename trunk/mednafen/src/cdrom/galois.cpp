@@ -26,6 +26,8 @@
 
 #include "galois-inlines.h"
 
+#include "../memory.h"
+
 /***
  *** Galois field arithmetic.
  *** 
@@ -39,7 +41,7 @@
 
 GaloisTables* CreateGaloisTables(int32 gf_generator)
 {  
-   GaloisTables *gt = (GaloisTables *)calloc(1, sizeof(GaloisTables));
+   GaloisTables *gt = (GaloisTables *)MDFN_calloc(1, sizeof(GaloisTables), "GaloisTables");
    int32 b,log;
 
    /* Allocate the tables.
@@ -48,9 +50,9 @@ GaloisTables* CreateGaloisTables(int32 gf_generator)
 
    gt->gfGenerator = gf_generator;
 
-   gt->indexOf     = (int32 *)calloc(GF_FIELDSIZE, sizeof(int32));
-   gt->alphaTo     = (int32 *)calloc(GF_FIELDSIZE, sizeof(int32));
-   gt->encAlphaTo  = (int32 *)calloc(2*GF_FIELDSIZE, sizeof(int32));
+   gt->indexOf     = (int32 *)MDFN_calloc(GF_FIELDSIZE, sizeof(int32), "gtIndexOf");
+   gt->alphaTo     = (int32 *)MDFN_calloc(GF_FIELDSIZE, sizeof(int32), "gtAlphaTo");
+   gt->encAlphaTo  = (int32 *)MDFN_calloc(2*GF_FIELDSIZE, sizeof(int32), "gtEncAlphaTo");
    
    /* create the log/ilog values */
 
@@ -81,11 +83,15 @@ GaloisTables* CreateGaloisTables(int32 gf_generator)
 
 void FreeGaloisTables(GaloisTables *gt)
 {
-  if(gt->indexOf)     free(gt->indexOf);
-  if(gt->alphaTo)     free(gt->alphaTo);
-  if(gt->encAlphaTo) free(gt->encAlphaTo);
-
-  free(gt);
+  // Wii fix...
+  if( gt != NULL )
+  {
+    if(gt->indexOf)     MDFN_free(gt->indexOf);
+    if(gt->alphaTo)     MDFN_free(gt->alphaTo);
+    if(gt->encAlphaTo) MDFN_free(gt->encAlphaTo);
+    MDFN_free(gt);
+    gt = NULL;
+  }
 }
 
 /***
@@ -97,7 +103,7 @@ ReedSolomonTables *CreateReedSolomonTables(GaloisTables *gt,
 					   int32 first_consecutive_root,
 					   int32 prim_elem,
 					   int nroots_in)
-{  ReedSolomonTables *rt = (ReedSolomonTables *)calloc(1, sizeof(ReedSolomonTables));
+{  ReedSolomonTables *rt = (ReedSolomonTables *)MDFN_calloc(1, sizeof(ReedSolomonTables), "ReedSolomonTables");
    int32 i,j,root;
 
    rt->gfTables = gt;
@@ -106,7 +112,7 @@ ReedSolomonTables *CreateReedSolomonTables(GaloisTables *gt,
    rt->nroots   = nroots_in;
    rt->ndata    = GF_FIELDMAX - rt->nroots;
 
-   rt->gpoly    = (int32 *)calloc((rt->nroots+1), sizeof(int32));
+   rt->gpoly    = (int32 *)MDFN_calloc((rt->nroots+1), sizeof(int32), "rtGPoly");
 
    /* Create the RS code generator polynomial */
 
@@ -150,7 +156,12 @@ ReedSolomonTables *CreateReedSolomonTables(GaloisTables *gt,
 
 void FreeReedSolomonTables(ReedSolomonTables *rt)
 {
-  if(rt->gpoly)        free(rt->gpoly);
+  // Wii fix...
+  if( rt != NULL )
+  {
+    if(rt->gpoly)        MDFN_free(rt->gpoly);
 
-  free(rt);
+    MDFN_free(rt);
+    rt = NULL;
+  }
 }

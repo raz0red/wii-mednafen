@@ -51,7 +51,12 @@
 #include <network.h>
 #include "net_print.h"  
 #endif
+
 #include "wii_mednafen.h"
+
+#ifdef MEM2
+#include "mem2.h"
+#endif
 
 static bool CPUInit(const std::string bios_fn);
 static void CPUReset(void);
@@ -503,23 +508,20 @@ bool CPUReadBatteryFile(const char *filename)
 
 void CPUCleanUp()
 {
-#ifdef WII_NETTRACE
-  net_print_string( NULL, 0, "CPUCleanUp\n" );
-#endif
 
  if(rom) 
  {
-#ifdef WII_NETTRACE
-net_print_string( NULL, 0, "Free rom: %x\n", rom );
-#endif
-
+#ifndef MEM2
   MDFN_free(rom);
+#endif
   rom = NULL;
  }
 
  if(vram)
  {
+#ifndef MEM2
   MDFN_free(vram);
+#endif
   vram = NULL;
  }
 
@@ -683,30 +685,39 @@ static int Load(const char *name, MDFNFILE *fp)
 {
   layerSettings = 0xFF00;
 
+#ifdef MEM2
+  if(!(rom = Mem2ManagerAdjust( fp->f_data, 0x2000000, "ROM" )))
+    return(0);
+  memset(rom + fp->size, 0xFF, 0x2000000-fp->size);
+#else
   if(!(rom = (uint8 *)MDFN_malloc(0x2000000, _("ROM"))))
-   return(0);
-
-#ifdef WII_NETTRACE
-net_print_string( NULL, 0, "Rom: %x\n", rom );
-#endif
-
+    return(0);
   memset(rom, 0xFF, 0x2000000);
-
+#endif
+    
   if(!(workRAM = (uint8 *)MDFN_calloc(1, 0x40000, _("Work RAM"))))
   {
+#ifndef MEM2
    MDFN_free(rom);
+#endif
    return(0);
   }
 
-
   if(!memcmp(fp->data, "PSF\x22", 4))
   {
+#ifdef MEM2
+    MDFN_PrintError("GSF not currently supported.");
+    return(0);
+#endif
+
    int t = MDFNPSF_Load(0x22, fp, &pi, gsf_load_func);
    if(!t)
    {
     MDFN_PrintError("GSF load error.");
     MDFN_free(workRAM);
+#ifndef MEM2
     MDFN_free(rom);
+#endif
     return(0);
    }
    static UTF8 *sn;
@@ -731,7 +742,9 @@ net_print_string( NULL, 0, "Rom: %x\n", rom );
      size = 0x2000000;
    }
 
+#ifndef MEM2
    memcpy(whereToLoad, fp->data, size);
+#endif
 
    md5_context md5;
    md5.starts();
@@ -770,7 +783,11 @@ net_print_string( NULL, 0, "Rom: %x\n", rom );
    return 0;
   }
 
+#ifdef MEM2
+  if(!(vram = (uint8 *)Mem2ManagerCalloc(1, 0x20000, _("VRAM"))))
+#else
   if(!(vram = (uint8 *)MDFN_calloc(1, 0x20000, _("VRAM"))))
+#endif
   {
    CPUCleanUp();
    return 0;
@@ -876,6 +893,7 @@ net_print_string( NULL, 0, "Rom: %x\n", rom );
  return(1);
 }
 
+#if 0
 void doMirroring (bool b)
 {
   uint32 mirroredRomSize = (((romSize)>>20) & 0x3F)<<20;
@@ -892,6 +910,7 @@ void doMirroring (bool b)
     }
   }
 }
+#endif
 
 void CPUUpdateRender()
 {

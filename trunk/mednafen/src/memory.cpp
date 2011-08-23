@@ -22,11 +22,21 @@
 
 #include "memory.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 void *MDFN_calloc_real(uint32 nmemb, uint32 size, const char *purpose, const char *_file, const int _line)
 {
   void *ret;
 
   ret = calloc(nmemb, size);
+
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "MDFN_calloc_real: %s = 0x%x, %s, %0.2f\n", 
+    purpose, ret, ( ((u32)ret) < 0x90000000 ? "MEM1" : "MEM2" ), ((float)(size*nmemb)/1048576.0) );
+#endif
 
   if(!ret)
   {
@@ -42,9 +52,14 @@ void *MDFN_malloc_real(uint32 size, const char *purpose, const char *_file, cons
 
   ret = malloc(size);
 
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "MDFN_malloc_real: %s = 0x%x, %s, %0.2f\n", 
+    purpose, ret, ( ((u32)ret) < 0x90000000 ? "MEM1" : "MEM2" ), ((float)size/1048576.0) );
+#endif
+
   if(!ret)
   {
-    MDFN_PrintError(_("Error allocating(malloc) %u bytes for \"%s\" in %s(%d)!"), size, purpose, _file, _line);
+    MDFN_PrintError(_("Error allocating(malloc) %u(%0.2f) bytes for \"%s\" in %s(%d)!"), size, ((float)size/1048576.0), purpose, _file, _line);
     return(0);
   }
   return ret;
@@ -56,6 +71,11 @@ void *MDFN_realloc_real(void *ptr, uint32 size, const char *purpose, const char 
 
   ret = realloc(ptr, size);
 
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "MDFN_realloc_real: %s = 0x%x, %s, %0.2f\n", 
+    purpose, ret, ( ((u32)ret) < 0x90000000 ? "MEM1" : "MEM2" ), ((float)size/1048576.0) );
+#endif
+
   if(!ret)
   {
     MDFN_PrintError(_("Error allocating(realloc) %u bytes for \"%s\" in %s(%d)!"), size, purpose, _file, _line);
@@ -64,8 +84,12 @@ void *MDFN_realloc_real(void *ptr, uint32 size, const char *purpose, const char 
   return ret;
 }
 
-void MDFN_free(void *ptr)
+void MDFN_free_real(void *ptr, const char *_file, const int _line)
 {
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "MDFN_free: 0x%x %s(%d)\n", ptr, _file, _line );
+#endif
+
   free(ptr);
 }
 

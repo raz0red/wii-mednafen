@@ -25,6 +25,10 @@
 #include "../mempatcher.h"
 #include <iconv.h>
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 #ifdef WII
 #include "wii_mednafen.h"
 #endif
@@ -2780,8 +2784,10 @@ bool V810VB::Init(V810_Emu_Mode mode, bool vb_mode)
 
 void V810VB::Kill(void)
 {
+#ifndef MEM2
  for(unsigned int i = 0; i < FastMapAllocList.size(); i++)
   MDFN_free(FastMapAllocList[i]);
+#endif
 
  FastMapAllocList.clear();
 }
@@ -2804,7 +2810,11 @@ uint8 *V810VB::SetFastMap(uint32 addresses[], uint32 length, unsigned int num_ad
  }
  assert((length & (V810_FAST_MAP_PSIZE - 1)) == 0);
 
+#ifdef MEM2
+ if(!(ret = (uint8 *)Mem2ManagerAlloc(length + V810_FAST_MAP_TRAMPOLINE_SIZE, name)))
+#else
  if(!(ret = (uint8 *)MDFN_malloc(length + V810_FAST_MAP_TRAMPOLINE_SIZE, name)))
+#endif
  {
   return(NULL);
  }
