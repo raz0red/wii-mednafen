@@ -42,6 +42,12 @@
 #include "lec.h"
 
 #include "audioreader.h"
+#include "../memory.h"
+
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
 
 struct CDRFILE_TRACK_INFO
 {
@@ -256,11 +262,16 @@ void cdrfile_destroy(CDRFile *p_cdrfile)
    else
    {
     if(this_track->FirstFileInstance)
+    {
      fclose(this_track->fp);
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", this_track->fp );
+#endif
+    }
    }
   }  
  }
- free(p_cdrfile);
+ MDFN_free(p_cdrfile);
 }
 
 static bool ParseTOCFileLineInfo(CDRFILE_TRACK_INFO *track, const int tracknum, const char *filename, const char *binoffset, const char *msfoffset, const char *length)
@@ -279,6 +290,10 @@ static bool ParseTOCFileLineInfo(CDRFILE_TRACK_INFO *track, const int tracknum, 
   MDFN_printf(_("Could not open referenced file \"%s\": %s\n"), efn.c_str(), ene.StrError());
   return(0);
  }
+
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "fopen: %s = 0x%x\n", "track->fp", track->fp );
+#endif
 
  if(strlen(filename) >= 4 && !strcasecmp(filename + strlen(filename) - 4, ".wav"))
  {
@@ -397,7 +412,7 @@ static void DetermineFeatures(CDRFile *p_cdrfile)
 #ifdef HAVE_LIBCDIO
 static CDRFile *PhysOpen(const char *path)
 {
- CDRFile *ret = (CDRFile *)calloc(1, sizeof(CDRFile));
+ CDRFile *ret = (CDRFile *)MDFN_calloc(1, sizeof(CDRFile));
 
   CdIo *p_cdio;
   char **devices;
@@ -424,7 +439,7 @@ static CDRFile *PhysOpen(const char *path)
    MDFN_PrintError(_("No CDROM drives detected(or no disc present)."));
    if(devices)
     cdio_free_device_list(devices);
-   free(ret);
+   MDFN_free(ret);
    return(NULL);
   }
 
@@ -435,7 +450,7 @@ static CDRFile *PhysOpen(const char *path)
 
   if(!p_cdio) 
   {
-   free(ret);
+   MDFN_free(ret);
    return(NULL);
   }
   ret->p_cdio = p_cdio;
@@ -447,7 +462,7 @@ static CDRFile *PhysOpen(const char *path)
   if(ret->FirstTrack > 99)
   {
    MDFN_PrintError(_("Invalid first track: %d\n"), ret->FirstTrack);
-   free(ret);
+   MDFN_free(ret);
    cdio_destroy(p_cdio);
    return(NULL);
   }
@@ -455,7 +470,7 @@ static CDRFile *PhysOpen(const char *path)
   if(ret->NumTracks > 100)
   {
    MDFN_PrintError(_("Invalid track count: %d\n"), ret->NumTracks);
-   free(ret);
+   MDFN_free(ret);
    cdio_destroy(p_cdio);
    return(NULL);
   }
@@ -547,7 +562,7 @@ static CDRFile *PhysOpen(const char *path)
 
 static CDRFile *ImageOpen(const char *path)
 {
- CDRFile *ret = (CDRFile *)calloc(1, sizeof(CDRFile));
+ CDRFile *ret = (CDRFile *)MDFN_calloc(1, sizeof(CDRFile), "cdrfile");
  FILE *fp = NULL;
  bool IsTOC = FALSE;
 
@@ -560,10 +575,14 @@ static CDRFile *ImageOpen(const char *path)
    ErrnoHolder ene(errno);
 
    MDFN_PrintError(_("Error opening CUE sheet/TOC \"%s\": %s\n"), path, ene.StrError());
-   free(ret);
+   MDFN_free(ret);
    return(NULL);
   }
   GetFileBase(path);
+
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "fopen: %s = 0x%x\n", "ImageOpen", fp );
+#endif
 
   char linebuf[512];
   int32 active_track = -1;
@@ -634,7 +653,13 @@ static CDRFile *ImageOpen(const char *path)
      if(AutoTrackInc > 99)
      {
       MDFN_printf(_("Invalid track number: %d\n"), AutoTrackInc);
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(NULL);
      }
 
@@ -657,7 +682,13 @@ static CDRFile *ImageOpen(const char *path)
      if(format_lookup == _DI_FORMAT_COUNT)
      {
       MDFN_printf(_("Invalid track format: %s\n"), args[0]);
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
 
@@ -668,7 +699,13 @@ static CDRFile *ImageOpen(const char *path)
      {
       TmpTrack.SubchannelMode = CDRF_SUBM_RW;
       MDFN_printf(_("\"RW\" format subchannel data not supported, only \"RW_RAW\" is!\n"));
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
      else if(!strcasecmp(args[1], "RW_RAW"))
@@ -703,7 +740,13 @@ static CDRFile *ImageOpen(const char *path)
      //printf("%s, %s, %s, %s\n", args[0], binoffset, msfoffset, length);
      if(!ParseTOCFileLineInfo(&TmpTrack, active_track, args[0], binoffset, msfoffset, length))
      {
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
     }
@@ -722,7 +765,13 @@ static CDRFile *ImageOpen(const char *path)
 
      if(!ParseTOCFileLineInfo(&TmpTrack, active_track, args[0], binoffset, NULL, length))
      {
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
     }
@@ -735,7 +784,13 @@ static CDRFile *ImageOpen(const char *path)
      if(active_track < 0)
      {
       MDFN_printf(_("Command %s is outside of a TRACK definition!\n"), cmdbuf);
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(NULL);
      }
      int m,s,f;
@@ -747,7 +802,13 @@ static CDRFile *ImageOpen(const char *path)
      if(active_track < 0)
      {
       MDFN_printf(_("Command %s is outside of a TRACK definition!\n"), cmdbuf);
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(NULL);
      }
      int m,s,f;
@@ -771,9 +832,20 @@ static CDRFile *ImageOpen(const char *path)
       ErrnoHolder ene(errno);
 
       MDFN_printf(_("Could not open referenced file \"%s\": %s\n"), efn.c_str(), ene.StrError());
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
+
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fopen: %s = 0x%x\n", "TmpTrack.fp", TmpTrack.fp );
+#endif
+
      TmpTrack.FirstFileInstance = 1;
      if(!strcasecmp(args[1], "BINARY"))
      {
@@ -789,14 +861,26 @@ static CDRFile *ImageOpen(const char *path)
       if(!TmpTrack.AReader)
       {
        MDFN_printf(_("Unsupported audio track file format: %s\n"), args[0]);
-       free(ret);
+       MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
        return(0);
       }     
      }
      else
      {
       MDFN_printf(_("Unsupported track format: %s\n"), args[1]);
-      free(ret);
+      MDFN_free(ret);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
       return(0);
      }
     }
@@ -828,6 +912,12 @@ static CDRFile *ImageOpen(const char *path)
      if(format_lookup == _DI_FORMAT_COUNT)
      {
       MDFN_printf(_("Invalid track format: %s\n"), args[0]);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif      
       return(0);
      }
 
@@ -836,6 +926,12 @@ static CDRFile *ImageOpen(const char *path)
      if(active_track < 0 || active_track > 99)
      {
       MDFN_printf(_("Invalid track number: %d\n"), active_track);
+#ifdef WII
+      fclose( fp );
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif      
       return(0);
      }
     }
@@ -869,6 +965,12 @@ static CDRFile *ImageOpen(const char *path)
   else
    MDFN_printf(_("Error reading CUE sheet: %s\n"), ene.StrError());
 
+#ifdef WII
+  fclose( fp );
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
   return(0);
  }
 
@@ -878,6 +980,12 @@ static CDRFile *ImageOpen(const char *path)
  if(FirstTrack > LastTrack)
  {
   MDFN_printf(_("No tracks found!\n"));
+#ifdef WII
+  fclose( fp );
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
   return(0);
  }
 
@@ -943,6 +1051,13 @@ static CDRFile *ImageOpen(const char *path)
  } // end to track loop
 
  ret->total_sectors = RunningLBA;
+
+#ifdef WII
+  fclose( fp );
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "fclose: 0x%x\n", fp );
+#endif
+#endif
 
  return(ret);
 }

@@ -296,7 +296,7 @@ bool CDIF_Open(const char *device_name)
  EmuThreadQueue = new CDIF_Queue();
  
  SBMutex = MDFND_CreateMutex();
- SectorBuffers = (CDIF_Sector_Buffer *)calloc(SBSize, sizeof(CDIF_Sector_Buffer));
+ SectorBuffers = (CDIF_Sector_Buffer *)MDFN_calloc(SBSize, sizeof(CDIF_Sector_Buffer), "SectorBuffers");
 
  SBWritePos = 0;
  ra_lba = 0;
@@ -366,7 +366,7 @@ bool CDIF_Close(void)
 
  if(SectorBuffers)
  {
-  free(SectorBuffers);
+  MDFN_free(SectorBuffers);
   SectorBuffers = NULL;
  }
 
@@ -386,6 +386,13 @@ bool CDIF_Close(void)
  {
   MDFND_DestroyMutex(SBMutex);
   SBMutex = NULL;
+ }
+
+ // Wii fix...
+ LEC_Eval = MDFN_GetSettingB("cdrom.lec_eval");
+ if(LEC_Eval)
+ {
+  Kill_LEC_Correct();
  }
 
  return(1);

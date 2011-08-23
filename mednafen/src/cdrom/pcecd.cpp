@@ -54,6 +54,10 @@
 #include "pcecd.h"
 #include "SimpleFIFO.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 //#define PCECD_DEBUG
 
 static unsigned int OC_Multiplier;
@@ -413,8 +417,11 @@ bool PCECD_Init(const PCECD_Settings *settings, void (*irqcb)(bool), double mast
 
 	// Warning: magic number 126000 in PCECD_SetSettings() too
 	SCSICD_Init(SCSICD_PCE, 3 * OC_Multiplier, sbuf[0], sbuf[1], 126000 * (settings ? settings->CD_Speed : 1), master_clock * OC_Multiplier, CDIRQ, StuffSubchannel);
-
+#ifdef MEM2
+        if(!(ADPCM.RAM = (uint8 *)Mem2ManagerAlloc(0x10000, _("PCE ADPCM RAM"))))
+#else
         if(!(ADPCM.RAM = (uint8 *)MDFN_malloc(0x10000, _("PCE ADPCM RAM"))))
+#endif
         {
          return(0);
         }
@@ -431,7 +438,9 @@ void PCECD_Close(void)
 {
         if(ADPCM.RAM)
         {
+#ifndef MEM2
          MDFN_free(ADPCM.RAM);
+#endif
          ADPCM.RAM = NULL;
         }
 }

@@ -27,7 +27,7 @@
 #include "../md5.h"
 
 #include <string.h>
-//#include <memory.h>
+#include "../memory.h"
 #include <zlib.h>
 
 #include "gb.h"
@@ -38,6 +38,10 @@
 
 #include "Emulators.h"
 #include "wii_mednafen.h"
+
+#ifdef MEM2
+#include "mem2.h"
+#endif
 
 static uint32 *gbColorFilter = NULL; //[32768];
 static uint32 gbMonoColorMap[8 + 1];	// Mono color map(+1 = LCD off color)!
@@ -1727,37 +1731,39 @@ static void CloseGame(void)
 
  if(gbRam != NULL) 
  {
-  free(gbRam);
+  MDFN_free(gbRam);
   gbRam = NULL;
  }
 
  if(gbRom != NULL) 
  {
-  free(gbRom);
+#ifndef MEM2
+  MDFN_free(gbRom);
+#endif
   gbRom = NULL;
  }
 
  if(gbLineBuffer != NULL) 
  {
-  free(gbLineBuffer);
+  MDFN_free(gbLineBuffer);
   gbLineBuffer = NULL;
  }
 
  if(gbVram != NULL) 
  {
-  free(gbVram);
+  MDFN_free(gbVram);
   gbVram = NULL;
  }
 
  if(gbWram != NULL) 
  {
-  free(gbWram);
+  MDFN_free(gbWram);
   gbWram = NULL;
  }
 
  if(gbColorFilter)
  {
-  free(gbColorFilter);
+  MDFN_free(gbColorFilter);
   gbColorFilter = NULL;
  }
 
@@ -1979,9 +1985,13 @@ static int Load(const char *name, MDFNFILE *fp)
  {
   return(0);
  }
-
- gbRom = (uint8 *)malloc(fp->size);
+ 
+#ifdef MEM2
+ gbRom = fp->f_data;
+#else
+ gbRom = (uint8 *)MDFN_malloc(fp->size, "ROM");
  memcpy(gbRom, fp->data, fp->size);
+#endif
  gbRomSize = fp->size;
 
  md5_context md5;
@@ -2023,7 +2033,12 @@ static bool gbUpdateSizes()
   //MDFN_printf("ROM Size: %d\n", gbRomSizes[gbRom[0x148]]);
 
   if(gbRomSize < gbRomSizes[gbRom[0x148]]) {
-    gbRom = (uint8 *)realloc(gbRom, gbRomSizes[gbRom[0x148]]);
+#ifdef MEM2
+  if(!(gbRom = Mem2ManagerAdjust( gbRom, gbRomSizes[gbRom[0x148]], "ROM" )))
+    return false;
+#else
+    gbRom = (uint8 *)MDFN_realloc(gbRom, gbRomSizes[gbRom[0x148]], "ROM");
+#endif
   }
   gbRomSize = gbRomSizes[gbRom[0x148]];
   gbRomSizeMask = gbRomSizesMasks[gbRom[0x148]];
@@ -2119,7 +2134,7 @@ static bool gbUpdateSizes()
   }
 
   if(gbRamSize) {
-    gbRam = (uint8 *)malloc(gbRamSize);
+    gbRam = (uint8 *)MDFN_malloc(gbRamSize, "RAM");
     memset(gbRam, 0xFF, gbRamSize);
   }
 
@@ -2141,18 +2156,18 @@ static bool gbUpdateSizes()
 
   if(gbCgbMode)
   {
-   gbWram = (uint8 *)malloc(0x8000);
+   gbWram = (uint8 *)MDFN_malloc(0x8000, "WRAM");
    memset(gbWram,0,0x8000);
    MDFNMP_AddRAM(0x8000, 0x10000, gbWram);
 
-   gbVram = (uint8 *)malloc(0x4000);
+   gbVram = (uint8 *)MDFN_malloc(0x4000, "VRAM");
    memset(gbVram, 0, 0x4000);
   }
   else
   {
-   gbWram = (uint8 *)malloc(0x2000);
+   gbWram = (uint8 *)MDFN_malloc(0x2000, "WRAM");
    memset(gbWram,0,0x2000);
-   gbVram = (uint8 *)malloc(0x2000);
+   gbVram = (uint8 *)MDFN_malloc(0x2000, "VRAM");
    memset(gbVram, 0, 0x2000);
   }
 
@@ -2162,7 +2177,7 @@ static bool gbUpdateSizes()
   if(gbRam)
    MDFNMP_AddRAM(gbRamSize > 8192 ? 8192 : gbRamSize, 0xA000, gbRam);
 
-  gbLineBuffer = (uint16 *)malloc(160 * sizeof(uint16));
+  gbLineBuffer = (uint16 *)MDFN_malloc(160 * sizeof(uint16), "lineBuffer");
 
   switch(type) {
   case 0x1c:

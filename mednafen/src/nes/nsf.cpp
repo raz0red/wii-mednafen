@@ -81,13 +81,13 @@ static void FreeNSF(void)
 {
  if(NSFInfo)
  {
-  if(NSFInfo->GameName) free(NSFInfo->GameName);
-  if(NSFInfo->Artist) free(NSFInfo->Artist);
-  if(NSFInfo->Copyright) free(NSFInfo->Copyright);
-  if(NSFInfo->Ripper) free(NSFInfo->Ripper);
-  if(NSFInfo->NSFDATA) free(NSFInfo->NSFDATA);
-  if(ExWRAM) { free(ExWRAM); ExWRAM = NULL; }
-  free(NSFInfo);
+  if(NSFInfo->GameName) MDFN_free(NSFInfo->GameName);
+  if(NSFInfo->Artist) MDFN_free(NSFInfo->Artist);
+  if(NSFInfo->Copyright) MDFN_free(NSFInfo->Copyright);
+  if(NSFInfo->Ripper) MDFN_free(NSFInfo->Ripper);
+  if(NSFInfo->NSFDATA) MDFN_free(NSFInfo->NSFDATA);
+  if(ExWRAM) { MDFN_free(ExWRAM); ExWRAM = NULL; }
+  MDFN_free(NSFInfo);
   NSFInfo = NULL;
  }
 

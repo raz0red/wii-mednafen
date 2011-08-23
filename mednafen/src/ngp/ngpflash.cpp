@@ -180,12 +180,12 @@ void flash_read(void)
         }
 
         //Read the flash data
-        flashdata = (uint8*)malloc(header.total_file_length * sizeof(uint8));
+        flashdata = (uint8*)MDFN_malloc(header.total_file_length * sizeof(uint8), "flashdata");
         system_io_flash_read(flashdata, header.total_file_length);
 
 	do_flash_read(flashdata);
 
-        free(flashdata);
+        MDFN_free(flashdata);
 }
 
 
@@ -249,7 +249,7 @@ static uint8 *make_flash_commit(int32 *length)
 	}
 
 	//Write the flash data
-	flashdata = (uint8*)malloc(header.total_file_length * sizeof(uint8));
+	flashdata = (uint8*)MDFN_malloc(header.total_file_length * sizeof(uint8), "flashdata");
 
 	//Copy header
 	memcpy(flashdata, &header, sizeof(FlashFileHeader));
@@ -283,7 +283,7 @@ void flash_commit(void)
  if(flashdata)
  {
   system_io_flash_write(flashdata, length);
-  free(flashdata);
+  MDFN_free(flashdata);
  }
 }
 
@@ -309,12 +309,12 @@ int FLASH_StateAction(StateMem *sm, int load, int data_only)
 
  if(!FlashLength) // No flash data to save, OR no flash data to load.
  {
-  if(flashdata) free(flashdata);
+  if(flashdata) MDFN_free(flashdata);
   return(1);
  }
 
  if(load)
-  flashdata = (uint8 *)malloc(FlashLength);
+  flashdata = (uint8 *)MDFN_malloc(FlashLength, "flashdata");
 
  SFORMAT FLSH_StateRegs[] =
  {
@@ -324,7 +324,7 @@ int FLASH_StateAction(StateMem *sm, int load, int data_only)
 
  if(!MDFNSS_StateAction(sm, load, data_only, FLSH_StateRegs, "FLSH"))
  {
-  free(flashdata);
+  MDFN_free(flashdata);
   return(0);
  }
 
@@ -334,6 +334,6 @@ int FLASH_StateAction(StateMem *sm, int load, int data_only)
   do_flash_read(flashdata);
  }
 
- free(flashdata);
+ MDFN_free(flashdata);
  return(1);
 }

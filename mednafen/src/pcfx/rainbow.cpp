@@ -24,6 +24,10 @@
 #include "jrevdct.h"
 #include "../clamp.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 static bool ChromaIP;	// Bilinearly interpolate chroma channel
 
 /* Y = luminance/luma, UV = chrominance/chroma */
@@ -242,11 +246,19 @@ static bool BuildHuffmanLUT(const HuffmanTable *table, HuffmanQuickLUT *qlut, co
  // TODO: Allocate only (1 << bitmax) entries.
  // TODO: What should we set invalid bitsequences/entries to? 0? ~0?  Something else?
 
+#ifdef MEM2
+ if(!(qlut->lut = (uint8 *)Mem2ManagerCalloc(1 << 12, 1, _("Huffman LUT"))))
+#else
  if(!(qlut->lut = (uint8 *)MDFN_calloc(1 << 12, 1, _("Huffman LUT"))))
-  return(FALSE);
+#endif
+   return(FALSE);
 
+#ifdef MEM2
+ if(!(qlut->lut_bits = (uint8 *)Mem2ManagerCalloc(1 << 12, 1, _("Huffman LUT"))))
+#else
  if(!(qlut->lut_bits = (uint8 *)MDFN_calloc(1 << 12, 1, _("Huffman LUT"))))
-  return(FALSE);
+#endif
+   return(FALSE);
 
  for(int numbits = 2; numbits <= 12; numbits++)
  {
@@ -641,8 +653,12 @@ bool RAINBOW_Init(bool arg_ChromaIP)
 
  for(int i = 0; i < 2; i++)
  {
+#ifdef MEM2
+  if(!(DecodeBuffer[i] = (uint8*)Mem2ManagerAlloc(0x2000 * 4, _("RAINBOW buffer RAM"))))
+#else
   if(!(DecodeBuffer[i] = (uint8*)MDFN_malloc(0x2000 * 4, _("RAINBOW buffer RAM"))))
-   return(0);
+#endif
+    return(0);
   memset(DecodeBuffer[i], 0, 0x2000 * 4);
  }
 
@@ -672,7 +688,9 @@ void RAINBOW_Close(void)
  for(int i = 0; i < 2; i++)
   if(DecodeBuffer[i])
   {
-   free(DecodeBuffer[i]);
+#ifndef MEM2
+   MDFN_free(DecodeBuffer[i]);
+#endif
    DecodeBuffer[i] = NULL;
   }
 }

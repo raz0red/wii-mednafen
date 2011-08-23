@@ -55,6 +55,10 @@ found freely through public domain sources.
 
 //#include "fpu-new/softfloat.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 V810::V810()
 {
  #ifdef WANT_DEBUGGER
@@ -311,8 +315,10 @@ bool V810::Init(V810_Emu_Mode mode, bool vb_mode)
 
 void V810::Kill(void)
 {
+#ifndef MEM2
  for(unsigned int i = 0; i < FastMapAllocList.size(); i++)
   MDFN_free(FastMapAllocList[i]);
+#endif 
 
  FastMapAllocList.clear();
 }
@@ -334,7 +340,11 @@ uint8 *V810::SetFastMap(uint32 addresses[], uint32 length, unsigned int num_addr
  }
  assert((length & (V810_FAST_MAP_PSIZE - 1)) == 0);
 
+#ifdef MEM2
+ if(!(ret = (uint8 *)Mem2ManagerAlloc(length + V810_FAST_MAP_TRAMPOLINE_SIZE, name)))
+#else
  if(!(ret = (uint8 *)MDFN_malloc(length + V810_FAST_MAP_TRAMPOLINE_SIZE, name)))
+#endif
  {
   return(NULL);
  }
@@ -1414,20 +1424,20 @@ int V810::StateAction(StateMem *sm, int load, int data_only)
 
  if(EmuMode == V810_EMU_MODE_ACCURATE)
  {
-  cache_tag_temp = (uint32 *)malloc(sizeof(uint32 *) * 128);
-  cache_data_temp = (uint32 *)malloc(sizeof(uint32 *) * 128 * 2);
-  cache_data_valid_temp = (bool *)malloc(sizeof(bool *) * 128 * 2);
+  cache_tag_temp = (uint32 *)MDFN_malloc(sizeof(uint32 *) * 128, "cache_tag_temp");
+  cache_data_temp = (uint32 *)MDFN_malloc(sizeof(uint32 *) * 128 * 2, "cache_data_temp");
+  cache_data_valid_temp = (bool *)MDFN_malloc(sizeof(bool *) * 128 * 2, "cache_data_valid_temp");
 
   if(!cache_tag_temp || !cache_data_temp || !cache_data_valid_temp)
   {
    if(cache_tag_temp)
-    free(cache_tag_temp);
+    MDFN_free(cache_tag_temp);
 
    if(cache_data_temp)
-    free(cache_data_temp);
+    MDFN_free(cache_data_temp);
 
    if(cache_data_valid_temp)
-    free(cache_data_valid_temp);
+    MDFN_free(cache_data_valid_temp);
 
    return(0);
   }
@@ -1510,9 +1520,9 @@ int V810::StateAction(StateMem *sm, int load, int data_only)
 
  if(EmuMode == V810_EMU_MODE_ACCURATE)
  {
-  free(cache_tag_temp);
-  free(cache_data_temp);
-  free(cache_data_valid_temp);
+  MDFN_free(cache_tag_temp);
+  MDFN_free(cache_data_temp);
+  MDFN_free(cache_data_valid_temp);
  }
 
  return(ret);

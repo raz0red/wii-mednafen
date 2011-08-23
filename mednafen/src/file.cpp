@@ -38,6 +38,10 @@
 #include "file.h"
 #include "general.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 #ifndef __GNUC__
 #define strcasecmp strcmp
 #endif
@@ -75,6 +79,9 @@ static const char *unzErrorString(int error_code)
 
 bool MDFNFILE::ApplyIPS(FILE *ips)
 {
+#ifdef MEM2
+  return false; // TODO: Fix this...
+#endif
   uint8 header[5];
   uint32 count = 0;
 
@@ -266,13 +273,35 @@ bool MDFNFILE::MakeMemWrap(void *tz, int type)
     else
     {
 #endif
+
+#ifdef MEM2
+      if( isgame )
+      {
+        if(!(f_data = (uint8*)Mem2ManagerAlloc(size, _("file read buffer"))))
+        {
+          goto doret;
+        }
+      }
+      else
+      {
+#endif
       if(!(f_data = (uint8*)MDFN_malloc(size, _("file read buffer"))))
       {
         goto doret;
       }
+#ifdef MEM2
+      }
+#endif
       if((int64)::fread(f_data, 1, size, (FILE *)tz) != size)
       {
+#ifdef MEM2
+        if( !isgame )
+        {
+#endif
         free(f_data);
+#ifdef MEM2
+        }
+#endif
         goto doret;
       }
 #ifdef HAVE_MMAP
@@ -320,10 +349,24 @@ bool MDFNFILE::MakeMemWrap(void *tz, int type)
       goto doret;
     }
 
+#ifdef MEM2
+    if( isgame )
+    {
+      if(!(f_data = (uint8*)Mem2ManagerAlloc(ufo.uncompressed_size, _("file read buffer"))))
+      {
+        goto doret;
+      }
+    }
+    else
+    {
+#endif
     if(!(f_data=(uint8 *)MDFN_malloc(ufo.uncompressed_size, _("file read buffer"))))
     {
       goto doret;
     }
+#ifdef MEM2
+    }
+#endif
 
     unzReadCurrentFile(tz, f_data, ufo.uncompressed_size);
   }
@@ -348,7 +391,7 @@ doret:
   return(ret);
 }
 
-MDFNFILE::MDFNFILE() : size(f_size), data((const uint8* const &)f_data), ext((const char * const &)f_ext)
+MDFNFILE::MDFNFILE() : size(f_size), data((const uint8* const &)f_data), ext((const char * const &)f_ext), isgame(false)
 {
   f_data = NULL;
   f_size = 0;
@@ -369,6 +412,11 @@ MDFNFILE::~MDFNFILE()
 
 bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, const char *purpose, const bool suppress_notfound_pe)
 {
+  if( purpose != NULL && !strcmp( purpose, "game" ) )
+  {
+    isgame = true;
+  }
+
   void *t;
   unzFile tz;
 
@@ -556,7 +604,14 @@ bool MDFNFILE::Close(void)
       munmap(f_data, size);
     else
 #endif
-      free(f_data);
+#ifdef MEM2
+    if( !isgame )
+    {
+#endif
+      MDFN_free(f_data);
+#ifdef MEM2
+    }
+#endif
     f_data = NULL;
   }
 

@@ -153,7 +153,7 @@ static void CloseGame(void)
  {
   if(GameInterface->Close)
    GameInterface->Close();
-  free(GameInterface);
+  MDFN_free(GameInterface);
   GameInterface = NULL;
  }
 
@@ -190,7 +190,7 @@ static void InitCommon(const char *name)
           MDFNGameInfo->VideoSystem = VIDSYS_PAL;
         }
 
-        GameInterface = (NESGameType *)calloc(1, sizeof(NESGameType));
+        GameInterface = (NESGameType *)MDFN_calloc(1, sizeof(NESGameType), "GameInterface");
 
         SetReadHandler(0x0000, 0xFFFF, ANull);
         SetWriteHandler(0x0000, 0xFFFF, BNull);
@@ -263,7 +263,7 @@ static int Load(const char *name, MDFNFILE *fp)
 
 	if(!LoadFunction(name, fp, GameInterface))
 	{
-	 free(GameInterface);
+	 MDFN_free(GameInterface);
 	 GameInterface = NULL;
 	 return(0);
 	}

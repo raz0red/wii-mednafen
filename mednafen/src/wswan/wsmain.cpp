@@ -41,6 +41,10 @@
 #include "wii_mednafen.h"
 #include "Emulators.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 int 		wsc = 1;			/*color/mono*/
 uint32		rom_size;
 
@@ -228,8 +232,12 @@ static int Load(const char *name, MDFNFILE *fp)
  real_rom_size = (fp->size + 0xFFFF) & ~0xFFFF;
  rom_size = round_up_pow2(real_rom_size); //fp->size);
 
+#ifdef MEM2
+  if(!(wsCartROM = Mem2ManagerCalloc(1, rom_size, "wsCartROM")))
+    return 0;
+#else
  wsCartROM = (uint8 *)calloc(1, rom_size);
-
+#endif
 
  // This real_rom_size vs rom_size funny business is intended primarily for handling
  // WSR files.
@@ -348,7 +356,9 @@ static void CloseGame(void)
 
  if(wsCartROM)
  {
+#ifndef MEM2
   free(wsCartROM);
+#endif
   wsCartROM = NULL;
  }
 }

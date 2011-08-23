@@ -50,7 +50,7 @@ static int M96_StateAction(StateMem *sm, int load, int data_only)
 static void Mapper96_Close(void)
 {
  if(M96_CHR)
-  free(M96_CHR);
+  MDFN_free(M96_CHR);
  M96_CHR = NULL;
 }
 
@@ -63,7 +63,7 @@ static void Mapper96_Reset(CartInfo *info)
 
 int Mapper96_Init(CartInfo *info)
 {
- if(!(M96_CHR = (uint8 *)malloc(32768)))
+ if(!(M96_CHR = (uint8 *)MDFN_malloc(32768,"M96_CHR")))
   return(0);
 
  SetWriteHandler(0x8000, 0xffff, Mapper96_write);

@@ -76,9 +76,11 @@ public:
 
   char *fgets(char *s, int size);
 
-private:
-
   uint8 *f_data;
+
+private:
+  bool isgame;
+
   int64 f_size;
   char *f_ext;
 

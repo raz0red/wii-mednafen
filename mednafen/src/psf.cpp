@@ -210,7 +210,6 @@ static PSFINFO *LoadPSF(void (*datafunc)(void *, uint32), MDFNFILE *fp, int leve
   net_print_string( NULL, 0, "### res:%d\n", reserved );
 #endif
 
-
   fp->fseek(reserved, SEEK_CUR);
 
   if(type)
@@ -218,10 +217,10 @@ static PSFINFO *LoadPSF(void (*datafunc)(void *, uint32), MDFNFILE *fp, int leve
   else
   {
     in=(char *)malloc(complen);
-    out = (char *)malloc(1024 * 1024 * 5 + 12);
+    out = (char *)malloc(1024 * 1024 * 32 + 12);
     //out=(char *)malloc(1024*1024*2+0x800);
     fp->fread(in,1,complen);
-    outlen=1024 * 1024 * 5 + 12; //1024*1024*2;
+    outlen=1024 * 1024 * 32 + 12; //1024*1024*2;
     int t = uncompress((unsigned char *)out,&outlen,(unsigned char *)in,complen);
 #ifdef WII_NETTRACE
   net_print_string( NULL, 0, "### uncompress:%d\n", t );
@@ -246,6 +245,9 @@ static PSFINFO *LoadPSF(void (*datafunc)(void *, uint32), MDFNFILE *fp, int leve
     uint8 tagdata[5];
     if(fp->fread(tagdata, 1, 5) == 5)
     {
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "Tagdata:%s\n", tagdata);
+#endif
       if(!memcmp(tagdata,"[TAG]",5))
       {
         char linebuf[1024];
@@ -261,6 +263,10 @@ static PSFINFO *LoadPSF(void (*datafunc)(void *, uint32), MDFNFILE *fp, int leve
             if(value) free(value);
             continue;
           }
+
+#ifdef WII_NETTRACE
+          net_print_string( NULL, 0, "Key:%s Value:%s\n", key, value);
+#endif
 
           AddKV(&psfi->tags,key,value);
 

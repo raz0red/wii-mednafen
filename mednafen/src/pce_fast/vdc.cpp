@@ -33,6 +33,10 @@ The spectrum peaked at 15734 Hz.  21477272.727272... / 3 / 15734 = 455.00(CPU cy
 #include <trio/trio.h>
 #include <math.h>
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 namespace PCE_Fast
 {
 
@@ -1600,7 +1604,11 @@ void VDC_Init(int sgx)
 
  for(int chip = 0; chip < VDC_TotalChips; chip++)
  {
+#ifdef MEM2
+  vdc_chips[chip] = (vdc_t *)Mem2ManagerAlloc(sizeof(vdc_t), "VDC");
+#else
   vdc_chips[chip] = (vdc_t *)MDFN_malloc(sizeof(vdc_t), "VDC");
+#endif
  }
 
  LoadCustomPalette(MDFN_MakeFName(MDFNMKF_PALETTE, 0, NULL).c_str());
@@ -1618,8 +1626,10 @@ void VDC_Close(void)
 {
  for(int chip = 0; chip < VDC_TotalChips; chip++)
  {
+#ifndef MEM2
   if(vdc_chips[chip])
    MDFN_free(vdc_chips[chip]);
+#endif
   vdc_chips[chip] = NULL;
  }
  VDC_TotalChips = 0;

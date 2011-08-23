@@ -28,6 +28,10 @@
 
 #include "wii_mednafen.h"
 
+#ifdef MEM2
+#include "mem2.h"
+#endif
+
 namespace PCE_Fast
 {
 
@@ -126,7 +130,11 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
  MDFN_printf(_("ROM CRC32: 0x%04x\n"), crc32);
  MDFN_printf(_("ROM MD5:   0x%s\n"), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str());
 
+#ifdef MEM2
+ if(!(HuCROM = (uint8 *)Mem2ManagerAlloc(m_len, _("HuCard ROM"))))
+#else
  if(!(HuCROM = (uint8 *)MDFN_malloc(m_len, _("HuCard ROM"))))
+#endif
  {
   return(0);
  }
@@ -192,7 +200,9 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
 
   if(!(TsushinRAM = (uint8*)MDFN_calloc(1, 0x8000 + 8192, _("Tsushin Booster RAM"))))	// + 8192 for PC-as-ptr safety padding
   {
+#ifndef MEM2
    MDFN_free(HuCROM);
+#endif
    return(0);
   }
   memset(TsushinRAM, 0xFF, 0x8000);
@@ -431,7 +441,9 @@ void HuCClose(void)
 
  if(HuCROM)
  {
+#ifndef MEM2
   MDFN_free(HuCROM);
+#endif
   HuCROM = NULL;
  }
 }

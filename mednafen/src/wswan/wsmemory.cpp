@@ -458,7 +458,7 @@ void WSwan_MemoryKill(void)
 
  if(wsSRAM)
  {
-  free(wsSRAM);
+  MDFN_free(wsSRAM);
   wsSRAM = NULL;
  }
 }
@@ -474,7 +474,7 @@ void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
 
  if(sram_size)
  {
-  wsSRAM = (uint8*)malloc(sram_size);
+  wsSRAM = (uint8*)MDFN_malloc(sram_size, "wsSRAM");
   memset(wsSRAM, 0, sram_size);
  }
 
@@ -501,7 +501,7 @@ void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
 #if 0
  if(sram_size)
  {
-  wsSRAM = (uint8*)malloc(sram_size);
+  wsSRAM = (uint8*)MDFN_malloc(sram_size);
   memset(wsSRAM, 0, sram_size);
  }
 #endif

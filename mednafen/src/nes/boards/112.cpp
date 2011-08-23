@@ -69,7 +69,7 @@ static void Close(void)
 {
  if(WRAM)
  {
-  free(WRAM);
+  MDFN_free(WRAM);
   WRAM = NULL;
  }
 }
@@ -105,7 +105,7 @@ int Mapper112_Init(CartInfo *info)
  info->Close = Close;
  info->StateAction = StateAction;
 
- if(!(WRAM = (uint8 *)malloc(8192)))
+ if(!(WRAM = (uint8 *)MDFN_malloc(8192,"WRAM")))
   return(0);
 
  SetupCartPRGMapping(0x10, WRAM, 8192, 1);

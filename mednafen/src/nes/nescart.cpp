@@ -498,7 +498,7 @@ bool Genie_Init(void)
 
   if(!fp.Open(fn.c_str(), NULL, _("Game Genie ROM Image")))
   {
-   free(GENIEROM);
+   MDFN_free(GENIEROM);
    GENIEROM=0;
    return(FALSE);
   }
@@ -507,7 +507,7 @@ bool Genie_Init(void)
   {
    grerr:
    MDFN_PrintError(_("Error reading from Game Genie ROM image!"));
-   free(GENIEROM);
+   MDFN_free(GENIEROM);
    GENIEROM = NULL;
    fp.Close();
    return(FALSE);
@@ -541,7 +541,7 @@ bool Genie_Init(void)
  {
   if(GENIEROM)
   {
-   free(GENIEROM);
+   MDFN_free(GENIEROM);
    GENIEROM = NULL;
   }
   return(FALSE);
@@ -574,7 +574,7 @@ void Genie_Kill(void)
 
  if(GENIEROM)
  {
-  free(GENIEROM);
+  MDFN_free(GENIEROM);
   GENIEROM = NULL;
  }
 

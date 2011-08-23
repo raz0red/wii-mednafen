@@ -363,7 +363,7 @@ void T6W28_Apu::write_data_right( sms_time_t time, int data )
 
 T6W28_ApuState *T6W28_Apu::save_state(void)
 {
- T6W28_ApuState *ret = (T6W28_ApuState *)malloc(sizeof(T6W28_ApuState));
+ T6W28_ApuState *ret = (T6W28_ApuState *)MDFN_malloc(sizeof(T6W28_ApuState), "ApuState");
 
  for(int x = 0; x < 4; x++)
  {

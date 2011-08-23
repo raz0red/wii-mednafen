@@ -88,7 +88,7 @@ static void Close(void)
 {
  if(WRAM)
  {
-  free(WRAM);
+  MDFN_free(WRAM);
   WRAM = NULL;
  }
 }

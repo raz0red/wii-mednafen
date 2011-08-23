@@ -295,14 +295,34 @@ static DECLFW(FDSWrite)
 
 static void FreeFDSMemory(void)
 {
- unsigned int x;
+  unsigned int x;
+  for(x=0;x<TotalSides;x++)
+    if(diskdata[x])
+    {
+      MDFN_free(diskdata[x]);
+      diskdata[x]=0;
+    }
 
- for(x=0;x<TotalSides;x++)
-  if(diskdata[x])
+#ifdef WII
+  for(x=0;x<TotalSides;x++)
+    if(diskdatao[x])
+    { 
+      MDFN_free(diskdatao[x]);
+      diskdatao[x]=0;
+    }
+
+  if(FDSRAM)
   {
-   free(diskdata[x]);
-   diskdata[x]=0;
+    MDFN_free(FDSRAM);
+    FDSRAM=NULL;
   }
+
+  if(CHRRAM)
+  {
+    MDFN_free(CHRRAM);
+    CHRRAM=NULL;
+  }
+#endif
 }
 
 static int SubLoad(MDFNFILE *fp)
@@ -343,7 +363,7 @@ static int SubLoad(MDFNFILE *fp)
   {
    unsigned int zol;
    for(zol=0;zol<x;zol++)
-    free(diskdata[zol]);
+    MDFN_free(diskdata[zol]);
    return 0;
   }
   fp->fread(diskdata[x], 1, 65500);
@@ -671,7 +691,17 @@ bool FDSLoad(const char *name, MDFNFILE *fp, NESGameType *gt)
 
   if(tp.Open(MDFN_MakeFName(MDFNMKF_SAV, 0, "fds").c_str(), NULL, _("auxillary FDS data")))
   {
+#ifndef WII
    FreeFDSMemory();
+#else
+   unsigned int x;
+   for(x=0;x<TotalSides;x++)
+     if(diskdata[x])
+     {
+       MDFN_free(diskdata[x]);
+       diskdata[x]=0;
+     }
+#endif
    if(!SubLoad(&tp))
    {
     MDFN_PrintError("Error reading auxillary FDS file.");
@@ -710,16 +740,30 @@ void FDSClose(void)
  FILE *fp;
  unsigned int x;
 
- if(!DiskWritten) return;
+ if(!DiskWritten) 
+ {
+#ifdef WII
+   FreeFDSMemory();
+#endif
+   return;
+ }
 
  if(!(fp=fopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "fds").c_str(),"wb")))
+ {
+#ifdef WII
+  FreeFDSMemory();
+#endif
   return;
+ }
 
  for(x=0;x<TotalSides;x++)
  {
   if(fwrite(diskdata[x],1,65500,fp)!=65500) 
   {
    MDFN_PrintError("Error saving FDS image!");
+#ifdef WII
+   FreeFDSMemory();
+#endif
    fclose(fp);
    return;
   }
@@ -727,7 +771,6 @@ void FDSClose(void)
  FreeFDSMemory();
  fclose(fp);
 }
-
 
 static void FDSInit(void)
 {

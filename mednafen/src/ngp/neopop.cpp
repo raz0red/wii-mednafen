@@ -131,11 +131,15 @@ static bool TestMagic(const char *name, MDFNFILE *fp)
 
 static int Load(const char *name, MDFNFILE *fp)
 {
+#ifdef MEM2
+ ngpc_rom.data = fp->f_data;
+#else
  if(!(ngpc_rom.data = (uint8 *)MDFN_malloc(fp->size, _("Cart ROM"))))
-  return(0);
+   return(0);
+  memcpy(ngpc_rom.data, fp->data, fp->size);
+#endif
 
  ngpc_rom.length = fp->size;
- memcpy(ngpc_rom.data, fp->data, fp->size);
 
  md5_context md5;
  md5.starts();

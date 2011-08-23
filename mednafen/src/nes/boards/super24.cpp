@@ -210,7 +210,7 @@ static void Super24Reset(CartInfo *info)
 static void Super24Close(void)
 {
  if(CHRRAM)
-  free(CHRRAM);
+  MDFN_free(CHRRAM);
  CHRRAM = NULL;
 }
 
@@ -244,7 +244,7 @@ int Super24_Init(CartInfo *info)
  info->Power=Super24Reset;
  info->StateAction = StateAction;
 
- if(!(CHRRAM = (uint8 *)malloc(8192)))
+ if(!(CHRRAM = (uint8 *)MDFN_malloc(8192,"CHRRAM")))
   return(0);
 
  info->Close = Super24Close;
