@@ -19,12 +19,12 @@ PCFX::PCFX() :
   m_emulatorScreenSize.h = 280;
 
   // The base multi-res screen size
-  m_baseMultiResScreenSize.w = m_emulatorScreenSize.w;
-  m_baseMultiResScreenSize.h = m_emulatorScreenSize.h;
+  m_baseMultiResScreenSize.w = 256;
+  m_baseMultiResScreenSize.h = 240;
 
   // Set user screen sizes
-  float scalew = 1.0;
-  float scaleh = 1.0;
+  float scalew = 2.5;
+  float scaleh = 2.0;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
 }

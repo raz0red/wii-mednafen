@@ -387,6 +387,7 @@ int wii_sdl_init()
   // Don't show the cursor
   SDL_ShowCursor( SDL_DISABLE );
 
+#if 0
   // True type fonts
   TTF_Init();
 
@@ -398,6 +399,7 @@ int wii_sdl_init()
   sdl_font_13 = TTF_OpenFontRW( rw, 1, 13 );
   rw = SDL_RWFromMem( (u8*)font_ttf, font_ttf_size );
   sdl_font_12 = TTF_OpenFontRW( rw, 1, 12 );  
+#endif
 
   return 1;
 }
@@ -415,7 +417,6 @@ void wii_sdl_flip()
  */
 void wii_sdl_free_resources()
 {
-
   if( back_surface != NULL )
   {
     SDL_FreeSurface( back_surface );
@@ -424,6 +425,7 @@ void wii_sdl_free_resources()
   {
     SDL_FreeSurface( blit_surface );
   }
+#if 0
   if( sdl_font_18 != NULL )
   {
     TTF_CloseFont( sdl_font_18 );    
@@ -440,5 +442,6 @@ void wii_sdl_free_resources()
   {
     TTF_CloseFont( sdl_font_12 );    
   }
+#endif
 }
 

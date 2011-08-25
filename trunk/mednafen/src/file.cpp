@@ -79,9 +79,6 @@ static const char *unzErrorString(int error_code)
 
 bool MDFNFILE::ApplyIPS(FILE *ips)
 {
-#ifdef MEM2
-  return false; // TODO: Fix this...
-#endif
   uint8 header[5];
   uint32 count = 0;
 
@@ -178,9 +175,20 @@ bool MDFNFILE::ApplyIPS(FILE *ips)
         return(0);
       }
 
+#ifdef MEM2
+      if( isgame )
+      {
+        if(!(tmp = (uint8 *)Mem2ManagerAdjust(f_data, offset + patch_size, _("file read buffer"))))
+          return(0);
+      }
+      else
+      {
+#endif
       if(!(tmp = (uint8 *)MDFN_realloc(f_data, offset + patch_size, _("file read buffer"))))
         return(0);
-
+#ifdef MEM2
+      }
+#endif
       // Zero newly-allocated memory
       memset(tmp + f_size, 0, (offset + patch_size) - f_size);
 

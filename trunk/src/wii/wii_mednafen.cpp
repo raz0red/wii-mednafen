@@ -35,7 +35,9 @@ distribution.
 #include "FreeTypeGX.h"
 
 #include "font_ttf.h"
+#if 0
 #include "asot_ttf.h"
+#endif
 
 #include "Emulators.h"
 

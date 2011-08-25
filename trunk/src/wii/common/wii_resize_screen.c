@@ -89,14 +89,14 @@ static void wii_resize_render_callback()
   GXColor black = (GXColor) { 0x0, 0x0, 0x0, 0xff };
 
   wii_gx_drawrectangle( 
-    -141, 81, 282, 162, black, FALSE );
+    -231, 71, 462, 142, black, FALSE );
   wii_gx_drawrectangle( 
-    -140, 80, 280, 160, (GXColor){ 0x99, 0x99, 0x99, 0xff }, TRUE );    
+    -230, 70, 460, 140, (GXColor){ 0x99, 0x99, 0x99, 0xdd }, TRUE );    
 
-  int fontsize = 18;
-  int spacing = 20;
-  int largespacing = 30;
-  int y = 70;
+  int fontsize = 14;
+  int spacing = 16;
+  int largespacing = 28;
+  int y = 60;
 
   u16 right = ( FTGX_ALIGN_TOP | FTGX_JUSTIFY_RIGHT );
   u16 left = ( FTGX_ALIGN_TOP | FTGX_JUSTIFY_LEFT );

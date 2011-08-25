@@ -22,97 +22,97 @@ static map<string,string> msgmap;
 static char *
 expand_escape(const char *str)
 {
-	char *retval, *rp;
-	const char *cp = str;
+  char *retval, *rp;
+  const char *cp = str;
 
-	retval = (char *) malloc(strlen(str) + 1);
-	if (retval == NULL)
-		return NULL;
-	rp = retval;
+  retval = (char *) malloc(strlen(str) + 1);
+  if (retval == NULL)
+    return NULL;
+  rp = retval;
 
-	while (cp[0] != '\0' && cp[0] != '\\')
-		*rp++ = *cp++;
-	if (cp[0] == '\0')
-		goto terminate;
-	do
-	{
+  while (cp[0] != '\0' && cp[0] != '\\')
+    *rp++ = *cp++;
+  if (cp[0] == '\0')
+    goto terminate;
+  do
+  {
 
-		/* Here cp[0] == '\\'.  */
-		switch (*++cp)
-		{
-		case '\"': /* " */
-			*rp++ = '\"';
-			++cp;
-			break;
-		case 'a': /* alert */
-			*rp++ = '\a';
-			++cp;
-			break;
-		case 'b': /* backspace */
-			*rp++ = '\b';
-			++cp;
-			break;
-		case 'f': /* form feed */
-			*rp++ = '\f';
-			++cp;
-			break;
-		case 'n': /* new line */
-			*rp++ = '\n';
-			++cp;
-			break;
-		case 'r': /* carriage return */
-			*rp++ = '\r';
-			++cp;
-			break;
-		case 't': /* horizontal tab */
-			*rp++ = '\t';
-			++cp;
-			break;
-		case 'v': /* vertical tab */
-			*rp++ = '\v';
-			++cp;
-			break;
-		case '\\':
-			*rp = '\\';
-			++cp;
-			break;
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		{
-			int ch = *cp++ - '0';
+    /* Here cp[0] == '\\'.  */
+    switch (*++cp)
+    {
+    case '\"': /* " */
+      *rp++ = '\"';
+      ++cp;
+      break;
+    case 'a': /* alert */
+      *rp++ = '\a';
+      ++cp;
+      break;
+    case 'b': /* backspace */
+      *rp++ = '\b';
+      ++cp;
+      break;
+    case 'f': /* form feed */
+      *rp++ = '\f';
+      ++cp;
+      break;
+    case 'n': /* new line */
+      *rp++ = '\n';
+      ++cp;
+      break;
+    case 'r': /* carriage return */
+      *rp++ = '\r';
+      ++cp;
+      break;
+    case 't': /* horizontal tab */
+      *rp++ = '\t';
+      ++cp;
+      break;
+    case 'v': /* vertical tab */
+      *rp++ = '\v';
+      ++cp;
+      break;
+    case '\\':
+      *rp = '\\';
+      ++cp;
+      break;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+      {
+        int ch = *cp++ - '0';
 
-			if (*cp >= '0' && *cp <= '7')
-			{
-				ch *= 8;
-				ch += *cp++ - '0';
+        if (*cp >= '0' && *cp <= '7')
+        {
+          ch *= 8;
+          ch += *cp++ - '0';
 
-				if (*cp >= '0' && *cp <= '7')
-				{
-					ch *= 8;
-					ch += *cp++ - '0';
-				}
-			}
-			*rp = ch;
-		}
-			break;
-		default:
-			*rp = '\\';
-			break;
-		}
+          if (*cp >= '0' && *cp <= '7')
+          {
+            ch *= 8;
+            ch += *cp++ - '0';
+          }
+        }
+        *rp = ch;
+      }
+      break;
+    default:
+      *rp = '\\';
+      break;
+    }
 
-		while (cp[0] != '\0' && cp[0] != '\\')
-			*rp++ = *cp++;
-	} while (cp[0] != '\0');
+    while (cp[0] != '\0' && cp[0] != '\\')
+      *rp++ = *cp++;
+  } while (cp[0] != '\0');
 
-	/* Terminate string.  */
-	terminate: *rp = '\0';
-	return retval;
+  /* Terminate string.  */
+terminate: *rp = '\0';
+  return retval;
 }
 
 static void setMSG(const char *msgid, const char *msgstr)
@@ -138,9 +138,9 @@ bool LoadLanguage( const char* langfile )
     return true;
   }
 
-	char line[200];
-	char *lastID = NULL;
-	
+  char line[200];
+  char *lastID = NULL;
+
   FILE *fp;
   fp = fopen( langfile, "rb" );
   if (fp == NULL) 
@@ -148,52 +148,52 @@ bool LoadLanguage( const char* langfile )
     return false;		
   }
 
-	gettextCleanUp();
+  gettextCleanUp();
 
-	while( fgets( line, sizeof(line), fp ) != 0 )
-	{
+  while( fgets( line, sizeof(line), fp ) != 0 )
+  {
     // lines starting with # are comments
-		if (line[0] == '#')
-			continue;
+    if (line[0] == '#')
+      continue;
 
-		if (strncmp(line, "msgid \"", 7) == 0)
-		{
-			char *msgid, *end;
-			if (lastID)
-			{
-				free(lastID);
-				lastID = NULL;
-			}
-			msgid = &line[7];
-			end = strrchr(msgid, '"');
-			if (end && end - msgid > 1)
-			{
-				*end = 0;
-				lastID = strdup(msgid);
-			}
-		}
-		else if (strncmp(line, "msgstr \"", 8) == 0)
-		{
-			char *msgstr, *end;
+    if (strncmp(line, "msgid \"", 7) == 0)
+    {
+      char *msgid, *end;
+      if (lastID)
+      {
+        free(lastID);
+        lastID = NULL;
+      }
+      msgid = &line[7];
+      end = strrchr(msgid, '"');
+      if (end && end - msgid > 1)
+      {
+        *end = 0;
+        lastID = strdup(msgid);
+      }
+    }
+    else if (strncmp(line, "msgstr \"", 8) == 0)
+    {
+      char *msgstr, *end;
 
-			if (lastID == NULL)
-				continue;
+      if (lastID == NULL)
+        continue;
 
-			msgstr = &line[8];
-			end = strrchr(msgstr, '"');
-			if (end && end - msgstr > 1)
-			{
-				*end = 0;
-				setMSG(lastID, msgstr);
-			}
-			free(lastID);
-			lastID = NULL;
-		}
-	}
+      msgstr = &line[8];
+      end = strrchr(msgstr, '"');
+      if (end && end - msgstr > 1)
+      {
+        *end = 0;
+        setMSG(lastID, msgstr);
+      }
+      free(lastID);
+      lastID = NULL;
+    }
+  }
 
   fclose( fp );
 
-	return true;
+  return true;
 }
 
 #ifdef TRACK_UNIQUE_MSGIDS
@@ -238,7 +238,20 @@ const char *gettextmsg( const char *msgid )
   map<string,string>::iterator iter = msgmap.find(msgid);
   if( iter != msgmap.end() )
   {
-    return iter->second.c_str();
+    const char* str = iter->second.c_str();
+#if 0
+#ifdef WII_NETTRACE
+  char buf[512] = "";
+  char *pbuf = buf;
+  for( int i = 0; i < strlen(str) && ((pbuf - buf) < (sizeof(buf) - 4)); i++ )
+  {
+    sprintf( pbuf, "%x ", (u8)str[i] );
+    pbuf += 3;
+  }
+  net_print_string( NULL, 0, "gettextmsg: %s, %s\n", str, buf );
+#endif
+#endif
+    return str;
   }
   return msgid;
 }

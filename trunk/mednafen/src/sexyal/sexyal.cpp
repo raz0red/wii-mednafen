@@ -38,6 +38,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "convert.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 /* kludge.  yay. */
 SexyAL_enumdevice *SexyALI_OSS_EnumerateDevices(void);
 SexyAL_device *SexyALI_OSS_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
@@ -86,6 +91,15 @@ static int Write(SexyAL_device *device, void *data, uint32_t frames)
     device->srcformat.rate == device->format.rate &&
     device->srcformat.revbyteorder == device->format.revbyteorder)
   {
+#if 0
+#ifdef WII_NETTRACE
+    net_print_string( NULL, 0, "Write chunk: %d %d %d %d\n", 
+      device->srcformat.sampformat,
+      device->srcformat.channels,
+      device->srcformat.rate,
+      device->srcformat.revbyteorder );
+#endif
+#endif
     const uint8_t *data_in = (const uint8_t *)data;
 
     while(frames)
@@ -106,6 +120,16 @@ static int Write(SexyAL_device *device, void *data, uint32_t frames)
   else
   {
     const uint8_t *data_in = (const uint8_t *)data;
+
+#if 0
+#ifdef WII_NETTRACE
+    net_print_string( NULL, 0, "SexiALI_Convert: %d %d %d %d\n", 
+      device->srcformat.sampformat,
+      device->srcformat.channels,
+      device->srcformat.rate,
+      device->srcformat.revbyteorder );
+#endif
+#endif
 
     while(frames)
     {
