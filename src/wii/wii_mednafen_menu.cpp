@@ -721,9 +721,16 @@ static void read_lang_list( TREENODE *menu )
         Util_getextension( entry->d_name, ext );
         if( !strcmp( ext, WII_LANG_EXT ) )
         {
-          TREENODE *child = 
-              wii_create_tree_node( NODETYPE_LANG, entry->d_name );
+          char filepart[WII_MAX_PATH];
+          Util_strlcpy( filepart, entry->d_name, sizeof(filepart) );
+          int idx = strlen(filepart) - strlen(WII_LANG_EXT) - 1;
+          if( idx > 0 )
+          {
+            filepart[ idx ] = '\0';
+            TREENODE *child = 
+              wii_create_tree_node( NODETYPE_LANG, filepart );
             wii_add_child( menu, child );
+          }
         }
       }
     }

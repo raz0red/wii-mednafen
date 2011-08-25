@@ -22,6 +22,11 @@
 
 #include "FreeTypeGX.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 static FT_Library ftLibrary;	/**< FreeType FT_Library instance. */
 static FT_Face ftFace;			/**< FreeType reusable FT_Face typographic object. */
 static FT_GlyphSlot ftSlot;		/**< FreeType reusable FT_GlyphSlot glyph container object. */
@@ -92,6 +97,7 @@ uint16_t FT_GetWidth( FT_UInt pixelSize, char *text )
   return width;
 }
 
+#if 0
 /**
  * Convert a short char sctring to a wide char string.
  *
@@ -101,7 +107,6 @@ uint16_t FT_GetWidth( FT_UInt pixelSize, char *text )
  * @param strChar	Character string to be converted.
  * @return Wide character representation of supplied character string.
  */
-#if 0
 wchar_t* charToWideChar(const char* strChar)
 {
 	wchar_t *strWChar;
@@ -114,8 +119,22 @@ wchar_t* charToWideChar(const char* strChar)
 	return strWChar;
 }
 #endif
+
 wchar_t* charToWideChar(const char* strChar)
 {
+#if 0
+#ifdef WII_NETTRACE
+  const char* str = strChar;
+  char buf[512] = "";
+  char *pbuf = buf;
+  for( int i = 0; i < strlen(str) && ((pbuf - buf) < (sizeof(buf) - 4)); i++ )
+  {
+    sprintf( pbuf, "%x ", (u8)str[i] );
+    pbuf += 3;
+  }
+  net_print_string( NULL, 0, "charToWideChar: %s, %s\n", str, buf );
+#endif
+#endif
 	wchar_t *strWChar = new wchar_t[strlen(strChar) + 1];
 	if(!strWChar)
 		return NULL;
@@ -128,7 +147,7 @@ wchar_t* charToWideChar(const char* strChar)
 	}
 
 	wchar_t *tempDest = strWChar;
-	while((*tempDest++ = *strChar++));
+	while((*tempDest++ = (unsigned char)*strChar++));
 
 	return strWChar;
 }

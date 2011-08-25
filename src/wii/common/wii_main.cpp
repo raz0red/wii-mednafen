@@ -440,8 +440,8 @@ static void wii_menu_render( TREENODE *menu )
         {
           wii_gx_drawrectangle( 
             GX_X( 30 ),
-            GX_Y( MENU_STARTY + ( ( displayed + 1 ) * MENU_LINESIZE ) + wii_menu_sel_offset ), 
-            580, 20,
+            GX_Y( MENU_STARTY + ( ( displayed + 1 ) * MENU_LINESIZE ) + 1 /*+ wii_menu_sel_offset*/ ), 
+            580, 21,
             selColor, 1);
         }
 

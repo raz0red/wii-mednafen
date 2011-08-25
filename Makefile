@@ -118,9 +118,9 @@ CFLAGS	= \
   -DPCE_FAST_BPP=16 \
   -DNES_BPP=16 \
   -DPCFX_BPP=16 \
-  -DPLAYER_BPP=16 \
-  -DUSB_WIILOAD \
-  -DWII_NETTRACE
+  -DPLAYER_BPP=16
+#  -DUSB_WIILOAD \
+#  -DWII_NETTRACE
       
 CXXFLAGS	=	$(CFLAGS) 
 
@@ -129,7 +129,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lSDL_ttf -lSDL -lSDL_image -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz -ltinysmb
+LIBS	:=	-ltinysmb -lSDL -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz 
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

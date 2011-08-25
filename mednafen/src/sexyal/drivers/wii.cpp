@@ -113,7 +113,7 @@ void PlaySound( u32 *Buffer, int count )
 
   for( i = 0; i < count; i++ )
   {
-    dst[mixhead++] = Buffer[i];
+    dst[mixhead++] = ((Buffer[i]<<16)&0xffff0000)|((Buffer[i]>>16)&0x0000ffff);
     if (mixhead == RealBufferSizeW)
       mixhead = 0;
   }

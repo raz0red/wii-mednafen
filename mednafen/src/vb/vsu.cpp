@@ -22,13 +22,8 @@ static const unsigned int Tap_LUT[8] = { 15 - 1, 11 - 1, 14 - 1, 5 - 1, 9 - 1, 7
 
 VSU::VSU(Blip_Buffer *bb_l, Blip_Buffer *bb_r)
 {
-#ifdef WII
- sbuf[0] = bb_r;
- sbuf[1] = bb_l;
-#else
  sbuf[0] = bb_l;
  sbuf[1] = bb_r;
-#endif
  Synth.volume(1.0 / 6 / 2);
 }
 
