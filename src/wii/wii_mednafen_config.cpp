@@ -67,6 +67,10 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_filter = Util_sscandec( value );
   }
+  else if( strcmp( name, "cheats" ) == 0 )
+  {
+    wii_cheats = Util_sscandec( value );
+  }
   else if( strcmp( name, "roms_dir" ) == 0 )
   {
     wii_set_roms_dir( value );
@@ -110,6 +114,7 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "sel_offset=%d\n", wii_menu_sel_offset );    
   fprintf( fp, "mote_menu_vertical=%d\n", wii_mote_menu_vertical );  
   fprintf( fp, "video_filter=%d\n", wii_filter );
+  fprintf( fp, "cheats=%d\n", wii_cheats );
   fprintf( fp, "language=%s\n", wii_language );
   fprintf( fp, "roms_dir=%s\n", wii_get_roms_dir() );
 

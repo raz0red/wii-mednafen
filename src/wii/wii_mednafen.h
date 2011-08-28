@@ -48,6 +48,8 @@ extern char wii_cartridge_hash_with_header[33];
 extern BOOL wii_debug;
 // Whether to filter the display
 extern BOOL wii_filter;
+// Whether cheat mode is enabled
+extern BOOL wii_cheats;
 // Hardware buttons (reset, power, etc.)
 extern u8 wii_hw_button;
 // The current language

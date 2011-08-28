@@ -196,11 +196,15 @@ void wii_mednafen_menu_init()
     "Video filter" );
   wii_add_child( advanced, child );
 
-  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  child = wii_create_tree_node( NODETYPE_CHEATS,
+    "Cheats" );
   wii_add_child( advanced, child );
 
-  child = wii_create_tree_node( NODETYPE_DEBUG_MODE, 
-    "Debug mode" );
+  child = wii_create_tree_node( NODETYPE_SELECT_LANG, 
+    "Language" );
+  wii_add_child( advanced, child );  
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
 
   child = wii_create_tree_node( NODETYPE_TOP_MENU_EXIT, 
@@ -214,11 +218,8 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
 
-  child = wii_create_tree_node( NODETYPE_SELECT_LANG, 
-    "Language" );
-  wii_add_child( advanced, child );  
-
-  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  child = wii_create_tree_node( NODETYPE_DEBUG_MODE, 
+    "Debug mode" );
   wii_add_child( advanced, child );
 
   wii_menu_push( wii_menu_root );	
@@ -346,10 +347,14 @@ void wii_menu_handle_get_node_name(
     case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
     case NODETYPE_AUTO_LOAD_SAVE:
+    case NODETYPE_CHEATS:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_CHEATS:
+            enabled = wii_cheats;
+            break;
           case NODETYPE_AUTO_LOAD_SAVE:
             enabled = wii_auto_load_save_state;
             break;
@@ -468,6 +473,9 @@ void wii_menu_handle_select_node( TREENODE *node )
         break;
       case NODETYPE_TOP_MENU_EXIT:
         wii_top_menu_exit ^= 1;
+        break;
+      case NODETYPE_CHEATS:
+        wii_cheats ^= 1;
         break;
       case NODETYPE_WIIMOTE_MENU_ORIENT:
         wii_mote_menu_vertical ^= 1;

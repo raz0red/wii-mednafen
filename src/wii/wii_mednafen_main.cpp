@@ -281,6 +281,11 @@ void wii_mednafen_emu_loop( BOOL resume )
   emu->getDbManager().applyButtonMap(); // Apply the button map
   emu->onPreLoop();
 
+  if( MDFN_GetSettingB("cheats") != wii_cheats )
+  {
+    MDFNI_SetSettingB( "cheats", wii_cheats );
+  }
+
   for(int i = 0; i < 2; i++)
     ((MDFN_Surface *)VTBuffer[i])->Fill(0, 0, 0, 0);
 
