@@ -16,6 +16,9 @@ TREENODE* EmulatorMenuHelper::createEmulatorMenu()
     "Screen size" );      
   wii_add_child( menu, child ); 
 
+  child = wii_create_tree_node( NODETYPE_FRAME_SKIP, "Frame skip" );
+  wii_add_child( menu, child );
+
   return menu;
 }
 
@@ -26,6 +29,10 @@ void EmulatorMenuHelper::getNodeName(
 
   switch( node->node_type )
   {
+    case NODETYPE_FRAME_SKIP:
+      snprintf( value, WII_MENU_BUFF_SIZE, 
+        emu.getFrameSkip() ? "Enabled" : "Disabled" );
+      break;
     case NODETYPE_RESIZE_SCREEN:
       {
         if( emu.isRotationSupported() )
@@ -80,6 +87,17 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
 
     wii_gx_pop_callback();
   }
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_FRAME_SKIP:
+      emu.setFrameSkip( !emu.getFrameSkip() );
+      break;
+  }
+
+  UNLOCK_RENDER_MUTEX();
 }
 
 bool EmulatorMenuHelper::isNodeVisible( TREENODE* node )

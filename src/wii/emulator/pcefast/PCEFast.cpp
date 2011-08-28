@@ -44,6 +44,12 @@ MenuManager& PCEFast::getMenuManager()
   return m_menuManager;
 }
 
+// Mednafen extern
+namespace PCE_Fast
+{
+  extern bool AVPad6Enabled[5];
+}
+
 void PCEFast::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
@@ -100,6 +106,9 @@ void PCEFast::updateControls( bool isRapid )
     //
     
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+
+    // 2 or 6 button controls
+    PCE_Fast::AVPad6Enabled[c] = ((PCEFastDbEntry*)entry)->controlType[c];
 
     for( int i = 0; i < PCE_BUTTON_COUNT; i++ )
     {

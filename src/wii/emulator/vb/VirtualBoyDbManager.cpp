@@ -111,8 +111,6 @@ void VirtualBoyDbManager::resetToDefaults()
 
   StandardDatabaseManager::resetToDefaults();
 
-  vbEntry->frameSkip = 0;
-  vbEntry->renderRate = MAX_RENDER_RATE;
   vbEntry->romPatch = ROM_PATCH_DEFAULT;
 
   resetButtons();
@@ -145,8 +143,6 @@ bool VirtualBoyDbManager::writeEntryValues(
 
   VbDbEntry* vbEntry = (VbDbEntry*)entry;
 
-  fprintf( file, "frameSkip=%d\n", vbEntry->frameSkip );
-  fprintf( file, "renderRate=%d\n", vbEntry->renderRate );
   fprintf( file, "romPatch=%d\n", vbEntry->romPatch );
 
   return true;
@@ -159,15 +155,7 @@ void VirtualBoyDbManager::readEntryValue(
 
   VbDbEntry* vbEntry = (VbDbEntry*)entry;
 
-  if( !strcmp( name, "frameSkip" ) )
-  {
-    vbEntry->frameSkip = Util_sscandec( value );
-  }          
-  else if( !strcmp( name, "renderRate" ) )
-  {
-    vbEntry->renderRate = Util_sscandec( value );
-  }
-  else if( !strcmp( name, "romPatch" ) )
+  if( !strcmp( name, "romPatch" ) )
   {
     vbEntry->romPatch = Util_sscandec( value );
   }

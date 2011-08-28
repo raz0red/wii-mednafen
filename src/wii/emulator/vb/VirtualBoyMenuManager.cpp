@@ -20,10 +20,10 @@ VirtualBoyMenuManager::VirtualBoyMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
+  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+
   TREENODE* child = wii_create_tree_node( NODETYPE_VB_MODE, "Display mode" );
   wii_add_child( m_emulatorMenu, child );
-
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
 
   child = wii_create_tree_node( NODETYPE_ROM_PATCH, "ROM patching" );
   wii_add_child( m_emulatorMenu, child );  
@@ -43,18 +43,10 @@ VirtualBoyMenuManager::VirtualBoyMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
   m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
 
-#if 0
   // Display sub-menu
-  TREENODE *cartDisplay = 
+  TREENODE *display = 
     m_cartSettingsMenuHelper.addDisplaySettingsNode(
       m_cartridgeSettingsMenu );
-
-  child = wii_create_tree_node( NODETYPE_CART_FRAME_SKIP, "Frame skip" );
-  wii_add_child( cartDisplay, child );
-
-  child = wii_create_tree_node( NODETYPE_CART_RENDER_RATE, "Render rate (%)" );
-  wii_add_child( cartDisplay, child );
-#endif
 
   // Advanced sub-menu
   TREENODE *cartadvanced = 
@@ -81,13 +73,6 @@ void VirtualBoyMenuManager::getNodeName(
 
   switch( node->node_type )
   {
-    case NODETYPE_CART_RENDER_RATE:
-      {
-        snprintf( 
-          value, WII_MENU_BUFF_SIZE, "%d", entry->renderRate );
-      }
-      break;
-    case NODETYPE_CART_FRAME_SKIP:
     case NODETYPE_ROM_PATCH:
       {
         BOOL enabled = FALSE;
@@ -95,11 +80,6 @@ void VirtualBoyMenuManager::getNodeName(
         {
           case NODETYPE_ROM_PATCH:
             enabled = emu.getPatchRom(); 
-            break;
-          case NODETYPE_CART_FRAME_SKIP:
-            {
-              enabled = entry->frameSkip;
-            }
             break;
           default:
             /* do nothing */
@@ -150,13 +130,6 @@ void VirtualBoyMenuManager::selectNode( TREENODE *node )
 
   switch( node->node_type )
   {
-    case NODETYPE_CART_RENDER_RATE:
-      entry->renderRate--;
-      if( entry->renderRate < MIN_RENDER_RATE )
-      {
-        entry->renderRate = MAX_RENDER_RATE;
-      }
-      break;
     case NODETYPE_VB_MODE:
       {
         const Vb3dMode* mode = NULL;
@@ -178,9 +151,6 @@ void VirtualBoyMenuManager::selectNode( TREENODE *node )
 
         emu.setMode( mode->key );
       }
-      break;
-    case NODETYPE_CART_FRAME_SKIP:
-      entry->frameSkip ^= 1;
       break;
     case NODETYPE_ROM_PATCH_CART:
       entry->romPatch++;
@@ -211,12 +181,6 @@ bool VirtualBoyMenuManager::isNodeVisible( TREENODE *node )
   else if( !m_cartSettingsMenuHelper.isNodeVisible( node ) ) 
   {
     return false;
-  }
-
-  switch( node->node_type )
-  {
-    case NODETYPE_CART_RENDER_RATE:
-      return entry->frameSkip;
   }
 
   return true;

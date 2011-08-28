@@ -67,12 +67,12 @@ const WiiButton PCFXDbManager::
     { "Minus",  WPAD_CLASSIC_BUTTON_MINUS,    PCFX_MAP_SELECT },
     { "A",      WPAD_CLASSIC_BUTTON_A,        PCFX_MAP_I      }, 
     { "B",      WPAD_CLASSIC_BUTTON_B,        PCFX_MAP_II     },
-    { "X",      WPAD_CLASSIC_BUTTON_X,        PCFX_MAP_NONE   },
-    { "Y",      WPAD_CLASSIC_BUTTON_Y,        PCFX_MAP_NONE   },
-    { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   PCFX_MAP_NONE   },
-    { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   PCFX_MAP_NONE   },
-    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       PCFX_MAP_NONE   },
-    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       PCFX_MAP_NONE   }
+    { "X",      WPAD_CLASSIC_BUTTON_X,        PCFX_MAP_V      },
+    { "Y",      WPAD_CLASSIC_BUTTON_Y,        PCFX_MAP_III    },
+    { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   PCFX_MAP_VI     },
+    { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   PCFX_MAP_IV     },
+    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       PCFX_MAP_VI     },
+    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       PCFX_MAP_IV     }
   },
   {
     { "Start",  PAD_BUTTON_START,             PCFX_MAP_RUN    },

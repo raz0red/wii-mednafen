@@ -33,9 +33,30 @@ PCEFastMenuManager::PCEFastMenuManager( Emulator &emulator ) :
     m_cartSettingsMenuHelper.addControlsSettingsNode( 
       m_cartridgeSettingsMenu );
 
-  m_cartSettingsMenuHelper.addControllerNode( controls );
-  m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
-  m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
+  // Control mappings
+  TREENODE *mappings = 
+    m_cartSettingsMenuHelper.addControlsMappingsNode( 
+      controls );
+
+  m_cartSettingsMenuHelper.addControllerNode( mappings );
+  m_cartSettingsMenuHelper.addWiimoteSupportedNode( mappings );
+  m_cartSettingsMenuHelper.addButtonMappingNodes( mappings );
+
+  m_cartSettingsMenuHelper.addSpacerNode( controls );
+
+  for( int i = NODETYPE_CONTROL_TYPE1; i <= NODETYPE_CONTROL_TYPE4; i++ )
+  {
+    char buff[512];
+    snprintf( buff, sizeof(buff), "Controller %d", 
+      ( i - NODETYPE_CONTROL_TYPE1 ) + 1 );
+    wii_add_child( controls, 
+      wii_create_tree_node( (NODETYPE)i, buff ) );
+  }
+
+  // Display sub-menu
+  TREENODE *display = 
+    m_cartSettingsMenuHelper.addDisplaySettingsNode(
+      m_cartridgeSettingsMenu );
 
   // Save/Revert/Delete
   m_cartSettingsMenuHelper.addCartSettingsOpsNodes( m_cartridgeSettingsMenu );
@@ -51,6 +72,21 @@ void PCEFastMenuManager::getNodeName(
   // Helpers
   m_emuMenuHelper.getNodeName( node, buffer, value );
   m_cartSettingsMenuHelper.getNodeName( node, buffer, value );
+
+  switch( node->node_type )
+  {
+    case NODETYPE_CONTROL_TYPE1:
+    case NODETYPE_CONTROL_TYPE2:
+    case NODETYPE_CONTROL_TYPE3:
+    case NODETYPE_CONTROL_TYPE4:
+      {
+        int index = node->node_type - NODETYPE_CONTROL_TYPE1;
+        snprintf( value, WII_MENU_BUFF_SIZE, "%d-%s",
+          ( entry->controlType[index] == CONTROL_2BUTTON ? 2 : 6 ),
+          gettextmsg( "button pad" ) );
+      }
+    break;
+  }
 }
 
 void PCEFastMenuManager::selectNode( TREENODE *node )
@@ -64,6 +100,23 @@ void PCEFastMenuManager::selectNode( TREENODE *node )
   // Helpers
   m_emuMenuHelper.selectNode( node );
   m_cartSettingsMenuHelper.selectNode( node );
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_CONTROL_TYPE1:
+    case NODETYPE_CONTROL_TYPE2:
+    case NODETYPE_CONTROL_TYPE3:
+    case NODETYPE_CONTROL_TYPE4:
+      {
+        int index = node->node_type - NODETYPE_CONTROL_TYPE1;
+        entry->controlType[index] = !(entry->controlType[index]);
+      }
+    break;
+  }
+
+  UNLOCK_RENDER_MUTEX();
 }
 
 bool PCEFastMenuManager::isNodeVisible( TREENODE *node )

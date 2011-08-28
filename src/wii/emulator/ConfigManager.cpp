@@ -21,6 +21,8 @@ void ConfigManager::writeConfig( FILE *fp )
     snprintf( buff, sizeof(buff), "%s.rotscreen_h", emu.getKey() );
     fprintf( fp, "%s=%d\n", buff, emu.getRotatedScreenSize()->h  );
   }
+  snprintf( buff, sizeof(buff), "%s.frameskip", emu.getKey() );
+  fprintf( fp, "%s=%d\n", buff, emu.getFrameSkip()  );
 }
 
 void ConfigManager::readConfigValue( const char *name, const char* value )
@@ -50,5 +52,10 @@ void ConfigManager::readConfigValue( const char *name, const char* value )
     {
       emu.getRotatedScreenSize()->h = Util_sscandec( value );
     }
+  }
+  snprintf( buff, sizeof(buff), "%s.frameskip", emu.getKey() );
+  if( strcmp( name, buff ) == 0 )
+  {
+    emu.setFrameSkip( Util_sscandec( value ) );
   }
 }

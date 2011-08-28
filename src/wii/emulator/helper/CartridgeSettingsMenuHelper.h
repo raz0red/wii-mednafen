@@ -9,6 +9,7 @@ public:
   CartridgeSettingsMenuHelper( Emulator& emulator );
   TREENODE* createCartridgeSettingsMenu();
   TREENODE* addControlsSettingsNode( TREENODE* parent );
+  TREENODE* addControlsMappingsNode( TREENODE* parent );
   TREENODE* addDisplaySettingsNode( TREENODE* parent );
   TREENODE* addAdvancedSettingsNode( TREENODE* parent );
   void addCartSettingsOpsNodes( TREENODE* parent );

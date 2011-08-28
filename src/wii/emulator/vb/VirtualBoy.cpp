@@ -138,17 +138,6 @@ Vb3dMode VirtualBoy::getMode()
   return VB_MODES[getModeIndex()];
 }
 
-int VirtualBoy::getRenderRate()
-{
-  VbDbEntry* entry = (VbDbEntry*)m_dbManager.getEntry();
-
-  return
-    entry->frameSkip &&
-      ( entry->renderRate >= MIN_RENDER_RATE &&
-        entry->renderRate <= MAX_RENDER_RATE ) ?
-    entry->renderRate : - 1;
-}
-
 void VirtualBoy::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
@@ -307,13 +296,8 @@ void VirtualBoy::onPreLoop()
 bool VirtualBoy::updateDebugText( 
   char* output, const char* defaultOutput, int len )
 {
-  int renderRate = getRenderRate();
-  if( renderRate == -1 )
-  {
-    renderRate = 100;
-  }
-  snprintf( output, len, "%s (p:%d)",  /*(s:%d)*/
-    defaultOutput, /*renderRate,*/ m_currentRomPatched ? 1 : 0 );
+  snprintf( output, len, "%s (p:%d)",
+    defaultOutput, m_currentRomPatched ? 1 : 0 );
 
   return true;
 }

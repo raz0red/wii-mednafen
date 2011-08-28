@@ -5,6 +5,11 @@
 #include "BaseManager.h"
 #include "wii_main.h"
 
+// Frame skipping
+#define FRAME_SKIP_DEFAULT    0
+#define FRAME_SKIP_ENABLED    1
+#define FRAME_SKIP_DISABLED   2
+
 /*
  * Structure for a Wii button 
  */
@@ -29,6 +34,7 @@ typedef struct dbEntry
   char name[255];       // The name of the game
   u8 loaded;            // Whether the settings were loaded 
   u8 wiimoteSupported;  // Whether the Wiimote is supported
+  u8 frameSkip;         // Whether to allow frame skipping
 } dbEntry;
 
 

@@ -35,9 +35,14 @@ WonderSwanMenuManager::WonderSwanMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
   m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
 
-  m_cartSettingsMenuHelper.addSpacerNode( m_cartridgeSettingsMenu );
+  // Display sub-menu
+  TREENODE *display = 
+    m_cartSettingsMenuHelper.addDisplaySettingsNode(
+      m_cartridgeSettingsMenu );
+
+  m_cartSettingsMenuHelper.addSpacerNode( display );
   TREENODE* child = wii_create_tree_node( NODETYPE_ORIENT, "Rotation" );
-  wii_add_child( m_cartridgeSettingsMenu, child );
+  wii_add_child( display, child );
 
   // Save/Revert/Delete
   m_cartSettingsMenuHelper.addCartSettingsOpsNodes( m_cartridgeSettingsMenu );

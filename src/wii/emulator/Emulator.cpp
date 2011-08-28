@@ -19,7 +19,8 @@ void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 
 Emulator::Emulator( const char* key, const char* name ) : 
   m_key( key ),
-  m_name( name ) 
+  m_name( name ),
+  m_frameSkip( true )
 {
   memset( m_padData, 0, sizeof(u32)<<2 );
 }
@@ -155,6 +156,27 @@ net_print_string( NULL, 0,
   }
 
   WII_SetRotation( getRotation() * 90 );
+}
+
+bool Emulator::getFrameSkip()
+{
+  return m_frameSkip;
+}
+
+void Emulator::setFrameSkip( bool skip )
+{
+  m_frameSkip = skip;
+}
+
+bool Emulator::getAppliedFrameSkip()
+{
+   dbEntry* entry = getDbManager().getEntry();
+   if( entry->frameSkip == FRAME_SKIP_DEFAULT )
+   {
+     return getFrameSkip();
+   }
+   
+   return entry->frameSkip == FRAME_SKIP_ENABLED;
 }
 
 u8 Emulator::getBpp()
