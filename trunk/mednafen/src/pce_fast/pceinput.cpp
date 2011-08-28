@@ -32,7 +32,7 @@ static int InputTypes[5];
 static uint8 *data_ptr[5];
 
 static bool AVPad6Which[5]; // Lower(8 buttons) or higher(4 buttons).
-static bool AVPad6Enabled[5];
+bool AVPad6Enabled[5];
 
 uint16 pce_jp_data[5];
 

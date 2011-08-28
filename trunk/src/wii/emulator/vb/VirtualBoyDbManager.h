@@ -3,10 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-// Render rate (frame skipping)
-#define MAX_RENDER_RATE   99
-#define MIN_RENDER_RATE   1
-
 // ROM patching
 #define ROM_PATCH_DEFAULT    0
 #define ROM_PATCH_ENABLED    1
@@ -20,8 +16,6 @@
 typedef struct VbDbEntry
 {
   StandardDbEntry base;
-  u8 frameSkip;         // Whether frame skipping is enabled
-  u8 renderRate;        // The render rate (if skipping enabled)
   u8 romPatch;          // Whether to patch the ROM
 } VbDbEntry;
 

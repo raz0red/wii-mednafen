@@ -1102,7 +1102,11 @@ int GameLoop(void *arg)
 
     fskip = ers.NeedFrameSkip();
 
+#ifdef WII
+    if( !emuRegistry.getCurrentEmulator()->getAppliedFrameSkip() )
+#else
     if(!MDFN_GetSettingB("video.frameskip"))
+#endif
       fskip = 0;
 
     if(pending_snapshot || pending_save_state || pending_save_movie || NeedFrameAdvance)

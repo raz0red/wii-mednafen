@@ -25,10 +25,11 @@ class Emulator
 private:
   const char* m_key; 
   const char* m_name;
-  Rect m_lastSize;
+  Rect m_lastSize; 
+  bool m_frameSkip;
 
 protected:
-  u16 m_padData[4];
+  u16 m_padData[4];  
   Rect m_emulatorScreenSize;
   Rect m_screenSize;
   Rect m_defaultScreenSize;
@@ -63,6 +64,9 @@ public:
   Rect* getRotatedScreenSize();
   Rect* getDefaultRotatedScreenSize();  
   u16* getPadData();
+  bool getFrameSkip();
+  void setFrameSkip( bool skip );
+  bool getAppliedFrameSkip();
 };
 
 #endif

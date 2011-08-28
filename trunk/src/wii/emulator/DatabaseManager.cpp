@@ -78,6 +78,7 @@ bool DatabaseManager::writeEntryValues(
   fprintf( file, "[%s]\n", hash );
   fprintf( file, "name=%s\n", entry->name );
   fprintf( file, "wiimoteSupported=%d\n", entry->wiimoteSupported );
+  fprintf( file, "frameSkip=%d\n", entry->frameSkip );
 
   return true;
 }
@@ -90,6 +91,10 @@ void DatabaseManager::readEntryValue(
   if( !strcmp( name, "wiimoteSupported" ) )
   {
     entry->wiimoteSupported = Util_sscandec( value );
+  }  
+  else if( !strcmp( name, "frameSkip" ) )
+  {
+    entry->frameSkip = Util_sscandec( value );
   }  
 }
 
@@ -292,4 +297,5 @@ void DatabaseManager::resetToDefaults()
 {
   dbEntry* entry = getEntry();
   entry->wiimoteSupported = 1;
+  entry->frameSkip = FRAME_SKIP_DEFAULT;
 }

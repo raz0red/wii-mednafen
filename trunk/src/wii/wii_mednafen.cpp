@@ -78,9 +78,11 @@ void wii_handle_init()
   InitMem2Manager();
 #endif
 
+#if 0
   // Set the default roms dir
   snprintf( 
     roms_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_ROMS_DIR );
+#endif
 
   // Read the config values
   wii_read_config();

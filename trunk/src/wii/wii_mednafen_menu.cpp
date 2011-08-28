@@ -171,7 +171,7 @@ void wii_mednafen_menu_init()
   wii_add_child( states, child );
 
   TREENODE *cart_settings = wii_create_tree_node( 
-    NODETYPE_CARTRIDGE_SETTINGS_CURRENT, "Cartridge settings" );
+    NODETYPE_CARTRIDGE_SETTINGS_CURRENT, "Cartridge-specific settings" );
   wii_add_child( wii_menu_root, cart_settings );    
 
   child = wii_create_tree_node( NODETYPE_EMULATOR_SETTINGS_SPACER, "" );

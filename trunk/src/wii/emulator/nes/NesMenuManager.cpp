@@ -37,6 +37,11 @@ NesMenuManager::NesMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
   m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
 
+  // Display sub-menu
+  TREENODE *display = 
+    m_cartSettingsMenuHelper.addDisplaySettingsNode(
+      m_cartridgeSettingsMenu );
+
   // Save/Revert/Delete
   m_cartSettingsMenuHelper.addCartSettingsOpsNodes( m_cartridgeSettingsMenu );
 }

@@ -71,12 +71,12 @@ const WiiButton PCEFastDbManager::
     { "Minus",  WPAD_CLASSIC_BUTTON_MINUS,    PCE_MAP_SELECT },
     { "A",      WPAD_CLASSIC_BUTTON_A,        PCE_MAP_I      }, 
     { "B",      WPAD_CLASSIC_BUTTON_B,        PCE_MAP_II     },
-    { "X",      WPAD_CLASSIC_BUTTON_X,        PCE_MAP_NONE   },
-    { "Y",      WPAD_CLASSIC_BUTTON_Y,        PCE_MAP_NONE   },
-    { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   PCE_MAP_NONE   },
-    { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   PCE_MAP_NONE   },
-    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       PCE_MAP_NONE   },
-    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       PCE_MAP_NONE   }
+    { "X",      WPAD_CLASSIC_BUTTON_X,        PCE_MAP_V      },
+    { "Y",      WPAD_CLASSIC_BUTTON_Y,        PCE_MAP_III    },
+    { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   PCE_MAP_VI     },
+    { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   PCE_MAP_IV     },
+    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       PCE_MAP_VI     },
+    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       PCE_MAP_IV     }
   },
   {
     { "Start",  PAD_BUTTON_START,             PCE_MAP_RUN    },
@@ -128,4 +128,38 @@ const WiiButton* PCEFastDbManager::getMappedButton(
   int profile, int controller, int button )
 {
   return &(WII_BUTTONS[controller][button]);
+}
+
+bool PCEFastDbManager::writeEntryValues( 
+  FILE* file, const char* hash, const dbEntry *entry )
+{
+  if( !StandardDatabaseManager::writeEntryValues( file, hash, entry ) )
+  {
+    return false;
+  }
+
+  PCEFastDbEntry* pceEntry = (PCEFastDbEntry*)entry;
+  for( int i = 0; i < 4; i++ )
+  {
+    fprintf( file, "controlType.%d=%d\n", i, pceEntry->controlType[i] );
+  }
+
+  return true;
+}
+
+void PCEFastDbManager::readEntryValue( 
+  dbEntry *entry, const char* name, const char* value )
+{
+  StandardDatabaseManager::readEntryValue( entry, name, value );
+
+  PCEFastDbEntry* pceEntry = (PCEFastDbEntry*)entry;
+  for( int i = 0; i < 4; i++ )
+  {
+    char ctype[64];
+    snprintf( ctype, sizeof(ctype), "controlType.%d", i );
+     if( !strcmp( name, ctype ) )
+    {
+      pceEntry->controlType[i] = Util_sscandec( value );
+    }   
+  }
 }
