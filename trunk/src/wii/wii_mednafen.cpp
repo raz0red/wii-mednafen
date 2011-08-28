@@ -62,6 +62,8 @@ char wii_cartridge_hash_with_header[33];
 BOOL wii_debug = FALSE;
 // Whether to filter the display
 BOOL wii_filter = FALSE;
+// Whether cheat mode is enabled
+BOOL wii_cheats = FALSE;
 // Whether to auto load/save state
 BOOL wii_auto_load_save_state = FALSE;
 // The current language

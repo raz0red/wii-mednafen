@@ -27,6 +27,11 @@
 #include "md5.h"
 #include "mempatcher.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
 static uint8 **RAMPtrs = NULL;
 static uint32 PageSize;
 static uint32 NumPages;
@@ -1098,6 +1103,10 @@ static void SettingChanged(const char *name)
   MDFNMP_RemoveReadPatches();
 
   CheatsActive = MDFN_GetSettingB("cheats");
+
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, "Cheats event: %d\n", CheatsActive );
+#endif
 
   RebuildSubCheats();
 
