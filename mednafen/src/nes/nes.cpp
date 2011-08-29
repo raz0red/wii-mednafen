@@ -36,6 +36,7 @@
 #include	"vsuni.h"
 #include	"debug.h"
 
+#include "Emulators.h"
 #include "wii_mednafen.h"
 
 extern MDFNGI EmulatedNES;
@@ -293,7 +294,11 @@ static int Load(const char *name, MDFNFILE *fp)
 	if(NESIsVSUni)
 	 MDFN_VSUniInstallRWHooks();
 
-
+#ifdef WII
+    // Ensure game genie setting is applied prior to load
+    emuRegistry.NesEmu.setGameGenieEnabled( 
+      emuRegistry.NesEmu.isGameGenieEnabled() );
+#endif
 	if(MDFNGameInfo->GameType != GMT_PLAYER)
          if(MDFN_GetSettingB("nes.gg"))
 	  Genie_Init();

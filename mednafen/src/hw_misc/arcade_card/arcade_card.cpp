@@ -18,7 +18,6 @@
  Arcade Card emulation based on information provided by Ki and David Shadoff
 */
 
-//#include "mednafen/mednafen.h"
 #include "../../mednafen.h"
 
 //#include "pce.h"
@@ -52,6 +51,7 @@ static INLINE void ACAutoIncrement(ACPort_t *port)
 
 uint8 ArcadeCard::Read(uint32 A, bool peek)
 {
+ //printf("AC Read: %04x\n", A);
  if((A & 0x1F00) != 0x1A00)
  {
   //if(!peek)
@@ -129,6 +129,7 @@ uint8 ArcadeCard::Read(uint32 A, bool peek)
 
 void ArcadeCard::Write(uint32 A, uint8 V)
 {
+ //printf("AC Write: %04x %02x\n", A, V);
  if((A & 0x1F00) != 0x1A00)
  {
   //printf("AC unknown write: %08x:%02x\n", A, V);
@@ -178,6 +179,12 @@ void ArcadeCard::Write(uint32 A, uint8 V)
 
    case 0x05: port->offset &= ~0xFF;
               port->offset |= V << 0;
+              if((port->control & 0x60) == 0x20)
+              {
+               port->base = (port->base + port->offset) & 0xFFFFFF;
+               if(port->control & 0x08)
+                port->base += 0xFF0000;
+              }
               break;
 
    case 0x06: port->offset &= ~0xFF00;

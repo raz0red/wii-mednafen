@@ -253,22 +253,6 @@ static int Load(const char *name, MDFNFILE *fp)
  md5.finish(MDFNGameInfo->MD5);
  MDFN_printf(_("ROM MD5:   0x%s\n"), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str());
 
- #ifdef WII
-  strcpy( 
-    wii_cartridge_hash_with_header, 
-    md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-
-  uint8 md5NoHeader[16];
-  md5_context md5NoHeaderCtx;
-  md5NoHeaderCtx.starts();
-  md5NoHeaderCtx.update(wsCartROM, rom_size - 10);
-  md5NoHeaderCtx.finish(md5NoHeader);
-
-  strcpy( 
-    wii_cartridge_hash, 
-    md5_context::asciistr(md5NoHeader, 0).c_str() );
-#endif
-
  uint8 header[10];
  memcpy(header, wsCartROM + rom_size - 10, 10);
 

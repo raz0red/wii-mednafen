@@ -118,7 +118,7 @@ CSystem::CSystem(const uint8 *filememory, int32 filesize)
 		case HANDY_FILETYPE_HOMEBREW:
 			{
 			 #if 0
-			 static uint8 dummy_cart[sizeof(LYNX_HEADER) + 65536] = 
+			 static uint8 dummy_cart[CCart::HEADER_RAW_SIZE + 65536] = 
 			 {
 				'L', 'Y', 'N', 'X', 0x00, 0x01, 0x00, 0x00,
 				0x01, 0x00,

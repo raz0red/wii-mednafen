@@ -49,13 +49,13 @@
 #define RAM_ADDR_MASK			0xffff
 #define DEFAULT_RAM_CONTENTS	0xff
 
-typedef struct
+struct HOME_HEADER
 {
    uint16   jump;
    uint16   load_address;
    uint16   size;
    uint8   magic[4];
-}HOME_HEADER;
+};
 
 class CRam : public CLynxBase
 {

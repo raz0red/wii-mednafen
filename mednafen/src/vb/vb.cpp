@@ -2069,10 +2069,6 @@ static int Load(const char *name, MDFNFILE *fp)
  MDFN_printf("\n");
  
  #ifdef WII
-    strcpy( 
-      wii_cartridge_hash_with_header, 
-      md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
-
     uint8 md5NoHeader[16];
     md5_context md5NoHeaderCtx;
     md5NoHeaderCtx.starts();

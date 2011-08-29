@@ -19,7 +19,7 @@ const char* DatabaseManager::getDbFile()
   if( m_dbFile[0] == '\0' )
   {
     snprintf( m_dbFile, WII_MAX_PATH, "%s%s%s.db",
-      wii_get_fs_prefix(), WII_FILES_DIR, getEmulator().getKey() );
+      wii_get_fs_prefix(), WII_DB_DIR, getEmulator().getKey() );
   }
 
   return m_dbFile;
@@ -30,7 +30,7 @@ const char* DatabaseManager::getDbTmpFile()
   if( m_dbTmpFile[0] == '\0' )
   {
     snprintf( m_dbTmpFile, WII_MAX_PATH, "%s%s%s.db.tmp",
-      wii_get_fs_prefix(), WII_FILES_DIR, getEmulator().getKey() );
+      wii_get_fs_prefix(), WII_DB_DIR, getEmulator().getKey() );
   }
 
   return m_dbTmpFile;
@@ -41,7 +41,7 @@ const char* DatabaseManager::getDbOldFile()
   if( m_dbOldFile[0] == '\0' )
   {
     snprintf( m_dbOldFile, WII_MAX_PATH, "%s%s%s.db.old",
-      wii_get_fs_prefix(), WII_FILES_DIR, getEmulator().getKey() );
+      wii_get_fs_prefix(), WII_DB_DIR, getEmulator().getKey() );
   }
 
   return m_dbOldFile;

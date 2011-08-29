@@ -17,7 +17,8 @@ Nes::Nes() :
   Emulator( "nes", "NES" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this )
+  m_menuManager( *this ),
+  m_gameGenie( false )
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 256;
@@ -71,7 +72,7 @@ void Nes::updateControls( bool isRapid )
         FDS_DiskSelect();
         break;
       case 10:
-	FDS_DiskInsert(-1);
+        FDS_DiskInsert(-1);
         break;
     }
     flipdisk--;
@@ -216,6 +217,19 @@ bool Nes::updateDebugText(
 bool Nes::isRotationSupported()
 {
   return false;
+}
+
+bool Nes::isGameGenieEnabled()
+{
+  return m_gameGenie;
+}
+
+void Nes::setGameGenieEnabled( bool enabled )
+{
+  m_gameGenie = enabled;
+
+  // Enable/disable Game Genie
+  MDFNI_SetSettingB( "nes.gg", enabled );
 }
 
 u8 Nes::getBpp()

@@ -93,6 +93,30 @@ extern void FPS_IncBlitted(void);
 // The wiimote not supported image data
 static gx_imagedata* mote_not_supported_idata = NULL;
 
+// A message to display during emulation
+static char message[512] = "";
+
+// The message display time
+static u32 message_time;
+
+/*
+ * Displays a message during emulation
+ *
+ * message  The message to display
+ */
+void wii_mednafen_set_message( const char* msg )
+{
+  if( msg == NULL )
+  {
+    message_time = 0;        
+  }
+  else
+  {
+    message_time = SDL_GetTicks() + 5 * 1000; // 5 secs
+    Util_strlcpy( message, msg, sizeof(message) );
+  }
+}
+
 static void free_video()
 {
   for( int i = 0; i < 2; i++ )
@@ -336,6 +360,8 @@ static void gxrender_callback()
   guMtxConcat( gx_view, m, mv );
   GX_LoadPosMtxImm( mv, GX_PNMTX0 ); 
 
+  GXColor color = (GXColor){0x0, 0x0, 0x0, 0x80};                       
+
   if( wii_debug )
   {    
     static char virtfps[64];
@@ -359,7 +385,7 @@ static void gxrender_callback()
     snprintf( 
       defaultText, sizeof(defaultText), "%s %s %s hash:%s%s", 
       virtfps, drawnfps, blitfps,
-      wii_cartridge_hash, 
+      wii_cartridge_hash_with_header, 
       ( entryLoaded ? " (db)" : "" )
     );
 
@@ -369,8 +395,6 @@ static void gxrender_callback()
     {
       displayText = text;
     }
-
-    GXColor color = (GXColor){0x0, 0x0, 0x0, 0x80};                       
     wii_gx_drawrectangle( 
       CB_X + -CB_PADDING, 
       CB_Y + CB_H + CB_PADDING, 
@@ -380,6 +404,26 @@ static void gxrender_callback()
 
     wii_gx_drawtext( 
       CB_X, CB_Y, CB_PIXELSIZE, displayText, ftgxWhite, FTGX_ALIGN_BOTTOM );
+  }
+
+  if( message_time != 0 )
+  {
+    if( SDL_GetTicks() > message_time )
+    {
+      message_time = 0;
+    }
+    else
+    {
+      wii_gx_drawrectangle( 
+        CB_X + -CB_PADDING, 
+        -CB_Y + CB_H + CB_PADDING, 
+        wii_gx_gettextwidth( CB_PIXELSIZE, (char*)message ) + (CB_PADDING<<1), 
+        CB_H + (CB_PADDING<<1), 
+        color, TRUE );
+
+      wii_gx_drawtext( 
+        CB_X, -CB_Y, CB_PIXELSIZE, message, ftgxWhite, FTGX_ALIGN_BOTTOM );
+    }
   }
 }
 

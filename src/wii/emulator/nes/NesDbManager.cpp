@@ -29,7 +29,7 @@ const MappableButton NesDbManager::NES_BUTTONS[NES_BUTTON_COUNT] =
   { "Down",           NES_DOWN    },
   { "A",              NES_A_R     }, 
   { "B",              NES_B_R     },
-  { "Coin/Flip disk", NES_SPECIAL }
+  { "(special)",      NES_SPECIAL } // Text is dynamically set
 };
 
 const WiiButton NesDbManager::
@@ -107,8 +107,16 @@ void NesDbManager::resetToDefaults()
   applyButtonMap();
 }
 
+extern bool NESIsVSUni;
+extern MDFNGI *MDFNGameInfo;
+
 int NesDbManager::getMappableButtonCount()
 {
+#if 0
+  return
+    ( NESIsVSUni || MDFNGameInfo->GameType == GMT_DISK ) ?
+      NES_BUTTON_COUNT : ( NES_BUTTON_COUNT - 1 );
+#endif
   return NES_BUTTON_COUNT;
 }
 

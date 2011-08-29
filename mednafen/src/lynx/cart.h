@@ -53,7 +53,7 @@ enum CTYPE {UNUSED,C64K,C128K,C256K,C512K,C1024K};
 #define CART_ROTATE_LEFT	1
 #define	CART_ROTATE_RIGHT	2
 
-typedef struct
+struct LYNX_HEADER
 {
    uint8   magic[4];
    uint16   page_size_bank0;
@@ -63,8 +63,7 @@ typedef struct
    uint8   manufname[16];
    uint8   rotation; 
    uint8   spare[5];
-} __attribute__((__packed__)) LYNX_HEADER;
-
+};
 
 class CCart : public CLynxBase
 {
@@ -78,7 +77,9 @@ class CCart : public CLynxBase
 	public:
 
 // Access for sensible members of the clan
+		enum { HEADER_RAW_SIZE = 64 };
 
+		static LYNX_HEADER DecodeHeader(const uint8 *data);
 		static bool TestMagic(const uint8 *data, uint32 size);
 
 		void	Reset(void);

@@ -241,7 +241,7 @@ bool MFDN_LoadSettings(const char *basedir)
 
   fname = basedir;
   fname += PSS;
-  fname += "mednafen-09x.cfg";
+  fname += "wii-mednafen-09x.cfg";
 
   MDFN_printf(_("Loading settings from \"%s\"..."), fname.c_str());
 
