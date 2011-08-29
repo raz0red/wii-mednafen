@@ -55,10 +55,40 @@
 
 #include "wii_hash.h"
 #include "wii_mednafen.h"
+LYNX_HEADER CCart::DecodeHeader(const uint8 *data)
+{
+ LYNX_HEADER header;
+
+ memcpy(header.magic, data, 4);
+ data += 4;
+
+ header.page_size_bank0 = MDFN_de16lsb(data);
+ data += 2;
+
+ header.page_size_bank1 = MDFN_de16lsb(data);
+ data += 2;
+
+ header.version = MDFN_de16lsb(data);
+ data += 2;
+
+ memcpy(header.cartname, data, 32);
+ data += 32;
+
+ memcpy(header.manufname, data, 16);
+ data += 16;
+
+ header.rotation = *data;
+ data++;
+
+ memcpy(header.spare, data, 5);
+ data += 5;
+
+ return(header);
+}
 
 bool CCart::TestMagic(const uint8 *data, uint32 size)
 {
- if(size <= (int)sizeof(LYNX_HEADER))
+ if(size <= HEADER_RAW_SIZE)
   return(FALSE);
 
  if(memcmp(data, "LYNX", 4) || data[8] != 0x01)
@@ -80,33 +110,21 @@ CCart::CCart(const uint8 *gamedata, uint32 gamesize)
 	mCRC32 = crc32(mCRC32,gamedata,gamesize);
 	
 	// Checkout the header bytes
-	if(gamesize <= sizeof(LYNX_HEADER))
+	if(gamesize <= HEADER_RAW_SIZE)
 	 throw(-1);
 
-#ifdef WII
-  wii_hash_compute( 
-    gamedata, gamesize, wii_cartridge_hash_with_header );
-  wii_hash_compute( 
-    gamedata+sizeof(LYNX_HEADER), gamesize-sizeof(LYNX_HEADER), wii_cartridge_hash );
-#endif
-
-	memcpy(&header, gamedata, sizeof(LYNX_HEADER));
-	gamedata += sizeof(LYNX_HEADER);
-	gamesize -= sizeof(LYNX_HEADER);
+	header = DecodeHeader(gamedata);
+	gamedata += HEADER_RAW_SIZE;
+	gamesize -= HEADER_RAW_SIZE;
 
 	InfoROMSize = gamesize;
 
-	#ifdef MSB_FIRST
-	header.page_size_bank0 = ((header.page_size_bank0>>8) | (header.page_size_bank0<<8));
-	header.page_size_bank1 = ((header.page_size_bank1>>8) | (header.page_size_bank1<<8));
-	header.version         = ((header.version>>8) | (header.version<<8));
-	#endif
 	// Sanity checks on the header
-
 	if(header.magic[0]!='L' || header.magic[1]!='Y' || header.magic[2]!='N' || header.magic[3]!='X' || header.version!=1)
 	{
 		throw(-1);
 	}
+
 	// Setup name & manufacturer
 	strncpy(mName,(char*)&header.cartname, 32);
 	strncpy(mManufacturer,(char*)&header.manufname, 16);

@@ -26,6 +26,8 @@
 #include "nsf.h"
 #include "fds-sound.h"
 
+#include "wii_mednafen_main.h"
+
 /*	TODO:  Add code to put a delay in between the time a disk is inserted
 	and the when it can be successfully read/written to.  This should
 	prevent writes to wrong places OR add code to prevent disk ejects
@@ -81,7 +83,16 @@ int FDS_DiskInsert(int oride)
 {
 	if(InDisk==255)
         {
+#ifdef WII
+          {
+            char message[512] = "";
+            snprintf( message, sizeof(message), 
+              "Disk %d side %s inserted.",SelectDisk>>1,(SelectDisk&1)?"B":"A" );
+            wii_mednafen_set_message( message );
+          }
+#else
          MDFN_DispMessage(_("Disk %1$d Side %2$s Inserted"),SelectDisk>>1,(SelectDisk&1)?"B":"A");  
+#endif
          InDisk=SelectDisk;
         }
         else   

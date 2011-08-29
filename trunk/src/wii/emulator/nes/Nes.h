@@ -25,6 +25,7 @@
 class Nes : public Emulator
 {
 private:
+  bool m_gameGenie;
   NesConfigManager m_configManager;
   NesDbManager m_dbManager;
   NesMenuManager m_menuManager;  
@@ -37,6 +38,9 @@ public:
   void updateControls( bool isRapid );
   bool isRotationSupported();
   u8 getBpp();
+
+  bool isGameGenieEnabled();
+  void setGameGenieEnabled( bool enabled );
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

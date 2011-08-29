@@ -22,6 +22,12 @@ NesMenuManager::NesMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
+  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+
+  // Game Genie
+  wii_add_child( m_emulatorMenu, 
+    wii_create_tree_node( NODETYPE_GAME_GENIE, "Game Genie" ) );
+
   //
   // The cartridge settings (current) menu
   //
@@ -46,6 +52,9 @@ NesMenuManager::NesMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addCartSettingsOpsNodes( m_cartridgeSettingsMenu );
 }
 
+extern bool NESIsVSUni;
+extern MDFNGI *MDFNGameInfo;
+
 void NesMenuManager::getNodeName( 
   TREENODE* node, char *buffer, char* value )
 {
@@ -56,6 +65,34 @@ void NesMenuManager::getNodeName(
   // Helpers
   m_emuMenuHelper.getNodeName( node, buffer, value );
   m_cartSettingsMenuHelper.getNodeName( node, buffer, value );
+
+  // Text for the "special" button...
+  if( !strcmp( value, "(special)" ) )
+  {
+    if( NESIsVSUni )
+    {
+      snprintf( value, WII_MENU_BUFF_SIZE, "Insert coin" );
+    }
+    else if( MDFNGameInfo->GameType == GMT_DISK )
+    {
+      snprintf( value, WII_MENU_BUFF_SIZE, "Flip disk" );
+    }
+#if 0
+    else
+    {
+      snprintf( value, WII_MENU_BUFF_SIZE, 
+        NesDbManager::NES_BUTTONS[0].name );
+    }
+#endif
+  }
+
+  switch( node->node_type )
+  {
+    case NODETYPE_GAME_GENIE:
+      snprintf( value, WII_MENU_BUFF_SIZE, 
+        emu.isGameGenieEnabled() ? "Enabled" : "Disabled" );
+      break;
+  }
 }
 
 void NesMenuManager::selectNode( TREENODE *node )
@@ -69,6 +106,17 @@ void NesMenuManager::selectNode( TREENODE *node )
   // Helpers
   m_emuMenuHelper.selectNode( node );
   m_cartSettingsMenuHelper.selectNode( node );
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_GAME_GENIE:
+      emu.setGameGenieEnabled( !emu.isGameGenieEnabled() );
+      break;
+  }
+
+  UNLOCK_RENDER_MUTEX();
 }
 
 bool NesMenuManager::isNodeVisible( TREENODE *node )

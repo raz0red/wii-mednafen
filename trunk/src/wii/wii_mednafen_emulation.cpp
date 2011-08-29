@@ -84,6 +84,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
     wii_cartridge_hash[0] = '\0'; // Reset the cartridge hash
     wii_cartridge_hash_with_header[0] = '\0';
     wii_snapshot_reset(); // Reset snapshot related state
+    wii_mednafen_set_message( NULL ); // Reset the display message
 
     emuRegistry.setCurrentEmulator( NULL ); // Reset the current emulator
     KillSound(); // Kill Sound?
@@ -91,11 +92,12 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
 
     if( succeeded )
     { 
+      strcpy( 
+        wii_cartridge_hash_with_header, 
+        md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
+
       if( wii_cartridge_hash[0] == '\0' )
       {
-        strcpy( 
-          wii_cartridge_hash_with_header, 
-          md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
         strcpy( 
           wii_cartridge_hash, 
           md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );

@@ -59,4 +59,11 @@ extern void wii_mednafen_emu_loop( BOOL resume );
  */
 extern int wii_mednafen_show_controls_screen();
 
+/*
+ * Displays a message during emulation
+ *
+ * message  The message to display
+ */
+extern void wii_mednafen_set_message( const char* message );
+
 #endif

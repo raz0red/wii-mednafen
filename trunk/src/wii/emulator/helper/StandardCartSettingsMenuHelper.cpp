@@ -149,7 +149,7 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
             entry->profile, m_currentController, index )->name;
         if( name != NULL )
         {
-          u8 mappedBtn = 
+          u8 mappedBtn =  
             entry->buttonMap[m_currentController][index];
 
           mappedBtn++;
