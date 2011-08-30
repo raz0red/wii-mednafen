@@ -227,9 +227,6 @@ bool Nes::isGameGenieEnabled()
 void Nes::setGameGenieEnabled( bool enabled )
 {
   m_gameGenie = enabled;
-
-  // Enable/disable Game Genie
-  MDFNI_SetSettingB( "nes.gg", enabled );
 }
 
 u8 Nes::getBpp()
