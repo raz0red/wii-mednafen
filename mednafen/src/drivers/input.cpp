@@ -36,6 +36,10 @@
 #include "help.h"
 #else
 #include "Emulators.h"
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
 #endif
 
 #include <math.h>
@@ -814,6 +818,7 @@ static void UpdatePhysicalDeviceState(void)
   int mouse_x, mouse_y;
 
   MouseData[2] = SDL_GetMouseState(&mouse_x, &mouse_y);
+
   PtoV(&mouse_x, &mouse_y);
   MouseData[0] = mouse_x & 0xFFFF;
   MouseData[1] = mouse_y & 0xFFFF;

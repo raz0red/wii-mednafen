@@ -38,6 +38,7 @@
 
 #include "Emulators.h"
 #include "wii_mednafen.h"
+#include "../settings-driver.h"
 
 extern MDFNGI EmulatedNES;
 
@@ -295,8 +296,8 @@ static int Load(const char *name, MDFNFILE *fp)
 	 MDFN_VSUniInstallRWHooks();
 
 #ifdef WII
-    // Ensure game genie setting is applied prior to load
-    emuRegistry.NesEmu.setGameGenieEnabled( 
+    // Enable/disable Game Genie
+    MDFNI_SetSettingB( "nes.gg", 
       emuRegistry.NesEmu.isGameGenieEnabled() );
 #endif
 	if(MDFNGameInfo->GameType != GMT_PLAYER)
