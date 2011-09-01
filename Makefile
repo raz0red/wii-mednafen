@@ -46,6 +46,7 @@ SOURCES		:=	\
     mednafen/src/ngp/TLCS-900h \
     mednafen/src/pcfx \
     mednafen/src/pcfx/input \
+    mednafen/src/sms \
     mednafen/src/vb \
     mednafen/src/wswan \
     mednafen/src/hw_cpu/v810 \
@@ -53,6 +54,8 @@ SOURCES		:=	\
     mednafen/src/hw_cpu/z80-fuse \
     mednafen/src/hw_sound/gb_apu \
     mednafen/src/hw_sound/pce_psg \
+    mednafen/src/hw_sound/sms_apu \
+    mednafen/src/hw_sound/ym2413 \
     mednafen/src/hw_misc/arcade_card \
     mednafen/src/hw_video/huc6270 \
     mednafen/src/mpcdec \
@@ -68,13 +71,15 @@ SOURCES		:=	\
     src/wii/emulator/helper \
     src/wii/emulator/gb \
     src/wii/emulator/gba \
+    src/wii/emulator/gg \
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
     src/wii/emulator/ngp \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
-    src/wii/emulator/wswan   
+    src/wii/emulator/wswan \
+    src/wii/emulator/sms
 
 INCLUDES	:= \
     mednafen/include \
@@ -96,13 +101,15 @@ INCLUDES	:= \
     src/wii/emulator/helper \
     src/wii/emulator/gb \
     src/wii/emulator/gba \
+    src/wii/emulator/gg \
     src/wii/emulator/lynx \
     src/wii/emulator/nes \
     src/wii/emulator/ngp \
     src/wii/emulator/vb \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
-    src/wii/emulator/wswan
+    src/wii/emulator/wswan \
+    src/wii/emulator/sms
 
 #---------------------------------------------------------------------------------
 # options for code generation

@@ -60,8 +60,6 @@ void GameBoyMenuManager::getNodeName(
 
 void GameBoyMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   GameBoy& emu = ((GameBoy&)getEmulator());
   GameBoyDbManager& dbManager = (GameBoyDbManager&)emu.getDbManager();
   GameBoyDbEntry* entry = (GameBoyDbEntry*)dbManager.getEntry();

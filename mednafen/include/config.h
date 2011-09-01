@@ -577,6 +577,7 @@
 
 /* Define if we are compiling with SMS+GG emulation. */
 /* #undef WANT_SMS_EMU */
+#define WANT_SMS_EMU 1
 
 /* Define if we are compiling with SNES emulation. */
 /* #undef WANT_SNES_EMU */

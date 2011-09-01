@@ -1,8 +1,8 @@
 #include "main.h"
 
-#include "GameBoyAdvanceMenuManager.h"
-#include "GameBoyAdvanceDbManager.h"
-#include "GameBoyAdvance.h"
+#include "GameGearMenuManager.h"
+#include "GameGearDbManager.h"
+#include "GameGear.h"
 
 #include "gettext.h"
 
@@ -12,7 +12,7 @@
 #include "wii_resize_screen.h"
 #include "wii_mednafen.h"
 
-GameBoyAdvanceMenuManager::GameBoyAdvanceMenuManager( Emulator &emulator ) :
+GameGearMenuManager::GameGearMenuManager( Emulator &emulator ) :
   MenuManager( emulator ),
   m_emuMenuHelper( emulator ),
   m_cartSettingsMenuHelper( emulator )
@@ -46,40 +46,34 @@ GameBoyAdvanceMenuManager::GameBoyAdvanceMenuManager( Emulator &emulator ) :
   m_cartSettingsMenuHelper.addCartSettingsOpsNodes( m_cartridgeSettingsMenu );
 }
 
-void GameBoyAdvanceMenuManager::getNodeName( 
+void GameGearMenuManager::getNodeName( 
   TREENODE* node, char *buffer, char* value )
 {
-  GameBoyAdvance& emu = (GameBoyAdvance&)getEmulator();
-  GameBoyAdvanceDbManager& dbManager = 
-    (GameBoyAdvanceDbManager&)emu.getDbManager();
-  GameBoyAdvanceDbEntry* entry = 
-    (GameBoyAdvanceDbEntry*)dbManager.getEntry();
-
+  GameGear& emu = ((GameGear&)getEmulator());
+  GameGearDbManager& dbManager = (GameGearDbManager&)emu.getDbManager();
+  GameGearDbEntry* entry = (GameGearDbEntry*)dbManager.getEntry();
+  
   // Helpers
   m_emuMenuHelper.getNodeName( node, buffer, value );
   m_cartSettingsMenuHelper.getNodeName( node, buffer, value );
 }
 
-void GameBoyAdvanceMenuManager::selectNode( TREENODE *node )
+void GameGearMenuManager::selectNode( TREENODE *node )
 {
-  GameBoyAdvance& emu = (GameBoyAdvance&)getEmulator();
-  GameBoyAdvanceDbManager& dbManager = 
-    (GameBoyAdvanceDbManager&)emu.getDbManager();
-  GameBoyAdvanceDbEntry* entry = 
-    (GameBoyAdvanceDbEntry*)dbManager.getEntry();
+  GameGear& emu = ((GameGear&)getEmulator());
+  GameGearDbManager& dbManager = (GameGearDbManager&)emu.getDbManager();
+  GameGearDbEntry* entry = (GameGearDbEntry*)dbManager.getEntry();
 
   // Helpers
   m_emuMenuHelper.selectNode( node );
   m_cartSettingsMenuHelper.selectNode( node );
 }
 
-bool GameBoyAdvanceMenuManager::isNodeVisible( TREENODE *node )
+bool GameGearMenuManager::isNodeVisible( TREENODE *node )
 {
-  GameBoyAdvance& emu = (GameBoyAdvance&)getEmulator();
-  GameBoyAdvanceDbManager& dbManager = 
-    (GameBoyAdvanceDbManager&)emu.getDbManager();
-  GameBoyAdvanceDbEntry* entry = 
-    (GameBoyAdvanceDbEntry*)dbManager.getEntry();
+  GameGear& emu = ((GameGear&)getEmulator());
+  GameGearDbManager& dbManager = (GameGearDbManager&)emu.getDbManager();
+  GameGearDbEntry* entry = (GameGearDbEntry*)dbManager.getEntry();
 
   // Helpers
   if( !m_emuMenuHelper.isNodeVisible( node ) ) 

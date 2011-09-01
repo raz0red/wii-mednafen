@@ -280,8 +280,9 @@ static void precallback()
   {
 #if 0
 #ifdef WII_NETTRACE
-net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d %d\n", 
-  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h, VTReady->w, VTReady->h, VTLWReady[0].w, ~0 );
+net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n", 
+  VTDRReady->x, VTDRReady->y, VTDRReady->w, VTDRReady->h, VTReady->w, VTReady->h, VTLWReady[0].w, 
+  MDFNGameInfo->nominal_width, MDFNGameInfo->nominal_height );
 #endif
 #endif
     Emulator* emu = emuRegistry.getCurrentEmulator();

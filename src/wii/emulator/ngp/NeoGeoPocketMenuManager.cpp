@@ -72,8 +72,6 @@ void NeoGeoPocketMenuManager::getNodeName(
 
 void NeoGeoPocketMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   NeoGeoPocket& emu = ((NeoGeoPocket&)getEmulator());
   NeoGeoPocketDbManager& dbManager = (NeoGeoPocketDbManager&)emu.getDbManager();
   NeoGeoPocketDbEntry* entry = (NeoGeoPocketDbEntry*)dbManager.getEntry();

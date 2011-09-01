@@ -73,8 +73,6 @@ void LynxMenuManager::getNodeName(
 
 void LynxMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   Lynx& emu = ((Lynx&)getEmulator());
   LynxDbManager& dbManager = (LynxDbManager&)emu.getDbManager();
   LynxDbEntry* entry = (LynxDbEntry*)dbManager.getEntry();

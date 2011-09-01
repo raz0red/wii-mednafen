@@ -37,7 +37,8 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
-  u8 getBpp();
+  u8 getBpp();  
+  bool isMultiRes();
 
   bool isGameGenieEnabled();
   void setGameGenieEnabled( bool enabled );

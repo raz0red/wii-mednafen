@@ -7,10 +7,12 @@
 #include "Lynx.h"
 #include "GameBoy.h"
 #include "GameBoyAdvance.h"
+#include "GameGear.h"
 #include "PCEFast.h"
 #include "PCFX.h"
 #include "NeoGeoPocket.h"
 #include "Nes.h"
+#include "MasterSystem.h"
 
 #include <map>
 #include <string>
@@ -32,6 +34,8 @@ public:
   PCEFast PCEFastEmu;
   PCFX PCFXEmu;
   NeoGeoPocket NeoGeoPocketEmu;
+  GameGear GameGearEmu;
+  MasterSystem MasterSystemEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );

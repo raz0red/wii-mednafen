@@ -41,7 +41,7 @@ static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth,
   int bpp = screen->format->BytesPerPixel;                          \
   dest += screen->offset/screen->format->BytesPerPixel +            \
   (destPitch * topindent) + indent;                                 \
-  src += srcPitch * DisplayRect->y;                                 \
+  src += srcPitch * DisplayRect->y + DisplayRect->x;                \
   if( LineWidths[0].w == ~0 )                                       \
   {                                                                 \
     for( int y = 0; y < DisplayRect->h; y++ )                       \
