@@ -1,6 +1,6 @@
 #include "main.h"
 
-#include "Nes.h"
+#include "MasterSystem.h"
 #include "wii_util.h"
 #include "wii_input.h"
 #include "wii_hw_buttons.h"
@@ -8,78 +8,44 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
-#ifdef WII_NETTRACE
-#include <network.h>
-#include "net_print.h"  
-#endif
-
-Nes::Nes() : 
-  Emulator( "nes", "NES" ),
+MasterSystem::MasterSystem() : 
+  Emulator( "sms", "Sega Master System" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this ),
-  m_gameGenie( false )
+  m_menuManager( *this )
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 256;
   m_emulatorScreenSize.h = 256;
 
   // Set user screen sizes
-  float hscale = 2.0;
-  float wscale = 2.5;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*wscale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*hscale);
+  float scalew = 2.5;
+  float scaleh = 2.0;  
+  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
+  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
 }
 
-ConfigManager& Nes::getConfigManager()
+ConfigManager& MasterSystem::getConfigManager()
 {
   return m_configManager;
 }
 
-DatabaseManager& Nes::getDbManager()
+DatabaseManager& MasterSystem::getDbManager()
 {
   return m_dbManager;
 }
 
-MenuManager& Nes::getMenuManager()
+MenuManager& MasterSystem::getMenuManager()
 {
   return m_menuManager;
 }
 
-extern bool NESIsVSUni;
-extern void MDFN_VSUniCoin();
-extern MDFNGI *MDFNGameInfo;
-extern int FDS_DiskInsert(int oride);
-extern int FDS_DiskEject(void);
-extern int FDS_DiskSelect(void);
-
-static int flipdisk = 0;
-static bool specialheld = false;
-
-void Nes::updateControls( bool isRapid )
+void MasterSystem::updateControls( bool isRapid )
 {
   WPAD_ScanPads();
   PAD_ScanPads();
 
-  if( flipdisk )
-  {
-    switch( flipdisk )
-    {
-      case 30:
-        FDS_DiskEject();
-        break;
-      case 20:
-        FDS_DiskSelect();
-        break;
-      case 10:
-        FDS_DiskInsert(-1);
-        break;
-    }
-    flipdisk--;
-  }
-
-  bool special = false;
-  for( int c = 0; c < 4; c++ )
+  for( int c = 0; c < 2; c++ )
   {
     // Check the state of the controllers
     u32 pressed = WPAD_ButtonsDown( c );
@@ -112,15 +78,12 @@ void Nes::updateControls( bool isRapid )
     s8 gcRX = PAD_SubStickX( c );
     s8 gcRY = PAD_SubStickY( c );
 
-    if( c == 0 )
+    // Check for home
+    if( ( pressed & WII_BUTTON_HOME ) ||
+      ( gcPressed & GC_BUTTON_HOME ) ||
+      wii_hw_button )
     {
-      // Check for home
-      if( ( pressed & WII_BUTTON_HOME ) ||
-        ( gcPressed & GC_BUTTON_HOME ) ||
-        wii_hw_button )
-      {
-        GameThreadRun = 0;
-      }
+      GameThreadRun = 0;
     }
 
     u16 result = 0;
@@ -131,7 +94,7 @@ void Nes::updateControls( bool isRapid )
     
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
-    for( int i = 0; i < NES_BUTTON_COUNT; i++ )
+    for( int i = 0; i < SMS_BUTTON_COUNT; i++ )
     {
       if( ( held &
             ( ( isClassic ? 
@@ -146,95 +109,49 @@ void Nes::updateControls( bool isRapid )
               entry->appliedButtonMap[
                 WII_CONTROLLER_CUBE ][ i ] ) )
       {
-        u32 val = NesDbManager::NES_BUTTONS[ i ].button;
-        if( val & NES_SPECIAL )
-        {          
-          special = true;
-          if( !specialheld )
-          {
-            specialheld = true;
-            if( NESIsVSUni )
-            {
-              MDFN_VSUniCoin();
-            }
-            else if( MDFNGameInfo->GameType == GMT_DISK && !flipdisk )
-            {
-              flipdisk = 30;
-            }
-          }                    
-        }
-        else 
+        u32 val = MasterSystemDbManager::SMS_BUTTONS[ i ].button;
+        if( !( val & BTN_RAPID ) || isRapid )
         {
-          if( !( val & BTN_RAPID ) || isRapid )
-          {
-            result |= ( val & 0xFFFF );          
-          }
+          result |= ( val & 0xFFFF );
         }
-      }        
+      }
     }    
 
     if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
         ( gcHeld & GC_BUTTON_RIGHT ) ||
         wii_analog_right( expX, gcX ) )
-      result|=NES_RIGHT;
+      result|=SMS_RIGHT;
 
     if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
         ( gcHeld & GC_BUTTON_LEFT ) ||                       
         wii_analog_left( expX, gcX ) )
-      result|=NES_LEFT;
+      result|=SMS_LEFT;
 
     if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
         ( gcHeld & GC_BUTTON_UP ) ||
         wii_analog_up( expY, gcY ) )
-      result|=NES_UP;
+      result|=SMS_UP;
 
     if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
         ( gcHeld & GC_BUTTON_DOWN ) ||
         wii_analog_down( expY, gcY ) )
-      result|=NES_DOWN;
+      result|=SMS_DOWN;
 
     m_padData[c] = result;
   }
-
-  if( !special )
-  {
-    specialheld = false;
-  }
 }
 
-void Nes::onPostLoad()
+void MasterSystem::onPostLoad()
 {
-  flipdisk = 0;
-  specialheld = false;
 }
 
-bool Nes::updateDebugText( 
+bool MasterSystem::updateDebugText( 
   char* output, const char* defaultOutput, int len )
 {
   return false;
 }
 
-bool Nes::isRotationSupported()
-{
-  return false;
-}
-
-bool Nes::isGameGenieEnabled()
-{
-  return m_gameGenie;
-}
-
-void Nes::setGameGenieEnabled( bool enabled )
-{
-  m_gameGenie = enabled;
-}
-
-u8 Nes::getBpp()
-{
-  return NES_BPP;
-}
-
-bool Nes::isMultiRes()
+bool MasterSystem::isRotationSupported()
 {
   return false;
 }

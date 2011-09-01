@@ -91,8 +91,6 @@ void PCEFastMenuManager::getNodeName(
 
 void PCEFastMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   PCEFast& emu = (PCEFast&)getEmulator();
   PCEFastDbManager& dbManager = (PCEFastDbManager&)emu.getDbManager();
   PCEFastDbEntry* entry = (PCEFastDbEntry*)dbManager.getEntry();

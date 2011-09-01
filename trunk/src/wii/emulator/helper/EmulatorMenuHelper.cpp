@@ -24,7 +24,7 @@ TREENODE* EmulatorMenuHelper::createEmulatorMenu()
 
 void EmulatorMenuHelper::getNodeName( 
   TREENODE* node, char *buffer, char* value )
-{
+{ 
   Emulator& emu = getEmulator();
 
   switch( node->node_type )
@@ -77,13 +77,14 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
     Rect* screenSize = 
       emu.getRotation() ?
         emu.getRotatedScreenSize() : emu.getScreenSize();
-    float ratio = emu.getCurrentScreenSizeRatio();
+    float ratiox, ratioy;
+    emu.getCurrentScreenSizeRatio( &ratiox, &ratioy );
     resize_info rinfo = 
-      { defaultScreenSize->w * ratio, defaultScreenSize->h, 
-        screenSize->w * ratio, screenSize->h };
+      { defaultScreenSize->w * ratiox, defaultScreenSize->h *ratioy, 
+        screenSize->w * ratiox, screenSize->h * ratioy };
     wii_resize_screen_gui( &rinfo );
-    screenSize->w = ( rinfo.currentX / ratio );
-    screenSize->h = ( rinfo.currentY );
+    screenSize->w = ( rinfo.currentX / ratiox );
+    screenSize->h = ( rinfo.currentY / ratioy );
 
     wii_gx_pop_callback();
   }

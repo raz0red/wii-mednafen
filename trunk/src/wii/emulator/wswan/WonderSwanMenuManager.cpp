@@ -70,8 +70,6 @@ void WonderSwanMenuManager::getNodeName(
 
 void WonderSwanMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   WonderSwan& emu = ((WonderSwan&)getEmulator());
   WonderSwanDbManager& dbManager = (WonderSwanDbManager&)emu.getDbManager();
   StandardDbEntry* entry = (StandardDbEntry*)dbManager.getEntry();

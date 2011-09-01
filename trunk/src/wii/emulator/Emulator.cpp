@@ -115,11 +115,19 @@ bool Emulator::isMultiRes()
   return false;
 }
 
-float Emulator::getCurrentScreenSizeRatio()
+void Emulator::getCurrentScreenSizeRatio( float* ratiox, float* ratioy )
 {  
-  return isMultiRes() ? 
-    (float)m_baseMultiResScreenSize.w / (float)VTDRReady->w :
-    1.0;
+  *ratiox =
+    isMultiRes() ? 
+      (float)m_baseMultiResScreenSize.w / (float)VTDRReady->w :
+      1.0;
+
+  *ratioy = 1.0;
+#if 0
+    isMultiRes() ? 
+      (float)m_baseMultiResScreenSize.h / (float)VTDRReady->h :
+      1.0;
+#endif
 }
 
 void Emulator::resizeScreen( bool force )
@@ -136,14 +144,15 @@ void Emulator::resizeScreen( bool force )
     {
       if( VTReady && ( VTDRReady->w != m_lastSize.w ) )
       {
-        float ratio = getCurrentScreenSizeRatio();
+        float ratiox, ratioy;
+        getCurrentScreenSizeRatio( &ratiox, &ratioy );
         WII_ChangeSquare( 
-          m_screenSize.w * ratio, m_screenSize.h, 0, 0 );
+          m_screenSize.w * ratiox, m_screenSize.h * ratioy, 0, 0 );
         m_lastSize.w = VTDRReady->w;
         m_lastSize.h = VTDRReady->h;
 #ifdef WII_NETTRACE
 net_print_string( NULL, 0, 
-  "resizing to: w:%dx%d, ratio:%f\n", VTDRReady->w, VTDRReady->h, ratio );
+  "resizing to: w:%dx%d, ratio:%f,%f\n", VTDRReady->w, VTDRReady->h, ratiox, ratioy );
 #endif
       }
     }

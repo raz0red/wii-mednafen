@@ -60,8 +60,6 @@ void PCFXMenuManager::getNodeName(
 
 void PCFXMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   PCFX& emu = (PCFX&)getEmulator();
   PCFXDbManager& dbManager = (PCFXDbManager&)emu.getDbManager();
   PCFXDbEntry* entry = (PCFXDbEntry*)dbManager.getEntry();

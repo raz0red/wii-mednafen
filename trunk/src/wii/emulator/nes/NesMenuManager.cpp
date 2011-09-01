@@ -97,8 +97,6 @@ void NesMenuManager::getNodeName(
 
 void NesMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   Nes& emu = (Nes&)getEmulator();
   NesDbManager& dbManager = (NesDbManager&)emu.getDbManager();
   NesDbEntry* entry = (NesDbEntry*)dbManager.getEntry();

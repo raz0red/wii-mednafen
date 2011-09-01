@@ -56,7 +56,7 @@ public:
   virtual u8 getBpp();
   virtual bool isMultiRes();
   virtual void resizeScreen( bool force );
-  float getCurrentScreenSizeRatio();
+  void getCurrentScreenSizeRatio( float* ratiox, float* ratioy );
   Rect* getBaseMultiResSize();
   Rect* getEmulatorScreenSize();
   Rect* getScreenSize();

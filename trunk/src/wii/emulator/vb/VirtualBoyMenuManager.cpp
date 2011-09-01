@@ -116,8 +116,6 @@ void VirtualBoyMenuManager::getNodeName(
 
 void VirtualBoyMenuManager::selectNode( TREENODE *node )
 {
-  char buff[WII_MAX_PATH];
-
   VirtualBoy& emu = ((VirtualBoy&)getEmulator());
   VirtualBoyDbManager& dbManager = (VirtualBoyDbManager&)emu.getDbManager();
   VbDbEntry* entry = (VbDbEntry*)dbManager.getEntry();
