@@ -3025,6 +3025,17 @@ void SCSICD_Init(int type, int cdda_time_div, Blip_Buffer *leftbuf, Blip_Buffer 
  CDStuffSubchannels = SSCFunc;
 }
 
+#ifdef WII
+void SCSICD_Close(void)
+{
+  if(din)
+  {
+    delete din;
+    din = NULL;
+  }
+}
+#endif
+
 void SCSICD_SetCDDAVolume(double left, double right)
 {
  cdda.CDDAVolume[0] = 65536 * left;

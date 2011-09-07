@@ -1813,6 +1813,10 @@ void KING_Close(void)
 #endif
   king = NULL;
  }
+
+#ifdef WII
+  SCSICD_Close();
+#endif
 }
 
 

@@ -90,6 +90,9 @@ void SCSICD_GetCDDAValues(int16 &left, int16 &right);
 void SCSICD_SetLog(void (*logfunc)(const char *, const char *, ...));
 
 void SCSICD_Init(int type, int CDDATimeDiv, Blip_Buffer *leftbuf, Blip_Buffer *rightbuf, uint32 TransferRate, uint32 SystemClock, void (*IRQFunc)(int), void (*SSCFunc)(uint8, int));
+#ifdef WII
+void SCSICD_Close(void);
+#endif
 void SCSICD_SetTransferRate(uint32 TransferRate);
 void SCSICD_SetCDDAVolume(double left, double right);
 int SCSICD_StateAction(StateMem *sm, int load, int data_only, const char *sname);
