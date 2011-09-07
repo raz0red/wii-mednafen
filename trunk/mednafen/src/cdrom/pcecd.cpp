@@ -443,6 +443,10 @@ void PCECD_Close(void)
 #endif
          ADPCM.RAM = NULL;
         }
+
+#ifdef WII
+  SCSICD_Close();
+#endif
 }
 
 
