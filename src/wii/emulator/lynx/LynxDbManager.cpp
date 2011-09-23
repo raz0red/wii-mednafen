@@ -74,8 +74,8 @@ const WiiButton LynxDbManager::
     { "Y",      WPAD_CLASSIC_BUTTON_Y,        LYNX_MAP_NONE  },
     { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   LYNX_MAP_PAUSE },
     { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   LYNX_MAP_PAUSE },
-    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       LYNX_MAP_NONE  },
-    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       LYNX_MAP_NONE  }
+    { "zR",     WPAD_CLASSIC_BUTTON_ZR,       LYNX_MAP_PAUSE },
+    { "zL",     WPAD_CLASSIC_BUTTON_ZL,       LYNX_MAP_PAUSE }
   },
   {
     { "Start",  PAD_BUTTON_START,             LYNX_MAP_PAUSE },

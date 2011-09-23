@@ -225,6 +225,10 @@ static int LoadCommon(const char *name, MDFNFILE *fp)
 
  MDFNMP_AddRAM(8192, 0xC000, sms.wram);
 
+#ifdef WII
+ memset( &bitmap, 0, sizeof(bitmap_t) );
+#endif
+
  sms_init();
  pio_init();
  vdp_init();

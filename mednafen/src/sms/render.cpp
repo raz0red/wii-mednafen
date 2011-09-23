@@ -153,7 +153,10 @@ void render_reset(void)
     int i;
 
     /* Clear display bitmap */
-    memset(bitmap.data, 0, bitmap.pitch * bitmap.height);
+#ifdef WII
+    if(bitmap.data)
+#endif
+      memset(bitmap.data, 0, bitmap.pitch * bitmap.height);
 
     /* Clear palette */
     for(i = 0; i < PALETTE_SIZE; i++)
@@ -522,7 +525,10 @@ void palette_sync(int index, int force)
   else
    color = SystemColorMap[vdp.cram[index] & 0x3F];
  }  
- pixel[index] = color;
+ if( index < PALETTE_SIZE ) // WII
+ {
+  pixel[index] = color;
+ }
 }
 
 static void remap_8_to_32(int line)

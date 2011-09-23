@@ -72,8 +72,8 @@ const WiiButton WonderSwanDbManager::
       { "Y",      WPAD_CLASSIC_BUTTON_Y,        WSK_MAP_Y3     },
       { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   WSK_MAP_Y1     },
       { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   WSK_MAP_Y4     },
-      { "zR",     WPAD_CLASSIC_BUTTON_ZR,       WSK_MAP_NONE   },
-      { "zL",     WPAD_CLASSIC_BUTTON_ZL,       WSK_MAP_NONE   }
+      { "zR",     WPAD_CLASSIC_BUTTON_ZR,       WSK_MAP_Y1     },
+      { "zL",     WPAD_CLASSIC_BUTTON_ZL,       WSK_MAP_Y4     }
     },
     {
       { "Start",  PAD_BUTTON_START,             WSK_MAP_START  },
@@ -122,8 +122,8 @@ const WiiButton WonderSwanDbManager::
       { "Y",      WPAD_CLASSIC_BUTTON_Y,        WSK_MAP_X1     },
       { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   WSK_MAP_A      },
       { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   WSK_MAP_B      },
-      { "zR",     WPAD_CLASSIC_BUTTON_ZR,       WSK_MAP_NONE   },
-      { "zL",     WPAD_CLASSIC_BUTTON_ZL,       WSK_MAP_NONE   }
+      { "zR",     WPAD_CLASSIC_BUTTON_ZR,       WSK_MAP_A      },
+      { "zL",     WPAD_CLASSIC_BUTTON_ZL,       WSK_MAP_B      }
     },
     {
       { "Start",  PAD_BUTTON_START,             WSK_MAP_START  },
