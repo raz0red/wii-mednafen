@@ -113,7 +113,7 @@ void wii_mednafen_set_message( const char* msg )
   else
   {
     message_time = SDL_GetTicks() + 5 * 1000; // 5 secs
-    Util_strlcpy( message, msg, sizeof(message) );
+    snprintf( message, sizeof(message), "%s", gettextmsg( msg ) );
   }
 }
 
@@ -199,8 +199,6 @@ int wii_mednafen_load_game( char* game )
   return LoadGame( NULL, game );
 }
 
-static MDFN_PixelFormat nf;
-
 static void reset_video()
 {
   free_video();
@@ -213,7 +211,7 @@ static void reset_video()
     SDL_SetVideoMode( size->w, size->h, bpp,
       SDL_HWSURFACE | SDL_HWPALETTE | SDL_FULLSCREEN );
 
-  memset( &nf, 0x0, sizeof( MDFN_PixelFormat ) );
+  MDFN_PixelFormat nf;
   nf.bpp = bpp;
   nf.colorspace = MDFN_COLORSPACE_RGB;
 

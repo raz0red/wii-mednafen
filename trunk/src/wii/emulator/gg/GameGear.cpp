@@ -16,10 +16,10 @@ GameGear::GameGear() :
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 256;
-  m_emulatorScreenSize.h = 256;
+  m_emulatorScreenSize.h = 480;
 
   // Set user screen sizes
-  float scale = 3.333;
+  float scale = 3.1;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
 }

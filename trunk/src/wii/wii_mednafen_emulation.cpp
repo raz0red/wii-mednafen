@@ -75,7 +75,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   Emulator *emulator;
 
   // Start emulation
-  if( !resume )
+  if( !resume && !reset )
   {
 #ifdef MEM2
     Mem2ManagerReset(); // Reset the MEM2 manager
@@ -103,7 +103,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
           md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str() );
       }
 
-      // Set the current emulaotr
+      // Set the current emulator
       emulator =
         emuRegistry.setCurrentEmulator( MDFNGameInfo->shortname );
       
@@ -121,6 +121,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
         entry->name, wii_cartridge_hash_with_header, wii_cartridge_hash );
 #endif
 
+#if 0
       // Load the save if applicable
       if( !reset && succeeded &&
           ( savefile != NULL && strlen( savefile ) > 0 ) )
@@ -152,7 +153,12 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
           }
         }
       }
+#endif
     }
+  }
+  else if( reset )
+  {
+    MDFNGameInfo->DoSimpleCommand( MDFN_MSC_RESET );
   }
 
   if( succeeded )

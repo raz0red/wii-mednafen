@@ -16,7 +16,7 @@ MasterSystem::MasterSystem() :
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 256;
-  m_emulatorScreenSize.h = 256;
+  m_emulatorScreenSize.h = 480;
 
   // Set user screen sizes
   float scalew = 2.5;
