@@ -26,7 +26,7 @@ void mode1RenderLine()
   uint16 *palette = (uint16 *)paletteRAM;
   
   if(DISPCNT & 0x80) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }
@@ -131,7 +131,7 @@ void mode1RenderLineNoWindow()
   uint16 *palette = (uint16 *)paletteRAM;
   
   if(DISPCNT & 0x80) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }
@@ -290,7 +290,7 @@ void mode1RenderLineAll()
   uint16 *palette = (uint16 *)paletteRAM;
   
   if(DISPCNT & 0x80) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }

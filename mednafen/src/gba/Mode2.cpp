@@ -26,7 +26,7 @@ void mode2RenderLine()
   uint16 *palette = (uint16 *)paletteRAM;
 
   if(DISPCNT & 0x80) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }

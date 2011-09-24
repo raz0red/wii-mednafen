@@ -20,6 +20,10 @@
 #include "Globals.h"
 #include "Sound.h"
 
+#ifdef WII
+#include "Port.h"
+#endif
+
 #if 0
 #include <memory.h>
 #endif
@@ -216,7 +220,11 @@ void soundEvent(uint32 address, uint16 data)
     }
     soundDSBEnabled = (data & 0x3000) ? true : false;
     soundDSBTimer = (data & 0x4000) ? 1 : 0;
+#ifndef WII
     *((uint16 *)&ioMem[address]) = data;    
+#else
+    WRITE16LE((uint16 *)&ioMem[address], data);
+#endif
     break;
   case FIFOA_L:
   case FIFOA_H:
@@ -224,7 +232,11 @@ void soundEvent(uint32 address, uint16 data)
     soundDSFifoA[soundDSFifoAWriteIndex++] = data >> 8;
     soundDSFifoACount += 2;
     soundDSFifoAWriteIndex &= 31;
+#ifndef WII
     *((uint16 *)&ioMem[address]) = data;    
+#else
+    WRITE16LE((uint16 *)&ioMem[address], data);
+#endif
     break;
   case FIFOB_L:
   case FIFOB_H:
@@ -232,11 +244,19 @@ void soundEvent(uint32 address, uint16 data)
     soundDSFifoB[soundDSFifoBWriteIndex++] = data >> 8;
     soundDSFifoBCount += 2;
     soundDSFifoBWriteIndex &= 31;
+#ifndef WII
     *((uint16 *)&ioMem[address]) = data;    
+#else
+    WRITE16LE((uint16 *)&ioMem[address], data);
+#endif
     break;
   case 0x88:
     data &= 0xC3FF;
-    *((uint16 *)&ioMem[address]) = data;
+#ifndef WII
+    *((uint16 *)&ioMem[address]) = data;    
+#else
+    WRITE16LE((uint16 *)&ioMem[address], data);
+#endif
     break;
   case 0x90:
   case 0x92:
