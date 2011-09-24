@@ -24,7 +24,7 @@
 void mode5RenderLine()
 {
   if(DISPCNT & 0x0080) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }
@@ -105,7 +105,7 @@ void mode5RenderLine()
 void mode5RenderLineNoWindow()
 {
   if(DISPCNT & 0x0080) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }
@@ -227,7 +227,7 @@ void mode5RenderLineNoWindow()
 void mode5RenderLineAll()
 {
   if(DISPCNT & 0x0080) {
-#ifndef WII
+#if 1
     for(int x = 0; x < 240; x++) {
       lineMix[x] = 0x7fff;
     }

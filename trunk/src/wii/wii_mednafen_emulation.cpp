@@ -158,7 +158,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   }
   else if( reset )
   {
-    MDFNGameInfo->DoSimpleCommand( MDFN_MSC_RESET );
+    MDFNGameInfo->DoSimpleCommand( MDFN_MSC_POWER );
   }
 
   if( succeeded )

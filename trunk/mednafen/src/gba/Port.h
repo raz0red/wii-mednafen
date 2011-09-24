@@ -33,8 +33,7 @@ static inline uint32 swap32(uint32 v)
 }
 
 #ifndef LSB_FIRST
-#if defined(__GNUC__) && defined(__ppc__)
-
+#if defined(WII) || (defined(__GNUC__) && defined(__ppc__))
 #define READ16LE(base) \
   ({ unsigned short lhbrxResult;       \
      __asm__ ("lhbrx %0, 0, %1" : "=r" (lhbrxResult) : "r" (base) : "memory"); \
