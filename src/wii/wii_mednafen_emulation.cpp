@@ -27,6 +27,7 @@ distribution.
 
 #include "wii_app.h"
 #include "wii_config.h"
+#include "wii_gx.h"
 #include "wii_input.h"
 #include "wii_sdl.h"
 #include "wii_snapshot.h"
@@ -163,6 +164,9 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
 
   if( succeeded )
   {
+    // Blank the screen
+    wii_gx_push_callback( NULL, FALSE );
+
     // Reset status message count
     wii_status_message_count = 0;
 
@@ -183,8 +187,10 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
 
       // Start the emulator loop
       wii_mednafen_emu_loop( resume );            
-
     }
+
+    // Pop the callback
+    wii_gx_pop_callback();
 
     // Store the name of the last rom (for resuming later)        
     // Do it in this order in case they passed in the pointer

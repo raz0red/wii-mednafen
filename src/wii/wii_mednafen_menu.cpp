@@ -59,6 +59,8 @@ extern MDFNGI *MDFNGameInfo;
 static BOOL games_read = FALSE;
 // Whether we are pending a drive mount
 static BOOL mount_pending = TRUE;
+// Whether we are pending a drive mount
+static BOOL loading_game = FALSE;
 // The index of the last rom that was run
 static s16 last_rom_index = 1;
 // The language menu
@@ -234,20 +236,27 @@ void wii_mednafen_menu_init()
  */
 void wii_menu_handle_get_header( TREENODE* menu, char *buffer )
 {
-  switch( menu->node_type )
+  if( loading_game )
   {
-    case NODETYPE_LOAD_ROM:    
-      if( !games_read )
-      {
-        snprintf( buffer, WII_MENU_BUFF_SIZE, 
-          mount_pending ? 
-            gettextmsg("Attempting to mount drive...") :
-            gettextmsg("Reading file list...") );
-      }
-      break;
-    default:
-      /* do nothing */
-      break;
+    snprintf( buffer, WII_MENU_BUFF_SIZE, gettextmsg("Loading game...") );
+  }
+  else
+  {
+    switch( menu->node_type )
+    {
+      case NODETYPE_LOAD_ROM:    
+        if( !games_read )
+        {
+          snprintf( buffer, WII_MENU_BUFF_SIZE, 
+            mount_pending ? 
+              gettextmsg("Attempting to mount drive...") :
+              gettextmsg("Reading file list...") );
+        }
+        break;
+      default:
+        /* do nothing */
+        break;
+    }
   }
 }
 
@@ -260,17 +269,24 @@ void wii_menu_handle_get_header( TREENODE* menu, char *buffer )
  */
 void wii_menu_handle_get_footer( TREENODE* menu, char *buffer )
 {
-  switch( menu->node_type )
+  if( loading_game )
   {
-    case NODETYPE_LOAD_ROM:
-      if( games_read )
-      {
-        wii_get_list_footer( 
-          roms_menu, "item", "items", buffer );
-      }
-      break;
-    default:
-      break;
+    snprintf( buffer, WII_MENU_BUFF_SIZE, " " );
+  }
+  else
+  {
+    switch( menu->node_type )
+    {
+      case NODETYPE_LOAD_ROM:
+        if( games_read )
+        {
+          wii_get_list_footer( 
+            roms_menu, "item", "items", buffer );
+        }
+        break;
+      default:
+        break;
+    }
   }
 }
 
@@ -422,7 +438,7 @@ void wii_menu_handle_select_node( TREENODE *node )
       node->node_type == NODETYPE_RESET )
   {   
     // Essentially blanks the screen
-    wii_gx_push_callback( NULL, FALSE );
+  //  wii_gx_push_callback( NULL, FALSE );
 
     switch( node->node_type )
     {
@@ -433,7 +449,9 @@ void wii_menu_handle_select_node( TREENODE *node )
         snprintf( 
           buff, sizeof(buff), "%s%s", wii_get_roms_dir(), node->name ); 
         last_rom_index = wii_menu_get_current_index();
+        loading_game = TRUE;
         wii_start_emulation( buff, "", false, false );
+        loading_game = FALSE;
         break;
       case NODETYPE_RESUME:
         wii_resume_emulation();
@@ -446,7 +464,7 @@ void wii_menu_handle_select_node( TREENODE *node )
         break;
     }
 
-    wii_gx_pop_callback();
+ //   wii_gx_pop_callback();
   }
   else
   {
