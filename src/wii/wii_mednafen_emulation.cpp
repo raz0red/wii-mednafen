@@ -34,6 +34,7 @@ distribution.
 
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
+#include "wii_mednafen_menu.h"
 #include "wii_mednafen_snapshot.h"
 
 #include "Emulators.h"
@@ -163,9 +164,11 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
   }
 
   if( succeeded )
-  {
+  {    
+    loading_game = FALSE; // Update menu
+
     // Blank the screen
-    wii_gx_push_callback( NULL, FALSE );
+    wii_gx_push_callback( NULL, FALSE );    
 
     // Reset status message count
     wii_status_message_count = 0;
@@ -218,6 +221,9 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
       wii_last_rom = NULL;
     }
   }
+
+  // Wait until no buttons are pressed
+  wii_wait_until_no_buttons( 2 );
 }
 
 /*

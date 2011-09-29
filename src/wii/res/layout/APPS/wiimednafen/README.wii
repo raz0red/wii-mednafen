@@ -67,6 +67,12 @@ let me know if you experience any via the Google Code project.
    that you install the application and its support files on an SD card.
    This ensures that configuration changes and save states will persist
    properly, even if the drive goes to sleep.
+ * Many emulator options are not currently exposed, they will be added with
+   subsequent releases.
+ * Several features like rewind, etc. are not currently supported, they will
+   be added with subsequent releases.
+ * The front-end is functional but minimal. This is something that may be 
+   addressed once I am satisfied with the overall state of the port. 
 
 --------------------------------------------
 Installation

@@ -31,4 +31,7 @@ distribution.
  */
 extern void wii_mednafen_menu_init();
 
+// Whether we are loading a game
+extern BOOL loading_game;
+
 #endif

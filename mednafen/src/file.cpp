@@ -322,25 +322,73 @@ bool MDFNFILE::MakeMemWrap(void *tz, int type)
     uint32_t cur_alloced = 65536;
     int howmany;
 
+#ifdef MEM2
+    if( isgame )
+    {
+      if(!(f_data = (uint8*)Mem2ManagerAlloc(cur_alloced, _("file read buffer"))))
+      {
+        goto doret;
+      }
+    }
+    else
+    {
+#endif
     if(!(f_data = (uint8*)MDFN_malloc(cur_alloced, _("file read buffer"))))
     {
       goto doret;
     }
+#ifdef MEM2
+    }
+#endif
 
     while((howmany = gzread(tz, f_data + cur_size, cur_alloced - cur_size)) > 0)
     {
       cur_size += howmany;
       cur_alloced <<= 1;
+#ifdef MEM2
+      if( cur_alloced > 0x2000000 ) 
+      {
+        // 32megs is our max... deal with it.
+        cur_alloced = 0x2000000;
+      }
+
+      if( isgame )
+      {
+        if(!(f_data = (uint8 *)Mem2ManagerAdjust(f_data, cur_alloced, _("file read buffer")))) 
+        {
+          goto doret;
+        }
+      }
+      else
+      {
+#endif
       if(!(f_data = (uint8 *)MDFN_realloc(f_data, cur_alloced, _("file read buffer")))) 
       {
         goto doret;
       }
+#ifdef MEM2
+      }
+#endif
     }
 
+#ifdef MEM2
+    if( isgame )
+    {
+      if(!(f_data = (uint8 *)Mem2ManagerAdjust(f_data, cur_size, _("file read buffer")))) 
+      {
+        goto doret;
+      }
+    }
+    else
+    {
+#endif
     if(!(f_data = (uint8 *)MDFN_realloc(f_data, cur_size, _("file read buffer")))) 
     {
       goto doret;
     }
+#ifdef MEM2
+    }
+#endif
 
     f_size = cur_size;
   }
@@ -553,13 +601,18 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
     else                  /* Probably gzip */
     {
 #ifdef WII
-      MDFN_PrintError(_("Unable to open file type."));
-      if( t ) fclose( (FILE *)t );
-      return 0;
+      lseek(fileno((FILE *)t), 0, SEEK_SET);
+      void* tmpt;
+      if(!(tmpt=gzdopen(fileno((FILE*)t), "rb")))
+      {
+        fclose((FILE*)t);
+        return(0);
+      }
+      t = tmpt;
 #else
+      // Is this a bug? seems both handles need to be closed... -- Raz.
       int fd;
-
-      fd = dup(fileno( (FILE *)t));
+      fd = dup(fileno( (FILE *)t)); 
       lseek(fd, 0, SEEK_SET);
 
       if(!(t=gzdopen(fd, "rb")))
@@ -567,7 +620,7 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
         close(fd);
         return(0);
       }
-
+#endif
       if(!MakeMemWrap(t, 1))
       {
         gzclose(t);
@@ -586,7 +639,6 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
       }
       f_ext = strdup(ld ? ld + 1 : "");
       free(tmp_path);
-#endif
     } // End gzip handling
   } // End normal and gzip file handling else to zip
 
