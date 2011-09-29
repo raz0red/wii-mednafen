@@ -55,12 +55,12 @@ distribution.
 // Mednafen external references
 extern MDFNGI *MDFNGameInfo;
 
+// Whether we are loading a game
+BOOL loading_game = FALSE;
 // Have we read the games list yet?
 static BOOL games_read = FALSE;
 // Whether we are pending a drive mount
 static BOOL mount_pending = TRUE;
-// Whether we are pending a drive mount
-static BOOL loading_game = FALSE;
 // The index of the last rom that was run
 static s16 last_rom_index = 1;
 // The language menu

@@ -96,11 +96,11 @@ extern MDFN_ALIGN(16) uint32 clearArray[240];
 
 static INLINE void gfxClearArray(uint32 *array)
 {
-  memcpy( array, clearArray, 240 * sizeof(uint32) );
+ // memcpy( array, clearArray, 240 * sizeof(uint32) );
  //MDFN_FastU32MemsetM8(array, 0x80000000, 240);
- // for(int i = 0; i < 240; i++) {
- //   *array++ = 0x80000000;
- // }
+  for(int i = 0; i < 240; i++) {
+    *array++ = 0x80000000;
+  }
 }
 
 // Max coefficient is 16, so...
