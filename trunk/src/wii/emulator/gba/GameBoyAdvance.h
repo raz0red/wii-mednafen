@@ -29,6 +29,7 @@ private:
   GameBoyAdvanceConfigManager m_configManager;
   GameBoyAdvanceDbManager m_dbManager;
   GameBoyAdvanceMenuManager m_menuManager;  
+  bool m_gbaBios;
 
 public:
   GameBoyAdvance();
@@ -41,6 +42,9 @@ public:
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
   u8 getBpp();
+
+  void setGbaBiosEnabled( bool enabled );
+  bool isGbaBiosEnabled();
 
   friend class GameBoyAdvanceConfigManager;
 };

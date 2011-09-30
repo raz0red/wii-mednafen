@@ -22,6 +22,11 @@ GameBoyAdvanceMenuManager::GameBoyAdvanceMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
+  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+
+  TREENODE* child = wii_create_tree_node( NODETYPE_GBA_BIOS, "External BIOS" );
+  wii_add_child( m_emulatorMenu, child );
+
   //
   // The cartridge settings (current) menu
   //
@@ -58,6 +63,26 @@ void GameBoyAdvanceMenuManager::getNodeName(
   // Helpers
   m_emuMenuHelper.getNodeName( node, buffer, value );
   m_cartSettingsMenuHelper.getNodeName( node, buffer, value );
+
+  switch( node->node_type )
+  {
+    case NODETYPE_GBA_BIOS:
+      {
+        BOOL enabled = FALSE;
+        switch( node->node_type )
+        {
+          case NODETYPE_GBA_BIOS:
+            enabled = emu.isGbaBiosEnabled(); 
+            break;
+          default:
+            /* do nothing */
+            break;
+        }
+        snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+          enabled ? "Enabled" : "Disabled" );
+        break;
+      }
+  }
 }
 
 void GameBoyAdvanceMenuManager::selectNode( TREENODE *node )
@@ -71,6 +96,17 @@ void GameBoyAdvanceMenuManager::selectNode( TREENODE *node )
   // Helpers
   m_emuMenuHelper.selectNode( node );
   m_cartSettingsMenuHelper.selectNode( node );
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_GBA_BIOS:
+      emu.setGbaBiosEnabled( !emu.isGbaBiosEnabled() );
+      break;
+  }
+
+  UNLOCK_RENDER_MUTEX();
 }
 
 bool GameBoyAdvanceMenuManager::isNodeVisible( TREENODE *node )
