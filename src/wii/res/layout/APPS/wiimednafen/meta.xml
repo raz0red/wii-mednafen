@@ -2,8 +2,8 @@
  <app version="1">
    <name>WiiMednafen</name>
    <coder>raz0red</coder>
-   <version>0.0-092211</version>
-   <release_date>201109220000</release_date>
+   <version>0.0</version>
+   <release_date>201110030000</release_date>
    <short_description>Mednafen Emulator</short_description>
    <long_description>WiiMednafen is a port of the Mednafen Emulator.
 
