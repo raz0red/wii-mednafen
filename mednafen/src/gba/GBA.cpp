@@ -52,6 +52,7 @@
 #include "net_print.h"  
 #endif
 
+#include "../settings-driver.h"
 #include "wii_mednafen.h"
 
 #ifdef MEM2
@@ -681,6 +682,8 @@ static bool TestMagic(const char *name, MDFNFILE *fp)
  return(FALSE);
 }
 
+extern bool wii_external_gba_bios;
+
 static int Load(const char *name, MDFNFILE *fp)
 {
   layerSettings = 0xFF00;
@@ -830,6 +833,12 @@ static int Load(const char *name, MDFNFILE *fp)
    MDFNMP_AddRAM(0x40000, 0x2 << 24, workRAM);
    MDFNMP_AddRAM(0x08000, 0x3 << 24, internalRAM);
   }
+
+#ifdef WII
+    // Enable/disable exernal GBA BIOS
+    MDFNI_SetSetting("gba.bios", 
+      wii_external_gba_bios ? "gba_bios.bin" : "", FALSE );
+#endif
 
   if(!CPUInit(MDFN_GetSettingS("gba.bios")))
   {
@@ -2570,22 +2579,47 @@ static bool CPUInit(const std::string bios_fn)
 
   MDFNFILE bios_fp;
 
+
+#ifdef WII
+  bool error = false;
+  if(!bios_fp.Open(MDFN_MakeFName(MDFNMKF_FIRMWARE, 0, bios_fn.c_str()), KnownBIOSExtensions, _("GBA BIOS")))
+#else
   if(!bios_fp.Open(bios_fn, KnownBIOSExtensions, _("GBA BIOS")))
+#endif
   {
+#ifdef WII
+    error = true;
+#else
    return(0);
+#endif
   }
   
+#ifdef WII
+  if(!error && bios_fp.Size() != 0x4000)
+#else
   if(bios_fp.Size() != 0x4000)
+#endif
   {
    MDFN_PrintError(_("Invalid BIOS file size"));
    bios_fp.Close();
+#ifdef WII
+    error = true;
+#else
    return(0);
+#endif
   }
 
+#ifdef WII
+  if( !error )
+  {
+#endif
   memcpy(bios, bios_fp.Data(), 0x4000);
 
   bios_fp.Close();
   useBios = true;
+#ifdef WII
+  }
+#endif
  }
 
  if(!useBios) 

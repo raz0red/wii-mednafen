@@ -8,12 +8,17 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+bool wii_external_gba_bios;
+
 GameBoyAdvance::GameBoyAdvance() : 
   Emulator( "gba", "GameBoy Advance" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this )
+  m_menuManager( *this ),
+  m_gbaBios( false )
 {
+  wii_external_gba_bios = m_gbaBios;
+
   // The emulator screen size
   m_emulatorScreenSize.w = 240;
   m_emulatorScreenSize.h = 160;
@@ -155,4 +160,14 @@ bool GameBoyAdvance::isRotationSupported()
 u8 GameBoyAdvance::getBpp()
 {
   return GBA_BPP;
+}
+
+void GameBoyAdvance::setGbaBiosEnabled( bool enabled )
+{
+  wii_external_gba_bios = m_gbaBios = enabled;
+}
+
+bool GameBoyAdvance::isGbaBiosEnabled()
+{
+  return m_gbaBios;
 }
