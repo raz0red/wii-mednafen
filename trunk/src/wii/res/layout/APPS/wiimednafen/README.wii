@@ -90,11 +90,12 @@ Game ROMs and CD images can be loaded via SD, USB, and SMB (Network).
  (ROM images, etc.). These files must be placed in the "/wiimednafen"
  directory.
 
- * lynxboot.img       : Lynx boot ROM image.
- * pcfx.rom           : PC-FX BIOS image.
- * syscard3.pce       : PC Engine CD BIOS
- * disksys.rom        : Famicom Disk System BIOS
- * gg.rom (Optional)  : NES Game Genie ROM image
+ * lynxboot.img             : Lynx boot ROM image.
+ * pcfx.rom                 : PC-FX BIOS image.
+ * syscard3.pce             : PC Engine CD BIOS
+ * disksys.rom              : Famicom Disk System BIOS
+ * gg.rom (Optional)        : NES Game Genie ROM image
+ * gba_bios.bin (Optional)  : GameBoy Advance BIOS
 
 --------------------------------------------
 SMB (Network support)
@@ -215,6 +216,12 @@ emulator. Controls can be overridden on a game-by-game basis via the
 --------------------------------------------
 GameBoy Advance
 --------------------------------------------
+
+The GameBoy Advance emulator supports the use of a real BIOS (versus the 
+built-in BIOS). To use a real BIOS, name the BIOS file "gba_bios.bin" and
+place it in the "/wiimednafen" directory. Then, change the "External BIOS"
+setting in the "Emulator settings" to "Enabled" (to get to this menu, you must
+load a GBA game and exit back to the menu).
 
 Below are the "default" control mappings for the GameBoy Advance emulator.
 Controls can be overridden on a game-by-game basis via the
@@ -850,18 +857,19 @@ of the following locations:
 [http://www.wiibrew.org/wiki/Talk:WiiMednafen]
 
 --------------------------------------------
-Special Thanks
+Credits / Special Thanks
 --------------------------------------------
 
-Ryphecha  : Providing an incredible mega-emulator, optimizing the Virtual Boy
-            emulation, and putting up with my questions.
-Arikado   : Helping with the initial Virtual Boy (WiirtualBoy) port.
-Tantric   : Menu example code and SDL enhancements
+mastershoes  : Creating the WiiMednafen channel
+Ryphecha     : Providing an incredible mega-emulator, optimizing the 
+               Virtual Boy emulation, and putting up with my questions.
+Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
+Tantric      : Menu example code and SDL enhancements
 
 --------------------------------------------
 Change Log
 --------------------------------------------
 
-09/23/11 (0.0)
+10/03/11 (0.0)
 -------------------
  - Initial release
