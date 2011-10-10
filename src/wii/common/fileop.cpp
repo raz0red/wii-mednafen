@@ -215,7 +215,7 @@ bool FindDevice(char * filepath, int * device)
     *device = DEVICE_SD;
     return true;
   }
-  else if(strncmp(filepath, "usb:", 4) == 0)
+  else if(strncmp(filepath, "usb", 3) == 0)
   {
     *device = DEVICE_USB;
     return true;

@@ -8,8 +8,8 @@ Ported by raz0red
 Overview
 --------------------------------------------
 
-WiiMednafen is a partial port of the Mednafen emulator developed by the
-Mednafen team.
+WiiMednafen is a partial port of the Mednafen emulator.
+[http://mednafen.sourceforge.net/]
 
 Emulators supported:
 
@@ -78,16 +78,22 @@ let me know if you experience any via the Google Code project.
 Installation
 --------------------------------------------
 
-To install WiiMednafenen, extract the zip file directly to your SD card or
+To install WiiMednafen, extract the zip file directly to your SD card or
 USB device (retain the hierarchical structure exactly).
 
 Game ROMs and CD images can be loaded via SD, USB, and SMB (Network).
+
+NOTE: The "/wiimednafen" directory (containing saves, BIOS images, etc.) must
+reside on the same device as the "/apps/wiimednafen" directory (containing the
+application binary). These two directories must not be split across two
+different devices. However, game ROMs and CD images can be loaded from any of
+the available devices (SD, USB, or SMB (Network)).
 
  Emulator-specific files:
  ------------------------
 
  To function properly, several emulators require additional files
- (ROM images, etc.). These files must be placed in the "/wiimednafen"
+ (BIOS images, etc.). These files must be placed in the "/wiimednafen"
  directory.
 
  * lynxboot.img             : Lynx boot ROM image.
@@ -131,7 +137,7 @@ items will be available, "Game-specific settings" and "Emulator settings".
  -----------------------
 
  Game-specific settings contain settings that are specific to the current
- game. These settings include the ability to provide customize button 
+ game. These settings include the ability to provide customized button 
  mappings, etc.
 
  Menu Controls:
@@ -861,7 +867,7 @@ Credits / Special Thanks
 --------------------------------------------
 
 mastershoes  : Creating the WiiMednafen channel
-Ryphecha     : Providing an incredible mega-emulator, optimizing the 
+Ryphecha     : Providing an incredible multi-emulator, optimizing the
                Virtual Boy emulation, and putting up with my questions.
 Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
 Tantric      : Menu example code and SDL enhancements
@@ -870,6 +876,6 @@ Tantric      : Menu example code and SDL enhancements
 Change Log
 --------------------------------------------
 
-10/03/11 (0.0)
+10/10/11 (0.0)
 -------------------
  - Initial release
