@@ -18,12 +18,8 @@ PCFX::PCFX() :
   m_emulatorScreenSize.w = 341;
   m_emulatorScreenSize.h = 280;
 
-  // The base multi-res screen size
-  m_baseMultiResScreenSize.w = 256;
-  m_baseMultiResScreenSize.h = 240;
-
   // Set user screen sizes
-  float scalew = 2.5;
+  float scalew = 2.2222;
   float scaleh = 2.0;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
@@ -157,11 +153,6 @@ bool PCFX::updateDebugText(
 bool PCFX::isRotationSupported()
 {
   return false;
-}
-
-bool PCFX::isMultiRes()
-{
-  return true;
 }
 
 u8 PCFX::getBpp()

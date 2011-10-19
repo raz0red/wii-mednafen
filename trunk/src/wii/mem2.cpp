@@ -36,8 +36,8 @@ void InitMem2Manager()
 
 void Mem2ManagerReset()
 {
-  memset( mem2_ptr, 0x0, mem2_size );
-  head = last_head = (u8*)(((u32)mem2_ptr+0x1f)&(~0x1f)); // Align to 16 bytes
+  //memset( mem2_ptr, 0x0, mem2_size );
+  head = last_head = (u8*)(((u32)mem2_ptr+0x1f)&(~0x1f)); // Align to 32 bytes
   last_size = 0;
 }
 
@@ -53,12 +53,13 @@ u8* Mem2ManagerAlloc( u32 size, const char* purpose )
     last_head = head;
     last_size = size;
     head += size;
-    head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 16 bytes
+    head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 32 bytes
 
 #ifdef WII_NETTRACE
   net_print_string( NULL, 0, "Mem2ManagerAlloc: %s = 0x%x, %0.2f\n", 
     purpose, last_head, ((float)(size)/1048576.0) );
 #endif
+    memset( last_head, 0x0, size );
     return last_head;
   }
 }
@@ -71,10 +72,10 @@ u8* Mem2ManagerCalloc( int count, u32 size, const char* purpose )
 
   u32 realSize = size * count;
   u8* result = Mem2ManagerAlloc( realSize, purpose );
-  if( result != NULL )
-  {
-    memset( result, 0x0, realSize );
-  }
+  //if( result != NULL )
+  //{
+  //  memset( result, 0x0, realSize );
+  //}
 
   return result;
 }
@@ -93,7 +94,7 @@ u8* Mem2ManagerAdjust( u8* mem, u32 size, const char* purpose )
   }
  
   head = last_head + size;
-  head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 16 bytes
+  head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 32 bytes
   last_size = size;
 #ifdef WII_NETTRACE
   net_print_string( NULL, 0, "Mem2ManagerAdjust: %s = 0x%x, %0.2f\n", 

@@ -35,7 +35,6 @@ protected:
   Rect m_defaultScreenSize;
   Rect m_rotatedScreenSize;
   Rect m_defaultRotatedScreenSize;
-  Rect m_baseMultiResScreenSize;  
 
   Emulator( const char* key, const char* name );
 
@@ -54,10 +53,9 @@ public:
   virtual bool isRotationSupported();
   virtual int getRotation();
   virtual u8 getBpp();
-  virtual bool isMultiRes();
   virtual void resizeScreen( bool force );
   void getCurrentScreenSizeRatio( float* ratiox, float* ratioy );
-  Rect* getBaseMultiResSize();
+ 
   Rect* getEmulatorScreenSize();
   Rect* getScreenSize();
   Rect* getDefaultScreenSize();  

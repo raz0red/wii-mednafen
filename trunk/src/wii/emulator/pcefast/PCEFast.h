@@ -43,7 +43,6 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
-  bool isMultiRes();
   u8 getBpp();
 
   void onPostLoad();

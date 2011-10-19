@@ -191,6 +191,12 @@ typedef struct
   // TODO
   bool *IsFMV;
 
+	// Set(optionally) by emulation code.  If InterlaceOn is true, then assume field height is 1/2 DisplayRect.h, and
+	// only every other line in surface (with the start line defined by InterlacedField) has valid data
+	// (it's up to internal Mednafen code to deinterlace it).
+	bool InterlaceOn;
+	bool InterlaceField;
+
   // Skip rendering this frame if true.  Set by the driver code.
   int skip;
 

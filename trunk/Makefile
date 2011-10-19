@@ -36,19 +36,24 @@ SOURCES		:=	\
     mednafen/src/gb \
     mednafen/src/gba \
     mednafen/src/lynx \
+    mednafen/src/md \
+    mednafen/src/md/cart \
+    mednafen/src/md/cd \
+    mednafen/src/md/input \
     mednafen/src/nes \
-    mednafen/src/pce_fast \
     mednafen/src/nes/boards \
     mednafen/src/nes/input \
     mednafen/src/nes/ntsc \
     mednafen/src/nes/ppu \
     mednafen/src/ngp \
     mednafen/src/ngp/TLCS-900h \
+    mednafen/src/pce_fast \
     mednafen/src/pcfx \
     mednafen/src/pcfx/input \
     mednafen/src/sms \
     mednafen/src/vb \
     mednafen/src/wswan \
+    mednafen/src/hw_cpu/c68k \
     mednafen/src/hw_cpu/v810 \
     mednafen/src/hw_cpu/v810/fpu-new \
     mednafen/src/hw_cpu/z80-fuse \
@@ -56,6 +61,7 @@ SOURCES		:=	\
     mednafen/src/hw_sound/pce_psg \
     mednafen/src/hw_sound/sms_apu \
     mednafen/src/hw_sound/ym2413 \
+    mednafen/src/hw_sound/ym2612 \
     mednafen/src/hw_misc/arcade_card \
     mednafen/src/hw_video/huc6270 \
     mednafen/src/mpcdec \
@@ -73,6 +79,7 @@ SOURCES		:=	\
     src/wii/emulator/gba \
     src/wii/emulator/gg \
     src/wii/emulator/lynx \
+    src/wii/emulator/md \
     src/wii/emulator/nes \
     src/wii/emulator/ngp \
     src/wii/emulator/vb \
@@ -85,6 +92,7 @@ INCLUDES	:= \
     mednafen/include \
     mednafen/include/blip \
     mednafen/src/drivers \
+    mednafen/src/md \
     mednafen/src/ngp \
     mednafen/src/ngp/TLCS-900h \
     mednafen/src/hw_sound \
@@ -103,6 +111,7 @@ INCLUDES	:= \
     src/wii/emulator/gba \
     src/wii/emulator/gg \
     src/wii/emulator/lynx \
+    src/wii/emulator/md \
     src/wii/emulator/nes \
     src/wii/emulator/ngp \
     src/wii/emulator/vb \
@@ -115,9 +124,20 @@ INCLUDES	:= \
 # options for code generation
 #---------------------------------------------------------------------------------  
 #CFLAGS  -Wall -DWII_NETTRACE -DWII_NETTRACE -DTRACK_UNIQUE_MSGIDS 
+#  -fomit-frame-pointer \
+#  --param large-function-growth=800 \
+#  --param inline-unit-growth=200 \
+#  -Winline \
+#  -Wno-strict-aliasing \
+
 
 CFLAGS	= \
   -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -DMEM2 -fno-strict-overflow -fsigned-char \
+  -Winline \
+  -fomit-frame-pointer \
+  --param large-function-growth=800 \
+  --param inline-unit-growth=200 \
+  -Wno-strict-aliasing \
   -DWII \
   -DVB_BPP=8 \
   -DWSWAN_BPP=16 \
@@ -125,9 +145,12 @@ CFLAGS	= \
   -DPCE_FAST_BPP=16 \
   -DNES_BPP=16 \
   -DPCFX_BPP=16 \
+  -DMD_BPP=16 \
   -DPLAYER_BPP=16
-#  -DWII_NETTRACE
 #  -DUSB_WIILOAD \
+#  -DWII_NETTRACE
+#  -DC68K_GEN    
+# Do diffs w/ 0.9.18, examining printfs...  
 #  -DTRACK_UNIQUE_MSGIDS
       
 CXXFLAGS	=	$(CFLAGS) 

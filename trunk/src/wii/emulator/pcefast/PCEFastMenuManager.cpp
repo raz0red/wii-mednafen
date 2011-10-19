@@ -82,7 +82,7 @@ void PCEFastMenuManager::getNodeName(
       {
         int index = node->node_type - NODETYPE_CONTROL_TYPE1;
         snprintf( value, WII_MENU_BUFF_SIZE, "%d-%s",
-          ( entry->controlType[index] == CONTROL_2BUTTON ? 2 : 6 ),
+          ( entry->controlType[index] == PCE_CONTROL_2BUTTON ? 2 : 6 ),
           gettextmsg( "button pad" ) );
       }
     break;

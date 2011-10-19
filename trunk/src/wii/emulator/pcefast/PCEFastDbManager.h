@@ -7,8 +7,8 @@
 #define PCE_BUTTON_COUNT         15
 
 // Control type
-#define CONTROL_2BUTTON   0
-#define CONTROL_6BUTTON   1
+#define PCE_CONTROL_2BUTTON   0
+#define PCE_CONTROL_6BUTTON   1
 
 /*
  * PCE database entry 

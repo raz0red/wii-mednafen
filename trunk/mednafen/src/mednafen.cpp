@@ -29,6 +29,7 @@
 #include	"general.h"
 #include	"state.h"
 #include  "video.h"
+#include	"video/Deinterlacer.h"
 #include	"file.h"
 #include	"mempatcher.h"
 #include	"compress/minilzo.h"
@@ -171,6 +172,11 @@ static bool FFDiscard = FALSE; // TODO:  Setting to discard sound samples instea
 
 static MDFN_PixelFormat last_pixel_format;
 static double last_sound_rate;
+
+#if 0
+static bool PrevInterlaced;
+static Deinterlacer deint;
+#endif
 
 #ifndef WII
 bool MDFNI_StartWAVRecord(const char *path, double SoundRate)
@@ -734,6 +740,10 @@ void MDFNI_StopAVRecord(void)
         *tmp = 0;
     }
 
+#if 0
+	PrevInterlaced = false;
+	deint.ClearState();
+#endif
 #ifndef WII
     TBlur_Init();
     MDFN_StateEvilBegin();
@@ -1293,6 +1303,20 @@ void MDFNI_StopAVRecord(void)
 
     MDFNGameInfo->Emulate(espec);
 
+#if 0
+if(espec->InterlaceOn)
+ {
+  if(!PrevInterlaced)
+   deint.ClearState();
+
+  deint.Process(espec->surface, espec->DisplayRect, espec->LineWidths, espec->InterlaceField);
+
+  PrevInterlaced = true;
+
+  espec->InterlaceOn = false;
+  espec->InterlaceField = 0;
+ }
+#endif
     ProcessAudio(espec);
 
 #ifndef WII

@@ -10,6 +10,7 @@
 
 extern volatile MDFN_Rect *VTDRReady;
 extern volatile MDFN_Surface *VTReady;
+extern MDFNGI *MDFNGameInfo;
 
 extern "C" 
 {
@@ -48,15 +49,6 @@ Rect* Emulator::getDefaultRotatedScreenSize()
 Rect* Emulator::getEmulatorScreenSize()
 {
   return &m_emulatorScreenSize;
-}
-
-Rect* Emulator::getBaseMultiResSize()
-{
-  if( isMultiRes() )
-  {
-    return &m_baseMultiResScreenSize;
-  }
-  return getEmulatorScreenSize();
 }
 
 const char* Emulator::getKey()
@@ -110,61 +102,46 @@ int Emulator::getRotation()
   return MDFN_ROTATE0;
 }
 
-bool Emulator::isMultiRes()
-{
-  return false;
-}
-
 void Emulator::getCurrentScreenSizeRatio( float* ratiox, float* ratioy )
 {  
-  *ratiox =
-    isMultiRes() ? 
-      (float)m_baseMultiResScreenSize.w / (float)VTDRReady->w :
-      1.0;
-
-  *ratioy = 1.0;
-#if 0
-    isMultiRes() ? 
-      (float)m_baseMultiResScreenSize.h / (float)VTDRReady->h :
-      1.0;
-#endif
+  *ratiox = (float)MDFNGameInfo->nominal_width/(float)VTDRReady->w;
+  *ratioy = (float)MDFNGameInfo->nominal_height/(float)VTDRReady->h;
 }
 
 void Emulator::resizeScreen( bool force )
 {  
-  if( isMultiRes() )
+  if( force )
   {
-    // Multi-res doesn't currently support rotation...
-    if( force )
+    m_lastSize.w = m_lastSize.h = 0;
+    WII_ChangeSquare( m_screenSize.w, m_screenSize.h, 0, 0 );
+  }
+  else if( VTReady && ( 
+    ( VTDRReady->w != m_lastSize.w ) || 
+    ( VTDRReady->h != m_lastSize.h ) ) )
+  {
+    if( !isRotationSupported() )
     {
-      m_lastSize.w = m_lastSize.h = 0;
-      WII_ChangeSquare( m_screenSize.w, m_screenSize.h, 0, 0 );
+      float ratiox, ratioy;
+      getCurrentScreenSizeRatio( &ratiox, &ratioy );
+      WII_ChangeSquare( 
+        m_screenSize.w * ratiox, m_screenSize.h * ratioy, 0, 0 );
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, 
+  "resizing to: w:%dx%d, ratio:%f,%f\n", VTDRReady->w, VTDRReady->h, ratiox, ratioy /*, 
+    (float)MDFNGameInfo->nominal_width/(float)VTDRReady->w,
+    (float)MDFNGameInfo->nominal_height/(float)VTDRReady->h*/ );
+#endif
     }
     else
     {
-      if( VTReady && ( VTDRReady->w != m_lastSize.w ) )
-      {
-        float ratiox, ratioy;
-        getCurrentScreenSizeRatio( &ratiox, &ratioy );
-        WII_ChangeSquare( 
-          m_screenSize.w * ratiox, m_screenSize.h * ratioy, 0, 0 );
-        m_lastSize.w = VTDRReady->w;
-        m_lastSize.h = VTDRReady->h;
-#ifdef WII_NETTRACE
-net_print_string( NULL, 0, 
-  "resizing to: w:%dx%d, ratio:%f,%f\n", VTDRReady->w, VTDRReady->h, ratiox, ratioy );
-#endif
-      }
-    }
-  }
-  else
-  {
-    Rect* screenSize = getRotation() ?
-      getRotatedScreenSize() : getScreenSize();
-    WII_ChangeSquare( screenSize->w, screenSize->h, 0, 0 );
-  }
+      Rect* screenSize = getRotation() ?
+        getRotatedScreenSize() : getScreenSize();
+      WII_ChangeSquare( screenSize->w, screenSize->h, 0, 0 );
+    }    
 
-  WII_SetRotation( getRotation() * 90 );
+    m_lastSize.w = VTDRReady->w;
+    m_lastSize.h = VTDRReady->h;
+  }
 }
 
 bool Emulator::getFrameSkip()

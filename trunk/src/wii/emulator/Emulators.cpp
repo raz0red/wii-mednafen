@@ -16,6 +16,7 @@ Emulators::Emulators() :
   m_emuMap[NeoGeoPocketEmu.getKey()] = &(NeoGeoPocketEmu);
   m_emuMap[GameGearEmu.getKey()] = &(GameGearEmu);
   m_emuMap[MasterSystemEmu.getKey()] = &(MasterSystemEmu);
+  m_emuMap[MegaDriveEmu.getKey()] = &(MegaDriveEmu);
 }
 
 Emulator* Emulators::getEmulator( const char* key )

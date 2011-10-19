@@ -13,6 +13,7 @@
 #include "NeoGeoPocket.h"
 #include "Nes.h"
 #include "MasterSystem.h"
+#include "MegaDrive.h"
 
 #include <map>
 #include <string>
@@ -36,6 +37,7 @@ public:
   NeoGeoPocket NeoGeoPocketEmu;
   GameGear GameGearEmu;
   MasterSystem MasterSystemEmu;
+  MegaDrive MegaDriveEmu;
 
   Emulators();
   Emulator* getEmulator( const char* key );
