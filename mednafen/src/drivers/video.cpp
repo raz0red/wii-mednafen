@@ -71,8 +71,6 @@ static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth,
     }                                                               \
   }
 
-int mednafen_skip_frame = 0;
-
 void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)
 {
   if(!screen) return;

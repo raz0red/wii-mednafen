@@ -316,7 +316,9 @@ void wii_mednafen_emu_loop( BOOL resume )
   wii_gx_push_callback( &gxrender_callback, TRUE );  
 
   WII_SetFilter( wii_filter );
+  WII_SetRotation( emu->getRotation() * 90 );
   emu->resizeScreen( true );  
+
 
   ClearSound();
   PauseSound( 0 );

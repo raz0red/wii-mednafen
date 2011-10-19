@@ -555,6 +555,7 @@
 
 /* Define if we are compiling with Sega Genesis/MegaDrive emulation. */
 /* #undef WANT_MD_EMU */
+#define WANT_MD_EMU 1
 
 /* Define if we are compiling with NES emulation. */
 /* #undef WANT_NES_EMU */

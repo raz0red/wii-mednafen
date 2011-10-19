@@ -18,12 +18,8 @@ PCEFast::PCEFast() :
   m_emulatorScreenSize.w = 512;
   m_emulatorScreenSize.h = 242;
 
-  // The base multi-res screen size
-  m_baseMultiResScreenSize.w = 256;
-  m_baseMultiResScreenSize.h = m_emulatorScreenSize.h;
-
   // Set user screen sizes
-  float scalew = 2.5;
+  float scalew = 2.0;
   float scaleh = 2.0;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
@@ -170,11 +166,6 @@ bool PCEFast::updateDebugText(
 bool PCEFast::isRotationSupported()
 {
   return false;
-}
-
-bool PCEFast::isMultiRes()
-{
-  return true;
 }
 
 u8 PCEFast::getBpp()
