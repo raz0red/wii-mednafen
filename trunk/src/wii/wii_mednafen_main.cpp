@@ -54,6 +54,10 @@ void WII_SetRotation( int rot );
 void WII_SetFilter( BOOL filter );
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 void WII_SetPreRenderCallback( void (*cb)(void) );
+void WII_SetDefaultVideoMode();
+void WII_SetDoubleStrikeVideoMode();
+void WII_SetInterlaceVideoMode();
+void WII_SetWidescreen(int wide);
 extern Mtx gx_view;
 }
 
@@ -284,6 +288,19 @@ net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n",
 #endif
 #endif
     Emulator* emu = emuRegistry.getCurrentEmulator();
+
+    if( emu->isDoubleStrikeSupported() && wii_double_strike_mode )
+    {
+      if( ( VTDRReady->h + VTDRReady->x ) > 240 )
+      {
+        WII_SetInterlaceVideoMode();
+      }
+      else
+      {
+        WII_SetDoubleStrikeVideoMode();
+      }
+    }
+
     emu->resizeScreen( false ); 
     BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
     FPS_IncBlitted();
@@ -313,12 +330,11 @@ void wii_mednafen_emu_loop( BOOL resume )
     ((MDFN_Surface *)VTBuffer[i])->Fill(0, 0, 0, 0);
 
   wii_sdl_black_back_surface();
-  wii_gx_push_callback( &gxrender_callback, TRUE );  
+  wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
 
   WII_SetFilter( wii_filter );
   WII_SetRotation( emu->getRotation() * 90 );
   emu->resizeScreen( true );  
-
 
   ClearSound();
   PauseSound( 0 );
@@ -326,11 +342,7 @@ void wii_mednafen_emu_loop( BOOL resume )
   GameThreadRun = 1;
   NeedVideoChange = 0;
 
-  WII_SetPreRenderCallback( precallback );
-
   GameLoop( NULL );
-
-  WII_SetPreRenderCallback( NULL);
 
   PauseSound( 1 );
   wii_gx_pop_callback();     
@@ -403,7 +415,7 @@ static void gxrender_callback()
       CB_H + (CB_PADDING<<1), 
       color, TRUE );
 
-    wii_gx_drawtext( 
+    wii_gx_drawtext(  
       CB_X, CB_Y, CB_PIXELSIZE, displayText, ftgxWhite, FTGX_ALIGN_BOTTOM );
   }
 
@@ -492,7 +504,7 @@ int wii_mednafen_show_controls_screen()
   const int MAX_TIME = 5 * 1000; // 5 seconds
 
   // Push our callback
-  wii_gx_push_callback( &controls_render_callback, FALSE );  
+  wii_gx_push_callback( &controls_render_callback, FALSE, NULL );  
 
   u32 startTime = SDL_GetTicks();
 

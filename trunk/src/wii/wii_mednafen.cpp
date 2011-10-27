@@ -96,7 +96,7 @@ void wii_handle_init()
     exit( EXIT_FAILURE );
   }
 
-  // FreeTypeGX 
+  // FreeTypeGX
   InitFreeType( (uint8_t*)font_ttf, (FT_Long)font_ttf_size  );
 
   // Initializes the menu

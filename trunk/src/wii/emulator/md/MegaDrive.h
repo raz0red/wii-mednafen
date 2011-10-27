@@ -35,16 +35,28 @@ class MegaDrive : public Emulator
 private:
   MegaDriveConfigManager m_configManager;
   MegaDriveDbManager m_dbManager;
-  MegaDriveMenuManager m_menuManager;  
+  MegaDriveMenuManager m_menuManager; 
+  int m_consoleRegion;
+
+  static const char* regions[4];
+  static const char* regionNames[4];
 
 public:
+  static const int regionCount;
+
   MegaDrive();
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+  bool isDoubleStrikeSupported();
   u8 getBpp();
+
+  void setConsoleRegion( int region );
+  int getConsoleRegion();
+  const char* getConsoleRegionString();
+  const char* getConsoleRegionName();
   
   void onPostLoad();
   void onPreLoop();

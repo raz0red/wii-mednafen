@@ -51,8 +51,10 @@ typedef struct gx_imagedata
  *
  * rendercallback   The callback to activate
  * renderscreen     Whether we want to render the SDL screen (main surface)
+ * precallback      The pre render callback
  */
-extern void wii_gx_push_callback( void (*rendercallback)(void), BOOL renderscreen );
+extern void wii_gx_push_callback( 
+  void (*rendercallback)(void), BOOL renderscreen, void (*precallback)(void) );
 
 /*
  * Pops the active callback. The previous callback (if it exists) will be 

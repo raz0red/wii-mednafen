@@ -41,6 +41,7 @@ typedef struct callbackstate
 {
   void (*rendercallback)(void);
   BOOL renderscreen;
+  void (*precallback)(void);
 } callbackstate;
 
 // The callback state stack
@@ -53,14 +54,18 @@ static s8 cbstate_head = -1;
  *
  * rendercallback   The callback to activate
  * renderscreen     Whether we want to render the SDL screen (main surface)
+ * precallback      The pre render callback
  */
-void wii_gx_push_callback( void (*rendercallback)(void), BOOL renderscreen )
+void wii_gx_push_callback( 
+  void (*rendercallback)(void), BOOL renderscreen, void (*precallback)(void) )
 {
   cbstate_stack[++cbstate_head].rendercallback = rendercallback;
   cbstate_stack[cbstate_head].renderscreen = renderscreen;
+  cbstate_stack[cbstate_head].precallback = precallback;
 
   WII_SetRenderCallback( rendercallback );
   WII_SetRenderScreen( renderscreen );
+  WII_SetPreRenderCallback( precallback );  
 }
 
 /*
@@ -74,6 +79,7 @@ void wii_gx_pop_callback()
     return;
   }
 
+  cbstate_stack[cbstate_head].precallback = NULL;
   cbstate_stack[cbstate_head].rendercallback = NULL;
   cbstate_stack[cbstate_head--].renderscreen = FALSE;
 
@@ -81,6 +87,7 @@ void wii_gx_pop_callback()
   {
     WII_SetRenderCallback( cbstate_stack[cbstate_head].rendercallback );
     WII_SetRenderScreen( cbstate_stack[cbstate_head].renderscreen );
+    WII_SetPreRenderCallback( cbstate_stack[cbstate_head].precallback );  
   }
 }
 

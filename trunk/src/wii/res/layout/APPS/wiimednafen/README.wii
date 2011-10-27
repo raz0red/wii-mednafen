@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.0 release README
+WiiMednafen v0.1-pre102711 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -875,6 +875,10 @@ Tantric      : Menu example code and SDL enhancements
 --------------------------------------------
 Change Log
 --------------------------------------------
+
+10/27/11 (0.1-pre)
+-------------------
+ - 0.1 Pre-release build
 
 10/10/11 (0.0)
 -------------------

@@ -159,7 +159,7 @@ void wii_resize_screen_gui( resize_info* rinfo )
   WII_ChangeSquare( currentX, currentY, 0, 0 );
 
   // Push our callback
-  wii_gx_push_callback( &wii_resize_render_callback, TRUE ); 
+  wii_gx_push_callback( &wii_resize_render_callback, TRUE, NULL ); 
 
   // Allows for incremental speed when scaling
   // (Scales faster the longer the directional pad is held)

@@ -151,6 +151,11 @@ bool MasterSystem::updateDebugText(
   return false;
 }
 
+bool MasterSystem::isDoubleStrikeSupported()
+{
+  return true;
+}
+
 bool MasterSystem::isRotationSupported()
 {
   return false;

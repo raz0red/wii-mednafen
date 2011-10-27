@@ -165,6 +165,11 @@ bool Emulator::getAppliedFrameSkip()
    return entry->frameSkip == FRAME_SKIP_ENABLED;
 }
 
+bool Emulator::isDoubleStrikeSupported()
+{
+  return false;
+}
+
 u8 Emulator::getBpp()
 {
   return 32;

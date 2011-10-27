@@ -66,7 +66,7 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
   if( node->node_type == NODETYPE_RESIZE_SCREEN )
   {   
     // Essentially blanks the screen
-    wii_gx_push_callback( NULL, FALSE );
+    wii_gx_push_callback( NULL, FALSE, NULL );
 
     //wii_resize_screen_draw_border( back_surface, 0, back_surface->h );
     wii_sdl_flip(); 

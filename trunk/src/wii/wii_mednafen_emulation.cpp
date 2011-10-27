@@ -168,7 +168,7 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
     loading_game = FALSE; // Update menu
 
     // Blank the screen
-    wii_gx_push_callback( NULL, FALSE );    
+    wii_gx_push_callback( NULL, FALSE, NULL );    
 
     // Reset status message count
     wii_status_message_count = 0;

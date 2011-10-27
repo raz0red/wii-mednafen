@@ -33,6 +33,7 @@ public:
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
+  bool isDoubleStrikeSupported();
   bool isRotationSupported();
 
   void onPostLoad();

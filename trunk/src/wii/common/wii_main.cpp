@@ -61,8 +61,12 @@ distribution.
 
 extern "C" 
 {
-extern Mtx gx_view;
-extern void WII_VideoStop();
+Mtx gx_view;
+void WII_VideoStop();
+void WII_SetDefaultVideoMode();
+void WII_SetDoubleStrikeVideoMode();
+void WII_SetInterlaceVideoMode();
+void WII_SetWidescreen(int wide);
 }
 
 // The vsync mode
@@ -94,6 +98,11 @@ s16 menu_cur_idx = -1;
 int wii_menu_sel_offset = 0;
 // The menu selection color
 RGBA wii_menu_sel_color = { 0, 0, 0xC0, 0 };
+// Double strike mode
+BOOL wii_double_strike_mode = FALSE;
+// Full widescreen
+BOOL wii_full_widescreen = FALSE;
+
 // The about image data
 static gx_imagedata* about_idata = NULL;
 // The first item to display in the menu (paging, etc.)
@@ -646,13 +655,25 @@ static void menu_render_callback()
 #define DELAY_STEP 1
 #define DELAY_MIN 2
 
+static void precallback()
+{
+  static BOOL ws = 0;
+  if( ws != wii_full_widescreen )
+  {
+    ws = wii_full_widescreen;
+    WII_SetWidescreen( ws );
+  }
+
+  WII_SetDefaultVideoMode();
+}
+
 /*
 * Displays the menu 
 */
 void wii_menu_show()
 {
   // Push our callback
-  wii_gx_push_callback( &menu_render_callback, FALSE );
+  wii_gx_push_callback( &menu_render_callback, FALSE, &precallback );
 
   // Allows for incremental speed when scrolling the menu 
   // (Scrolls faster the longer the directional pad is held)

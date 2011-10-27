@@ -53,6 +53,8 @@ static SDL_Rect* modes_descending[] =
   NULL
 };
 
+static GXRModeObj* grxModes[3] = { NULL, NULL, NULL };
+
 /*** 2D Video ***/
 #define HASPECT 			320
 #define VASPECT 			240
@@ -117,8 +119,9 @@ static int currentwidth;
 static int currentheight;
 static int currentbpp;
 
-static void
-draw_init ()
+static void SetupGX();
+
+static void draw_init()
 {
   GX_ClearVtxDesc ();
 
@@ -155,16 +158,14 @@ draw_init ()
   GX_LoadTexObj (&texobj, GX_TEXMAP0);	// load texture object so its ready to use
 }
 
-static inline void
-draw_vert (u8 pos, u8 c, f32 s, f32 t)
+static inline void draw_vert (u8 pos, u8 c, f32 s, f32 t)
 {
   GX_Position1x8 (pos);
   GX_Color1x8 (c);
   GX_TexCoord2f32 (s, t);
 }
 
-static inline void
-draw_square (Mtx v)
+static inline void draw_square (Mtx v)
 {
   Mtx m, m1;			// model matrix.
   Mtx mv;			// modelview matrix.
@@ -184,31 +185,11 @@ draw_square (Mtx v)
   GX_End ();
 }
 
-/****************************************************************************
-* TakeScreenshot
-*
-* Copies the current screen into a GX texture
-***************************************************************************/
-
-static void TakeScreenshot()
-{
-  int texSize = vmode->fbWidth * vmode->efbHeight * 4;
-
-  if(screenTex) free(screenTex);
-  screenTex = (u8 *)memalign(32, texSize);
-  if(screenTex == NULL) return;
-  GX_SetTexCopySrc(0, 0, vmode->fbWidth, vmode->efbHeight);
-  GX_SetTexCopyDst(vmode->fbWidth, vmode->efbHeight, GX_TF_RGBA8, GX_FALSE);
-  GX_CopyTex(screenTex, GX_FALSE);
-  GX_PixModeSync();
-  DCFlushRange(screenTex, texSize);
-}
-
 static void * flip_thread (void *arg)
 {
   while(1)
   {
-    if(quit_flip_thread == 2)
+    if(quit_flip_thread)
       break;
 
     if( prerendercallback )
@@ -224,7 +205,6 @@ static void * flip_thread (void *arg)
 
     if( renderScreen )
     {
-      
       GX_SetBlendMode(GX_BM_BLEND,GX_BL_DSTALPHA,GX_BL_INVSRCALPHA,GX_LO_CLEAR);  
       GX_SetVtxDesc (GX_VA_POS, GX_INDEX8);
       GX_SetVtxDesc (GX_VA_CLR0, GX_INDEX8);
@@ -258,12 +238,6 @@ static void * flip_thread (void *arg)
 
     GX_SetColorUpdate(GX_TRUE);
 
-    if (quit_flip_thread == 1)
-    {
-      quit_flip_thread = 2;
-      TakeScreenshot();
-    }
-
     whichfb ^= 1;
 
     GX_CopyDisp(xfb[whichfb], GX_TRUE);
@@ -277,38 +251,7 @@ static void * flip_thread (void *arg)
   return NULL;
 }
 
-static void
-SetupGX()
-{
-  Mtx44 p;
-  int df = 1; // deflicker on/off
-
-  GX_SetViewport (0, 0, vmode->fbWidth, vmode->efbHeight, 0, 1);
-  GX_SetDispCopyYScale ((f32) vmode->xfbHeight / (f32) vmode->efbHeight);
-  GX_SetScissor (0, 0, vmode->fbWidth, vmode->efbHeight);
-
-  GX_SetDispCopySrc (0, 0, vmode->fbWidth, vmode->efbHeight);
-  GX_SetDispCopyDst (vmode->fbWidth, vmode->xfbHeight);
-  GX_SetCopyFilter (vmode->aa, vmode->sample_pattern, (df == 1) ? GX_TRUE : GX_FALSE, vmode->vfilter);
-
-  GX_SetFieldMode (vmode->field_rendering, ((vmode->viHeight == 2 * vmode->xfbHeight) ? GX_ENABLE : GX_DISABLE));
-  GX_SetPixelFmt (GX_PF_RGB8_Z24, GX_ZC_LINEAR);
-  GX_SetDispCopyGamma (GX_GM_1_0);
-  GX_SetCullMode (GX_CULL_NONE);
-  GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);  
-  //GX_SetBlendMode(GX_BM_BLEND,GX_BL_DSTALPHA,GX_BL_INVSRCALPHA,GX_LO_CLEAR);
-  GX_SetAlphaUpdate(GX_TRUE);
-
-  GX_SetZMode (GX_TRUE, GX_LEQUAL, GX_TRUE);
-  GX_SetColorUpdate (GX_TRUE);
-  GX_SetNumChans(1);
-
-  guOrtho(p, 480/2, -(480/2), -(640/2), 640/2, 100, 1000); // matrix, t, b, l, r, n, f
-  GX_LoadProjectionMtx (p, GX_ORTHOGRAPHIC);
-}
-
-static void
-StartVideoThread()
+static void StartVideoThread()
 {
   if(videothread == LWP_THREAD_NULL)
   {
@@ -320,8 +263,8 @@ StartVideoThread()
 static int WII_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
   // Set up the modes.
-  mode_640.w = vmode->fbWidth;
-  mode_640.h = vmode->xfbHeight;
+  mode_640.w = 640; //vmode->fbWidth;
+  mode_640.h = 480; //vmode->xfbHeight;
   mode_320.w = mode_640.w / 2;
   mode_320.h = mode_640.h / 2;
 
@@ -511,7 +454,7 @@ static void UpdateRect_16(_THIS, SDL_Rect *rect)
       x = rect->x + j;
       *((u16*)(((u8*)texturemem) + p1 + 
         ((x >> 2) << 5) + ((p2 + x % 4) << 1))) =
-          *((u16*)(src + (j<<1)));
+        *((u16*)(src + (j<<1)));
 
     }
   }
@@ -588,8 +531,6 @@ static void WII_UpdateRects(_THIS, int numrects, SDL_Rect *rects)
 
 static void flipHWSurface_8_16(_THIS, SDL_Surface *surface)
 {
-  //SDL_mutexP(videomutex);
-
   int new_pitch = this->hidden->width * 2;
   long long int *dst = (long long int *) texturemem;
   long long int *src1 = (long long int *) textureconvert;
@@ -645,14 +586,10 @@ static void flipHWSurface_8_16(_THIS, SDL_Surface *surface)
       src4 = (long long int *)(ra + rowadjust);
     }
   }
-
-  //SDL_mutexV(videomutex);
 }
 
 static void flipHWSurface_16_16(_THIS, SDL_Surface *surface)
 {
-  //SDL_mutexP(videomutex);
-
   int h, w;
   long long int *dst = (long long int *) texturemem;
   long long int *src1 = (long long int *) this->hidden->buffer;
@@ -690,8 +627,6 @@ static void flipHWSurface_16_16(_THIS, SDL_Surface *surface)
       src4 = (long long int *)(ra + rowadjust);
     }
   }
-
-  //SDL_mutexV(videomutex);
 }
 
 static void flipHWSurface_24_16(_THIS, SDL_Surface *surface)
@@ -826,11 +761,22 @@ VideoBootStrap WII_bootstrap = {
   WII_Available, WII_CreateDevice
 };
 
-void
-WII_InitVideoSystem()
+static void waitVSync()
+{
+  VIDEO_WaitVSync();
+
+  if (vmode->viTVMode & VI_NON_INTERLACE)
+    VIDEO_WaitVSync();
+  else
+    while (VIDEO_GetNextField())
+      VIDEO_WaitVSync();
+}
+
+void WII_InitVideoSystem()
 {
   /* Initialise the video system */
   VIDEO_Init();
+
   vmode = VIDEO_GetPreferredMode(NULL);
 
   switch (vmode->viTVMode >> 2)
@@ -850,10 +796,62 @@ WII_InitVideoSystem()
     break;
   }
 
+  // Standard video mode
+  grxModes[0] = vmode; 
+
+  // Double strike mode
+  grxModes[1] = (GXRModeObj*)malloc(sizeof(GXRModeObj));
+  memcpy( grxModes[1], grxModes[0], sizeof(GXRModeObj) );
+  grxModes[1]->fbWidth = grxModes[1]->viWidth = 640;
+  grxModes[1]->xfbHeight = grxModes[1]->efbHeight = 240;
+  grxModes[1]->field_rendering = GX_FALSE;
+  grxModes[1]->viHeight = 480;
+  grxModes[1]->xfbMode = VI_XFBMODE_SF;
+  grxModes[1]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_NON_INTERLACE );  
+  grxModes[1]->vfilter[0] = 0;
+  grxModes[1]->vfilter[1] = 0;
+  grxModes[1]->vfilter[2] = 21;
+  grxModes[1]->vfilter[3] = 22;
+  grxModes[1]->vfilter[4] = 21;
+  grxModes[1]->vfilter[5] = 0;
+  grxModes[1]->vfilter[6] = 0;
+
+  switch (vmode->viTVMode >> 2)
+  {
+  case VI_PAL: // 576 lines (PAL 50hz)
+    grxModes[1]->viXOrigin = (VI_MAX_WIDTH_PAL - 640 ) / 2;
+    grxModes[1]->viYOrigin = (VI_MAX_HEIGHT_PAL/2 - 480/2 ) / 2;
+    break;
+
+  case VI_NTSC: // 480 lines (NTSC 60hz)
+    grxModes[1]->viXOrigin = (VI_MAX_WIDTH_NTSC - 640 ) / 2;
+    grxModes[1]->viYOrigin = (VI_MAX_HEIGHT_NTSC/2 - 480/2 ) / 2;
+    break;
+
+  default: // 480 lines (PAL 60Hz)
+    grxModes[1]->viXOrigin = (VI_MAX_WIDTH_EURGB60 - 640 ) / 2;
+    grxModes[1]->viYOrigin = (VI_MAX_WIDTH_EURGB60/2 - 480/2 ) / 2;
+    break;
+  }
+
+  // Interlace mode
+  grxModes[2] = (GXRModeObj*)malloc(sizeof(GXRModeObj));
+  memcpy( grxModes[2], grxModes[0], sizeof(GXRModeObj) );
+  grxModes[2]->xfbMode = VI_XFBMODE_DF;
+  grxModes[2]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_INTERLACE );  
+  grxModes[2]->vfilter[0] = 8;
+  grxModes[2]->vfilter[1] = 8;
+  grxModes[2]->vfilter[2] = 10;
+  grxModes[2]->vfilter[3] = 12;
+  grxModes[2]->vfilter[4] = 10;
+  grxModes[2]->vfilter[5] = 8;
+  grxModes[2]->vfilter[6] = 8;  
+
+  vmode = grxModes[0];
+
   /* Set up the video system with the chosen mode */
   VIDEO_Configure(vmode);
 
-  // Allocate the video buffers
   xfb[0] = (u32 *) MEM_K0_TO_K1 (SYS_AllocateFramebuffer (vmode));
   xfb[1] = (u32 *) MEM_K0_TO_K1 (SYS_AllocateFramebuffer (vmode));
 
@@ -864,14 +862,8 @@ WII_InitVideoSystem()
   // Show the screen.
   VIDEO_SetBlack(FALSE);
   VIDEO_Flush();
-  VIDEO_WaitVSync();
-  if (vmode->viTVMode & VI_NON_INTERLACE)
-    VIDEO_WaitVSync();
-  else
-    while (VIDEO_GetNextField())
-      VIDEO_WaitVSync();
 
-  //CON_Init(xfb[0],20,20,vmode->fbWidth,vmode->xfbHeight,vmode->fbWidth*VI_DISPLAY_PIX_SZ);
+  waitVSync();
 
   /*** Clear out FIFO area ***/
   memset (&gp_fifo, 0, DEFAULT_FIFO_SIZE);
@@ -883,6 +875,37 @@ WII_InitVideoSystem()
   GX_SetCopyClear (background, 0x00ffffff);
 
   SetupGX();
+}
+
+static void SetupGX()
+{   
+  Mtx44 p;
+
+  int df = ( vmode == grxModes[0] ); // Deflicker
+
+  GX_SetViewport(0, 0, vmode->fbWidth, vmode->efbHeight, 0, 1);
+  GX_SetScissor(0, 0, vmode->fbWidth, vmode->efbHeight);
+  f32 yScale = GX_GetYScaleFactor( vmode->efbHeight, vmode->xfbHeight );
+  u16 xfbHeight = GX_SetDispCopyYScale( yScale );
+
+  GX_SetDispCopySrc(0, 0, vmode->fbWidth, vmode->efbHeight);
+  GX_SetDispCopyDst(vmode->fbWidth, xfbHeight);
+  GX_SetCopyFilter(vmode->aa, vmode->sample_pattern, (df == 1) ? GX_TRUE : GX_FALSE, vmode->vfilter);
+
+  GX_SetFieldMode(vmode->field_rendering, ((vmode->viHeight == 2 * vmode->xfbHeight) ? GX_ENABLE : GX_DISABLE));
+
+  GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+  GX_SetDispCopyGamma(GX_GM_1_0);
+  GX_SetCullMode(GX_CULL_NONE);
+  GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);  
+  GX_SetAlphaUpdate(GX_TRUE);
+
+  GX_SetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
+  GX_SetColorUpdate(GX_TRUE);
+  GX_SetNumChans(1);
+
+  guOrtho(p, 480/2, -(480/2), -(640/2), 640/2, 100, 1000); // matrix, t, b, l, r, n, f
+  GX_LoadProjectionMtx (p, GX_ORTHOGRAPHIC);
 }
 
 void WII_VideoStart()
@@ -915,7 +938,6 @@ void WII_SetPreRenderCallback( void (*cb)(void) )
   prerendercallback = cb;
 }
 
-
 void WII_SetRenderCallback( void (*cb)(void) )
 {
   rendercallback = cb;
@@ -935,3 +957,74 @@ void WII_SetFilter( BOOL b )
 {
   filterDisplay = b;
 }
+
+void WII_SetWidescreen(int wide)
+{
+  int i;
+  int width = wide ? 678 : 640;
+  
+  for( i = 0; i < 3; i++ )
+  {
+    grxModes[i]->viWidth = width;
+    switch (vmode->viTVMode >> 2)
+    {
+    case VI_PAL:      
+      grxModes[i]->viXOrigin = (VI_MAX_WIDTH_PAL - width ) / 2;
+      break;
+    case VI_NTSC:
+      grxModes[i]->viXOrigin = (VI_MAX_WIDTH_NTSC - width ) / 2;
+      break;
+    default:
+      grxModes[i]->viXOrigin = (VI_MAX_WIDTH_EURGB60 - width ) / 2;
+      break;
+    }
+  }
+
+	VIDEO_Configure( vmode );
+	VIDEO_Flush();	
+
+  waitVSync();
+}
+
+static void resetVideoMode()
+{
+    /* Set up the video system with the chosen mode */
+    VIDEO_Configure(vmode);
+    VIDEO_ClearFrameBuffer(vmode, xfb[0], COLOR_BLACK);
+    VIDEO_ClearFrameBuffer(vmode, xfb[1], COLOR_BLACK);
+    VIDEO_SetBlack(FALSE);
+    VIDEO_Flush();
+
+    waitVSync();
+
+    SetupGX();
+    draw_init();
+}
+
+void WII_SetDefaultVideoMode()
+{
+  if( vmode != grxModes[0] )
+  {
+    vmode = grxModes[0];
+    resetVideoMode();
+  }
+}
+
+void WII_SetDoubleStrikeVideoMode()
+{
+  if( vmode != grxModes[1] )
+  {
+    vmode = grxModes[1];
+    resetVideoMode();
+  }
+}
+
+void WII_SetInterlaceVideoMode()
+{
+  if( vmode != grxModes[2] )
+  {
+    vmode = grxModes[2];
+    resetVideoMode();
+  }
+}
+

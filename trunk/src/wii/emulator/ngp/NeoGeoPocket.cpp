@@ -26,7 +26,7 @@ NeoGeoPocket::NeoGeoPocket() :
 }
 
 ConfigManager& NeoGeoPocket::getConfigManager()
-{
+{ 
   return m_configManager;
 }
 
@@ -34,7 +34,7 @@ DatabaseManager& NeoGeoPocket::getDbManager()
 {
   return m_dbManager;
 }
-
+ 
 MenuManager& NeoGeoPocket::getMenuManager()
 {
   return m_menuManager;
