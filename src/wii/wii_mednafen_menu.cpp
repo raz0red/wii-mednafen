@@ -198,6 +198,17 @@ void wii_mednafen_menu_init()
     "Video filter" );
   wii_add_child( advanced, child );
 
+  child = wii_create_tree_node( NODETYPE_FULL_WIDESCREEN, 
+    "Full widescreen" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_DOUBLE_STRIKE, 
+    "Double strike (240p)" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( advanced, child );
+
   child = wii_create_tree_node( NODETYPE_CHEATS,
     "Cheats" );
   wii_add_child( advanced, child );
@@ -363,11 +374,19 @@ void wii_menu_handle_get_node_name(
     case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
     case NODETYPE_AUTO_LOAD_SAVE:
+    case NODETYPE_FULL_WIDESCREEN:
+    case NODETYPE_DOUBLE_STRIKE:
     case NODETYPE_CHEATS:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_DOUBLE_STRIKE:
+            enabled = wii_double_strike_mode;
+            break;
+          case NODETYPE_FULL_WIDESCREEN:
+            enabled = wii_full_widescreen;
+            break;
           case NODETYPE_CHEATS:
             enabled = wii_cheats;
             break;
@@ -438,7 +457,7 @@ void wii_menu_handle_select_node( TREENODE *node )
       node->node_type == NODETYPE_RESET )
   {   
     // Essentially blanks the screen
-  //  wii_gx_push_callback( NULL, FALSE );
+  //  wii_gx_push_callback( NULL, FALSE, NULL );
 
     switch( node->node_type )
     {
@@ -485,6 +504,12 @@ void wii_menu_handle_select_node( TREENODE *node )
           language_index = 0;
         }
         select_language();
+        break;
+      case NODETYPE_DOUBLE_STRIKE:
+        wii_double_strike_mode ^= 1;
+        break;
+      case NODETYPE_FULL_WIDESCREEN:
+        wii_full_widescreen ^= 1;
         break;
       case NODETYPE_AUTO_LOAD_SAVE:
         wii_auto_load_save_state ^= 1;

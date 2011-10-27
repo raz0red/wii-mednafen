@@ -10,11 +10,31 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+const char* MegaDrive::regions[4] = 
+{ 
+   "game", 
+   "overseas_ntsc", 
+   "overseas_pal", 
+   "domestic_ntsc"
+};
+
+const char* MegaDrive::regionNames[4] = 
+{ 
+   "Match game header", 
+   "North America", 
+   "Europe", 
+   "Japan"
+};
+
+const int MegaDrive::regionCount = 
+  sizeof( regions ) / sizeof( const char* );
+
 MegaDrive::MegaDrive() : 
   Emulator( "md", "Mega Drive" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this )
+  m_menuManager( *this ),
+  m_consoleRegion( 0 )
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 320;
@@ -170,6 +190,34 @@ bool MegaDrive::updateDebugText(
 bool MegaDrive::isRotationSupported()
 {
   return false;
+}
+
+bool MegaDrive::isDoubleStrikeSupported()
+{
+  return true;
+}
+
+void MegaDrive::setConsoleRegion( int region )
+{
+  if( region >= 0 && region < regionCount )
+  { 
+    m_consoleRegion = region;
+  }
+}
+
+int MegaDrive::getConsoleRegion()
+{
+  return m_consoleRegion;
+}
+
+const char* MegaDrive::getConsoleRegionString()
+{
+  return MegaDrive::regions[m_consoleRegion];
+}
+
+const char* MegaDrive::getConsoleRegionName()
+{
+  return MegaDrive::regionNames[m_consoleRegion];
 }
 
 u8 MegaDrive::getBpp()

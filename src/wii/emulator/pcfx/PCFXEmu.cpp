@@ -155,6 +155,11 @@ bool PCFX::isRotationSupported()
   return false;
 }
 
+bool PCFX::isDoubleStrikeSupported()
+{
+  return true;
+}
+
 u8 PCFX::getBpp()
 {
   return PCFX_BPP;

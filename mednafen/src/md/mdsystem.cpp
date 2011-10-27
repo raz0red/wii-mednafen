@@ -23,6 +23,10 @@
 #include "../general.h"
 #include "../mempatcher.h"
 
+#include "../settings-driver.h"
+
+#include "Emulators.h"
+
 namespace MDFN_IEN_MD
 {
 
@@ -274,6 +278,10 @@ static int LoadCommonPost(const md_game_info &ginfo)
  MDFN_indent(-1);
 
  {
+#ifdef WII
+   MDFNI_SetSetting("md.region",
+     emuRegistry.MegaDriveEmu.getConsoleRegionString());
+#endif
   const int region_setting = MDFN_GetSettingI("md.region");
   const int reported_region_setting = MDFN_GetSettingI("md.reported_region");
 

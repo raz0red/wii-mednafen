@@ -147,10 +147,10 @@ CFLAGS	= \
   -DPCFX_BPP=16 \
   -DMD_BPP=16 \
   -DPLAYER_BPP=16
+    
 #  -DUSB_WIILOAD \
-#  -DWII_NETTRACE
+#  -DWII_NETTRACE  
 #  -DC68K_GEN    
-# Do diffs w/ 0.9.18, examining printfs...  
 #  -DTRACK_UNIQUE_MSGIDS
       
 CXXFLAGS	=	$(CFLAGS) 

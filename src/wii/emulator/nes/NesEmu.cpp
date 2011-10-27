@@ -229,6 +229,11 @@ void Nes::setGameGenieEnabled( bool enabled )
   m_gameGenie = enabled;
 }
 
+bool Nes::isDoubleStrikeSupported()
+{
+  return true;
+}
+
 u8 Nes::getBpp()
 {
   return NES_BPP;

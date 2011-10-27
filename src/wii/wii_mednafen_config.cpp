@@ -71,6 +71,14 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_cheats = Util_sscandec( value );
   }
+  else if( strcmp( name, "double_strike" ) == 0 )
+  {
+    wii_double_strike_mode = Util_sscandec( value );
+  }
+  else if( strcmp( name, "full_widescreen" ) == 0 )
+  {
+    wii_full_widescreen = Util_sscandec( value );
+  }
   else if( strcmp( name, "roms_dir" ) == 0 )
   {
     wii_set_roms_dir( value );
@@ -117,6 +125,8 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "cheats=%d\n", wii_cheats );
   fprintf( fp, "language=%s\n", wii_language );
   fprintf( fp, "roms_dir=%s\n", wii_get_roms_dir() );
+  fprintf( fp, "double_strike=%d\n", wii_double_strike_mode );
+  fprintf( fp, "full_widescreen=%d\n", wii_full_widescreen );
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

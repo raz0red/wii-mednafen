@@ -84,6 +84,10 @@ extern int wii_menu_sel_offset;
 extern RGBA wii_menu_sel_color;
 // Whether the Wii is PAL or NTSC
 extern BOOL wii_is_pal;
+// Double strike mode
+extern BOOL wii_double_strike_mode;
+// Full widescreen
+extern BOOL wii_full_widescreen;
 
 // The display mode (from SDL)
 extern GXRModeObj *vmode;

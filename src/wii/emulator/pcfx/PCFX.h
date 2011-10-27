@@ -37,6 +37,7 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+  bool isDoubleStrikeSupported();
   u8 getBpp();
 
   void onPostLoad();

@@ -168,6 +168,11 @@ bool PCEFast::isRotationSupported()
   return false;
 }
 
+bool PCEFast::isDoubleStrikeSupported()
+{
+  return true;
+}
+
 u8 PCEFast::getBpp()
 {
   return PCE_FAST_BPP;

@@ -52,6 +52,7 @@ public:
     char* output, const char* defaultOutput, int len );
   virtual bool isRotationSupported();
   virtual int getRotation();
+  virtual bool isDoubleStrikeSupported();
   virtual u8 getBpp();
   virtual void resizeScreen( bool force );
   void getCurrentScreenSizeRatio( float* ratiox, float* ratioy );
