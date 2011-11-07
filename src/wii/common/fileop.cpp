@@ -31,6 +31,8 @@
 
 #include "fileop.h"
 #include "networkop.h"
+#include "sdl.h"
+#include "net_print.h"
 
 #define THREAD_SLEEP 100
 
@@ -274,4 +276,40 @@ bool ChangeInterface(char * filepath, int retryCount )
     return false;
 
   return ChangeInterface(device, retryCount );
+}
+
+static u32 lastKeepAlive = 0;
+static u32 keepAliveCount = 0;
+static FILE* keepAliveFile = NULL;
+#define KEEP_ALIVE_FILE "usb:/_keepalive.tmp"
+#define KEEP_ALIVE (60 * 1000 * 9)
+
+void UsbKeepAlive()
+{
+  if( isMounted[DEVICE_USB] )
+  {
+    u32 time = SDL_GetTicks();
+    if( ( time - lastKeepAlive ) > KEEP_ALIVE )
+    {
+      lastKeepAlive = time;
+      keepAliveCount++;
+      keepAliveCount %= 100;
+      //if( !keepAliveFile )
+      //{
+        keepAliveFile = fopen( KEEP_ALIVE_FILE, "w" );
+      //}
+      BOOL success = 0;
+      if( keepAliveFile )
+      {
+        fputc( keepAliveCount, keepAliveFile );
+        fflush( keepAliveFile );
+        fclose( keepAliveFile );
+        success = 1;
+      }
+#ifdef WII_NETTRACE
+      net_print_string( NULL, 0, 
+        "usb keepalive:%s, %d\n", KEEP_ALIVE_FILE, success );  
+#endif
+    }
+  }
 }

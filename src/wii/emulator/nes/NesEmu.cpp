@@ -24,7 +24,7 @@ Nes::Nes() :
   m_emulatorScreenSize.w = 256;
   m_emulatorScreenSize.h = 256;
 
-  // Set user screen sizes
+  // Set user screen sizes 
   float hscale = 2.0;
   float wscale = 2.5;
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*wscale); 

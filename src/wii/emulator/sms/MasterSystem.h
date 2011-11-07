@@ -26,8 +26,14 @@ private:
   MasterSystemConfigManager m_configManager;
   MasterSystemDbManager m_dbManager;
   MasterSystemMenuManager m_menuManager;  
+  int m_consoleRegion;
+
+  static const char* regions[2];
+  static const char* regionNames[2];
 
 public:
+  static const int regionCount;
+
   MasterSystem();
   ConfigManager& getConfigManager();
   DatabaseManager& getDbManager();
@@ -35,6 +41,11 @@ public:
   void updateControls( bool isRapid );
   bool isDoubleStrikeSupported();
   bool isRotationSupported();
+
+  void setConsoleRegion( int region );
+  int getConsoleRegion();
+  const char* getConsoleRegionString();
+  const char* getConsoleRegionName();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

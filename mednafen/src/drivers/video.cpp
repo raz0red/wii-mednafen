@@ -47,7 +47,6 @@ static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth,
     for( int y = 0; y < DisplayRect->h; y++ )                       \
     {                                                               \
       memcpy( dest, src, width );                                   \
-      /*for( int x = 0; x < width; x++ ) dest[x]=src[x];*/          \
       dest+=destPitch;                                              \
       src+=srcPitch;                                                \
     }                                                               \

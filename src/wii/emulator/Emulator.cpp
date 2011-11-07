@@ -4,17 +4,19 @@
 #include "wii_mednafen_main.h"
 
 #ifdef WII_NETTRACE
-#include <network.h>
+#include <network.h> 
 #include "net_print.h"  
 #endif
-
+  
 extern volatile MDFN_Rect *VTDRReady;
 extern volatile MDFN_Surface *VTReady;
 extern MDFNGI *MDFNGameInfo;
 
+extern uint32 round_up_pow2(uint32 v);
+
 extern "C" 
 {
-void WII_SetRotation( int rot );
+void WII_SetRotation( int rot ); 
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 }
 
@@ -75,14 +77,14 @@ bool Emulator::onShowControlsScreen()
   dbEntry* entry = getDbManager().getEntry();
   if( entry->wiimoteSupported )
   {
-    // Wiimote is supported
+    // Wiimote is supported 
     return true;
   }
 
   return wii_mednafen_show_controls_screen();
 }
 
-void Emulator::onPreLoop()
+void Emulator::onPreLoop() 
 {
 }
 
@@ -103,18 +105,27 @@ int Emulator::getRotation()
 }
 
 void Emulator::getCurrentScreenSizeRatio( float* ratiox, float* ratioy )
-{  
+{   
   *ratiox = (float)MDFNGameInfo->nominal_width/(float)VTDRReady->w;
   *ratioy = (float)MDFNGameInfo->nominal_height/(float)VTDRReady->h;
 }
 
-void Emulator::resizeScreen( bool force )
-{  
+static void changeSquare( u32 x, u32 y )
+{
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, 
+  "change square: %dx%d=%dx%d\n", x, y, (x+1)&0xFFFFFFFE, (y+1)&0xFFFFFFFE );
+#endif 
+  WII_ChangeSquare( ((x+1)&~1), (y+1)&~1, 0, 0 );
+}
+
+void Emulator::resizeScreen( bool force ) 
+{   
   if( force )
-  {
+  { 
     m_lastSize.w = m_lastSize.h = 0;
-    WII_ChangeSquare( m_screenSize.w, m_screenSize.h, 0, 0 );
-  }
+    changeSquare( m_screenSize.w, m_screenSize.h );
+  } 
   else if( VTReady && ( 
     ( VTDRReady->w != m_lastSize.w ) || 
     ( VTDRReady->h != m_lastSize.h ) ) )
@@ -123,20 +134,18 @@ void Emulator::resizeScreen( bool force )
     {
       float ratiox, ratioy;
       getCurrentScreenSizeRatio( &ratiox, &ratioy );
-      WII_ChangeSquare( 
-        m_screenSize.w * ratiox, m_screenSize.h * ratioy, 0, 0 );
+      changeSquare( m_screenSize.w * ratiox, m_screenSize.h * ratioy );
 #ifdef WII_NETTRACE
 net_print_string( NULL, 0, 
-  "resizing to: w:%dx%d, ratio:%f,%f\n", VTDRReady->w, VTDRReady->h, ratiox, ratioy /*, 
-    (float)MDFNGameInfo->nominal_width/(float)VTDRReady->w,
-    (float)MDFNGameInfo->nominal_height/(float)VTDRReady->h*/ );
+  "resizing to: w:%dx%d, ratio:%f,%f\n", 
+    VTDRReady->w, VTDRReady->h, ratiox, ratioy );
 #endif
     }
     else
     {
       Rect* screenSize = getRotation() ?
         getRotatedScreenSize() : getScreenSize();
-      WII_ChangeSquare( screenSize->w, screenSize->h, 0, 0 );
+      changeSquare( screenSize->w, screenSize->h );
     }    
 
     m_lastSize.w = VTDRReady->w;
@@ -153,7 +162,7 @@ void Emulator::setFrameSkip( bool skip )
 {
   m_frameSkip = skip;
 }
-
+ 
 bool Emulator::getAppliedFrameSkip()
 {
    dbEntry* entry = getDbManager().getEntry();
@@ -167,11 +176,10 @@ bool Emulator::getAppliedFrameSkip()
 
 bool Emulator::isDoubleStrikeSupported()
 {
-  return false;
+  return false; 
 }
-
+   
 u8 Emulator::getBpp()
-{
+{ 
   return 32;
 }
-

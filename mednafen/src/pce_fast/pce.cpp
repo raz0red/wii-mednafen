@@ -558,7 +558,7 @@ void PCE_Power(void)
  if(PCE_IsCD)
   PCECD_Power(HuCPU.timestamp * 3);
 }
-
+ 
 static void DoSimpleCommand(int cmd)
 {
  switch(cmd)
@@ -609,9 +609,9 @@ static const FileExtensionSpecStruct KnownExtensions[] =
  { ".sgx", gettext_noop("SuperGrafx ROM Image") },
  { NULL, NULL }
 };
-
+ 
 };
-
+ 
 MDFNGI EmulatedPCE_Fast =
 {
  "pce_fast",
@@ -644,11 +644,11 @@ MDFNGI EmulatedPCE_Fast =
  0,   // lcm_height           
  NULL,  // Dummy
 
- 320,   // Nominal width
+ 320,   // Nominal width 
  232,   // Nominal height
 
  512,	// Framebuffer width
- 242,	// Framebuffer height
+ 242,	// Framebuffer height 
 
  2,     // Number of output sound channels
 };

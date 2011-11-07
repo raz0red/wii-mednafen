@@ -99,6 +99,14 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     setSmbPassword( value );
   }
+  else if( strcmp( name, "usb_keepalive" ) == 0 )
+  {
+    wii_usb_keepalive = Util_sscandec( value );
+  }
+  else if( strcmp( name, "trap_filter" ) == 0 )
+  {
+    wii_trap_filter = Util_sscandec( value );
+  }
   else
   {
     // Read configuration value for emulators
@@ -127,6 +135,8 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "roms_dir=%s\n", wii_get_roms_dir() );
   fprintf( fp, "double_strike=%d\n", wii_double_strike_mode );
   fprintf( fp, "full_widescreen=%d\n", wii_full_widescreen );
+  fprintf( fp, "usb_keepalive=%d\n", wii_usb_keepalive );
+  fprintf( fp, "trap_filter=%d\n", wii_trap_filter );
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

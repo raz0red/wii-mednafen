@@ -27,6 +27,7 @@ distribution.
 
 #include <wiiuse/wpad.h>
 #include <gccore.h>
+#include <ogc/conf.h>
 #include <SDL.h>
 
 #include "pngu/pngu.h"
@@ -64,8 +65,8 @@ extern "C"
 Mtx gx_view;
 void WII_VideoStop();
 void WII_SetDefaultVideoMode();
-void WII_SetDoubleStrikeVideoMode();
-void WII_SetInterlaceVideoMode();
+void WII_SetDoubleStrikeVideoMode( u32 width );
+void WII_SetInterlaceVideoMode( u32 width );
 void WII_SetWidescreen(int wide);
 }
 
@@ -100,8 +101,14 @@ int wii_menu_sel_offset = 0;
 RGBA wii_menu_sel_color = { 0, 0, 0xC0, 0 };
 // Double strike mode
 BOOL wii_double_strike_mode = FALSE;
+// Auto widescreen value (from startup)
+static BOOL widescreen_auto = FALSE;
 // Full widescreen
-BOOL wii_full_widescreen = FALSE;
+int wii_full_widescreen = WS_AUTO;
+// USB keep alive
+BOOL wii_usb_keepalive = FALSE;
+// Trap filter
+BOOL wii_trap_filter = FALSE; 
 
 // The about image data
 static gx_imagedata* about_idata = NULL;
@@ -120,25 +127,12 @@ static void wii_free_node( TREENODE* node );
 */
 static void wii_test_pal()
 {
-  // TODO: Can we simply use the current TV mode to determine this?
-  int start = SDL_GetTicks();
-  int i;
-  for( i = 0; i < 40; i++ )
-  {
-    VIDEO_WaitVSync();
-  }
-  int time = SDL_GetTicks() - start;
-
-  test_fps = time / 40.0;
-
-  wii_is_pal = test_fps > 17.5;
+  wii_is_pal = 
+    ( VIDEO_GetPreferredMode(NULL)->viTVMode >> 2 ) == VI_PAL;
 
 #ifdef WII_NETTRACE
-  char val[256];
-  snprintf( val, sizeof(val), "pal test: [%f>17.5]=%d\n", test_fps, wii_is_pal );
-  net_print_string(__FILE__,__LINE__, val );  
+  net_print_string(NULL,0, "pal test: %d\n", wii_is_pal );  
 #endif
-
 }
 
 /*
@@ -657,11 +651,20 @@ static void menu_render_callback()
 
 static void precallback()
 {
-  static BOOL ws = 0;
-  if( ws != wii_full_widescreen )
+  if( wii_usb_keepalive )
   {
-    ws = wii_full_widescreen;
-    WII_SetWidescreen( ws );
+    UsbKeepAlive(); // Attempt to keep the USB drive from sleeping...
+  }
+
+  static BOOL lastws = 0;
+  int newws = 
+    ( wii_full_widescreen == WS_AUTO ? 
+        widescreen_auto : wii_full_widescreen );
+
+  if( lastws != newws )
+  {
+    lastws = newws;
+    WII_SetWidescreen( lastws );
   }
 
   WII_SetDefaultVideoMode();
@@ -1065,6 +1068,9 @@ int main(int argc,char *argv[])
     // Set the vsync based on whether or not we are PAL or NTSC
     wii_set_vsync( !wii_is_pal );
   }
+
+  // Determine widescreen auto value
+  widescreen_auto = ( CONF_GetAspectRatio() == CONF_ASPECT_16_9 );
 
   // Runs the application
   wii_handle_run();

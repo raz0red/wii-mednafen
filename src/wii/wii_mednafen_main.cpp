@@ -2,11 +2,11 @@
 WiiMednafen : Wii port of the Mednafen emulator
 
 Copyright (C) 2011 raz0red
-
+ 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any
 damages arising from the use of this software.
-
+ 
 Permission is granted to anyone to use this software for any
 purpose, including commercial applications, and to alter it and
 redistribute it freely, subject to the following restrictions:
@@ -34,6 +34,8 @@ distribution.
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 #include "wii_mednafen_sdl.h"
+#include "fileop.h"
+#include "vi_encoder.h"
 
 #include "wiimotenotsupported_png.h"
 
@@ -55,8 +57,8 @@ void WII_SetFilter( BOOL filter );
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 void WII_SetPreRenderCallback( void (*cb)(void) );
 void WII_SetDefaultVideoMode();
-void WII_SetDoubleStrikeVideoMode();
-void WII_SetInterlaceVideoMode();
+void WII_SetDoubleStrikeVideoMode( u32 width );
+void WII_SetInterlaceVideoMode( u32 width );
 void WII_SetWidescreen(int wide);
 extern Mtx gx_view;
 }
@@ -136,7 +138,7 @@ static void free_video()
       free(VTLineWidths[i]);
       VTLineWidths[i] = NULL;
     }
-  }
+  } 
 }
 
 /*
@@ -152,7 +154,7 @@ void wii_mednafen_init()
   MDFNI_printf(_("Starting Mednafen %s\n"), MEDNAFEN_VERSION);
   MDFN_indent(1);
   MDFN_printf(_("Base directory: %s\n"), DrBaseDirectory);
-
+ 
   // Look for external emulation modules here.
   if(!MDFNI_InitializeModules(ExternalSystems))
   {
@@ -271,7 +273,10 @@ extern void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, con
 
 static void precallback()
 {
-  //wii_usb_keepalive(); // Attempt to keep the USB drive from sleeping...
+  if( wii_usb_keepalive )
+  {
+    UsbKeepAlive(); // Attempt to keep the USB drive from sleeping...
+  }
 
   while( !VTReady && GameThreadRun )
   {
@@ -288,16 +293,24 @@ net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n",
 #endif
 #endif
     Emulator* emu = emuRegistry.getCurrentEmulator();
-
+ 
     if( emu->isDoubleStrikeSupported() && wii_double_strike_mode )
     {
-      if( ( VTDRReady->h + VTDRReady->x ) > 240 )
+      static int lastWidth = 0; 
+      if( lastWidth != VTDRReady->w )
       {
-        WII_SetInterlaceVideoMode();
+        SDL_FillRect( 
+          back_surface, 
+          NULL, SDL_MapRGB( back_surface->format, 0x0,0x0,0x0 ) );
+        lastWidth = VTDRReady->w;
+      }
+      if( ( VTDRReady->h + VTDRReady->y ) > 240 )
+      {
+        WII_SetInterlaceVideoMode( VTDRReady->w );
       }
       else
-      {
-        WII_SetDoubleStrikeVideoMode();
+      {        
+        WII_SetDoubleStrikeVideoMode( VTDRReady->w );
       }
     }
 
@@ -332,6 +345,7 @@ void wii_mednafen_emu_loop( BOOL resume )
   wii_sdl_black_back_surface();
   wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
 
+  VIDEO_SetTrapFilter( wii_trap_filter );
   WII_SetFilter( wii_filter );
   WII_SetRotation( emu->getRotation() * 90 );
   emu->resizeScreen( true );  
@@ -346,6 +360,7 @@ void wii_mednafen_emu_loop( BOOL resume )
 
   PauseSound( 1 );
   wii_gx_pop_callback();     
+  VIDEO_SetTrapFilter( 1 );
 }
 
 #define CB_PIXELSIZE 14

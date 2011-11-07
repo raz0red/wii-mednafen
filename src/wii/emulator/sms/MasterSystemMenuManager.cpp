@@ -22,6 +22,11 @@ MasterSystemMenuManager::MasterSystemMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
+  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+
+  TREENODE* child = wii_create_tree_node( NODETYPE_MD_REGION, "Console region" );
+  wii_add_child( m_emulatorMenu, child );
+
   //
   // The cartridge settings (current) menu
   //
@@ -56,6 +61,13 @@ void MasterSystemMenuManager::getNodeName(
   // Helpers
   m_emuMenuHelper.getNodeName( node, buffer, value );
   m_cartSettingsMenuHelper.getNodeName( node, buffer, value );
+
+  switch( node->node_type )
+  {
+    case NODETYPE_MD_REGION:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s", emu.getConsoleRegionName() );
+      break;
+  }
 }
 
 void MasterSystemMenuManager::selectNode( TREENODE *node )
@@ -67,6 +79,24 @@ void MasterSystemMenuManager::selectNode( TREENODE *node )
   // Helpers
   m_emuMenuHelper.selectNode( node );
   m_cartSettingsMenuHelper.selectNode( node );
+
+  LOCK_RENDER_MUTEX();
+
+  switch( node->node_type )
+  {
+    case NODETYPE_MD_REGION:
+      {
+        int region = emu.getConsoleRegion() + 1;
+        if( region >= MasterSystem::regionCount )
+        {
+          region = 0;
+        }
+        emu.setConsoleRegion( region );
+      }
+      break;
+  }
+
+  UNLOCK_RENDER_MUTEX();
 }
 
 bool MasterSystemMenuManager::isNodeVisible( TREENODE *node )
