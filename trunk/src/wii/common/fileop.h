@@ -41,6 +41,7 @@ bool FindDevice(char * filepath, int * device);
 char * StripDevice(char * path);
 bool ChangeInterface(int device, int retryCount);
 bool ChangeInterface(char * filepath, int retryCount);
+void UsbKeepAlive();
 
 extern bool unmountRequired[];
 extern bool isMounted[];

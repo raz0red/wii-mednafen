@@ -70,7 +70,7 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
 
     //wii_resize_screen_draw_border( back_surface, 0, back_surface->h );
     wii_sdl_flip(); 
-
+ 
     Rect* defaultScreenSize =
       emu.getRotation() ? 
         emu.getDefaultRotatedScreenSize() : emu.getDefaultScreenSize();
@@ -81,7 +81,7 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
     emu.getCurrentScreenSizeRatio( &ratiox, &ratioy );
     resize_info rinfo = 
       { defaultScreenSize->w * ratiox, defaultScreenSize->h *ratioy, 
-        screenSize->w * ratiox, screenSize->h * ratioy };
+        screenSize->w * ratiox, screenSize->h * ratioy, emu.getRotation() };
     wii_resize_screen_gui( &rinfo );
     screenSize->w = ( rinfo.currentX / ratiox );
     screenSize->h = ( rinfo.currentY / ratioy );

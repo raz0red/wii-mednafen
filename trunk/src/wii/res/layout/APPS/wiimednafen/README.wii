@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1-pre102711 release README
+WiiMednafen v0.1-pre110611 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -17,6 +17,7 @@ Emulators supported:
  * GameBoy Advance
  * Game Gear
  * Lynx
+ * MegaDrive/Genesis
  * Nintendo Entertainment System (NES)
  * Neo Geo Pocket
  * PC Engine (CD)/TurboGrafx 16 (CD)/SuperGrafx (Fast version)
@@ -118,6 +119,12 @@ in the "/wiimednafen" directory and provide values for the following:
 
 Please note that loading CD images over the network will cause noticeable
 slowdown.
+
+--------------------------------------------
+Double strike (240p) mode support
+--------------------------------------------
+
+TODO
 
 --------------------------------------------
 Menu settings and navigation
@@ -376,6 +383,12 @@ menu item.
      R              : Option 1
      L              : Option 2
      Home           : Display WiiMednafen menu (see above)
+
+--------------------------------------------
+MegaDrive/Genesis
+--------------------------------------------
+
+TODO
 
 --------------------------------------------
 Nintendo Entertainment System (NES)
@@ -688,7 +701,7 @@ settings" menu item.
 
    Wiimote:
 
-     D-pad          : Move
+     D-pad          : Left control pad
      2              : A
      1              : B
      A              : R
@@ -699,7 +712,8 @@ settings" menu item.
 
    Wiimote + Nunchuk:
 
-     Analog         : Move
+     Analog         : Left control pad
+     D-pad          : Right control pad
      A              : A
      C              : B
      B              : R
@@ -710,7 +724,9 @@ settings" menu item.
 
    Classic controller/Pro:
 
-     D-pad/Analog   : Move
+     D-pad          : Left control pad
+     Left analog    : Left control pad
+     Right analog   : Right control pad
      A              : A
      B              : B
      R/zR           : R
@@ -721,7 +737,9 @@ settings" menu item.
 
    GameCube controller:
 
-     D-pad/Analog   : Move
+     D-pad          : Left control pad
+     Left analog    : Left control pad
+     Right analog   : Right control pad
      A              : A
      B              : B
      R              : R
@@ -871,15 +889,23 @@ Ryphecha     : Providing an incredible multi-emulator, optimizing the
                Virtual Boy emulation, and putting up with my questions.
 Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
 Tantric      : Menu example code and SDL enhancements
+Eke-eke      : Double strike help and Color trap filter implementation.
 
 --------------------------------------------
 Change Log
 --------------------------------------------
 
-10/27/11 (0.1-pre)
+11/06/11 (0.1-pre)
 -------------------
- - 0.1 Pre-release build
-
+ - Added support for MegaDrive/Genesis.
+ - Master system FM sound support (when region set to Domestic/Japan)
+ - Double strike (240p) mode support
+ - Color trap filter (Eke-eke implementation)
+ - Full widescreen support
+ - Virtual Boy SRAM bug fix (was not persisting).
+ - Fixed bug where screen sizing controls were not being properly rotated
+     (games with vertical orientation).
+ 
 10/10/11 (0.0)
 -------------------
  - Initial release

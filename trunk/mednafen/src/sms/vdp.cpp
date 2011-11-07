@@ -20,7 +20,7 @@ namespace MDFN_IEN_SMS
     bg_name_dirty[name] |= (1 << ((addr >> 2) & 7));       \
 }
 
-
+ 
 /* VDP context */
 vdp_t vdp;
 

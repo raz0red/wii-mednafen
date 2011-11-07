@@ -19,6 +19,10 @@
 #include "shared.h"
 #include "../mempatcher.h"
 
+#include "../settings-driver.h"
+
+#include "Emulators.h"
+
 namespace MDFN_IEN_SMS
 {
 
@@ -207,6 +211,11 @@ static int LoadCommon(const char *name, MDFNFILE *fp)
 
  /* Assign default settings (US NTSC machine) */
  sms.display     = DISPLAY_NTSC;
+
+#ifdef WII
+  MDFNI_SetSetting("sms.territory",
+    emuRegistry.MasterSystemEmu.getConsoleRegionString());
+#endif
 
  sms.territory   = MDFN_GetSettingI("sms.territory");
  sms.use_fm      = FALSE;

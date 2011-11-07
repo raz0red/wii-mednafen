@@ -52,6 +52,7 @@ distribution.
 
 extern "C" {
   void WII_VideoStop();
+  void WII_SetDebugCallback( void (*cb)(char* msg) );
 }
 
 // The last cartridge hash
@@ -71,6 +72,13 @@ char wii_language[WII_MAX_PATH] = "";
 // The roms dir
 static char roms_dir[WII_MAX_PATH] = "";
 
+#ifdef WII_NETTRACE
+static void sdlTrace( char* msg )
+{
+  net_print_string( NULL, 0, msg );
+}
+#endif
+
 /*
  * Initializes the application
  */
@@ -84,6 +92,10 @@ void wii_handle_init()
   // Set the default roms dir
   snprintf( 
     roms_dir, WII_MAX_PATH, "%s%s", wii_get_fs_prefix(), WII_ROMS_DIR );
+#endif
+
+#ifdef WII_NETTRACE
+  WII_SetDebugCallback( sdlTrace );
 #endif
 
   // Read the config values

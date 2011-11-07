@@ -8,18 +8,35 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+const char* MasterSystem::regions[2] = 
+{ 
+   "domestic", 
+   "export", 
+};
+
+const char* MasterSystem::regionNames[2] = 
+{ 
+   "Domestic (Japan)", 
+   "Export (World)"
+};
+
+const int MasterSystem::regionCount = 
+  sizeof( regions ) / sizeof( const char* );
+
+
 MasterSystem::MasterSystem() : 
   Emulator( "sms", "Sega Master System" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this )
+  m_menuManager( *this ),
+  m_consoleRegion( 1 )
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 256;
   m_emulatorScreenSize.h = 480;
-
+ 
   // Set user screen sizes
-  float scalew = 2.5;
+  float scalew = 2.5; 
   float scaleh = 2.0;  
   m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
   m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
@@ -139,6 +156,29 @@ void MasterSystem::updateControls( bool isRapid )
 
     m_padData[c] = result;
   }
+}
+
+void MasterSystem::setConsoleRegion( int region )
+{
+  if( region >= 0 && region < regionCount )
+  { 
+    m_consoleRegion = region;
+  }
+}
+
+int MasterSystem::getConsoleRegion()
+{
+  return m_consoleRegion;
+}
+
+const char* MasterSystem::getConsoleRegionString()
+{
+  return MasterSystem::regions[m_consoleRegion];
+}
+
+const char* MasterSystem::getConsoleRegionName()
+{
+  return MasterSystem::regionNames[m_consoleRegion];
 }
 
 void MasterSystem::onPostLoad()

@@ -194,17 +194,31 @@ void wii_mednafen_menu_init()
     "Advanced" );
   wii_add_child( wii_menu_root, advanced );    
 
-  child = wii_create_tree_node( NODETYPE_FILTER, 
-    "Video filter" );
-  wii_add_child( advanced, child );
+  TREENODE *video_settings = wii_create_tree_node( 
+    NODETYPE_VIDEO_SETTINGS, "Video settings" );                                                        
+  wii_add_child( advanced, video_settings );
 
   child = wii_create_tree_node( NODETYPE_FULL_WIDESCREEN, 
     "Full widescreen" );
-  wii_add_child( advanced, child );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( video_settings, child );
 
   child = wii_create_tree_node( NODETYPE_DOUBLE_STRIKE, 
     "Double strike (240p)" );
-  wii_add_child( advanced, child );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_FILTER, 
+    "Bilinear filter" );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_TRAP_FILTER, 
+    "Color trap filter" );
+  wii_add_child( video_settings, child );
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
@@ -369,23 +383,28 @@ void wii_menu_handle_get_node_name(
         value, WII_MENU_BUFF_SIZE, "%s", 
           language_menu->children[language_index]->name );
       break;
+    case NODETYPE_FULL_WIDESCREEN:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+        ( wii_full_widescreen == WS_AUTO ? "(auto)" :
+          ( wii_full_widescreen ? "Enabled" : "Disabled" ) ) );
+      break;
     case NODETYPE_DEBUG_MODE:
     case NODETYPE_TOP_MENU_EXIT:
     case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
     case NODETYPE_AUTO_LOAD_SAVE:
-    case NODETYPE_FULL_WIDESCREEN:
     case NODETYPE_DOUBLE_STRIKE:
     case NODETYPE_CHEATS:
+    case NODETYPE_TRAP_FILTER:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_TRAP_FILTER:
+            enabled = wii_trap_filter;
+            break;
           case NODETYPE_DOUBLE_STRIKE:
             enabled = wii_double_strike_mode;
-            break;
-          case NODETYPE_FULL_WIDESCREEN:
-            enabled = wii_full_widescreen;
             break;
           case NODETYPE_CHEATS:
             enabled = wii_cheats;
@@ -509,7 +528,11 @@ void wii_menu_handle_select_node( TREENODE *node )
         wii_double_strike_mode ^= 1;
         break;
       case NODETYPE_FULL_WIDESCREEN:
-        wii_full_widescreen ^= 1;
+        wii_full_widescreen++;
+        if( wii_full_widescreen > WS_AUTO )
+        {
+          wii_full_widescreen = 0;
+        }
         break;
       case NODETYPE_AUTO_LOAD_SAVE:
         wii_auto_load_save_state ^= 1;
@@ -525,6 +548,9 @@ void wii_menu_handle_select_node( TREENODE *node )
         break;
       case NODETYPE_DEBUG_MODE:
         wii_debug ^= 1;
+        break;
+      case NODETYPE_TRAP_FILTER:
+        wii_trap_filter ^= 1;
         break;
       case NODETYPE_FILTER:
         wii_filter ^= 1;
@@ -568,6 +594,7 @@ void wii_menu_handle_select_node( TREENODE *node )
         last_rom_index = 1;
         break;
       case NODETYPE_ADVANCED:
+      case NODETYPE_VIDEO_SETTINGS:
       case NODETYPE_CARTRIDGE_SAVE_STATES:
       case NODETYPE_LOAD_ROM:               
         wii_menu_push( node );

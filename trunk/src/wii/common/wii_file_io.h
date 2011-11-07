@@ -28,6 +28,5 @@ distribution.
 void wii_unmount();
 bool wii_mount();
 void wii_remount();
-void wii_usb_keepalive();
 
 #endif

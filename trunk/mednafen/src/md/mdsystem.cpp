@@ -527,11 +527,7 @@ static MDFNSetting MDSettings[] =
 
  { "md.cdbios", MDFNSF_EMU_STATE, gettext_noop("Path to the CD BIOS"), gettext_noop("SegaCD/MegaCD emulation is currently nonfunctional."), MDFNST_STRING, "us_scd1_9210.bin" },
 
-#ifndef WII
  { "md.correct_aspect", MDFNSF_CAT_VIDEO, gettext_noop("Correct the aspect ratio."), NULL, MDFNST_BOOL, "1" },
-#else
- { "md.correct_aspect", MDFNSF_CAT_VIDEO, gettext_noop("Correct the aspect ratio."), NULL, MDFNST_BOOL, "1" },
-#endif
 
  // off, teamplay, 4way, auto
  // { "md.input.4player", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE | MDFNSF_CAT_INPUT, gettext_noop("Which 4-player adapter to use."), NULL, MDFNST_STRING, "auto", NULL, NULL },

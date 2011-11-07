@@ -191,6 +191,7 @@ void wii_resize_screen_gui( resize_info* rinfo )
 
     // Classic or Nunchuck?
     bool isClassic = ( exp.type == WPAD_EXP_CLASSIC );
+    bool rotated = rinfo->rotateControls;
 
     if( ( ( held & (
         WII_BUTTON_LEFT | WII_BUTTON_RIGHT | 
@@ -225,7 +226,14 @@ void wii_resize_screen_gui( resize_info* rinfo )
           }
           else
           {
-            currentX -= xinc;
+            if( rotated )
+            {
+              currentY -= yinc;
+            }
+            else
+            {
+              currentX -= xinc;
+            }
           }
         }
         else if( 
@@ -241,7 +249,14 @@ void wii_resize_screen_gui( resize_info* rinfo )
           }
           else
           {
-             currentX += xinc;
+            if( rotated )
+            {
+              currentY += yinc;
+            }
+            else
+            {
+              currentX += xinc;
+            }             
           }
         }
         else if( 
@@ -257,7 +272,14 @@ void wii_resize_screen_gui( resize_info* rinfo )
           }
           else
           {
-            currentY += yinc;
+            if( rotated )
+            {
+              currentX += xinc;
+            }
+            else
+            {              
+              currentY += yinc;
+            }                         
           }
         }
         else if( 
@@ -273,7 +295,14 @@ void wii_resize_screen_gui( resize_info* rinfo )
           }
           else
           {
-            currentY -= yinc;
+            if( rotated )
+            {
+              currentX -= xinc;
+            }
+            else
+            {              
+              currentY -= yinc;
+            }                                     
           }
         }
 

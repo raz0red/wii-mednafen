@@ -39,6 +39,7 @@ typedef struct resize_info {
   float defaultY; 
   float currentX; 
   float currentY;
+  BOOL rotateControls;
 } resize_info;
 
 /*

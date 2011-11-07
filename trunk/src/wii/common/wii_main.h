@@ -60,6 +60,11 @@ typedef struct treenode {
 #define VSYNC_DISABLED 0
 #define VSYNC_ENABLED 1
 
+// widescreen modes
+#define WS_DISABLED 0
+#define WS_ENABLED  1
+#define WS_AUTO     2
+
 // The root of the menu
 extern TREENODE *wii_menu_root;
 // Whether the wiimote (for the menu) is horizontal or vertical
@@ -87,7 +92,12 @@ extern BOOL wii_is_pal;
 // Double strike mode
 extern BOOL wii_double_strike_mode;
 // Full widescreen
-extern BOOL wii_full_widescreen;
+extern int wii_full_widescreen;
+// USB keep alive
+extern BOOL wii_usb_keepalive;
+// Trap filter
+extern BOOL wii_trap_filter;
+
 
 // The display mode (from SDL)
 extern GXRModeObj *vmode;
