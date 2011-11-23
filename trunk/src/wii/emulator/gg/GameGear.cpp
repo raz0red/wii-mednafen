@@ -8,6 +8,17 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320*1*1.275, 240                },  "1x"          },
+  { { 320*2*1.275, 240*2              },  "2x"          },
+  { { 320*3*1.275, 240*3              },  "3x"          },
+  { { 320*4,       240*4*(1.0/1.275)  },  "Full screen" }  // default
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 GameGear::GameGear() : 
   Emulator( "gg", "Game Gear" ),
   m_configManager( *this ),
@@ -19,9 +30,9 @@ GameGear::GameGear() :
   m_emulatorScreenSize.h = 480;
 
   // Set user screen sizes
-  float scale = 3.1;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
+  int defaultIndex = 3;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& GameGear::getConfigManager()
@@ -150,4 +161,19 @@ bool GameGear::updateDebugText(
 bool GameGear::isRotationSupported()
 {
   return false;
+}
+
+const ScreenSize* GameGear::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int GameGear::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* GameGear::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

@@ -3,7 +3,6 @@
 
 #include "wii_gx.h"
 #include "wii_sdl.h"
-#include "wii_resize_screen.h"
 #include "wii_app.h"
 #include "wii_mednafen.h"
 

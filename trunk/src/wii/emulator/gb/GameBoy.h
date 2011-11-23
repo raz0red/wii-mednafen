@@ -27,7 +27,10 @@ class GameBoy : public Emulator
 private:
   GameBoyConfigManager m_configManager;
   GameBoyDbManager m_dbManager;
-  GameBoyMenuManager m_menuManager;  
+  GameBoyMenuManager m_menuManager; 
+
+protected:
+  const ScreenSize* getDoubleStrikeScreenSize();
 
 public:
   GameBoy();
@@ -36,6 +39,9 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

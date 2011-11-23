@@ -8,6 +8,18 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320,        240 },        "1x"           },
+  { { 320*2,      240*2 },      "2x"           },
+  { { 320*3,      240*3 },      "3x"           }, 
+  { { 320*3.138,  240*3.138 },  "Full screen"  }, // default
+  { { 320*4,      240*3.138 },  "Fill screen"  }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 GameBoy::GameBoy() : 
   Emulator( "gb", "GameBoy Color" ),
   m_configManager( *this ),
@@ -19,9 +31,9 @@ GameBoy::GameBoy() :
   m_emulatorScreenSize.h = 144;
 
   // Set user screen sizes
-  float scale = 1.55;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
+  int defaultIndex = 3;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& GameBoy::getConfigManager()
@@ -151,3 +163,19 @@ bool GameBoy::isRotationSupported()
 {
   return false;
 }
+
+const ScreenSize* GameBoy::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int GameBoy::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* GameBoy::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
+}
+

@@ -8,6 +8,15 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320,    240        },  "1x"             },
+  { { 320*2,  240*2      },  "2x/Full screen" },
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 PCEFast::PCEFast() : 
   Emulator( "pce_fast", "PC Engine" ),
   m_configManager( *this ),
@@ -19,10 +28,9 @@ PCEFast::PCEFast() :
   m_emulatorScreenSize.h = 242;
 
   // Set user screen sizes
-  float scalew = 2.0; 
-  float scaleh = 2.0;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
+  int defaultIndex = 1;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& PCEFast::getConfigManager()
@@ -168,12 +176,22 @@ bool PCEFast::isRotationSupported()
   return false;
 }
 
-bool PCEFast::isDoubleStrikeSupported()
-{
-  return true;
-}
-
 u8 PCEFast::getBpp()
 {
   return PCE_FAST_BPP;
+}
+
+const ScreenSize* PCEFast::getDefaultScreenSizes()
+{ 
+  return defaultScreenSizes;
+}
+
+int PCEFast::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* PCEFast::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

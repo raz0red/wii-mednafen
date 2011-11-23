@@ -552,8 +552,17 @@ void VIDEO_SetGamma(VIGamma gamma)
   __VISetGamma(gamma);
 }
 
-void VIDEO_SetTrapFilter(bool enable)
+void VIDEO_SetTrapFilter(int enable)
 {
+  static int curvalue = -1;
+
+  if( curvalue == enable )
+  {
+    return;
+  }
+
+  curvalue = enable;
+
   if (enable)
     __VISetTrapFilter(0);
   else

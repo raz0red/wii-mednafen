@@ -97,7 +97,8 @@ extern int wii_full_widescreen;
 extern BOOL wii_usb_keepalive;
 // Trap filter
 extern BOOL wii_trap_filter;
-
+// 16:9 correction
+extern BOOL wii_16_9_correction;
 
 // The display mode (from SDL)
 extern GXRModeObj *vmode;

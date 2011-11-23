@@ -56,6 +56,8 @@ extern u8 wii_hw_button;
 extern char wii_language[WII_MAX_PATH];
 // Whether to auto load/save state
 extern BOOL wii_auto_load_save_state;
+// Whether to use the GX/VI scaler
+extern BOOL wii_gx_vi_scaler;
 
 /*
  * Returns the roms directory

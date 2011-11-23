@@ -49,6 +49,9 @@ private:
   VirtualBoyDbManager m_dbManager;
   VirtualBoyMenuManager m_menuManager;
 
+protected:
+  bool isDoubleStrikeSupported();
+
 public:
   static const char* CUSTOM_MODE_KEY;
   static const char* DEFAULT_MODE_KEY;
@@ -76,6 +79,9 @@ public:
   void onPreLoop();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
   u8 getBpp();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   friend class VirtualBoyConfigManager;
 };

@@ -31,6 +31,9 @@ private:
   static const char* regions[2];
   static const char* regionNames[2];
 
+protected:
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
+
 public:
   static const int regionCount;
 
@@ -39,13 +42,15 @@ public:
   DatabaseManager& getDbManager();
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
-  bool isDoubleStrikeSupported();
   bool isRotationSupported();
 
   void setConsoleRegion( int region );
   int getConsoleRegion();
   const char* getConsoleRegionString();
   const char* getConsoleRegionName();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

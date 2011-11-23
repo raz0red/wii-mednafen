@@ -27,7 +27,10 @@ private:
   int m_gameLanguage;
   NeoGeoPocketConfigManager m_configManager;
   NeoGeoPocketDbManager m_dbManager;
-  NeoGeoPocketMenuManager m_menuManager;  
+  NeoGeoPocketMenuManager m_menuManager; 
+
+protected:
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
 
 public:
   NeoGeoPocket();
@@ -36,6 +39,9 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   int getGameLanguage();
   void setGameLanguage( int lang );

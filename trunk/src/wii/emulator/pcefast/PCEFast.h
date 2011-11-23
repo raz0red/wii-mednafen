@@ -34,7 +34,10 @@ class PCEFast : public Emulator
 private:
   PCEFastConfigManager m_configManager;
   PCEFastDbManager m_dbManager;
-  PCEFastMenuManager m_menuManager;  
+  PCEFastMenuManager m_menuManager; 
+
+protected:
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
 
 public:
   PCEFast();
@@ -43,8 +46,10 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
-  bool isDoubleStrikeSupported();
   u8 getBpp();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

@@ -18,6 +18,11 @@ typedef struct Rect {
   u16 h;
 } Rect;
 
+typedef struct ScreenSize {
+  Rect r;
+  const char* name;
+} ScreenSize;
+
 #define BTN_RAPID 0x80000000
 
 class Emulator
@@ -25,18 +30,19 @@ class Emulator
 private:
   const char* m_key; 
   const char* m_name;
-  Rect m_lastSize; 
   bool m_frameSkip;
 
 protected:
   u16 m_padData[4];  
   Rect m_emulatorScreenSize;
   Rect m_screenSize;
-  Rect m_defaultScreenSize;
   Rect m_rotatedScreenSize;
-  Rect m_defaultRotatedScreenSize;
 
   Emulator( const char* key, const char* name );
+
+  virtual bool isDoubleStrikeSupported();
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
+  virtual const ScreenSize* getDoubleStrikeRotatedScreenSize();
 
 public:
   const char* getKey();
@@ -52,16 +58,27 @@ public:
     char* output, const char* defaultOutput, int len );
   virtual bool isRotationSupported();
   virtual int getRotation();
-  virtual bool isDoubleStrikeSupported();
   virtual u8 getBpp();
-  virtual void resizeScreen( bool force );
+  virtual void resizeScreen();
+  void getResizeScreenRect( Rect* rect );
   void getCurrentScreenSizeRatio( float* ratiox, float* ratioy );
  
+  virtual const ScreenSize* getDefaultScreenSizes();
+  virtual int getDefaultScreenSizesCount();
+  const char* getScreenSizeName();
+  const char* getScreenSizeName( int w, int h );
+
+  virtual const ScreenSize* getDefaultRotatedScreenSizes();
+  virtual int getDefaultRotatedScreenSizesCount();
+  const char* getRotatedScreenSizeName();
+  const char* getRotatedScreenSizeName( int w, int h );
+
+  virtual bool isDoubleStrikeEnabled();
+
   Rect* getEmulatorScreenSize();
   Rect* getScreenSize();
-  Rect* getDefaultScreenSize();  
   Rect* getRotatedScreenSize();
-  Rect* getDefaultRotatedScreenSize();  
+
   u16* getPadData();
   bool getFrameSkip();
   void setFrameSkip( bool skip );

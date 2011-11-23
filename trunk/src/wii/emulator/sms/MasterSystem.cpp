@@ -20,6 +20,15 @@ const char* MasterSystem::regionNames[2] =
    "Export (World)"
 };
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320*1*1.25, 240    },  "1x"               },
+  { { 320*2*1.25, 240*2  },  "2x/Full screen"   }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 const int MasterSystem::regionCount = 
   sizeof( regions ) / sizeof( const char* );
 
@@ -36,10 +45,9 @@ MasterSystem::MasterSystem() :
   m_emulatorScreenSize.h = 480;
  
   // Set user screen sizes
-  float scalew = 2.5; 
-  float scaleh = 2.0;  
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
+  int defaultIndex = 1;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& MasterSystem::getConfigManager()
@@ -191,12 +199,23 @@ bool MasterSystem::updateDebugText(
   return false;
 }
 
-bool MasterSystem::isDoubleStrikeSupported()
-{
-  return true;
-}
 
 bool MasterSystem::isRotationSupported()
 {
   return false;
+}
+
+const ScreenSize* MasterSystem::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int MasterSystem::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* MasterSystem::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

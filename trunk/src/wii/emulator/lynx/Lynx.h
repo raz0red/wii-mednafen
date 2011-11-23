@@ -31,6 +31,10 @@ private:
   LynxDbManager m_dbManager;
   LynxMenuManager m_menuManager;  
 
+protected:
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
+  virtual const ScreenSize* getDoubleStrikeRotatedScreenSize();
+
 public:
   Lynx();
   ConfigManager& getConfigManager();
@@ -39,6 +43,11 @@ public:
   void updateControls( bool isRapid );
   bool isRotationSupported();
   int getRotation();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
+  const ScreenSize* getDefaultRotatedScreenSizes();
+  int getDefaultRotatedScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

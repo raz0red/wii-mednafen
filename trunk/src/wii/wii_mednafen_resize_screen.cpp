@@ -26,12 +26,17 @@ distribution.
 #include "wii_gx.h"
 #include "wii_hw_buttons.h"
 #include "wii_input.h"
-#include "wii_resize_screen.h"
+#include "wii_mednafen_resize_screen.h"
 #include "wii_sdl.h"
 
 #include "gettext.h"
 
-extern void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
+extern "C" 
+{
+  void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
+}
+
+extern Mtx gx_view;
 
 // Whether the aspect ratio is locked
 static BOOL arlocked = TRUE;
@@ -41,6 +46,14 @@ static float aratio = 0.0f;
 static float xinc = 0.0f;
 // The y increment
 static float yinc = 0.0f;
+// The current screen size index
+static int currsize = -1;
+// The resize info
+static resize_info* resizeinfo;
+// The current x value
+static float currentX;
+// The current y value
+static float currentY;
 
 #define DELAY_FRAMES 6
 #define DELAY_STEP 1
@@ -67,7 +80,54 @@ static void reset_aspect_ratio( float currentX, float currentY )
   yinc = 1.0f;  
 }
 
-extern Mtx gx_view;
+static const ScreenSize* getCurrentDefaultSize()
+{
+  int count = 
+    resizeinfo->rotated ?
+      resizeinfo->emulator.getDefaultRotatedScreenSizesCount() :
+      resizeinfo->emulator.getDefaultScreenSizesCount();
+
+  if( count > currsize && currsize != -1 ) 
+  {
+    return 
+      resizeinfo->rotated ?      
+        &((resizeinfo->emulator.getDefaultRotatedScreenSizes())[currsize]) :
+        &((resizeinfo->emulator.getDefaultScreenSizes())[currsize]);
+  }
+
+  return NULL;
+}
+
+static void initCurrentDefaultSize()
+{
+  int i;
+  currsize = -1;
+
+  int count = 
+    resizeinfo->rotated ?
+      resizeinfo->emulator.getDefaultRotatedScreenSizesCount() :
+      resizeinfo->emulator.getDefaultScreenSizesCount();
+
+  for( i = 0; i < count; i++ )
+  {
+    const ScreenSize* size = 
+      resizeinfo->rotated ?
+        &(resizeinfo->emulator.getDefaultRotatedScreenSizes()[i]) :
+        &(resizeinfo->emulator.getDefaultScreenSizes()[i]);
+
+    if( currentX == size->r.w &&
+        currentY == size->r.h )
+    {
+      currsize = i;
+      break;
+    }    
+  }
+
+  if( i >= count ) 
+  {
+    currsize = -1;
+  }
+}
 
 /*
  * GX render callback
@@ -86,60 +146,90 @@ static void wii_resize_render_callback()
   guMtxConcat( gx_view, m, mv );
   GX_LoadPosMtxImm( mv, GX_PNMTX0 ); 
 
-  GXColor black = (GXColor) { 0x0, 0x0, 0x0, 0xff };
+  GXColor white = (GXColor) { 0xff, 0xff, 0xff, 0xff };
 
+#if 0
   wii_gx_drawrectangle( 
-    -231, 71, 462, 142, black, FALSE );
+    -231, 71, 462, 142, white, FALSE );
+#endif
   wii_gx_drawrectangle( 
-    -230, 70, 460, 140, (GXColor){ 0x99, 0x99, 0x99, 0xdd }, TRUE );    
+    -230, 80, 460, 160, (GXColor){ 0x0, 0x0, 0x0, 0xcc }, TRUE );    
 
   int fontsize = 14;
   int spacing = 16;
   int largespacing = 28;
-  int y = 60;
+  int y = 68;
 
   u16 right = ( FTGX_ALIGN_TOP | FTGX_JUSTIFY_RIGHT );
   u16 left = ( FTGX_ALIGN_TOP | FTGX_JUSTIFY_LEFT );
 
   char buffer[512] = "";
   snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "D-pad/Analog" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, right );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );
   snprintf( buffer, sizeof(buffer), " %s", gettextmsg( "Resize screen" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, left );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
   y-=spacing;
 
   snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "A/2 button" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, right );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );
   snprintf( buffer, sizeof(buffer), " %s", gettextmsg( "Accept changes" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, left );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
   y-=spacing;
 
   snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "B/1 button" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, right );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );
   snprintf( buffer, sizeof(buffer), " %s", gettextmsg( "Cancel changes" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, left );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
   y-=largespacing;
 
   snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "Minus/LTrigger" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, right );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );
   snprintf( buffer, sizeof(buffer), " %s", gettextmsg( "Toggle A/R lock" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, left );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
   y-=spacing;
 
   snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "Plus/RTrigger" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, right );
-  snprintf( buffer, sizeof(buffer), " %s", gettextmsg( "Reset to defaults" ) );
-  wii_gx_drawtext( 0, y, fontsize, buffer, black, left );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );  
+  snprintf( buffer, sizeof(buffer), " %s" , 
+    gettextmsg( "Toggle screen sizes" ) );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
   y-=largespacing;
 
-  snprintf( buffer, sizeof(buffer), "(%s : %s)",
-    gettextmsg( "Aspect ratio" ),
-    ( arlocked ? gettextmsg( "Locked" ) : gettextmsg( "Unlocked" ) ) );
+  snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "Screen size" ) );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );  
+  snprintf( buffer, sizeof(buffer), " %s", 
+    gettextmsg( 
+      resizeinfo->rotated ?
+        resizeinfo->emulator.getRotatedScreenSizeName( currentX, currentY ) :
+        resizeinfo->emulator.getScreenSizeName( currentX, currentY ) ) );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
+  y-=spacing;
 
-  wii_gx_drawtext( 
-    0, y, fontsize, 
-    buffer, 
-    black, FTGX_ALIGN_TOP | FTGX_JUSTIFY_CENTER  );
+  snprintf( buffer, sizeof(buffer), "%s :", gettextmsg( "Aspect ratio" ) );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, right );  
+  snprintf( buffer, sizeof(buffer), " %s",
+    gettextmsg( 
+      arlocked ? gettextmsg( "Locked" ) : gettextmsg( "Unlocked" ) ) );
+  wii_gx_drawtext( 0, y, fontsize, buffer, white, left );
+}
+
+static void changeSquare( int x, int y )
+{
+  if( wii_16_9_correction )
+  {
+    if( resizeinfo->rotated )
+    {
+      y = ( y * 3 ) / 4;
+    }
+    else
+    {
+      x = ( x * 3 ) / 4;
+    }
+  }
+
+  x = ((x+1)&~1);
+  y = ((y+1)&~1);  
+  WII_ChangeSquare( x, y, 0, 0 );
 }
 
 /*
@@ -149,14 +239,18 @@ static void wii_resize_render_callback()
  */
 void wii_resize_screen_gui( resize_info* rinfo )
 { 
-  float currentX = rinfo->currentX;
-  float currentY = rinfo->currentY;
-
+  currentX = rinfo->currentX;
+  currentY = rinfo->currentY;
   arlocked = TRUE;
+  currsize = 0;
+  resizeinfo = rinfo;
 
   reset_aspect_ratio( currentX, currentY );
+  initCurrentDefaultSize();
 
-  WII_ChangeSquare( currentX, currentY, 0, 0 );
+  float ratioX, ratioY;
+  rinfo->emulator.getCurrentScreenSizeRatio( &ratioX, &ratioY );
+  changeSquare( currentX * ratioX, currentY * ratioY );
 
   // Push our callback
   wii_gx_push_callback( &wii_resize_render_callback, TRUE, NULL ); 
@@ -168,8 +262,8 @@ void wii_resize_screen_gui( resize_info* rinfo )
 
   BOOL loop = TRUE;
   while( loop && !wii_hw_button )
-  {
-    WII_ChangeSquare(  currentX, currentY, 0, 0 );
+  {    
+    changeSquare( currentX * ratioX, currentY * ratioY );
 
     // Scan the Wii and Gamecube controllers
     WPAD_ScanPads();
@@ -191,7 +285,7 @@ void wii_resize_screen_gui( resize_info* rinfo )
 
     // Classic or Nunchuck?
     bool isClassic = ( exp.type == WPAD_EXP_CLASSIC );
-    bool rotated = rinfo->rotateControls;
+    bool rotated = rinfo->rotated;
 
     if( ( ( held & (
         WII_BUTTON_LEFT | WII_BUTTON_RIGHT | 
@@ -362,9 +456,24 @@ void wii_resize_screen_gui( resize_info* rinfo )
           WPAD_CLASSIC_BUTTON_FULL_R ) ) ||
         ( gcDown & PAD_TRIGGER_R ) )
     {
-      currentX = rinfo->defaultX;
-      currentY = rinfo->defaultY;
-      reset_aspect_ratio( currentX, currentY );
+      currsize++;
+      int count = 
+        rotated ?
+          resizeinfo->emulator.getDefaultRotatedScreenSizesCount() :
+          resizeinfo->emulator.getDefaultScreenSizesCount();
+
+      if( count <= currsize ) 
+      {
+        currsize = 0;
+      }
+
+      const ScreenSize* defaultSize = getCurrentDefaultSize();
+      if( defaultSize != NULL )
+      {
+        currentX = defaultSize->r.w;
+        currentY = defaultSize->r.h;
+        reset_aspect_ratio( currentX, currentY );
+      }
     }    
 
     VIDEO_WaitVSync();
@@ -383,10 +492,10 @@ void wii_resize_screen_gui( resize_info* rinfo )
  */
 void wii_resize_screen_draw_border( SDL_Surface* surface, int startY, int height )
 {
+#if 0
   wii_sdl_draw_rectangle(
     surface, 0, startY, surface->w, height, 
     SDL_MapRGB( surface->format, 0xff, 0xff, 0xff ), FALSE ); 
-#if 0
   wii_sdl_draw_rectangle(
     surface, 1, 1 + startY, surface->w-2, height-2,
     SDL_MapRGB( surface->format, 0, 0, 0 ), FALSE ); 

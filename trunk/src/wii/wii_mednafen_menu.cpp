@@ -30,7 +30,7 @@ distribution.
 #include <stdlib.h>
 
 #include "wii_app.h"
-#include "wii_resize_screen.h"
+#include "wii_mednafen_resize_screen.h"
 #include "wii_sdl.h"
 #include "wii_snapshot.h"
 #include "wii_util.h"
@@ -201,6 +201,9 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_FULL_WIDESCREEN, 
     "Full widescreen" );
   wii_add_child( video_settings, child );
+  child = wii_create_tree_node( NODETYPE_16_9_CORRECTION, 
+    "16:9 correction" );
+  wii_add_child( video_settings, child );  
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( video_settings, child );
@@ -218,6 +221,13 @@ void wii_mednafen_menu_init()
 
   child = wii_create_tree_node( NODETYPE_TRAP_FILTER, 
     "Color trap filter" );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_GX_VI_SCALER_SPACER, "" );
+  wii_add_child( video_settings, child );
+
+  child = wii_create_tree_node( NODETYPE_GX_VI_SCALER, 
+    "Scaler" );
   wii_add_child( video_settings, child );
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
@@ -388,6 +398,10 @@ void wii_menu_handle_get_node_name(
         ( wii_full_widescreen == WS_AUTO ? "(auto)" :
           ( wii_full_widescreen ? "Enabled" : "Disabled" ) ) );
       break;
+    case NODETYPE_GX_VI_SCALER:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+        ( wii_gx_vi_scaler ? "GX + VI" : "GX" ) );
+      break;
     case NODETYPE_DEBUG_MODE:
     case NODETYPE_TOP_MENU_EXIT:
     case NODETYPE_FILTER:
@@ -396,10 +410,14 @@ void wii_menu_handle_get_node_name(
     case NODETYPE_DOUBLE_STRIKE:
     case NODETYPE_CHEATS:
     case NODETYPE_TRAP_FILTER:
+    case NODETYPE_16_9_CORRECTION:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_16_9_CORRECTION:
+            enabled = wii_16_9_correction;
+            break;
           case NODETYPE_TRAP_FILTER:
             enabled = wii_trap_filter;
             break;
@@ -534,6 +552,12 @@ void wii_menu_handle_select_node( TREENODE *node )
           wii_full_widescreen = 0;
         }
         break;
+      case NODETYPE_16_9_CORRECTION:
+        wii_16_9_correction ^= 1;
+        break;
+      case NODETYPE_GX_VI_SCALER:
+        wii_gx_vi_scaler ^= 1;
+        break;
       case NODETYPE_AUTO_LOAD_SAVE:
         wii_auto_load_save_state ^= 1;
         break;
@@ -662,6 +686,9 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
   {
     case NODETYPE_LOAD_STATE:
       return wii_snapshot_current_exists();
+    case NODETYPE_GX_VI_SCALER_SPACER:
+    case NODETYPE_GX_VI_SCALER:
+      return !wii_filter;
     case NODETYPE_RESET:
     case NODETYPE_RESUME:
     case NODETYPE_EMULATOR_SETTINGS_SPACER:
@@ -714,7 +741,8 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
 BOOL wii_menu_handle_is_node_selectable( TREENODE *node )
 {
   if( node->node_type == NODETYPE_CARTRIDGE_SETTINGS_CURRENT_SPACER ||      
-      node->node_type == NODETYPE_EMULATOR_SETTINGS_SPACER )
+      node->node_type == NODETYPE_EMULATOR_SETTINGS_SPACER ||
+      node->node_type == NODETYPE_GX_VI_SCALER_SPACER )
   {
     return FALSE;
   }

@@ -27,19 +27,16 @@ distribution.
 
 #include <SDL.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "Emulator.h"
 
 /*
  * Information about the resize operation
  */
 typedef struct resize_info {
-  float defaultX; 
-  float defaultY; 
   float currentX; 
   float currentY;
-  BOOL rotateControls;
+  BOOL rotated;
+  Emulator& emulator;
 } resize_info;
 
 /*
@@ -57,9 +54,5 @@ extern void wii_resize_screen_gui( resize_info* rinfo );
  * height   The height to scale
  */
 extern void wii_resize_screen_draw_border( SDL_Surface* surface, int startY, int height );
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

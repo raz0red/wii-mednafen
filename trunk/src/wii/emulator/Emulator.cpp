@@ -33,19 +33,9 @@ Rect* Emulator::getScreenSize()
   return &m_screenSize;
 }
 
-Rect* Emulator::getDefaultScreenSize()
-{
-  return &m_defaultScreenSize;
-}
-
 Rect* Emulator::getRotatedScreenSize()
 {
   return &m_rotatedScreenSize;
-}
-
-Rect* Emulator::getDefaultRotatedScreenSize()
-{
-  return &m_defaultRotatedScreenSize;
 }
 
 Rect* Emulator::getEmulatorScreenSize()
@@ -110,47 +100,64 @@ void Emulator::getCurrentScreenSizeRatio( float* ratiox, float* ratioy )
   *ratioy = (float)MDFNGameInfo->nominal_height/(float)VTDRReady->h;
 }
 
-static void changeSquare( u32 x, u32 y )
-{
-#ifdef WII_NETTRACE
-net_print_string( NULL, 0, 
-  "change square: %dx%d=%dx%d\n", x, y, (x+1)&0xFFFFFFFE, (y+1)&0xFFFFFFFE );
-#endif 
-  WII_ChangeSquare( ((x+1)&~1), (y+1)&~1, 0, 0 );
-}
+void Emulator::getResizeScreenRect( Rect* rect )
+{ 
+  float ratiox, ratioy;
+  getCurrentScreenSizeRatio( &ratiox, &ratioy );
 
-void Emulator::resizeScreen( bool force ) 
-{   
-  if( force )
-  { 
-    m_lastSize.w = m_lastSize.h = 0;
-    changeSquare( m_screenSize.w, m_screenSize.h );
-  } 
-  else if( VTReady && ( 
-    ( VTDRReady->w != m_lastSize.w ) || 
-    ( VTDRReady->h != m_lastSize.h ) ) )
+  if( isDoubleStrikeEnabled() )
   {
-    if( !isRotationSupported() )
+    const ScreenSize* size = 
+      getRotation() ? 
+        getDoubleStrikeRotatedScreenSize() :
+        getDoubleStrikeScreenSize();
+      
+    rect->w = (float)size->r.w * ratiox;
+    rect->h = (float)size->r.h * ratioy; 
+  }
+  else
+  {
+    if( getRotation() )
     {
-      float ratiox, ratioy;
-      getCurrentScreenSizeRatio( &ratiox, &ratioy );
-      changeSquare( m_screenSize.w * ratiox, m_screenSize.h * ratioy );
-#ifdef WII_NETTRACE
-net_print_string( NULL, 0, 
-  "resizing to: w:%dx%d, ratio:%f,%f\n", 
-    VTDRReady->w, VTDRReady->h, ratiox, ratioy );
-#endif
+      rect->w = (float)m_rotatedScreenSize.w * ratiox;
+      rect->h = (float)m_rotatedScreenSize.h * ratioy; 
     }
     else
     {
-      Rect* screenSize = getRotation() ?
-        getRotatedScreenSize() : getScreenSize();
-      changeSquare( screenSize->w, screenSize->h );
-    }    
-
-    m_lastSize.w = VTDRReady->w;
-    m_lastSize.h = VTDRReady->h;
+      rect->w = (float)m_screenSize.w * ratiox;
+      rect->h = (float)m_screenSize.h * ratioy; 
+    }
   }
+#ifdef WII_NETTRACE
+    net_print_string( NULL, 0, "resizing to: w:%dx%d, ratio:%f,%f, rect->w:%d, rect->h:%d\n", 
+  VTDRReady->w, VTDRReady->h, ratiox, ratioy, rect->w, rect->h );
+#endif
+
+  if( wii_16_9_correction )
+  {
+    if( getRotation() )
+    {
+      rect->h = ( rect->h * 3 ) / 4;
+    }
+    else
+    {
+      rect->w = ( rect->w * 3 ) / 4;
+    }
+  }
+
+  rect->w = ((rect->w+1)&~1);
+  rect->h = ((rect->h+1)&~1);
+}
+
+void Emulator::resizeScreen() 
+{
+  Rect r;
+  getResizeScreenRect( &r );
+  WII_ChangeSquare( r.w, r.h, 0, 0 );
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, 
+    "resizeScreen, change square: %dx%d\n", r.w, r.h );
+#endif 
 }
 
 bool Emulator::getFrameSkip()
@@ -176,10 +183,83 @@ bool Emulator::getAppliedFrameSkip()
 
 bool Emulator::isDoubleStrikeSupported()
 {
-  return false; 
+  return true; 
 }
    
 u8 Emulator::getBpp()
 { 
   return 32;
+}
+
+const ScreenSize* Emulator::getDefaultScreenSizes()
+{
+  return NULL;
+}
+
+int Emulator::getDefaultScreenSizesCount()
+{
+  return 0;
+}
+const char* Emulator::getScreenSizeName()
+{
+  return getScreenSizeName( m_screenSize.w, m_screenSize.h );
+}
+
+const char* Emulator::getScreenSizeName( int w, int h )
+{
+  const ScreenSize* sizes = getDefaultScreenSizes();
+  for( int i = 0; i < getDefaultScreenSizesCount(); i++ )
+  {
+    if( sizes[i].r.w == w && sizes[i].r.h == h )
+    {
+      return sizes[i].name;
+    }
+  }
+
+  return "Custom";
+}
+
+const ScreenSize* Emulator::getDefaultRotatedScreenSizes()
+{
+  return NULL;
+}
+
+int Emulator::getDefaultRotatedScreenSizesCount()
+{
+  return 0;
+}
+
+const char* Emulator::getRotatedScreenSizeName()
+{
+  return getRotatedScreenSizeName( 
+    m_rotatedScreenSize.w, m_rotatedScreenSize.h );
+}
+
+const char* Emulator::getRotatedScreenSizeName( int w, int h )
+{
+  const ScreenSize* sizes = getDefaultRotatedScreenSizes();
+  for( int i = 0; i < getDefaultRotatedScreenSizesCount(); i++ )
+  {
+    if( sizes[i].r.w == w && sizes[i].r.h == h )
+    {
+      return sizes[i].name;
+    }
+  }
+
+  return "Custom";
+}
+
+const ScreenSize* Emulator::getDoubleStrikeScreenSize()
+{
+  return NULL;
+}
+
+const ScreenSize* Emulator::getDoubleStrikeRotatedScreenSize()
+{
+  return NULL;
+}
+
+bool Emulator::isDoubleStrikeEnabled()
+{
+  return isDoubleStrikeSupported() && wii_double_strike_mode;
 }

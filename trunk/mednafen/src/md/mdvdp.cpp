@@ -1144,8 +1144,10 @@ namespace MDFN_IEN_MD
 
     // Our display output window is nominally XXX*224 with NTSC, XXX*240 with PAL.
     //if(line == 0)
+#if 0
 #ifdef WII
     if( line == 120 )  // This fixes PageMaster... Not sure what it breaks.
+#endif
 #endif
     {
       rect->x = 0;
