@@ -51,6 +51,7 @@ distribution.
 #include "wii_sdl.h"
 #include "fileop.h"
 
+#include "vi_encoder.h"
 #include "gettext.h"
 
 #define ABOUT_Y 20
@@ -65,8 +66,6 @@ extern "C"
 Mtx gx_view;
 void WII_VideoStop();
 void WII_SetDefaultVideoMode();
-void WII_SetDoubleStrikeVideoMode( u32 width );
-void WII_SetInterlaceVideoMode( u32 width );
 void WII_SetWidescreen(int wide);
 }
 
@@ -105,10 +104,12 @@ BOOL wii_double_strike_mode = FALSE;
 static BOOL widescreen_auto = FALSE;
 // Full widescreen
 int wii_full_widescreen = WS_AUTO;
-// USB keep alive
+// USB keep alive 
 BOOL wii_usb_keepalive = FALSE;
 // Trap filter
 BOOL wii_trap_filter = FALSE; 
+// 16:9 correction
+BOOL wii_16_9_correction = FALSE;
 
 // The about image data
 static gx_imagedata* about_idata = NULL;
@@ -667,6 +668,7 @@ static void precallback()
     WII_SetWidescreen( lastws );
   }
 
+  VIDEO_SetTrapFilter( 1 );
   WII_SetDefaultVideoMode();
 }
 

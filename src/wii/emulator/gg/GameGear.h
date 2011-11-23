@@ -27,6 +27,9 @@ private:
   GameGearDbManager m_dbManager;
   GameGearMenuManager m_menuManager;  
 
+protected:
+  const ScreenSize* getDoubleStrikeScreenSize();
+
 public:
   GameGear();
   ConfigManager& getConfigManager();
@@ -34,6 +37,9 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

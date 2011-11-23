@@ -53,12 +53,17 @@ static SDL_Rect* modes_descending[] =
   NULL
 };
 
-static GXRModeObj* grxModes[3] = { NULL, NULL, NULL };
+static GXRModeObj* grxModes[4] = { NULL, NULL, NULL, NULL };
+
+#define DEFAULT_MODE    0
+#define STANDARD_MODE   1
+#define DSTRIKE_MODE    2
+#define INTERLACE_MODE  3
 
 /*** 2D Video ***/
 #define HASPECT 			320
 #define VASPECT 			240
-#define TEXTUREMEM_SIZE 	(640*480*4)
+#define TEXTUREMEM_SIZE 	(640*574*4)
 
 unsigned int *xfb[2] = { NULL, NULL }; // Double buffered
 int whichfb = 0; // Switch
@@ -73,7 +78,6 @@ static void (*prerendercallback)(void) = NULL;
 static void (*rendercallback)(void) = NULL;
 static int rotation = 0;
 static BOOL filterDisplay = FALSE;
-static BOOL doublewidth = FALSE;
 
 /*** GX ***/
 #define DEFAULT_FIFO_SIZE 256 * 1024
@@ -113,7 +117,7 @@ static camera cam = {
   {0.0F, 0.0F, -0.5F}
 };
 
-#define DEBUG 0
+#define DEBUG 1
 
 #if DEBUG
 char debugMsg[512] = "";
@@ -163,6 +167,11 @@ static void draw_init()
     GX_InitTexObj (&texobj, texturemem, currentwidth, currentheight, GX_TF_RGB565, GX_CLAMP, GX_CLAMP, GX_FALSE);
   else
     GX_InitTexObj (&texobj, texturemem, currentwidth, currentheight, GX_TF_RGBA8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+
+#if DEBUG
+  snprintf( debugMsg, sizeof(debugMsg), "Texture: %dx%d\n", currentwidth, currentheight );
+  writeDebugMsg( debugMsg );
+#endif
 
   GX_LoadTexObj (&texobj, GX_TEXMAP0);	// load texture object so its ready to use
 }
@@ -226,7 +235,7 @@ static void * flip_thread (void *arg)
       // load texture into GX
       DCFlushRange(texturemem, TEXTUREMEM_SIZE);
 
-      if( !filterDisplay )
+      if( vmode != grxModes[DEFAULT_MODE] || !filterDisplay )
       {
         GX_InitTexObjLOD(&texobj,GX_NEAR,GX_NEAR_MIP_NEAR,0.0,10.0,0.0,GX_FALSE,GX_FALSE,GX_ANISO_1);
       }
@@ -235,7 +244,7 @@ static void * flip_thread (void *arg)
       draw_square(gx_view); // render textured quad
     }
 
-    if( rendercallback && vmode == grxModes[0] )
+    if( rendercallback && vmode == grxModes[DEFAULT_MODE] )
     {
       GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);  
       GX_SetTevOp (GX_TEVSTAGE0, GX_PASSCLR);
@@ -273,8 +282,8 @@ static void StartVideoThread()
 static int WII_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
   // Set up the modes.
-  mode_640.w = vmode->fbWidth;
-  mode_640.h = vmode->xfbHeight;
+  mode_640.w = 640; //vmode->fbWidth;
+  mode_640.h = 480; //vmode->xfbHeight;
   mode_320.w = mode_640.w / 2;
   mode_320.h = mode_640.h / 2;
 
@@ -299,6 +308,11 @@ static SDL_Rect **WII_ListModes(_THIS, SDL_PixelFormat *format, Uint32 flags)
 static SDL_Surface *WII_SetVideoMode(_THIS, SDL_Surface *current,
                                      int width, int height, int bpp, Uint32 flags)
 {
+  if( height > 480 ) 
+  {
+    height = 480;
+  }
+
   SDL_Rect* 		mode;
   size_t			bytes_per_pixel;
   Uint32			r_mask = 0;
@@ -307,6 +321,8 @@ static SDL_Surface *WII_SetVideoMode(_THIS, SDL_Surface *current,
 
 #if DEBUG
   snprintf( debugMsg, sizeof(debugMsg), "WII_SetVideoMode: %d, %d, %d\n", width, height, bpp );
+  writeDebugMsg( debugMsg );
+  snprintf( debugMsg, sizeof(debugMsg), "tvMode:%d\n", vmode->viTVMode >> 2 );
   writeDebugMsg( debugMsg );
 #endif
 
@@ -333,9 +349,9 @@ static SDL_Surface *WII_SetVideoMode(_THIS, SDL_Surface *current,
   writeDebugMsg( debugMsg );
 #endif
 
-  if(bpp != 8 && bpp != 16 && bpp != 24 && bpp != 32)
+  if(bpp != 8 && bpp != 16 && bpp != 32)
   {
-    SDL_SetError("Resolution (%d bpp) is unsupported (8/16/24/32 bpp only).",
+    SDL_SetError("Resolution (%d bpp) is unsupported (8/16/32 bpp only).",
       bpp);
     return NULL;
   }
@@ -480,24 +496,6 @@ static void UpdateRect_16(_THIS, SDL_Rect *rect)
   }
 }
 
-static void UpdateRect_24(_THIS, SDL_Rect *rect)
-{
-  u8 *src;
-  u8 *ptr;
-  u32 color;
-  int i, j;
-  for (i = 0; i < rect->h; i++)
-  {
-    src = (this->hidden->buffer + (this->hidden->width * 3 * (i + rect->y)) + (rect->x * 3));
-    for (j = 0; j < rect->w; j++)
-    {
-      ptr = src + (j * 3);
-      color = (ptr[0] << 24) | (ptr[1] << 16) | (ptr[2] << 8) | 0xff;
-      Set_RGBAPixel(this, rect->x + j, rect->y + i, color);
-    }
-  }
-}
-
 static void UpdateRect_32(_THIS, SDL_Rect *rect)
 {
   u8 *src;
@@ -516,6 +514,8 @@ static void UpdateRect_32(_THIS, SDL_Rect *rect)
   }
 }
 
+static void flipHWSurface_16_16(_THIS, SDL_Surface *surface);
+
 static void WII_UpdateRect(_THIS, SDL_Rect *rect)
 {
   const SDL_Surface* const screen = this->screen;
@@ -525,10 +525,8 @@ static void WII_UpdateRect(_THIS, SDL_Rect *rect)
     UpdateRect_8(this, rect);
     break;
   case 2:
-    UpdateRect_16(this, rect);
-    break;
-  case 3:
-    UpdateRect_24(this, rect);
+    flipHWSurface_16_16(this, screen /*surface*/);
+    //UpdateRect_16(this, rect);
     break;
   case 4:
     UpdateRect_32(this, rect);
@@ -649,12 +647,6 @@ static void flipHWSurface_16_16(_THIS, SDL_Surface *surface)
   }
 }
 
-static void flipHWSurface_24_16(_THIS, SDL_Surface *surface)
-{
-  SDL_Rect screen_rect = {0, 0, this->hidden->width, this->hidden->height};
-  WII_UpdateRect(this, &screen_rect);
-}
-
 static void flipHWSurface_32_16(_THIS, SDL_Surface *surface)
 {
   SDL_Rect screen_rect = {0, 0, this->hidden->width, this->hidden->height};
@@ -670,9 +662,6 @@ static int WII_FlipHWSurface(_THIS, SDL_Surface *surface)
     break;
   case 2:
     flipHWSurface_16_16(this, surface);
-    break;
-  case 3:
-    flipHWSurface_24_16(this, surface);
     break;
   case 4:
     flipHWSurface_32_16(this, surface);
@@ -798,20 +787,22 @@ void WII_InitVideoSystem()
 
   /* Initialise the video system */
   VIDEO_Init();
-//  VIDEO_SetGamma(10.0);
-//  VIDEO_SetTrapFilter(0);
 
   vmode = VIDEO_GetPreferredMode(NULL);
+#if 0
+  vmode->fbWidth = 320;
+  vmode->viWidth = 640; //408;
+  vmode->viXOrigin = (VI_MAX_WIDTH_NTSC - vmode->viWidth ) / 2;
   //vmode = &TVPal574IntDfScale;
+#endif
 
   switch (vmode->viTVMode >> 2)
   {
   case VI_PAL: // 576 lines (PAL 50hz)
     // display should be centered vertically (borders)
     vmode = &TVPal574IntDfScale;
-    vmode->xfbHeight = 480;
-    vmode->viYOrigin = (VI_MAX_HEIGHT_PAL - 480)/2;
-    vmode->viHeight = 480;
+    vmode->xfbHeight = vmode->viHeight = 480;
+    vmode->viYOrigin = (VI_MAX_HEIGHT_PAL - vmode->viHeight)/2;
     break;
 
   case VI_NTSC: // 480 lines (NTSC 60hz)
@@ -821,59 +812,70 @@ void WII_InitVideoSystem()
     break;
   }
 
+  // Menu video mode
+  grxModes[DEFAULT_MODE] = vmode;   
+  
   // Standard video mode
-  grxModes[0] = vmode;   
+  int mode = STANDARD_MODE;
+  grxModes[mode] = (GXRModeObj*)malloc( sizeof(GXRModeObj) );
+  memcpy( grxModes[mode], grxModes[DEFAULT_MODE], sizeof(GXRModeObj) );
 
   // Double strike mode
-  grxModes[1] = (GXRModeObj*)malloc( sizeof(GXRModeObj) );
-  memcpy( grxModes[1], grxModes[0], sizeof(GXRModeObj) );
-  grxModes[1]->xfbHeight = grxModes[1]->efbHeight = 240;
-  grxModes[1]->field_rendering = GX_FALSE;
-  grxModes[1]->xfbMode = VI_XFBMODE_SF;
-  grxModes[1]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_NON_INTERLACE );  
-  grxModes[1]->vfilter[0] = 0;
-  grxModes[1]->vfilter[1] = 0;
-  grxModes[1]->vfilter[2] = 21;
-  grxModes[1]->vfilter[3] = 22;
-  grxModes[1]->vfilter[4] = 21;
-  grxModes[1]->vfilter[5] = 0;
-  grxModes[1]->vfilter[6] = 0;
+  mode = DSTRIKE_MODE;
+  grxModes[mode] = (GXRModeObj*)malloc( sizeof(GXRModeObj) );
+  memcpy( grxModes[mode], grxModes[DEFAULT_MODE], sizeof(GXRModeObj) );
+  grxModes[mode]->xfbHeight = grxModes[mode]->efbHeight = 240;
+  grxModes[mode]->field_rendering = GX_FALSE;
+  grxModes[mode]->xfbMode = VI_XFBMODE_SF;
+  grxModes[mode]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_NON_INTERLACE );  
+  grxModes[mode]->vfilter[0] = 0;
+  grxModes[mode]->vfilter[1] = 0;
+  grxModes[mode]->vfilter[2] = 21;
+  grxModes[mode]->vfilter[3] = 22;
+  grxModes[mode]->vfilter[4] = 21;
+  grxModes[mode]->vfilter[5] = 0;
+  grxModes[mode]->vfilter[6] = 0;
 
   switch (vmode->viTVMode >> 2)
   {
   case VI_PAL: // 576 lines (PAL 50hz)
-    grxModes[1]->viYOrigin = 
-      (VI_MAX_HEIGHT_PAL/2 - grxModes[1]->viHeight/2 ) / 2;
+    grxModes[mode]->viHeight = 574;
+    grxModes[mode]->xfbHeight = grxModes[mode]->efbHeight = 287;
+    grxModes[mode]->viYOrigin = 
+      (VI_MAX_HEIGHT_PAL/2 - grxModes[mode]->viHeight/2 ) / 2;
     break;
 
   case VI_NTSC: // 480 lines (NTSC 60hz)
-    grxModes[1]->viYOrigin = 
-      (VI_MAX_HEIGHT_NTSC/2 - grxModes[1]->viHeight/2 ) / 2;
+    grxModes[mode]->viYOrigin = 
+      (VI_MAX_HEIGHT_NTSC/2 - grxModes[mode]->viHeight/2 ) / 2;
     break;
 
   default: // 480 lines (PAL 60Hz)
-    grxModes[1]->viYOrigin = 
-      (VI_MAX_WIDTH_EURGB60/2 - grxModes[1]->viHeight/2 ) / 2;
+    grxModes[mode]->viYOrigin = 
+      (VI_MAX_WIDTH_EURGB60/2 - grxModes[mode]->viHeight/2 ) / 2;
     break;
   }
 
   // Interlace mode
-  grxModes[2] = (GXRModeObj*)malloc(sizeof(GXRModeObj));
-  memcpy( grxModes[2], grxModes[0], sizeof(GXRModeObj) );
-  grxModes[2]->xfbMode = VI_XFBMODE_DF;
-  grxModes[2]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_INTERLACE );  
-  grxModes[2]->vfilter[0] = 8;
-  grxModes[2]->vfilter[1] = 8;
-  grxModes[2]->vfilter[2] = 10;
-  grxModes[2]->vfilter[3] = 12;
-  grxModes[2]->vfilter[4] = 10;
-  grxModes[2]->vfilter[5] = 8;
-  grxModes[2]->vfilter[6] = 8;  
+  mode = INTERLACE_MODE;
+  grxModes[mode] = (GXRModeObj*)malloc(sizeof(GXRModeObj));
+  memcpy( grxModes[mode], grxModes[DEFAULT_MODE], sizeof(GXRModeObj) );
+  grxModes[mode]->xfbMode = VI_XFBMODE_DF;
+  grxModes[mode]->viTVMode = VI_TVMODE( vmode->viTVMode >> 2, VI_INTERLACE );  
+  grxModes[mode]->vfilter[0] = 8;
+  grxModes[mode]->vfilter[1] = 8;
+  grxModes[mode]->vfilter[2] = 10;
+  grxModes[mode]->vfilter[3] = 12;
+  grxModes[mode]->vfilter[4] = 10;
+  grxModes[mode]->vfilter[5] = 8;
+  grxModes[mode]->vfilter[6] = 8;  
+#if 0
   for( i = 0; i < 12; i++ )
     for( j = 0; j < 2; j++ )
-      grxModes[2]->sample_pattern[i][j] = 6;
+      grxModes[mode]->sample_pattern[i][j] = 6;
+#endif
 
-  vmode = grxModes[0];  
+  vmode = grxModes[DEFAULT_MODE];  
 
   /* Set up the video system with the chosen mode */
   VIDEO_Configure(vmode);
@@ -923,6 +925,11 @@ static void SetupGX()
 
   GX_SetFieldMode(vmode->field_rendering, ((vmode->viHeight == 2 * vmode->xfbHeight) ? GX_ENABLE : GX_DISABLE));
 
+#if DEBUG
+    snprintf( debugMsg, sizeof(debugMsg), "((vmode->viHeight == 2 * vmode->xfbHeight):%d\n", (vmode->viHeight == 2 * vmode->xfbHeight) );
+    writeDebugMsg( debugMsg );
+#endif
+
   GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
   GX_SetDispCopyGamma(GX_GM_1_0);
   GX_SetCullMode(GX_CULL_NONE);
@@ -935,6 +942,10 @@ static void SetupGX()
 
   //guOrtho(p, 480/2, -(480/2), -(640/2), 640/2, 100, 1000); // matrix, t, b, l, r, n, f
   guOrtho(p, vmode->efbHeight/2, -(vmode->efbHeight/2), -(vmode->fbWidth/2), vmode->fbWidth/2, 100, 1000 );
+#if DEBUG
+    snprintf( debugMsg, sizeof(debugMsg), "vmode->efbHeight/2, -(vmode->efbHeight/2), -(vmode->fbWidth/2), vmode->fbWidth/2:%d,%d,%d,%d\n", vmode->efbHeight/2, -(vmode->efbHeight/2), -(vmode->fbWidth/2), vmode->fbWidth/2 );
+    writeDebugMsg( debugMsg );
+#endif
   GX_LoadProjectionMtx (p, GX_ORTHOGRAPHIC);
 }
 
@@ -956,10 +967,10 @@ void WII_VideoStop()
 
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift)
 {  
-  if( vmode != grxModes[0] )
+  if( currentwidth == 320 && currentheight == 240 )
   {
-    xscale = ( doublewidth ? 640 : 320 ); 
-    yscale = 240;
+    xscale >>= 1;
+    yscale >>= 1;
   }
 
   square[6] = square[3]  =  xscale + xshift;
@@ -967,6 +978,188 @@ void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift)
   square[4] = square[1]  =  yscale - yshift;
   square[7] = square[10] = -yscale - yshift;
   DCFlushRange (square, 32); // update memory BEFORE the GPU accesses it!
+}
+
+static void resetVideoMode( bool waitVsync )
+{
+    /* Set up the video system with the chosen mode */
+    VIDEO_Configure(vmode);
+
+    VIDEO_ClearFrameBuffer(vmode, xfb[whichfb], COLOR_BLACK);
+    //VIDEO_ClearFrameBuffer(vmode, xfb[1], COLOR_BLACK);
+
+    VIDEO_SetBlack(FALSE);
+    VIDEO_Flush();
+
+    if( waitVsync )
+    {
+      waitVSync();
+    }
+
+    SetupGX();
+    draw_init();
+}
+
+void updateWidth( int xscale, int yscale, int width )
+{
+  bool widescreen = grxModes[DEFAULT_MODE]->viWidth != 640;
+  bool rotated = ( rotation != 0 && rotation != 180 );  
+  int origXscale = xscale;
+  int origYScale = yscale;
+
+#if DEBUG
+snprintf( 
+  debugMsg, sizeof(debugMsg), "widescreen: %d, xscale:%d, width:%d\n", 
+  widescreen, xscale, width );
+writeDebugMsg( debugMsg );
+#endif  
+
+  vmode->viWidth = 
+      rotated ? 
+        ( ( yscale * width ) / 240 ) ) : 
+        ( ( xscale * width ) / 320 );
+
+  if( widescreen )
+  {
+    vmode->viWidth = ( vmode->viWidth * 678 ) / 640;
+  }
+
+  if( vmode->viWidth > 720 || vmode->viWidth < width )
+  {
+#if DEBUG
+snprintf( debugMsg, sizeof(debugMsg), 
+  "Forcing GX scaler:%d,%d,%d\n", xscale, vmode->viWidth, width );
+writeDebugMsg( debugMsg );
+#endif
+    vmode->viWidth = widescreen ? 678 : 640;
+    vmode->fbWidth = 640;
+  }
+  else
+  {
+    bool loop = true;
+    bool doublewidth = false;
+    while( loop )
+    {
+      loop = false;
+      if( width <= 320 && ( ( width << 1 ) <= vmode->viWidth ) )
+      {
+        doublewidth = true;
+        width <<= 1;   
+        if( rotated )
+        {
+          yscale = 480;
+        }
+        else
+        {
+          xscale = 640; 
+        }
+      }
+      else
+      {
+        if( rotated ) 
+        {
+          yscale = 240;
+        }
+        else
+        {
+          xscale = 320;
+        }
+      }
+
+      vmode->fbWidth = ( width & 15 ? ( ( width & ~15) + 16 ) : width );
+      if( ( vmode->fbWidth <= 320 ) && ( vmode->viWidth & 15 ) )
+      {
+        vmode->viWidth = ( vmode->viWidth & ~15) + 16;
+        if( !doublewidth )
+        {
+          loop = true;
+        }
+      }
+    }
+
+    if( vmode->fbWidth != width )
+    {
+#if DEBUG
+int oldViWidth = vmode->viWidth;
+#endif
+
+      vmode->viWidth = ( vmode->fbWidth * vmode->viWidth ) / width;
+
+#if DEBUG
+snprintf( 
+  debugMsg, sizeof(debugMsg), "adjusted viWidth: %d, %d\n", 
+  oldViWidth, vmode->viWidth );
+writeDebugMsg( debugMsg );
+#endif
+    } 
+
+    if( vmode->viWidth & 1 )
+    {
+      vmode->viWidth += 1;
+    }
+
+    if( vmode->viWidth > 720 || ( vmode->viWidth < vmode->fbWidth ) )
+    {
+#if DEBUG
+snprintf( debugMsg, sizeof(debugMsg), 
+  "Forcing GX scaler:%d,%d,%d\n", xscale, vmode->viWidth, width );
+writeDebugMsg( debugMsg );
+#endif
+      vmode->viWidth = widescreen ? 678 : 640;
+      vmode->fbWidth = 640;
+      xscale = origXscale;
+      yscale = origYScale;
+    }
+
+#if DEBUG
+snprintf( debugMsg, sizeof(debugMsg), "viWidth: %d, fbWidth:%d\n", 
+  vmode->viWidth, vmode->fbWidth );
+writeDebugMsg( debugMsg );
+#endif
+  }
+
+  switch (vmode->viTVMode >> 2)
+  {
+    case VI_PAL:      
+      vmode->viXOrigin = (VI_MAX_WIDTH_PAL - vmode->viWidth ) / 2;
+      break;
+    case VI_NTSC:
+      vmode->viXOrigin = (VI_MAX_WIDTH_NTSC - vmode->viWidth ) / 2;
+      break;
+    default:
+      vmode->viXOrigin = (VI_MAX_WIDTH_EURGB60 - vmode->viWidth ) / 2;
+      break;
+  }
+
+  WII_ChangeSquare( xscale, yscale, 0, 0 );
+  resetVideoMode( false );
+}
+
+void WII_SetStandardVideoMode( int xscale, int yscale, int width )
+{
+  vmode = grxModes[STANDARD_MODE];
+  updateWidth( xscale, yscale, width );
+}
+
+void WII_SetDoubleStrikeVideoMode( int xscale, int yscale, int width )
+{
+  vmode = grxModes[DSTRIKE_MODE];
+  updateWidth( xscale, yscale, width );
+}
+
+void WII_SetInterlaceVideoMode( int xscale, int yscale, int width )
+{
+  vmode = grxModes[INTERLACE_MODE];
+  updateWidth( xscale, yscale, width );
+}
+
+void WII_SetDefaultVideoMode()
+{
+  if( vmode != grxModes[DEFAULT_MODE] )
+  {
+    vmode = grxModes[DEFAULT_MODE];
+    resetVideoMode( true );
+  }
 }
 
 void WII_SetPreRenderCallback( void (*cb)(void) )
@@ -997,113 +1190,28 @@ void WII_SetFilter( BOOL b )
 void WII_SetWidescreen(int wide)
 {
   int width = wide ? 678 : 640;
-  grxModes[0]->viWidth = width;
-  switch (vmode->viTVMode >> 2)
+  int mode;
+  for( mode = 0; mode <= STANDARD_MODE; mode++ )
   {
-    case VI_PAL:      
-      grxModes[0]->viXOrigin = (VI_MAX_WIDTH_PAL - width ) / 2;
-      break;
-    case VI_NTSC:
-      grxModes[0]->viXOrigin = (VI_MAX_WIDTH_NTSC - width ) / 2;
-      break;
-    default:
-      grxModes[0]->viXOrigin = (VI_MAX_WIDTH_EURGB60 - width ) / 2;
-      break;
+    grxModes[mode]->viWidth = width;
+    switch (vmode->viTVMode >> 2)
+    {
+      case VI_PAL:      
+        grxModes[mode]->viXOrigin = (VI_MAX_WIDTH_PAL - width ) / 2;
+        break;
+      case VI_NTSC:
+        grxModes[mode]->viXOrigin = (VI_MAX_WIDTH_NTSC - width ) / 2;
+        break;
+      default:
+        grxModes[mode]->viXOrigin = (VI_MAX_WIDTH_EURGB60 - width ) / 2;
+        break;
+    }
   }
 
 	VIDEO_Configure( vmode );
 	VIDEO_Flush();	
 
   waitVSync();
-}
-
-static void resetVideoMode( bool clearAndWait )
-{
-    /* Set up the video system with the chosen mode */
-    VIDEO_Configure(vmode);
-
-    if( clearAndWait )
-    {
-      VIDEO_ClearFrameBuffer(vmode, xfb[0], COLOR_BLACK);
-      VIDEO_ClearFrameBuffer(vmode, xfb[1], COLOR_BLACK);
-    }
-
-    VIDEO_SetBlack(FALSE);
-    VIDEO_Flush();
-
-    if( clearAndWait )
-    {
-      waitVSync();
-    }
-
-    SetupGX();
-    draw_init();
-}
-
-void WII_SetDefaultVideoMode()
-{
-  if( vmode != grxModes[0] )
-  {
-    vmode = grxModes[0];
-    resetVideoMode( true );
-  }
-}
-
-void updateWidth( GXRModeObj* newMode, u32 origWidth )
-{  
-  doublewidth = FALSE;
-  if( ( origWidth << 1 ) <= 640 )
-  {
-    doublewidth = TRUE;
-    origWidth <<= 1;
-  }
-
-  int width = origWidth;
-  if( origWidth & 15 )
-    width = ( origWidth & ~15) + 16;
-
-  if( vmode != newMode || vmode->fbWidth != width )
-  {    
-    vmode = newMode;
-    vmode->fbWidth = width;
-
-    if( width != origWidth )
-    {
-      float ratio = 640.0/(float)origWidth;
-      vmode->viWidth = (int)(ratio * (float)width);
-      if( vmode->viWidth & 1 )
-        vmode->viWidth += 1;
-    }
-    else
-    {
-      vmode->viWidth = 640;
-    }
-
-    switch (vmode->viTVMode >> 2)
-    {
-    case VI_PAL:      
-      vmode->viXOrigin = (VI_MAX_WIDTH_PAL - vmode->viWidth ) / 2;
-      break;
-    case VI_NTSC:
-      vmode->viXOrigin = (VI_MAX_WIDTH_NTSC - vmode->viWidth ) / 2;
-      break;
-    default:
-      vmode->viXOrigin = (VI_MAX_WIDTH_EURGB60 - vmode->viWidth ) / 2;
-      break;
-    }
-
-    resetVideoMode( false );
-  }
-}
-
-void WII_SetDoubleStrikeVideoMode( u32 origWidth )
-{
-  updateWidth( grxModes[1], origWidth );
-}
-
-void WII_SetInterlaceVideoMode( u32 origWidth )
-{
-  updateWidth( grxModes[2], origWidth );
 }
 
 #if DEBUG

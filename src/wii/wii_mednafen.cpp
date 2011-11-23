@@ -62,13 +62,15 @@ char wii_cartridge_hash_with_header[33];
 // Whether to display debug info (FPS, etc.)
 BOOL wii_debug = FALSE;
 // Whether to filter the display
-BOOL wii_filter = FALSE;
+BOOL wii_filter = FALSE; 
 // Whether cheat mode is enabled
 BOOL wii_cheats = FALSE;
 // Whether to auto load/save state
 BOOL wii_auto_load_save_state = FALSE;
 // The current language
 char wii_language[WII_MAX_PATH] = "";
+// Whether to use the GX/VI scaler
+BOOL wii_gx_vi_scaler = TRUE;
 // The roms dir
 static char roms_dir[WII_MAX_PATH] = "";
 
@@ -97,7 +99,7 @@ void wii_handle_init()
 #ifdef WII_NETTRACE
   WII_SetDebugCallback( sdlTrace );
 #endif
-
+ 
   // Read the config values
   wii_read_config();
 

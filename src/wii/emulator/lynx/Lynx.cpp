@@ -8,6 +8,29 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320,        240       },  "1x"              },
+  { { 320*2,      240*2     },  "2x"              },
+  { { 320*3,      240*3     },  "3x"              }, 
+  { { 320*4,      240*4     },  "4x/Full screen"  }, // default
+  { { 320*4,      240*4.431 },  "Fill screen"     }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
+static const ScreenSize defaultRotatedScreenSizes[] = 
+{
+  { { 320,        240       },   "1x"              },
+  { { 320*2,      240*2     },   "2x"              },
+  { { 320*2.825,  240*2.825 },   "3x/Full screen"  }, // default 
+  { { 320*2.825,  240*6.27  },   "Fill screen"     }
+};
+
+static const int defaultRotatedScreenSizesCount =
+  sizeof( defaultRotatedScreenSizes ) / sizeof(ScreenSize);
+
 Lynx::Lynx() : 
   Emulator( "lynx", "Lynx" ),
   m_configManager( *this ),
@@ -19,15 +42,15 @@ Lynx::Lynx() :
   m_emulatorScreenSize.h = 102;
 
   // Set user screen sizes
-  float scale = 1.95;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
+  int defaultIndex = 3;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 
-  scale = 1.42;
+  defaultIndex = 2;
   m_rotatedScreenSize.w = 
-    m_defaultRotatedScreenSize.w = ((WII_WIDTH>>1)*scale); 
+    defaultRotatedScreenSizes[defaultIndex].r.w; 
   m_rotatedScreenSize.h = 
-    m_defaultRotatedScreenSize.h = ((WII_HEIGHT>>1)*scale);
+    defaultRotatedScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& Lynx::getConfigManager()
@@ -187,4 +210,34 @@ int Lynx::getRotation()
 {
   return 
     ((LynxDbEntry*)m_dbManager.getEntry())->orient;
+}
+
+const ScreenSize* Lynx::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int Lynx::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* Lynx::getDefaultRotatedScreenSizes()
+{
+  return defaultRotatedScreenSizes;
+}
+
+int Lynx::getDefaultRotatedScreenSizesCount()
+{
+  return defaultRotatedScreenSizesCount;
+}
+
+const ScreenSize* Lynx::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
+}
+
+const ScreenSize* Lynx::getDoubleStrikeRotatedScreenSize()
+{
+  return &defaultRotatedScreenSizes[1];
 }

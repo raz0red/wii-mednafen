@@ -13,6 +13,15 @@
 #include "net_print.h"  
 #endif
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320*1*1.25, 240    },  "1x"               },
+  { { 320*2*1.25, 240*2  },  "2x/Full screen"   }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 Nes::Nes() : 
   Emulator( "nes", "NES" ),
   m_configManager( *this ),
@@ -24,11 +33,10 @@ Nes::Nes() :
   m_emulatorScreenSize.w = 256;
   m_emulatorScreenSize.h = 256;
 
-  // Set user screen sizes 
-  float hscale = 2.0;
-  float wscale = 2.5;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*wscale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*hscale);
+  // Set user screen sizes
+  int defaultIndex = 1;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& Nes::getConfigManager()
@@ -229,12 +237,22 @@ void Nes::setGameGenieEnabled( bool enabled )
   m_gameGenie = enabled;
 }
 
-bool Nes::isDoubleStrikeSupported()
-{
-  return true;
-}
-
 u8 Nes::getBpp()
 {
   return NES_BPP;
+}
+
+const ScreenSize* Nes::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int Nes::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* Nes::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

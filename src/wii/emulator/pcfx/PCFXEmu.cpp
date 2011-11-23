@@ -8,6 +8,15 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320*1*1.1, 240    },  "1x"               },
+  { { 320*2*1.1, 240*2  },  "2x/Full screen"   }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 PCFX::PCFX() : 
   Emulator( "pcfx", "PC-FX" ),
   m_configManager( *this ),
@@ -19,10 +28,9 @@ PCFX::PCFX() :
   m_emulatorScreenSize.h = 280;
 
   // Set user screen sizes
-  float scalew = 2.2222;
-  float scaleh = 2.0;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
+  int defaultIndex = 1;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& PCFX::getConfigManager()
@@ -155,12 +163,22 @@ bool PCFX::isRotationSupported()
   return false;
 }
 
-bool PCFX::isDoubleStrikeSupported()
-{
-  return true;
-}
-
 u8 PCFX::getBpp()
 {
   return PCFX_BPP;
+}
+
+const ScreenSize* PCFX::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int PCFX::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* PCFX::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

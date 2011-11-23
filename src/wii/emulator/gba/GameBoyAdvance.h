@@ -31,6 +31,9 @@ private:
   GameBoyAdvanceMenuManager m_menuManager;  
   bool m_gbaBios;
 
+protected:
+  const ScreenSize* getDoubleStrikeScreenSize();
+
 public:
   GameBoyAdvance();
   ConfigManager& getConfigManager();
@@ -38,6 +41,9 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );

@@ -26,6 +26,18 @@ const Vb3dMode VirtualBoy::VB_MODES[] = {
 const int VirtualBoy::VB_MODE_COUNT = 
   sizeof( VirtualBoy::VB_MODES ) / sizeof( Vb3dMode );
 
+
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320,         240        },  "1x"          },
+  { { 320*1.5,     240*1.5    },  "1.5x"        },
+  { { 320*1.667,   240*1.667  },  "Full screen" },
+  { { 320*1.667,   240*2.017  },  "Fill screen" }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 namespace MDFN_IEN_VB
 {
   extern bool PatchROM(bool checkROM);
@@ -52,9 +64,9 @@ VirtualBoy::VirtualBoy() :
   m_emulatorScreenSize.h = 224;
 
   // Set user screen sizes
-  float scale = 1.65;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
+  int defaultIndex = 2;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& VirtualBoy::getConfigManager()
@@ -305,4 +317,19 @@ bool VirtualBoy::updateDebugText(
 u8 VirtualBoy::getBpp()
 {
   return VB_BPP;
+}
+
+const ScreenSize* VirtualBoy::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int VirtualBoy::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+bool VirtualBoy::isDoubleStrikeSupported()
+{
+  return false;
 }

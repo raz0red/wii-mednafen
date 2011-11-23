@@ -107,6 +107,14 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_trap_filter = Util_sscandec( value );
   }
+  else if( strcmp( name, "vi_gx_scaler" ) == 0 )
+  {
+    wii_gx_vi_scaler = Util_sscandec( value );
+  }
+  else if( strcmp( name, "16_9_correction" ) == 0 )
+  {
+    wii_16_9_correction = Util_sscandec( value );
+  }  
   else
   {
     // Read configuration value for emulators
@@ -137,6 +145,8 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "full_widescreen=%d\n", wii_full_widescreen );
   fprintf( fp, "usb_keepalive=%d\n", wii_usb_keepalive );
   fprintf( fp, "trap_filter=%d\n", wii_trap_filter );
+  fprintf( fp, "vi_gx_scaler=%d\n", wii_gx_vi_scaler );
+  fprintf( fp, "16_9_correction=%d\n", wii_16_9_correction );
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

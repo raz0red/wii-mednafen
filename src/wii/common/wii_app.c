@@ -99,7 +99,7 @@ void wii_set_app_path( int argc, char *argv[] )
     char *loc;
 
     // Remove the file name
-    loc = strrchr( temp_path, '/' );
+    loc = strrchr( temp_path, '/' ); 
     if (loc != NULL)
     {
       *loc = '\0'; 

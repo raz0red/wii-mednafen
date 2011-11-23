@@ -57,8 +57,9 @@ void WII_SetFilter( BOOL filter );
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 void WII_SetPreRenderCallback( void (*cb)(void) );
 void WII_SetDefaultVideoMode();
-void WII_SetDoubleStrikeVideoMode( u32 width );
-void WII_SetInterlaceVideoMode( u32 width );
+void WII_SetStandardVideoMode( int xscale, int yscale, int width );
+void WII_SetDoubleStrikeVideoMode( int xscale, int yscale, int width );
+void WII_SetInterlaceVideoMode( int xscale, int yscale, int width );
 void WII_SetWidescreen(int wide);
 extern Mtx gx_view;
 }
@@ -104,6 +105,9 @@ static char message[512] = "";
 
 // The message display time
 static u32 message_time;
+
+// The last width/height displayed
+static Rect lastRect = { 0, 0 };
 
 /*
  * Displays a message during emulation
@@ -273,6 +277,8 @@ extern void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, con
 
 static void precallback()
 {
+  VIDEO_SetTrapFilter( wii_trap_filter );
+
   if( wii_usb_keepalive )
   {
     UsbKeepAlive(); // Attempt to keep the USB drive from sleeping...
@@ -292,29 +298,53 @@ net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n",
   MDFNGameInfo->nominal_width, MDFNGameInfo->nominal_height );
 #endif
 #endif
-    Emulator* emu = emuRegistry.getCurrentEmulator();
- 
-    if( emu->isDoubleStrikeSupported() && wii_double_strike_mode )
-    {
-      static int lastWidth = 0; 
-      if( lastWidth != VTDRReady->w )
+
+    if( lastRect.w != VTDRReady->w || lastRect.h != VTDRReady->h )
+    {            
+      if( lastRect.w != VTDRReady->w )
       {
         SDL_FillRect( 
           back_surface, 
           NULL, SDL_MapRGB( back_surface->format, 0x0,0x0,0x0 ) );
-        lastWidth = VTDRReady->w;
       }
-      if( ( VTDRReady->h + VTDRReady->y ) > 240 )
+
+      // Store last rect values
+      lastRect.w = VTDRReady->w; lastRect.h = VTDRReady->h;
+   
+      Emulator* emu = emuRegistry.getCurrentEmulator();
+      int width = ( emu->getRotation() ? VTDRReady->h : VTDRReady->w );
+      Rect r;
+      emu->getResizeScreenRect( &r );
+
+      if( emu->isDoubleStrikeEnabled() )
       {
-        WII_SetInterlaceVideoMode( VTDRReady->w );
+        if( ( VTDRReady->h + VTDRReady->y ) > 240 )
+        {
+          WII_SetInterlaceVideoMode( r.w, r.h, width );
+        }
+        else
+        {        
+          WII_SetDoubleStrikeVideoMode( 
+            ( emu->getRotation() ? r.w>>1 : r.w ),
+            ( emu->getRotation() ? r.h : r.h>>1 ), 
+            width );
+        }
       }
       else
-      {        
-        WII_SetDoubleStrikeVideoMode( VTDRReady->w );
+      {
+        if( wii_gx_vi_scaler && !wii_filter )
+        {
+          // GX + VI scaler
+          WII_SetStandardVideoMode( r.w, r.h, width );
+        }
+        else
+        {
+          // GX scaler
+          emu->resizeScreen(); 
+        }
       }
     }
 
-    emu->resizeScreen( false ); 
     BlitScreen((MDFN_Surface *)VTReady, (MDFN_Rect *)VTDRReady, (MDFN_Rect*)VTLWReady);
     FPS_IncBlitted();
     VTReady = NULL;
@@ -343,12 +373,12 @@ void wii_mednafen_emu_loop( BOOL resume )
     ((MDFN_Surface *)VTBuffer[i])->Fill(0, 0, 0, 0);
 
   wii_sdl_black_back_surface();
-  wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
 
-  VIDEO_SetTrapFilter( wii_trap_filter );
+  memset( &lastRect, 0, sizeof(Rect) ); // Clear the last rect
   WII_SetFilter( wii_filter );
   WII_SetRotation( emu->getRotation() * 90 );
-  emu->resizeScreen( true );  
+
+  wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
 
   ClearSound();
   PauseSound( 0 );
@@ -360,7 +390,6 @@ void wii_mednafen_emu_loop( BOOL resume )
 
   PauseSound( 1 );
   wii_gx_pop_callback();     
-  VIDEO_SetTrapFilter( 1 );
 }
 
 #define CB_PIXELSIZE 14

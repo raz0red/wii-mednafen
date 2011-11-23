@@ -30,6 +30,9 @@ private:
   NesDbManager m_dbManager;
   NesMenuManager m_menuManager;  
 
+protected:
+  virtual const ScreenSize* getDoubleStrikeScreenSize();
+
 public:
   Nes();
   ConfigManager& getConfigManager();
@@ -37,8 +40,10 @@ public:
   MenuManager& getMenuManager();
   void updateControls( bool isRapid );
   bool isRotationSupported();
-  bool isDoubleStrikeSupported();
   u8 getBpp();  
+
+  const ScreenSize* getDefaultScreenSizes();
+  int getDefaultScreenSizesCount();
 
   bool isGameGenieEnabled();
   void setGameGenieEnabled( bool enabled );

@@ -29,6 +29,15 @@ const char* MegaDrive::regionNames[4] =
 const int MegaDrive::regionCount = 
   sizeof( regions ) / sizeof( const char* );
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320*1*1.111, 240    },  "1x"               },
+  { { 320*2*1.111, 240*2  },  "2x/Full screen"   }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 MegaDrive::MegaDrive() : 
   Emulator( "md", "Mega Drive" ),
   m_configManager( *this ),
@@ -41,10 +50,9 @@ MegaDrive::MegaDrive() :
   m_emulatorScreenSize.h = 480;
 
   // Set user screen sizes
-  float scalew = 2.2222;
-  float scaleh = 2.0;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scalew); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scaleh);
+  int defaultIndex = 1;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& MegaDrive::getConfigManager()
@@ -192,11 +200,6 @@ bool MegaDrive::isRotationSupported()
   return false;
 }
 
-bool MegaDrive::isDoubleStrikeSupported()
-{
-  return true;
-}
-
 void MegaDrive::setConsoleRegion( int region )
 {
   if( region >= 0 && region < regionCount )
@@ -220,7 +223,22 @@ const char* MegaDrive::getConsoleRegionName()
   return MegaDrive::regionNames[m_consoleRegion];
 }
 
+const ScreenSize* MegaDrive::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int MegaDrive::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
 u8 MegaDrive::getBpp()
 {
   return MD_BPP;
+}
+
+const ScreenSize* MegaDrive::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }

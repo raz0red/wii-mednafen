@@ -71,4 +71,4 @@ typedef enum
 } VIGamma;
 
 extern void VIDEO_SetGamma(VIGamma gamma);
-extern void VIDEO_SetTrapFilter(bool enable);
+extern void VIDEO_SetTrapFilter(int enable);

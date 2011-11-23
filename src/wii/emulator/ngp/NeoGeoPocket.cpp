@@ -8,6 +8,17 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+static const ScreenSize defaultScreenSizes[] = 
+{
+  { { 320,         240        },  "1x"          },
+  { { 320*2,       240*2      },  "2x"          },
+  { { 320*2.973,   240*2.973  },  "Full screen" },
+  { { 320*4,       240*2.973  },  "Fill screen" }
+};
+
+static const int defaultScreenSizesCount =
+  sizeof( defaultScreenSizes ) / sizeof(ScreenSize);
+
 NeoGeoPocket::NeoGeoPocket() : 
   Emulator( "ngp", "Neo Geo Pocket" ),
   m_configManager( *this ),
@@ -20,9 +31,9 @@ NeoGeoPocket::NeoGeoPocket() :
   m_emulatorScreenSize.h = 152;
 
   // Set user screen sizes
-  float scale = 1.475;
-  m_screenSize.w = m_defaultScreenSize.w = ((WII_WIDTH>>1)*scale); 
-  m_screenSize.h = m_defaultScreenSize.h = ((WII_HEIGHT>>1)*scale);
+  int defaultIndex = 2;
+  m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
+  m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
 }
 
 ConfigManager& NeoGeoPocket::getConfigManager()
@@ -161,4 +172,19 @@ int  NeoGeoPocket::getGameLanguage()
 void  NeoGeoPocket::setGameLanguage( int lang )
 {
   m_gameLanguage = lang;
+}
+
+const ScreenSize* NeoGeoPocket::getDefaultScreenSizes()
+{
+  return defaultScreenSizes;
+}
+
+int NeoGeoPocket::getDefaultScreenSizesCount()
+{
+  return defaultScreenSizesCount;
+}
+
+const ScreenSize* NeoGeoPocket::getDoubleStrikeScreenSize()
+{
+  return &defaultScreenSizes[1];
 }
