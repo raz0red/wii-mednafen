@@ -34,6 +34,8 @@ NeoGeoPocket::NeoGeoPocket() :
   int defaultIndex = 2;
   m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
   m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
+
+  m_doubleStrike = DOUBLE_STRIKE_DISABLED;
 }
 
 ConfigManager& NeoGeoPocket::getConfigManager()

@@ -58,6 +58,8 @@ extern char wii_language[WII_MAX_PATH];
 extern BOOL wii_auto_load_save_state;
 // Whether to use the GX/VI scaler
 extern BOOL wii_gx_vi_scaler;
+// Volume
+extern int wii_volume;
 
 /*
  * Returns the roms directory

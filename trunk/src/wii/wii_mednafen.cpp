@@ -71,6 +71,8 @@ BOOL wii_auto_load_save_state = FALSE;
 char wii_language[WII_MAX_PATH] = "";
 // Whether to use the GX/VI scaler
 BOOL wii_gx_vi_scaler = TRUE;
+// Volume
+int wii_volume = 100;
 // The roms dir
 static char roms_dir[WII_MAX_PATH] = "";
 

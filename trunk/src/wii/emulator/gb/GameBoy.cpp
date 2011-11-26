@@ -34,6 +34,8 @@ GameBoy::GameBoy() :
   int defaultIndex = 3;
   m_screenSize.w = defaultScreenSizes[defaultIndex].r.w; 
   m_screenSize.h = defaultScreenSizes[defaultIndex].r.h; 
+
+  m_doubleStrike = DOUBLE_STRIKE_DISABLED;
 }
 
 ConfigManager& GameBoy::getConfigManager()

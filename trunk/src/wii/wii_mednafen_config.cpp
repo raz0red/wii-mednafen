@@ -115,6 +115,10 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_16_9_correction = Util_sscandec( value );
   }  
+  else if( strcmp( name, "volume" ) == 0 )
+  {
+    wii_volume = Util_sscandec( value );
+  }  
   else
   {
     // Read configuration value for emulators
@@ -147,6 +151,7 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "trap_filter=%d\n", wii_trap_filter );
   fprintf( fp, "vi_gx_scaler=%d\n", wii_gx_vi_scaler );
   fprintf( fp, "16_9_correction=%d\n", wii_16_9_correction );
+  fprintf( fp, "volume=%d\n", wii_volume );  
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

@@ -23,6 +23,10 @@ void ConfigManager::writeConfig( FILE *fp )
   }
   snprintf( buff, sizeof(buff), "%s.frameskip", emu.getKey() );
   fprintf( fp, "%s=%d\n", buff, emu.getFrameSkip()  );
+  snprintf( buff, sizeof(buff), "%s.doublestrike", emu.getKey() );
+  fprintf( fp, "%s=%d\n", buff, emu.getDoubleStrikeMode() );
+  snprintf( buff, sizeof(buff), "%s.volume", emu.getKey() );
+  fprintf( fp, "%s=%d\n", buff, emu.getVolume() );
 }
 
 void ConfigManager::readConfigValue( const char *name, const char* value )
@@ -58,4 +62,14 @@ void ConfigManager::readConfigValue( const char *name, const char* value )
   {
     emu.setFrameSkip( Util_sscandec( value ) );
   }
+  snprintf( buff, sizeof(buff), "%s.doublestrike", emu.getKey() );
+  if( strcmp( name, buff ) == 0 )
+  {
+    emu.setDoubleStrikeMode( Util_sscandec( value ) );
+  }  
+  snprintf( buff, sizeof(buff), "%s.volume", emu.getKey() );
+  if( strcmp( name, buff ) == 0 )
+  {
+    emu.setVolume( Util_sscandec( value ) );
+  }    
 }

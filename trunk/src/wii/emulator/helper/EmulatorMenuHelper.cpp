@@ -17,6 +17,21 @@ TREENODE* EmulatorMenuHelper::createEmulatorMenu()
     "Screen size" );      
   wii_add_child( menu, child ); 
 
+  addSpacerNode(  menu );
+
+  child = wii_create_tree_node( NODETYPE_VOLUME_CART, "Volume" );
+    wii_add_child( menu, child );
+
+  addSpacerNode(  menu );
+
+  Emulator& emu = getEmulator();
+  if( emu.isDoubleStrikeSupported() )
+  {    
+    child = wii_create_tree_node( 
+      NODETYPE_DOUBLE_STRIKE_CART, "Double strike (240p)" );
+    wii_add_child( menu, child );
+  }
+
   child = wii_create_tree_node( NODETYPE_FRAME_SKIP, "Frame skip" );
   wii_add_child( menu, child );
 
@@ -30,6 +45,39 @@ void EmulatorMenuHelper::getNodeName(
 
   switch( node->node_type )
   {
+    case NODETYPE_VOLUME_CART:
+      {
+        int volume = emu.getVolume();
+        if( volume == VOLUME_DEFAULT )
+        {
+          snprintf( value, WII_MENU_BUFF_SIZE, "(default)" ); 
+        }
+        else
+        {
+          snprintf( value, WII_MENU_BUFF_SIZE, "%d %s", 
+            ( volume / 10 ), 
+            ( volume == 100 ?  gettextmsg("(normal)") : "" ) );
+        }
+      }
+      break;
+    case NODETYPE_DOUBLE_STRIKE_CART:
+      {
+        const char* strmode;
+        switch( emu.getDoubleStrikeMode() )
+        {
+          case DOUBLE_STRIKE_DEFAULT:
+            strmode = "(default)";
+            break;
+          case DOUBLE_STRIKE_ENABLED:
+            strmode = "Enabled";
+            break;
+          default:
+            strmode = "Disabled";
+            break;
+        }
+        snprintf( value, WII_MENU_BUFF_SIZE, "%s", strmode );
+      }
+      break;
     case NODETYPE_FRAME_SKIP:
       snprintf( value, WII_MENU_BUFF_SIZE, 
         emu.getFrameSkip() ? "Enabled" : "Disabled" );
@@ -103,6 +151,28 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
 
   switch( node->node_type )
   {
+    case NODETYPE_VOLUME_CART:
+      {
+        int volume = emu.getVolume();
+        volume += 10;
+        if( volume > 160 )
+        {
+          volume = 0;
+        }
+        emu.setVolume( volume );
+      }
+      break;
+    case NODETYPE_DOUBLE_STRIKE_CART:
+      {
+        int mode = emu.getDoubleStrikeMode();
+        mode++;
+        if( mode > DOUBLE_STRIKE_DEFAULT )
+        {
+          mode = 0;
+        }
+        emu.setDoubleStrikeMode( mode );
+      }
+      break;
     case NODETYPE_FRAME_SKIP:
       emu.setFrameSkip( !emu.getFrameSkip() );
       break;
