@@ -7,7 +7,7 @@
 #define WII_PROFILE_ROTATED90   1
 
 #define WS_BUTTON_COUNT         14
-#define WII_PROFILE_COUNT       2
+#define WS_PROFILE_COUNT       2
 
 /*
  * Wonderswan database entry 
@@ -25,7 +25,7 @@ private:
 public:
   static const MappableButton WS_BUTTONS[WS_BUTTON_COUNT];
   static const WiiButton 
-    WII_BUTTONS[WII_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
+    WII_BUTTONS[WS_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   WonderSwanDbManager( Emulator& emulator );
   const WiiButton* getMappedButton( int profile, int controller, int button );
   int getMappableButtonCount();

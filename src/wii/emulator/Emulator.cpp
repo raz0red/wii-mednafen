@@ -1,6 +1,7 @@
 #include "main.h"
 #include "Emulator.h"
 #include "DatabaseManager.h"
+#include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
 #ifdef WII_NETTRACE
@@ -26,6 +27,8 @@ Emulator::Emulator( const char* key, const char* name ) :
   m_frameSkip( true )
 {
   memset( m_padData, 0, sizeof(u32)<<2 );
+  m_doubleStrike = DOUBLE_STRIKE_DEFAULT;
+  m_volume = VOLUME_DEFAULT;
 }
 
 Rect* Emulator::getScreenSize()
@@ -259,7 +262,41 @@ const ScreenSize* Emulator::getDoubleStrikeRotatedScreenSize()
   return NULL;
 }
 
+void Emulator::setDoubleStrikeMode( int mode )
+{
+  m_doubleStrike = mode;  
+}
+
+int Emulator::getDoubleStrikeMode()
+{
+  return m_doubleStrike;
+}
+
 bool Emulator::isDoubleStrikeEnabled()
 {
-  return isDoubleStrikeSupported() && wii_double_strike_mode;
+  return isDoubleStrikeSupported() && 
+    ( ( m_doubleStrike == DOUBLE_STRIKE_ENABLED ) ||
+      ( ( m_doubleStrike == DOUBLE_STRIKE_DEFAULT ) &&    
+        wii_double_strike_mode ) );
+}
+
+int Emulator::getVolume()
+{
+  return m_volume;
+}
+void Emulator::setVolume( int volume )
+{
+  m_volume = volume;
+}
+
+int Emulator::getAppliedVolume()
+{
+  if( m_volume == VOLUME_DEFAULT )
+  {
+    return wii_volume;
+  }
+  else
+  {
+    return m_volume;
+  }
 }

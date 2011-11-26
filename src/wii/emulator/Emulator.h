@@ -25,6 +25,12 @@ typedef struct ScreenSize {
 
 #define BTN_RAPID 0x80000000
 
+#define DOUBLE_STRIKE_DISABLED 0
+#define DOUBLE_STRIKE_ENABLED 1
+#define DOUBLE_STRIKE_DEFAULT 2
+
+#define VOLUME_DEFAULT 160
+
 class Emulator
 {
 private:
@@ -37,10 +43,11 @@ protected:
   Rect m_emulatorScreenSize;
   Rect m_screenSize;
   Rect m_rotatedScreenSize;
+  int m_doubleStrike;
+  int m_volume;
 
   Emulator( const char* key, const char* name );
 
-  virtual bool isDoubleStrikeSupported();
   virtual const ScreenSize* getDoubleStrikeScreenSize();
   virtual const ScreenSize* getDoubleStrikeRotatedScreenSize();
 
@@ -73,11 +80,18 @@ public:
   const char* getRotatedScreenSizeName();
   const char* getRotatedScreenSizeName( int w, int h );
 
+  virtual bool isDoubleStrikeSupported();
   virtual bool isDoubleStrikeEnabled();
+  void setDoubleStrikeMode( int mode );
+  int getDoubleStrikeMode();
 
   Rect* getEmulatorScreenSize();
   Rect* getScreenSize();
   Rect* getRotatedScreenSize();
+
+  int getVolume();
+  void setVolume( int volume );
+  int getAppliedVolume();
 
   u16* getPadData();
   bool getFrameSkip();

@@ -36,7 +36,7 @@ const MappableButton WonderSwanDbManager::WS_BUTTONS[WS_BUTTON_COUNT] =
 };
 
 const WiiButton WonderSwanDbManager::
-  WII_BUTTONS[WII_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
+  WII_BUTTONS[WS_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
 {
   { // Profile normal
     {

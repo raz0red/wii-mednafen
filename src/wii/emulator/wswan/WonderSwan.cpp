@@ -50,6 +50,8 @@ WonderSwan::WonderSwan() :
     defaultRotatedScreenSizes[defaultIndex].r.w; 
   m_rotatedScreenSize.h = 
     defaultRotatedScreenSizes[defaultIndex].r.h; 
+
+  m_doubleStrike = DOUBLE_STRIKE_DISABLED;
 }
 
 ConfigManager& WonderSwan::getConfigManager()

@@ -1150,7 +1150,12 @@ int GameLoop(void *arg)
       }
       else
       {
+#ifndef WII
         espec.SoundVolume = (double)MDFN_GetSettingUI("sound.volume") / 100;
+#else
+        espec.SoundVolume = 
+          ((float)emuRegistry.getCurrentEmulator()->getAppliedVolume()) / 100;
+#endif
       }
 
       int64 before_time = Time64();

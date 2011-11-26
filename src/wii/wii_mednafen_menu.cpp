@@ -226,19 +226,22 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_GX_VI_SCALER_SPACER, "" );
   wii_add_child( video_settings, child );
 
-  child = wii_create_tree_node( NODETYPE_GX_VI_SCALER, 
-    "Scaler" );
+  child = wii_create_tree_node( NODETYPE_GX_VI_SCALER, "Scaler" );
   wii_add_child( video_settings, child );
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
 
-  child = wii_create_tree_node( NODETYPE_CHEATS,
-    "Cheats" );
+  child = wii_create_tree_node( NODETYPE_VOLUME, "Volume" );
   wii_add_child( advanced, child );
 
-  child = wii_create_tree_node( NODETYPE_SELECT_LANG, 
-    "Language" );
+  child = wii_create_tree_node( NODETYPE_SPACER, "" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_CHEATS, "Cheats" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_SELECT_LANG, "Language" );
   wii_add_child( advanced, child );  
 
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
@@ -402,6 +405,11 @@ void wii_menu_handle_get_node_name(
       snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
         ( wii_gx_vi_scaler ? "GX + VI" : "GX" ) );
       break;
+    case NODETYPE_VOLUME:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%d %s", 
+        ( wii_volume / 10 ), 
+        ( wii_volume == 100 ?  gettextmsg("(normal)") : "" ) );
+      break;
     case NODETYPE_DEBUG_MODE:
     case NODETYPE_TOP_MENU_EXIT:
     case NODETYPE_FILTER:
@@ -528,6 +536,13 @@ void wii_menu_handle_select_node( TREENODE *node )
 
     switch( node->node_type )
     {
+      case NODETYPE_VOLUME:
+        wii_volume += 10;
+        if( wii_volume > 150 )
+        {
+          wii_volume = 0;
+        }
+        break;
       case NODETYPE_SAVE_STATE:
         wii_save_snapshot( NULL, TRUE );
         break;
