@@ -8,6 +8,12 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
+extern "C" 
+{
+void WII_SetRotation( int rot );
+}
+
+
 static const ScreenSize defaultScreenSizes[] = 
 {
   { { 320,         240        },  "1x"          },
@@ -69,8 +75,12 @@ MenuManager& WonderSwan::getMenuManager()
   return m_menuManager;
 }
 
+static bool specialheld = false;
+
 void WonderSwan::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -137,7 +147,26 @@ void WonderSwan::updateControls( bool isRapid )
               WII_CONTROLLER_CUBE ][ i ] ) )
     {
       u32 val = WonderSwanDbManager::WS_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == WS_ROTATE )
+      {        
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+
+          // Swap between the two profiles (normal and rotated)
+          entry->profile ^= 1;
+          WII_SetRotation( entry->profile * 90 ); // Rotate screen
+          wii_mednafen_reset_last_rect(); // Clear last rect cache (reset)
+
+          // Update the button mappings
+          WonderSwanDbManager& dbManager = 
+            (WonderSwanDbManager&)getDbManager();
+          //dbManager.resetButtons();  // TODO:MULTIPROF 
+          dbManager.applyButtonMap();
+        }     
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }
@@ -170,6 +199,11 @@ void WonderSwan::updateControls( bool isRapid )
     result|=( rot ? WS_Y4 : WS_X3 );
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+  }
 }
 
 void WonderSwan::onPostLoad()
@@ -227,3 +261,4 @@ const ScreenSize* WonderSwan::getDoubleStrikeRotatedScreenSize()
 {
   return &defaultRotatedScreenSizes[1];
 }
+

@@ -13,6 +13,8 @@
 #define WII_CONTROLLER_CLASSIC  2
 #define WII_CONTROLLER_CUBE     3
 
+#define WII_MAX_PROFILE_COUNT   10
+
 /*
  * A standard, button-mapped database entry 
  */
@@ -20,7 +22,7 @@ typedef struct StandardDbEntry
 {
   dbEntry base;
   u8 profile;  
-  u8 buttonMap[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
+  u8 buttonMap[WII_MAX_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   u32 appliedButtonMap[WII_CONTROLLER_COUNT][32];
   char buttonDesc[32][255];
 } StandardDbEntry;

@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1-pre110611 release README
+WiiMednafen v0.1-pre112811 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -895,16 +895,25 @@ Eke-eke      : Double strike help and Color trap filter implementation.
 Change Log
 --------------------------------------------
 
-11/06/11 (0.1-pre)
+11/28/11 (0.1-pre)
 -------------------
  - Added support for MegaDrive/Genesis.
- - Master system FM sound support (when region set to Domestic/Japan)
- - Double strike (240p) mode support
- - Color trap filter (Eke-eke implementation)
+ - VI + GX scaler (removes majority of scaling artifacts). 
+ - Default screen sizes per emulator (1x, 2x, etc.).
  - Full widescreen support
+ - 16:9 correction option (displays 4:3 on widescreen displays).
+ - Double strike (240p) mode support (can be enabled globally and 
+     per-emulator). By default, is explicitly disabled for handheld emulators.
+ - Color trap filter (Eke-eke implementation) 
+ - Master system FM sound support (when region set to Domestic/Japan)
  - Virtual Boy SRAM bug fix (was not persisting).
  - Fixed bug where screen sizing controls were not being properly rotated
      (games with vertical orientation).
+ - Ability to map "rotate screen" button for WonderSwan (Klonoa, etc.).
+ - WonderSwan control mappings now supports "profile" toggle. Allows for 
+     saving mappings for both orientations (Klonoa, etc.).
+ - Updated Game Gear to display with proper aspect ratio.
+ - Ability to set Volume globally and per-emulator.   
  
 10/10/11 (0.0)
 -------------------

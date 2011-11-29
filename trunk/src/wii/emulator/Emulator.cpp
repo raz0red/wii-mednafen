@@ -300,3 +300,5 @@ int Emulator::getAppliedVolume()
     return m_volume;
   }
 }
+
+

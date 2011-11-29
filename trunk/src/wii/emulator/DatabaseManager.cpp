@@ -299,3 +299,13 @@ void DatabaseManager::resetToDefaults()
   entry->wiimoteSupported = 1;
   entry->frameSkip = FRAME_SKIP_DEFAULT;
 }
+
+int DatabaseManager::getProfileCount()
+{
+  return 1;
+}
+
+const char* DatabaseManager::getProfileName( int profile )
+{
+  return "";
+}

@@ -17,12 +17,16 @@ void StandardDatabaseManager::resetButtons()
   memset( entry->buttonMap, 0x0, sizeof(entry->buttonMap) );
 
   // Set the default button map values
-  for( int i = 0; i < WII_CONTROLLER_COUNT; i++ )
+  for( int x = 0; x < getProfileCount(); x++ )
   {
-    for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+    for( int i = 0; i < WII_CONTROLLER_COUNT; i++ )
     {
-      entry->buttonMap[i][j] = 
-        getMappedButton( entry->profile, i, j )->defaultMapping;
+      for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+      {
+        // TODO:MULTIPROF
+        entry->buttonMap[x][i][j] = 
+          getMappedButton( x, i, j )->defaultMapping; // TODO:MULTIPROF
+      }
     }
   }
 }
@@ -36,7 +40,7 @@ void StandardDatabaseManager::applyButtonMap()
   {
     for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
     {
-      u8 mappedButton = entry->buttonMap[i][j];
+      u8 mappedButton = entry->buttonMap[entry->profile][i][j]; // TODO:MULTIPROF
       if( mappedButton != KEY_MAP_NONE )
       {
         entry->appliedButtonMap[i][mappedButton] |= 
@@ -57,14 +61,26 @@ bool StandardDatabaseManager::writeEntryValues(
   fprintf( file, "profile=%d\n", entry->profile );
 
   int i;
-  for( i = 0; i < WII_CONTROLLER_COUNT; i++ )
+  int profileCount = getProfileCount();
+  for( int x = 0; x < profileCount; x++ )
   {
-    for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+    for( i = 0; i < WII_CONTROLLER_COUNT; i++ )
     {
-      u8 val = entry->buttonMap[i][j];
-      if( val != getMappedButton( entry->profile, i, j )->defaultMapping )
+      for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
       {
-        fprintf( file, "btn.%d.%d=%d\n", i, j, val );
+        u8 val = entry->buttonMap[x][i][j]; // TODO:MULTIPROF
+        if( val != getMappedButton( x, i, j )->defaultMapping )
+        {
+          if( profileCount > 1 )
+          {
+            fprintf( file, "btn.%d.%d.%d=%d\n", x, i, j, val );            
+          }
+          else
+          {
+            // Backward compatibility
+            fprintf( file, "btn.%d.%d=%d\n", i, j, val );
+          }
+        }
       }
     }
   }
@@ -100,16 +116,32 @@ void StandardDatabaseManager::readEntryValue(
 
   int i;
   bool btnFound = false;
-  for( i = 0; !btnFound && i < WII_CONTROLLER_COUNT; i++ )
+  int profileCount = getProfileCount();
+  for( int x = 0; x < profileCount; x++ )
   {
-    for( int j = 0; !btnFound && j < WII_MAP_BUTTON_COUNT; j++ )
+    for( i = 0; !btnFound && i < WII_CONTROLLER_COUNT; i++ )
     {
-      char btnName[64];
-      snprintf( btnName, sizeof(btnName), "btn.%d.%d", i, j );
-      if( !strcmp( name, btnName ) )
+      for( int j = 0; !btnFound && j < WII_MAP_BUTTON_COUNT; j++ )
       {
-        entry->buttonMap[i][j] = Util_sscandec( value );
-        btnFound = true;
+        char btnName[64];
+
+        // Backward compatibility
+        snprintf( btnName, sizeof(btnName), "btn.%d.%d", i, j );
+        if( !strcmp( name, btnName ) )
+        {
+          entry->buttonMap[entry->profile][i][j] = Util_sscandec( value ); // TODO:MULTIPROF
+          btnFound = true;
+        }
+
+        if( !btnFound )
+        {
+          snprintf( btnName, sizeof(btnName), "btn.%d.%d.%d", x, i, j );
+          if( !strcmp( name, btnName ) )
+          {
+            entry->buttonMap[x][i][j] = Util_sscandec( value ); // TODO:MULTIPROF
+            btnFound = true;
+          }
+        }
       }
     }
   }

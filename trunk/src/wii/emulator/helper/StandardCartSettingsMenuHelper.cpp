@@ -10,8 +10,15 @@
 StandardCartSettingsMenuHelper::StandardCartSettingsMenuHelper( 
   Emulator& emulator ) :
   CartridgeSettingsMenuHelper( emulator ),
-  m_currentController( 0 )
+  m_currentController( 0 ),
+  m_currentProfile( 0 )
 {
+}
+
+void StandardCartSettingsMenuHelper::addProfileNode( TREENODE* parent )
+{
+  TREENODE* child = wii_create_tree_node( NODETYPE_PROFILE, "Profile" );
+  wii_add_child( parent, child );
 }
 
 void StandardCartSettingsMenuHelper::addControllerNode( TREENODE* parent )
@@ -57,6 +64,10 @@ void StandardCartSettingsMenuHelper::getNodeName(
       snprintf( value, WII_MENU_BUFF_SIZE, "%s",
         StandardDatabaseManager::WII_CONTROLLER_NAMES[m_currentController] );
       break;
+    case NODETYPE_PROFILE:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s",
+        dbManager.getProfileName( m_currentProfile ) );
+      break;
     case NODETYPE_BUTTON1:
     case NODETYPE_BUTTON2:
     case NODETYPE_BUTTON3:
@@ -71,11 +82,12 @@ void StandardCartSettingsMenuHelper::getNodeName(
         int index = ( node->node_type - NODETYPE_BUTTON1 );
         const char* name = 
           dbManager.getMappedButton( 
-            entry->profile, m_currentController, index )->name;
+            m_currentProfile, m_currentController, index )->name;  // TODO:MULTIPROF
         if( name != NULL )
         {
           snprintf( buffer, WII_MENU_BUFF_SIZE, "%s", name );
-          u8 btn = entry->buttonMap[m_currentController][index];
+          u8 btn = 
+            entry->buttonMap[m_currentProfile][m_currentController][index]; // TODO:MULTIPROF
           const MappableButton* mappedBtn = dbManager.getMappableButton( btn ); 
           const char* name = mappedBtn->name;
           u32 val = mappedBtn->button;
@@ -122,8 +134,18 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
 
   switch( node->node_type )
   {
+    case NODETYPE_CARTRIDGE_SETTINGS_CONTROLS:
+      m_currentProfile = entry->profile; // TODO:MULTIPROF
+      break;
     case NODETYPE_WIIMOTE_SUPPORTED:
       entry->base.wiimoteSupported ^= 1;
+      break;
+    case NODETYPE_PROFILE:
+      m_currentProfile++; 
+      if( m_currentProfile >= dbManager.getProfileCount() )
+      {
+        m_currentProfile = 0;
+      }
       break;
     case NODETYPE_CONTROLLER:
       m_currentController++; 
@@ -146,11 +168,11 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
         int index = ( node->node_type - NODETYPE_BUTTON1 );
         const char* name = 
           dbManager.getMappedButton( 
-            entry->profile, m_currentController, index )->name;
+            m_currentProfile, m_currentController, index )->name; // TODO:MULTIPROF
         if( name != NULL )
         {
           u8 mappedBtn =  
-            entry->buttonMap[m_currentController][index];
+            entry->buttonMap[m_currentProfile][m_currentController][index]; // TODO:MULTIPROF
 
           mappedBtn++;
           if( mappedBtn >= dbManager.getMappableButtonCount() )
@@ -158,7 +180,8 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
             mappedBtn = 0;
           }
 
-          entry->buttonMap[m_currentController][index] = mappedBtn;
+          entry->buttonMap[m_currentProfile][m_currentController][index] 
+            = mappedBtn; // TODO:MULTIPROF
         }
       }
       break;     
@@ -195,7 +218,7 @@ bool StandardCartSettingsMenuHelper::isNodeVisible( TREENODE* node )
     case NODETYPE_BUTTON10:
       return 
         dbManager.getMappedButton( 
-            entry->profile, m_currentController, 
+            m_currentProfile, m_currentController, 
               node->node_type - NODETYPE_BUTTON1 )->name != NULL;
   }
 

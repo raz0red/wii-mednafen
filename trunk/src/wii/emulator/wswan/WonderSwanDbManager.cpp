@@ -16,23 +16,25 @@
 #define WSK_MAP_Y4      11
 #define WSK_MAP_A_R     12
 #define WSK_MAP_B_R     13
+#define WSK_MAP_ROT     14
 
 const MappableButton WonderSwanDbManager::WS_BUTTONS[WS_BUTTON_COUNT] = 
 {
-  { "(none)", WS_NONE  },
-  { "A",      WS_A     }, 
-  { "B",      WS_B     }, 
-  { "Start",  WS_START },
-  { "X1",     WS_X1    },
-  { "X2",     WS_X2    },
-  { "X3",     WS_X3    },
-  { "X4",     WS_X4    },
-  { "Y1",     WS_Y1    },
-  { "Y2",     WS_Y2    },
-  { "Y3",     WS_Y3    },
-  { "Y4",     WS_Y4    },
-  { "A",      WS_A_R   }, 
-  { "B",      WS_B_R   } 
+  { "(none)",           WS_NONE   },
+  { "A",                WS_A      }, 
+  { "B",                WS_B      }, 
+  { "Start",            WS_START  },
+  { "X1",               WS_X1     },
+  { "X2",               WS_X2     },
+  { "X3",               WS_X3     },
+  { "X4",               WS_X4     },
+  { "Y1",               WS_Y1     },
+  { "Y2",               WS_Y2     },
+  { "Y3",               WS_Y3     },
+  { "Y4",               WS_Y4     },
+  { "A",                WS_A_R    }, 
+  { "B",                WS_B_R    },
+  { "(Rotate screen)",  WS_ROTATE } 
 };
 
 const WiiButton WonderSwanDbManager::
@@ -140,6 +142,11 @@ const WiiButton WonderSwanDbManager::
   }
 };
 
+static const char* profileNames[WS_PROFILE_COUNT] =
+{
+  "Normal", "Rotated"
+};
+
 WonderSwanDbManager::WonderSwanDbManager( Emulator &emulator ) :
   StandardDatabaseManager( emulator )
 {
@@ -159,7 +166,7 @@ void WonderSwanDbManager::resetToDefaults()
   StandardDatabaseManager::resetToDefaults();
 
   entry->base.profile = MDFNGameInfo->rotated ? 
-    WII_PROFILE_ROTATED90 : WII_PROFILE_NORMAL;
+    WS_PROFILE_ROTATED90 : WS_PROFILE_NORMAL;
   resetButtons();
   applyButtonMap();
 }
@@ -178,4 +185,14 @@ const WiiButton* WonderSwanDbManager::getMappedButton(
   int profile, int controller, int button )
 {
   return &(WII_BUTTONS[profile][controller][button]);
+}
+
+int WonderSwanDbManager::getProfileCount()
+{
+  return WS_PROFILE_COUNT;
+}
+
+const char* WonderSwanDbManager::getProfileName( int profile )
+{
+  return profileNames[profile];
 }

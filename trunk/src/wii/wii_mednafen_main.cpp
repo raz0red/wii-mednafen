@@ -109,6 +109,14 @@ static u32 message_time;
 // The last width/height displayed
 static Rect lastRect = { 0, 0 };
 
+/**
+ * Resets the last cached display rect size
+ */
+void wii_mednafen_reset_last_rect()
+{
+  memset( &lastRect, 0x0, sizeof( Rect ) );
+}
+
 /*
  * Displays a message during emulation
  *

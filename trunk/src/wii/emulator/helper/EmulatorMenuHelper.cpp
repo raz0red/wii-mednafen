@@ -22,7 +22,7 @@ TREENODE* EmulatorMenuHelper::createEmulatorMenu()
   child = wii_create_tree_node( NODETYPE_VOLUME_CART, "Volume" );
     wii_add_child( menu, child );
 
-  addSpacerNode(  menu );
+//  addSpacerNode(  menu );
 
   Emulator& emu = getEmulator();
   if( emu.isDoubleStrikeSupported() )

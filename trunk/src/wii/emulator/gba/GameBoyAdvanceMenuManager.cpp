@@ -21,7 +21,7 @@ GameBoyAdvanceMenuManager::GameBoyAdvanceMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+  //m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
 
   TREENODE* child = wii_create_tree_node( NODETYPE_GBA_BIOS, "External BIOS" );
   wii_add_child( m_emulatorMenu, child );

@@ -19,7 +19,7 @@ VirtualBoyMenuManager::VirtualBoyMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+  //m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
 
   TREENODE* child = wii_create_tree_node( NODETYPE_VB_MODE, "Display mode" );
   wii_add_child( m_emulatorMenu, child );
