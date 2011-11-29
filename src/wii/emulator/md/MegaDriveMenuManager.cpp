@@ -21,7 +21,7 @@ MegaDriveMenuManager::MegaDriveMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+  //m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
 
   TREENODE* child = wii_create_tree_node( NODETYPE_MD_REGION, "Console region" );
   wii_add_child( m_emulatorMenu, child );

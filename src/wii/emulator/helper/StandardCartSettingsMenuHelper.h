@@ -7,9 +7,11 @@ class StandardCartSettingsMenuHelper : public CartridgeSettingsMenuHelper
 {
 private:
   int m_currentController;
+  int m_currentProfile;
 
 public:
   StandardCartSettingsMenuHelper( Emulator& emulator );
+  void addProfileNode( TREENODE* parent );
   void addControllerNode( TREENODE* parent );
   void addWiimoteSupportedNode( TREENODE* parent );
   void addButtonMappingNodes( TREENODE* parent );

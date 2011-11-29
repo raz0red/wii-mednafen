@@ -21,7 +21,7 @@ NesMenuManager::NesMenuManager( Emulator &emulator ) :
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
 
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+  //m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
 
   // Game Genie
   wii_add_child( m_emulatorMenu, 

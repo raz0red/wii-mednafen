@@ -64,6 +64,8 @@ public:
   bool deleteEntry( const char* hash );
   bool writeEntry( const char* hash, bool del = false );
   virtual void applyButtonMap();
+  virtual int getProfileCount(); 
+  virtual const char* getProfileName( int profile );
 };
 
 #endif

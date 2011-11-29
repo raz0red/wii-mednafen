@@ -20,7 +20,7 @@ NeoGeoPocketMenuManager::NeoGeoPocketMenuManager( Emulator &emulator ) :
   // The emulator menu
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
-  m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
+  //m_emuMenuHelper.addSpacerNode( m_emulatorMenu );
   TREENODE* child = wii_create_tree_node( NODETYPE_GAME_LANGUAGE, "Language (game)" );
   wii_add_child( m_emulatorMenu, child );  
 

@@ -94,6 +94,7 @@ public:
   int getAppliedVolume();
 
   u16* getPadData();
+  
   bool getFrameSkip();
   void setFrameSkip( bool skip );
   bool getAppliedFrameSkip();

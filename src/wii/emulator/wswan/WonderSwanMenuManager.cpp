@@ -30,6 +30,7 @@ WonderSwanMenuManager::WonderSwanMenuManager( Emulator &emulator ) :
     m_cartSettingsMenuHelper.addControlsSettingsNode( 
       m_cartridgeSettingsMenu );
 
+  m_cartSettingsMenuHelper.addProfileNode( controls );
   m_cartSettingsMenuHelper.addControllerNode( controls );
   m_cartSettingsMenuHelper.addWiimoteSupportedNode( controls );
   m_cartSettingsMenuHelper.addButtonMappingNodes( controls );
@@ -83,7 +84,6 @@ void WonderSwanMenuManager::selectNode( TREENODE *node )
   {
     case NODETYPE_ORIENT:
       entry->profile ^= 1;
-      dbManager.resetButtons();
       break;
   }
 

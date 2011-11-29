@@ -23,6 +23,7 @@
 #define WS_B      0x0400
 #define WS_A_R    WS_A | BTN_RAPID
 #define WS_B_R    WS_B | BTN_RAPID
+#define WS_ROTATE 0x40000000
 
 class WonderSwan : public Emulator
 {

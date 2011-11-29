@@ -66,4 +66,9 @@ extern int wii_mednafen_show_controls_screen();
  */
 extern void wii_mednafen_set_message( const char* message );
 
+/**
+ * Resets the last cached display rect size
+ */
+extern void wii_mednafen_reset_last_rect();
+
 #endif

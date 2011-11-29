@@ -3,11 +3,10 @@
 
 #include "StandardDatabaseManager.h"
 
-#define WII_PROFILE_NORMAL      0
-#define WII_PROFILE_ROTATED90   1
-
-#define WS_BUTTON_COUNT         14
-#define WS_PROFILE_COUNT       2
+#define WS_PROFILE_NORMAL       0
+#define WS_PROFILE_ROTATED90    1
+#define WS_BUTTON_COUNT         15
+#define WS_PROFILE_COUNT        2
 
 /*
  * Wonderswan database entry 
@@ -32,6 +31,8 @@ public:
   const MappableButton* getMappableButton( int button );
   void resetToDefaults();
   dbEntry* getEntry();
+  int getProfileCount(); 
+  const char* getProfileName( int profile );
 };
 
 #endif

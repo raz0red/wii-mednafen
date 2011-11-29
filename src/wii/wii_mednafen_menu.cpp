@@ -205,15 +205,19 @@ void wii_mednafen_menu_init()
     "16:9 correction" );
   wii_add_child( video_settings, child );  
 
+#if 0
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( video_settings, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_DOUBLE_STRIKE, 
     "Double strike (240p)" );
   wii_add_child( video_settings, child );
 
+#if 0
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( video_settings, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_FILTER, 
     "Bilinear filter" );
@@ -223,8 +227,10 @@ void wii_mednafen_menu_init()
     "Color trap filter" );
   wii_add_child( video_settings, child );
 
+#if 0
   child = wii_create_tree_node( NODETYPE_GX_VI_SCALER_SPACER, "" );
   wii_add_child( video_settings, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_GX_VI_SCALER, "Scaler" );
   wii_add_child( video_settings, child );
@@ -235,8 +241,10 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_VOLUME, "Volume" );
   wii_add_child( advanced, child );
 
+#if 0
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_CHEATS, "Cheats" );
   wii_add_child( advanced, child );
@@ -244,8 +252,10 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_SELECT_LANG, "Language" );
   wii_add_child( advanced, child );  
 
+#if 0
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
+#endif
 
   child = wii_create_tree_node( NODETYPE_TOP_MENU_EXIT, 
     "Top menu exit" );
