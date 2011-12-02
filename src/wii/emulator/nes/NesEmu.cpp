@@ -1,5 +1,6 @@
 #include "main.h"
 
+#include "ControlMacros.h"
 #include "Nes.h"
 #include "wii_util.h"
 #include "wii_input.h"
@@ -89,71 +90,14 @@ void Nes::updateControls( bool isRapid )
   bool special = false;
   for( int c = 0; c < 4; c++ )
   {
-    // Check the state of the controllers
-    u32 pressed = WPAD_ButtonsDown( c );
-    u32 held = WPAD_ButtonsHeld( c );  
-    u32 gcPressed = PAD_ButtonsDown( c );
-    u32 gcHeld = PAD_ButtonsHeld( c );
-
-    // Classic or Nunchuck?
-    expansion_t exp;
-    WPAD_Expansion( c, &exp );          
-
-    BOOL isClassic = ( exp.type == WPAD_EXP_CLASSIC );
-    BOOL isNunchuk = ( exp.type == WPAD_EXP_NUNCHUK );
-
-    // Mask off the Wiimote d-pad depending on whether a nunchuk
-    // is connected. (Wiimote d-pad is left when nunchuk is not
-    // connected, right when it is).
-    u32 heldLeft = ( isNunchuk ? ( held & ~0x0F00 ) : held );
-    u32 heldRight = ( !isNunchuk ? ( held & ~0x0F00 ) : held );
-
-    // Analog for Wii controls
-    float expX = wii_exp_analog_val( &exp, TRUE, FALSE );
-    float expY = wii_exp_analog_val( &exp, FALSE, FALSE );
-    float expRX = isClassic ? wii_exp_analog_val( &exp, TRUE, TRUE ) : 0;
-    float expRY = isClassic ? wii_exp_analog_val( &exp, FALSE, TRUE ) : 0;
-
-    // Analog for Gamecube controls
-    s8 gcX = PAD_StickX( c );
-    s8 gcY = PAD_StickY( c );
-    s8 gcRX = PAD_SubStickX( c );
-    s8 gcRY = PAD_SubStickY( c );
-
-    if( c == 0 )
-    {
-      // Check for home
-      if( ( pressed & WII_BUTTON_HOME ) ||
-        ( gcPressed & GC_BUTTON_HOME ) ||
-        wii_hw_button )
-      {
-        GameThreadRun = 0;
-      }
-    }
+    READ_CONTROLS_STATE
 
     u16 result = 0;
-
-    //
-    // Mapped buttons
-    //
-    
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
     for( int i = 0; i < NES_BUTTON_COUNT; i++ )
     {
-      if( ( held &
-            ( ( isClassic ? 
-                  entry->appliedButtonMap[ 
-                    WII_CONTROLLER_CLASSIC ][ i ] : 0 ) |
-              ( isNunchuk ?
-                  entry->appliedButtonMap[
-                    WII_CONTROLLER_CHUK ][ i ] :
-                  entry->appliedButtonMap[
-                    WII_CONTROLLER_MOTE ][ i ] ) ) ) ||
-          ( gcHeld &
-              entry->appliedButtonMap[
-                WII_CONTROLLER_CUBE ][ i ] ) )
-      {
+      BEGIN_IF_BUTTON_HELD
         u32 val = NesDbManager::NES_BUTTONS[ i ].button;
         if( val & NES_SPECIAL )
         {          
@@ -178,27 +122,16 @@ void Nes::updateControls( bool isRapid )
             result |= ( val & 0xFFFF );          
           }
         }
-      }        
+      END_IF_BUTTON_HELD
     }    
 
-    if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
-        ( gcHeld & GC_BUTTON_RIGHT ) ||
-        wii_analog_right( expX, gcX ) )
+    IF_RIGHT
       result|=NES_RIGHT;
-
-    if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
-        ( gcHeld & GC_BUTTON_LEFT ) ||                       
-        wii_analog_left( expX, gcX ) )
+    IF_LEFT
       result|=NES_LEFT;
-
-    if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
-        ( gcHeld & GC_BUTTON_UP ) ||
-        wii_analog_up( expY, gcY ) )
+    IF_UP
       result|=NES_UP;
-
-    if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
-        ( gcHeld & GC_BUTTON_DOWN ) ||
-        wii_analog_down( expY, gcY ) )
+    IF_DOWN
       result|=NES_DOWN;
 
     m_padData[c] = result;
