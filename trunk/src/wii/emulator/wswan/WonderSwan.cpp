@@ -1,5 +1,6 @@
 #include "main.h"
 
+#include "ControlMacros.h"
 #include "WonderSwan.h"
 #include "wii_util.h"
 #include "wii_input.h"
@@ -84,68 +85,15 @@ void WonderSwan::updateControls( bool isRapid )
   WPAD_ScanPads();
   PAD_ScanPads();
 
-  // Check the state of the controllers
-  u32 pressed = WPAD_ButtonsDown( 0 );
-  u32 held = WPAD_ButtonsHeld( 0 );  
-  u32 gcPressed = PAD_ButtonsDown( 0 );
-  u32 gcHeld = PAD_ButtonsHeld( 0 );
-
-  // Classic or Nunchuck?
-  expansion_t exp;
-  WPAD_Expansion( 0, &exp );          
-
-  BOOL isClassic = ( exp.type == WPAD_EXP_CLASSIC );
-  BOOL isNunchuk = ( exp.type == WPAD_EXP_NUNCHUK );
-
-  // Mask off the Wiimote d-pad depending on whether a nunchuk
-  // is connected. (Wiimote d-pad is left when nunchuk is not
-  // connected, right when it is).
-  u32 heldLeft = ( isNunchuk ? ( held & ~0x0F00 ) : held );
-  u32 heldRight = ( !isNunchuk ? ( held & ~0x0F00 ) : held );
-
-  // Analog for Wii controls
-  float expX = wii_exp_analog_val( &exp, TRUE, FALSE );
-  float expY = wii_exp_analog_val( &exp, FALSE, FALSE );
-  float expRX = isClassic ? wii_exp_analog_val( &exp, TRUE, TRUE ) : 0;
-  float expRY = isClassic ? wii_exp_analog_val( &exp, FALSE, TRUE ) : 0;
-
-  // Analog for Gamecube controls
-  s8 gcX = PAD_StickX( 0 );
-  s8 gcY = PAD_StickY( 0 );
-  s8 gcRX = PAD_SubStickX( 0 );
-  s8 gcRY = PAD_SubStickY( 0 );
-
-  // Check for home
-  if( ( pressed & WII_BUTTON_HOME ) ||
-    ( gcPressed & GC_BUTTON_HOME ) ||
-    wii_hw_button )
-  {
-    GameThreadRun = 0;
-  }
+  int c = 0;
+  READ_CONTROLS_STATE
 
   u16 result = 0;
-
-  //
-  // Mapped buttons
-  //
-  
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
   for( int i = 0; i < WS_BUTTON_COUNT; i++ )
   {
-    if( ( held &
-          ( ( isClassic ? 
-                entry->appliedButtonMap[ 
-                  WII_CONTROLLER_CLASSIC ][ i ] : 0 ) |
-            ( isNunchuk ?
-                entry->appliedButtonMap[
-                  WII_CONTROLLER_CHUK ][ i ] :
-                entry->appliedButtonMap[
-                  WII_CONTROLLER_MOTE ][ i ] ) ) ) ||
-        ( gcHeld &
-            entry->appliedButtonMap[
-              WII_CONTROLLER_CUBE ][ i ] ) )
-    {
+    BEGIN_IF_BUTTON_HELD
       u32 val = WonderSwanDbManager::WS_BUTTONS[ i ].button;
       if( val == WS_ROTATE )
       {        
@@ -162,7 +110,6 @@ void WonderSwan::updateControls( bool isRapid )
           // Update the button mappings
           WonderSwanDbManager& dbManager = 
             (WonderSwanDbManager&)getDbManager();
-          //dbManager.resetButtons();  // TODO:MULTIPROF 
           dbManager.applyButtonMap();
         }     
       }
@@ -170,32 +117,18 @@ void WonderSwan::updateControls( bool isRapid )
       {
         result |= ( val & 0xFFFF );
       }
-    }
+    END_IF_BUTTON_HELD
   }    
 
-  //
-  // Left sticks and pads
-  //
   bool rot = ( entry->profile == 1 );
 
-  if( wii_digital_right( !isNunchuk, isClassic, heldLeft ) ||
-      ( gcHeld & GC_BUTTON_RIGHT ) ||
-      wii_analog_right( expX, gcX ) )
+  IF_RIGHT
     result|=( rot ? WS_Y3 : WS_X2 );
-
-  if( wii_digital_left( !isNunchuk, isClassic, heldLeft ) || 
-      ( gcHeld & GC_BUTTON_LEFT ) ||                       
-      wii_analog_left( expX, gcX ) )
+  IF_LEFT
     result|=( rot ? WS_Y1 : WS_X4 );
-
-  if( wii_digital_up( !isNunchuk, isClassic, heldLeft ) || 
-      ( gcHeld & GC_BUTTON_UP ) ||
-      wii_analog_up( expY, gcY ) )
+  IF_UP
     result|=( rot ? WS_Y2 : WS_X1 );
-
-  if( wii_digital_down( !isNunchuk, isClassic, heldLeft ) ||
-      ( gcHeld & GC_BUTTON_DOWN ) ||
-      wii_analog_down( expY, gcY ) )
+  IF_DOWN
     result|=( rot ? WS_Y4 : WS_X3 );
 
   m_padData[0] = result;
@@ -208,6 +141,7 @@ void WonderSwan::updateControls( bool isRapid )
 
 void WonderSwan::onPostLoad()
 {
+  specialheld = false;
 }
 
 bool WonderSwan::updateDebugText( 
@@ -261,4 +195,3 @@ const ScreenSize* WonderSwan::getDoubleStrikeRotatedScreenSize()
 {
   return &defaultRotatedScreenSizes[1];
 }
-
