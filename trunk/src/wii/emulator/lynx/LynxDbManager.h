@@ -3,8 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define LYNX_BUTTON_COUNT         14
-
 /*
  * Lynx database entry 
  */
@@ -24,7 +22,7 @@ protected:
   void readEntryValue( dbEntry *entry, const char* name, const char* value );
 
 public:
-  static const MappableButton LYNX_BUTTONS[LYNX_BUTTON_COUNT];
+  static const MappableButton LYNX_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   LynxDbManager( Emulator& emulator );

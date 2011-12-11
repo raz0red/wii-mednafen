@@ -28,7 +28,7 @@
 #define MD_X_R    MD_X | BTN_RAPID
 #define MD_Y_R    MD_Y | BTN_RAPID
 #define MD_Z_R    MD_Z | BTN_RAPID
-
+#define MD_REWIND BTN_REWIND
 
 class MegaDrive : public Emulator
 {
@@ -66,6 +66,8 @@ public:
   void onPostLoad();
   void onPreLoop();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class MegaDriveConfigManager;
 };

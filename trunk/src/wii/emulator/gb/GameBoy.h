@@ -20,7 +20,7 @@
 #define GB_DOWN   0x0080
 #define GB_A_R    GB_A | BTN_RAPID
 #define GB_B_R    GB_B | BTN_RAPID
-
+#define GB_REWIND BTN_REWIND
 
 class GameBoy : public Emulator
 {
@@ -45,6 +45,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class GameBoyConfigManager;
 };

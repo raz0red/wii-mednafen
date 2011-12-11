@@ -15,8 +15,9 @@
 #define NES_MAP_A_R     9
 #define NES_MAP_B_R     10
 #define NES_MAP_SPECIAL 11
+#define NES_MAP_REWIND  12
 
-const MappableButton NesDbManager::NES_BUTTONS[NES_BUTTON_COUNT] = 
+const MappableButton NesDbManager::NES_BUTTONS[] = 
 {
   { "(none)",         NES_NONE    },
   { "A",              NES_A       }, 
@@ -29,8 +30,12 @@ const MappableButton NesDbManager::NES_BUTTONS[NES_BUTTON_COUNT] =
   { "Down",           NES_DOWN    },
   { "A",              NES_A_R     }, 
   { "B",              NES_B_R     },
-  { "(special)",      NES_SPECIAL } // Text is dynamically set
+  { "(special)",      NES_SPECIAL }, // Text is dynamically set
+  { "(rewind)",       NES_REWIND  } 
 };
+
+static const int buttonCount =  
+  sizeof(NesDbManager::NES_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton NesDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -117,7 +122,7 @@ int NesDbManager::getMappableButtonCount()
     ( NESIsVSUni || MDFNGameInfo->GameType == GMT_DISK ) ?
       NES_BUTTON_COUNT : ( NES_BUTTON_COUNT - 1 );
 #endif
-  return NES_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* NesDbManager::getMappableButton( int button )

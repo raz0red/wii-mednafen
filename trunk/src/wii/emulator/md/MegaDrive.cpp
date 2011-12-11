@@ -71,8 +71,13 @@ MenuManager& MegaDrive::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void MegaDrive::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -82,12 +87,23 @@ void MegaDrive::updateControls( bool isRapid )
 
     u16 result = 0;
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+    StandardDatabaseManager& dbManager = 
+      (StandardDatabaseManager&)getDbManager();
 
-    for( int i = 0; i < MD_BUTTON_COUNT; i++ )
+    for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
     {
       BEGIN_IF_BUTTON_HELD
         u32 val = MegaDriveDbManager::MD_BUTTONS[ i ].button;
-        if( !( val & BTN_RAPID ) || isRapid )
+        if( val == MD_REWIND )
+        {
+          special = true;
+          if( !specialheld )
+          {
+            specialheld = true;
+            DNeedRewind = true;
+          }                    
+        }
+        else if( !( val & BTN_RAPID ) || isRapid )
         {
           result |= ( val & 0xFFFF );
         }
@@ -105,10 +121,18 @@ void MegaDrive::updateControls( bool isRapid )
 
     m_padData[c] = result;
   }
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void MegaDrive::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 void MegaDrive::onPreLoop()
@@ -174,4 +198,13 @@ u8 MegaDrive::getBpp()
 const ScreenSize* MegaDrive::getDoubleStrikeScreenSize()
 {
   return &defaultScreenSizes[1];
+}
+
+bool MegaDrive::isRewindSupported()
+{
+#ifdef ENABLE_MD_REWIND    
+  return true;
+#else
+  return false;
+#endif
 }

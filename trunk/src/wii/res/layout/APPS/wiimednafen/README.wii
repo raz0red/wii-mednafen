@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1-pre112811 release README
+WiiMednafen v0.1-pre121011 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -70,7 +70,7 @@ let me know if you experience any via the Google Code project.
    properly, even if the drive goes to sleep.
  * Many emulator options are not currently exposed, they will be added with
    subsequent releases.
- * Several features like rewind, etc. are not currently supported, they will
+ * Several features of Mednafen proper are not currently supported, they will
    be added with subsequent releases.
  * The front-end is functional but minimal. This is something that may be 
    addressed once I am satisfied with the overall state of the port. 
@@ -126,6 +126,31 @@ Double strike (240p) mode support
 
 TODO
 
+--------------------------------------------
+Rewind support
+--------------------------------------------
+
+Rewind is currently supported for the following emulators:
+
+ * GameBoy/GameBoy Color
+ * Game Gear
+ * Lynx 
+ * Nintendo Entertainment System (excludes FDS games)
+ * Neo Geo Pocket
+ * PC Engine/TurboGrafx 16 (excludes CD games)
+ * Sega Master System
+ * WonderSwan (Excludes large SRAM sizes: Dicing Knight, Judgment Silversword)
+
+ Enabling rewind:
+ ----------------
+ 
+ TODO
+
+ Rewind buttons (auto vs. manual)
+ --------------------------------
+ 
+ TODO
+ 
 --------------------------------------------
 Menu settings and navigation
 --------------------------------------------
@@ -380,8 +405,8 @@ menu item.
      A              : A
      B              : B
      Start          : Pause
-     R              : Option 1
-     L              : Option 2
+     X              : Option 1
+     Y              : Option 2
      Home           : Display WiiMednafen menu (see above)
 
 --------------------------------------------
@@ -895,9 +920,19 @@ Eke-eke      : Double strike help and Color trap filter implementation.
 Change Log
 --------------------------------------------
 
-11/28/11 (0.1-pre)
+12/10/11 (0.1-pre)
 -------------------
  - Added support for MegaDrive/Genesis.
+ - Added rewind support for the following emulators:
+   - GameBoy/GameBoy Color
+   - Game Gear
+   - Lynx 
+   - Nintendo Entertainment System (excludes FDS games)
+   - Neo Geo Pocket
+   - PC Engine/TurboGrafx 16 (excludes CD games)
+   - Sega Master System
+   - WonderSwan (Excludes large SRAM sizes: Dicing Knight, 
+       Judgment Silversword)
  - VI + GX scaler (eliminates majority of scaling artifacts). 
  - Default screen sizes per emulator (1x, 2x, Full, etc.).
  - Full widescreen support

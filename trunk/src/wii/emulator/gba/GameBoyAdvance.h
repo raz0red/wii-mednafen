@@ -22,6 +22,7 @@
 #define GBA_L      0x0200
 #define GBA_A_R    0x0001 | BTN_RAPID
 #define GBA_B_R    0x0002 | BTN_RAPID
+#define GBA_REWIND BTN_REWIND
 
 class GameBoyAdvance : public Emulator
 {
@@ -51,6 +52,8 @@ public:
 
   void setGbaBiosEnabled( bool enabled );
   bool isGbaBiosEnabled();
+
+  bool isRewindSupported();
 
   friend class GameBoyAdvanceConfigManager;
 };

@@ -59,8 +59,13 @@ MenuManager& GameBoyAdvance::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void GameBoyAdvance::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -69,12 +74,23 @@ void GameBoyAdvance::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < GBA_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = GameBoyAdvanceDbManager::GBA_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == GBA_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }
@@ -91,10 +107,18 @@ void GameBoyAdvance::updateControls( bool isRapid )
     result|=GBA_DOWN;
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void GameBoyAdvance::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool GameBoyAdvance::updateDebugText( 
@@ -138,3 +162,11 @@ const ScreenSize* GameBoyAdvance::getDoubleStrikeScreenSize()
   return &defaultScreenSizes[1];
 }
 
+bool GameBoyAdvance::isRewindSupported()
+{
+#ifdef ENABLE_GBA_REWIND  
+  return true;
+#else
+  return false;
+#endif
+}

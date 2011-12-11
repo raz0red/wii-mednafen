@@ -39,6 +39,14 @@
 #include "net_print.h"  
 #endif
 
+#ifdef WII
+// Redefine these so we don't see the verbose debug output.
+// Comment this block out if you want to see debug info.
+#define MDFN_malloc(size,name) malloc(size)
+#define MDFN_realloc(ptr,size,name) realloc(ptr,size)
+#define MDFN_free(ptr) free(ptr)
+#endif
+
 static int SaveStateStatus[10];
 
 #define RLSB 		MDFNSTATE_RLSB	//0x80000000
@@ -58,11 +66,11 @@ int32 smem_write(StateMem *st, void *buffer, uint32 len)
 {
  if((len + st->loc) > st->malloced)
  {
-  uint32 newsize = (st->malloced >= 32768) ? st->malloced : (st->initial_malloc ? st->initial_malloc : 32768);
+  uint32 newsize = (st->malloced >= 32768) ? st->malloced : (st->initial_malloc ? st->initial_malloc : 32768 );
 
   while(newsize < (len + st->loc))
    newsize *= 2;
-  st->data = (uint8 *)realloc(st->data, newsize);
+  st->data = (uint8 *)MDFN_realloc(st->data, newsize, "st->data");
   st->malloced = newsize;
  }
  memcpy(st->data + st->loc, buffer, len);
@@ -593,7 +601,7 @@ int MDFNSS_SaveSM(StateMem *st, int wantpreview, int data_only, const MDFN_Surfa
 #ifndef WII
   if(wantpreview)
   {
-    uint8 *previewbuffer = (uint8 *)malloc(4 * neowidth * neoheight);
+    uint8 *previewbuffer = (uint8 *)MDFN_malloc(4 * neowidth * neoheight, "previewbuffer");
     MDFN_Surface *dest_surface = new MDFN_Surface((uint32 *)previewbuffer, neowidth, neoheight, neowidth, surface->format);
     MDFN_Rect dest_rect;
 
@@ -622,7 +630,7 @@ int MDFNSS_SaveSM(StateMem *st, int wantpreview, int data_only, const MDFN_Surfa
 
     smem_write(st, previewbuffer, 3 * neowidth * neoheight);
 
-    free(previewbuffer);
+    MDFN_free(previewbuffer);
     delete dest_surface;
   }
 #endif
@@ -662,7 +670,7 @@ int MDFNSS_Save(const char *fname, const char *suffix, const MDFN_Surface *surfa
 	if(!MDFNSS_SaveSM(&st, (DisplayRect && LineWidths), 0, surface, DisplayRect, LineWidths))
 	{
 	 if(st.data)
-	  free(st.data);
+	  MDFN_free(st.data);
 	 if(!fname && !suffix)
  	  MDFN_DispMessage(_("State %d save error."), CurrentState);
 	 return(0);
@@ -671,7 +679,7 @@ int MDFNSS_Save(const char *fname, const char *suffix, const MDFN_Surface *surfa
 	if(!MDFN_DumpToFile(fname ? fname : MDFN_MakeFName(MDFNMKF_STATE,CurrentState,suffix).c_str(), 6, st.data, st.len))
 	{
          SaveStateStatus[CurrentState] = 0;
-	 free(st.data);
+	 MDFN_free(st.data);
 
          if(!fname && !suffix)
           MDFN_DispMessage(_("State %d save error."),CurrentState);
@@ -679,7 +687,7 @@ int MDFNSS_Save(const char *fname, const char *suffix, const MDFN_Surface *surfa
 	 return(0);
 	}
 
-	free(st.data);
+	MDFN_free(st.data);
 
 	SaveStateStatus[CurrentState] = 1;
 	RecentlySavedState = CurrentState;
@@ -700,19 +708,19 @@ int MDFNSS_SaveFP(gzFile fp, const MDFN_Surface *surface, const MDFN_Rect *Displ
  if(!MDFNSS_SaveSM(&st, (DisplayRect && LineWidths), 0, surface, DisplayRect, LineWidths))
  {
   if(st.data)
-   free(st.data);
+   MDFN_free(st.data);
   return(0);
  }
 
  if(gzwrite(fp, st.data, st.len) != (int32)st.len)
  {
   if(st.data)
-   free(st.data);
+   MDFN_free(st.data);
   return(0);
  }
 
  if(st.data)
-  free(st.data);
+  MDFN_free(st.data);
 
  return(1);
 }
@@ -778,21 +786,21 @@ int MDFNSS_LoadFP(gzFile fp)
  if(st.len < 32)
   return(0);
 
- if(!(st.data = (uint8 *)malloc(st.len)))
+ if(!(st.data = (uint8 *)MDFN_malloc(st.len, "st.data")))
   return(0);
 
  memcpy(st.data, header, 32);
  if(gzread(fp, st.data + 32, st.len - 32) != ((int32)st.len - 32))
  {
-  free(st.data);
+  MDFN_free(st.data);
   return(0);
  }
  if(!MDFNSS_LoadSM(&st, 1, 0))
  {
-  free(st.data);
+  MDFN_free(st.data);
   return(0);
  }
- free(st.data);
+ MDFN_free(st.data);
  return(1);
 }
 
@@ -1022,8 +1030,9 @@ struct StateMemPacket
 	uint8 *data;
 	uint32 compressed_len;
 	uint32 uncompressed_len;
-
+#ifndef WII
 	StateMem MovieLove;
+#endif
 };
 
 static int SRW_NUM = 600;
@@ -1053,7 +1062,7 @@ void MDFN_StateEvilBegin(void)
  else if(srwcompstring == "blz")
   SRWCompressor = SRW_COMPRESSOR_BLZ;
 
- bcs = (StateMemPacket *)calloc(SRW_NUM, sizeof(StateMemPacket));
+ bcs = (StateMemPacket *)MDFN_calloc(SRW_NUM, sizeof(StateMemPacket),"bcs");
  bcspos = 0;
 
  for(x=0;x<SRW_NUM;x++)
@@ -1061,7 +1070,9 @@ void MDFN_StateEvilBegin(void)
   bcs[x].data = NULL;
   bcs[x].compressed_len = 0;
   bcs[x].uncompressed_len = 0;
+#ifndef WII
   memset(&bcs[x].MovieLove, 0, sizeof(StateMem));
+#endif
  }
 }
 
@@ -1088,14 +1099,15 @@ void MDFN_StateEvilEnd(void)
   {
 
    if(bcs[x].data)
-    free(bcs[x].data);
+    MDFN_free(bcs[x].data);
    bcs[x].data = NULL;
    bcs[x].compressed_len = 0;
   }
-  free(bcs);
+  MDFN_free(bcs);
  }
 }
 
+#ifndef WII
 void MDFN_StateEvilFlushMovieLove(void)
 {
  int bahpos = (bcspos + 1) % SRW_NUM;
@@ -1103,16 +1115,15 @@ void MDFN_StateEvilFlushMovieLove(void)
  {
   if(bcs[bahpos].MovieLove.data)
   {
-#ifndef WII
    if(bcs[x].data)
     MDFNMOV_ForceRecord(&bcs[bahpos].MovieLove);
-#endif
-   free(bcs[bahpos].MovieLove.data);
+   MDFN_free(bcs[bahpos].MovieLove.data);
    bcs[bahpos].MovieLove.data = NULL;
   }
   bahpos = (bahpos + 1) % SRW_NUM;
  }
 }
+#endif
 
 int MDFN_StateEvil(int rewind)
 {
@@ -1137,7 +1148,7 @@ int MDFN_StateEvil(int rewind)
    uint8 *tmp_buf;
    lzo_uint dst_len = bcs[bcspos].uncompressed_len;
 
-   tmp_buf = (uint8 *)malloc(bcs[bcspos].uncompressed_len);
+   tmp_buf = (uint8 *)MDFN_malloc(bcs[bcspos].uncompressed_len,"tmp_buf");
 
    if(SRWCompressor == SRW_COMPRESSOR_QUICKLZ)
     dst_len = qlz_decompress((char*)bcs[bcspos].data, tmp_buf, qlz_scratch_decompress);
@@ -1150,19 +1161,21 @@ int MDFN_StateEvil(int rewind)
    for(uint32 x = 0; x < bcs[bcspos].uncompressed_len && x < bcs[next_bcspos].uncompressed_len; x++)
     tmp_buf[x] ^= bcs[next_bcspos].data[x];
 
-   free(bcs[bcspos].data);
+   MDFN_free(bcs[bcspos].data);
    bcs[bcspos].data = tmp_buf;
    bcs[bcspos].compressed_len = 0;
   }
 
   if(NeedDataFlush)
   {
+#ifndef WII
    if(bcs[next_bcspos].MovieLove.data)
    {
-    free(bcs[next_bcspos].MovieLove.data);
+    MDFN_free(bcs[next_bcspos].MovieLove.data);
     bcs[next_bcspos].MovieLove.data = NULL;
    }
-   free(bcs[next_bcspos].data);
+#endif
+   MDFN_free(bcs[next_bcspos].data);
    bcs[next_bcspos].data = NULL;
    bcs[next_bcspos].compressed_len = 0;
    bcs[next_bcspos].uncompressed_len = 0;
@@ -1180,7 +1193,7 @@ int MDFN_StateEvil(int rewind)
    MDFNSS_LoadSM(&sm, 0, 1);
 
 #ifndef WII
-   free(MDFNMOV_GrabRewindJoy().data);
+   MDFN_free(MDFNMOV_GrabRewindJoy().data);
 #endif
    return(1);
   }
@@ -1199,21 +1212,23 @@ int MDFN_StateEvil(int rewind)
    {
     //printf("Force: %d\n", bcspos);
     MDFNMOV_ForceRecord(&bcs[bcspos].MovieLove);
-    free(bcs[bcspos].MovieLove.data);
+    MDFN_free(bcs[bcspos].MovieLove.data);
     bcs[bcspos].MovieLove.data = NULL;
    }
   }
 #endif
   if(bcs[bcspos].data)
   {
-   free(bcs[bcspos].data);
+   MDFN_free(bcs[bcspos].data);
    bcs[bcspos].data = NULL;
   }
+#ifndef WII
   if(bcs[bcspos].MovieLove.data)
   {
-   free(bcs[bcspos].MovieLove.data);
+   MDFN_free(bcs[bcspos].MovieLove.data);
    bcs[bcspos].MovieLove.data = NULL;
   }
+#endif
 
   memset(&sm, 0, sizeof(sm));
 
@@ -1232,37 +1247,37 @@ int MDFN_StateEvil(int rewind)
    if(SRWCompressor == SRW_COMPRESSOR_QUICKLZ)
    {
     uint32 dst_len;
-    uint8 *tmp_buf = (uint8 *)malloc(bcs[prev_bcspos].uncompressed_len + 400);
+    uint8 *tmp_buf = (uint8 *)MDFN_malloc(bcs[prev_bcspos].uncompressed_len + 400,"tmp_buf");
 
     dst_len = qlz_compress(bcs[prev_bcspos].data, (char*)tmp_buf, bcs[prev_bcspos].uncompressed_len, qlz_scratch_compress);
 
-    free(bcs[prev_bcspos].data);
-    bcs[prev_bcspos].data = (uint8 *)realloc(tmp_buf, dst_len);
+    MDFN_free(bcs[prev_bcspos].data);
+    bcs[prev_bcspos].data = (uint8 *)MDFN_realloc(tmp_buf, dst_len,"bcs[prev_bcspos].data");
     bcs[prev_bcspos].compressed_len = dst_len;
    }
    else if(SRWCompressor == SRW_COMPRESSOR_MINILZO)
    {
     uint8 workmem[LZO1X_1_MEM_COMPRESS];
-    uint8 * tmp_buf = (uint8 *)malloc((size_t)(1.10 * bcs[prev_bcspos].uncompressed_len));
+    uint8 * tmp_buf = (uint8 *)MDFN_malloc((size_t)(1.10 * bcs[prev_bcspos].uncompressed_len),"tmp_buf");
     lzo_uint dst_len = (lzo_uint)(1.10 * bcs[prev_bcspos].uncompressed_len);
 
     lzo1x_1_compress(bcs[prev_bcspos].data, bcs[prev_bcspos].uncompressed_len, tmp_buf, &dst_len, workmem);
 
-    free(bcs[prev_bcspos].data);
-    bcs[prev_bcspos].data = (uint8 *)realloc(tmp_buf, dst_len);
+    MDFN_free(bcs[prev_bcspos].data);
+    bcs[prev_bcspos].data = (uint8 *)MDFN_realloc(tmp_buf, dst_len,"bcs[prev_bcspos].data");
     bcs[prev_bcspos].compressed_len = dst_len;
    }
    else if(SRWCompressor == SRW_COMPRESSOR_BLZ)
    {
     blz_pack_t workmem;
 
-    uint8 * tmp_buf = (uint8 *)malloc((size_t)(bcs[prev_bcspos].uncompressed_len + blz_pack_extra));
+    uint8 * tmp_buf = (uint8 *)MDFN_malloc((size_t)(bcs[prev_bcspos].uncompressed_len + blz_pack_extra),"tmp_buf");
     uint32 dst_len = bcs[prev_bcspos].uncompressed_len + blz_pack_extra;
 
     dst_len = blz_pack(bcs[prev_bcspos].data, bcs[prev_bcspos].uncompressed_len, tmp_buf, &workmem);
 
-    free(bcs[prev_bcspos].data);
-    bcs[prev_bcspos].data = (uint8 *)realloc(tmp_buf, dst_len);
+    MDFN_free(bcs[prev_bcspos].data);
+    bcs[prev_bcspos].data = (uint8 *)MDFN_realloc(tmp_buf, dst_len,"bcs[prev_bcspos].data");
     bcs[prev_bcspos].compressed_len = dst_len;
    }
   }

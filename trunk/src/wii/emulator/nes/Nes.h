@@ -20,7 +20,8 @@
 #define NES_DOWN    0x0020
 #define NES_A_R     0x0001 | BTN_RAPID
 #define NES_B_R     0x0002 | BTN_RAPID
-#define NES_SPECIAL 0x40000000
+#define NES_SPECIAL 0x00010000
+#define NES_REWIND  BTN_REWIND
 
 class Nes : public Emulator
 {
@@ -50,6 +51,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class NesConfigManager;
 };

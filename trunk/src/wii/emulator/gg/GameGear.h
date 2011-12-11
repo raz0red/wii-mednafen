@@ -19,6 +19,7 @@
 #define GG_START    0x0040
 #define GG_BTN1_R   GG_BTN1 | BTN_RAPID
 #define GG_BTN2_R   GG_BTN2 | BTN_RAPID
+#define GG_REWIND   BTN_REWIND
 
 class GameGear : public Emulator
 {
@@ -43,6 +44,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class GameGearConfigManager;
 };

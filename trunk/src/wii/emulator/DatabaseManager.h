@@ -60,12 +60,13 @@ public:
   DatabaseManager( Emulator& emulator );  
   virtual void resetToDefaults();
   virtual dbEntry* getEntry() = 0;
-  void loadEntry( const char* hash );
+  virtual void loadEntry( const char* hash );
   bool deleteEntry( const char* hash );
   bool writeEntry( const char* hash, bool del = false );
   virtual void applyButtonMap();
   virtual int getProfileCount(); 
   virtual const char* getProfileName( int profile );
+  virtual void addRewindButtons();
 };
 
 #endif

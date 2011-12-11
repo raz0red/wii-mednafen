@@ -3,8 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define GB_BUTTON_COUNT         11
-
 /*
  * GameBoy database entry 
  */
@@ -19,7 +17,7 @@ private:
   GameBoyDbEntry m_entry;
 
 public:
-  static const MappableButton GB_BUTTONS[GB_BUTTON_COUNT];
+  static const MappableButton GB_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   GameBoyDbManager( Emulator& emulator );

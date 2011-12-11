@@ -13,8 +13,9 @@
 #define SMS_MAP_DOWN     7
 #define SMS_MAP_FIRE1_R  8
 #define SMS_MAP_FIRE2_R  9
+#define SMS_MAP_REWIND   10
 
-const MappableButton MasterSystemDbManager::SMS_BUTTONS[SMS_BUTTON_COUNT] = 
+const MappableButton MasterSystemDbManager::SMS_BUTTONS[] = 
 {
   { "(none)",       SMS_NONE      },
   { "Fire 1/Start", SMS_FIRE1     }, 
@@ -25,8 +26,12 @@ const MappableButton MasterSystemDbManager::SMS_BUTTONS[SMS_BUTTON_COUNT] =
   { "Up",           SMS_UP        },
   { "Down",         SMS_DOWN      },
   { "Fire 1",       SMS_FIRE1_R   }, 
-  { "Fire 2",       SMS_FIRE2_R   } 
+  { "Fire 2",       SMS_FIRE2_R   },
+  { "(rewind)",     SMS_REWIND    } 
 };
+
+static const int buttonCount =  
+  sizeof(MasterSystemDbManager::SMS_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton MasterSystemDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -105,7 +110,7 @@ void MasterSystemDbManager::resetToDefaults()
 
 int MasterSystemDbManager::getMappableButtonCount()
 {
-  return SMS_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* MasterSystemDbManager::getMappableButton( int button )

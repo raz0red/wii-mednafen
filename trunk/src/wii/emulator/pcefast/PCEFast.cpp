@@ -55,8 +55,13 @@ namespace PCE_Fast
   extern bool AVPad6Enabled[5];
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void PCEFast::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -70,11 +75,23 @@ void PCEFast::updateControls( bool isRapid )
     // 2 or 6 button controls
     PCE_Fast::AVPad6Enabled[c] = ((PCEFastDbEntry*)entry)->controlType[c];
 
-    for( int i = 0; i < PCE_BUTTON_COUNT; i++ )
+    StandardDatabaseManager& dbManager = 
+      (StandardDatabaseManager&)getDbManager();
+
+    for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
     {
       BEGIN_IF_BUTTON_HELD
         u32 val = PCEFastDbManager::PCE_BUTTONS[ i ].button;
-        if( !( val & BTN_RAPID ) || isRapid )
+        if( val == PCE_REWIND )
+        {
+          special = true;
+          if( !specialheld )
+          {
+            specialheld = true;
+            DNeedRewind = true;
+          }                    
+        }
+        else if( !( val & BTN_RAPID ) || isRapid )
         {
           result |= ( val & 0xFFFF );
         }
@@ -92,10 +109,18 @@ void PCEFast::updateControls( bool isRapid )
 
     m_padData[c] = result;
   }
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void PCEFast::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool PCEFast::updateDebugText( 
@@ -127,4 +152,15 @@ int PCEFast::getDefaultScreenSizesCount()
 const ScreenSize* PCEFast::getDoubleStrikeScreenSize()
 {
   return &defaultScreenSizes[1];
+}
+
+namespace PCE_Fast
+{
+  extern bool IsSGX;
+  extern bool PCE_IsCD;
+}
+
+bool PCEFast::isRewindSupported()
+{
+  return !PCE_Fast::PCE_IsCD && !PCE_Fast::IsSGX;
 }

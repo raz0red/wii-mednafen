@@ -13,8 +13,9 @@
 #define NGP_MAP_DOWN    7
 #define NGP_MAP_A_R     8
 #define NGP_MAP_B_R     9
+#define NGP_MAP_REWIND  10
 
-const MappableButton NeoGeoPocketDbManager::NGP_BUTTONS[NGP_BUTTON_COUNT] = 
+const MappableButton NeoGeoPocketDbManager::NGP_BUTTONS[] = 
 {
   { "(none)",   NGP_NONE    },
   { "A",        NGP_A       }, 
@@ -25,8 +26,12 @@ const MappableButton NeoGeoPocketDbManager::NGP_BUTTONS[NGP_BUTTON_COUNT] =
   { "Up",       NGP_UP      },
   { "Down",     NGP_DOWN    },
   { "A",        NGP_A_R     }, 
-  { "B",        NGP_B_R     } 
+  { "B",        NGP_B_R     },
+  { "(rewind)", NGP_REWIND  }
 };
+
+static const int buttonCount =  
+  sizeof(NeoGeoPocketDbManager::NGP_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton NeoGeoPocketDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -105,7 +110,7 @@ void NeoGeoPocketDbManager::resetToDefaults()
 
 int NeoGeoPocketDbManager::getMappableButtonCount()
 {
-  return NGP_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* NeoGeoPocketDbManager::getMappableButton( int button )

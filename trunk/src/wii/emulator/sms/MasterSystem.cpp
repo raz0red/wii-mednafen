@@ -66,8 +66,13 @@ MenuManager& MasterSystem::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void MasterSystem::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -78,11 +83,23 @@ void MasterSystem::updateControls( bool isRapid )
     u16 result = 0;
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
 
-    for( int i = 0; i < SMS_BUTTON_COUNT; i++ )
+    StandardDatabaseManager& dbManager = 
+      (StandardDatabaseManager&)getDbManager();
+
+    for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )  
     {
       BEGIN_IF_BUTTON_HELD
         u32 val = MasterSystemDbManager::SMS_BUTTONS[ i ].button;
-        if( !( val & BTN_RAPID ) || isRapid )
+        if( val == SMS_REWIND )
+        {
+          special = true;
+          if( !specialheld )
+          {
+            specialheld = true;
+            DNeedRewind = true;
+          }                    
+        }
+        else if( !( val & BTN_RAPID ) || isRapid )
         {
           result |= ( val & 0xFFFF );
         }
@@ -99,6 +116,12 @@ void MasterSystem::updateControls( bool isRapid )
       result|=SMS_DOWN;
 
     m_padData[c] = result;
+  }
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
   }
 }
 
@@ -127,6 +150,8 @@ const char* MasterSystem::getConsoleRegionName()
 
 void MasterSystem::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool MasterSystem::updateDebugText( 
@@ -134,7 +159,6 @@ bool MasterSystem::updateDebugText(
 {
   return false;
 }
-
 
 bool MasterSystem::isRotationSupported()
 {
@@ -154,4 +178,9 @@ int MasterSystem::getDefaultScreenSizesCount()
 const ScreenSize* MasterSystem::getDoubleStrikeScreenSize()
 {
   return &defaultScreenSizes[1];
+}
+
+bool MasterSystem::isRewindSupported()
+{
+  return true;
 }

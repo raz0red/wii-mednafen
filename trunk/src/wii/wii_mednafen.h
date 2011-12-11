@@ -60,6 +60,10 @@ extern BOOL wii_auto_load_save_state;
 extern BOOL wii_gx_vi_scaler;
 // Volume
 extern int wii_volume;
+// Whether to enable rewind
+extern BOOL wii_rewind;
+// Whether to automatically add rewind buttons
+extern BOOL wii_rewind_add_buttons;
 
 /*
  * Returns the roms directory

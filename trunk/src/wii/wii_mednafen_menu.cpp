@@ -241,6 +241,12 @@ void wii_mednafen_menu_init()
   child = wii_create_tree_node( NODETYPE_VOLUME, "Volume" );
   wii_add_child( advanced, child );
 
+  child = wii_create_tree_node( NODETYPE_REWIND, "Rewind" );
+  wii_add_child( advanced, child );
+
+  child = wii_create_tree_node( NODETYPE_REWIND_BUTTON, "Rewind buttons" );
+  wii_add_child( advanced, child );
+
 #if 0
   child = wii_create_tree_node( NODETYPE_SPACER, "" );
   wii_add_child( advanced, child );
@@ -420,19 +426,27 @@ void wii_menu_handle_get_node_name(
         ( wii_volume / 10 ), 
         ( wii_volume == 100 ?  gettextmsg("(normal)") : "" ) );
       break;
+    case NODETYPE_REWIND_BUTTON:
+      snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+        wii_rewind_add_buttons ? "Auto" : "Manual" );
+      break;
     case NODETYPE_DEBUG_MODE:
     case NODETYPE_TOP_MENU_EXIT:
     case NODETYPE_FILTER:
     case NODETYPE_VSYNC:
     case NODETYPE_AUTO_LOAD_SAVE:
     case NODETYPE_DOUBLE_STRIKE:
-    case NODETYPE_CHEATS:
+    case NODETYPE_CHEATS:    
     case NODETYPE_TRAP_FILTER:
     case NODETYPE_16_9_CORRECTION:
+    case NODETYPE_REWIND:
       {
         BOOL enabled = FALSE;
         switch( node->node_type )
         {
+          case NODETYPE_REWIND:
+            enabled = wii_rewind;
+            break;
           case NODETYPE_16_9_CORRECTION:
             enabled = wii_16_9_correction;
             break;
@@ -592,6 +606,17 @@ void wii_menu_handle_select_node( TREENODE *node )
       case NODETYPE_CHEATS:
         wii_cheats ^= 1;
         break;
+      case NODETYPE_REWIND:
+        wii_rewind ^= 1;
+        if( wii_rewind )
+        {
+          wii_set_status_message( 
+            "Note: Enabling rewind may affect performance." );
+        }
+        break;
+      case NODETYPE_REWIND_BUTTON:
+        wii_rewind_add_buttons ^= 1;
+        break;
       case NODETYPE_WIIMOTE_MENU_ORIENT:
         wii_mote_menu_vertical ^= 1;
         break;
@@ -711,6 +736,8 @@ BOOL wii_menu_handle_is_node_visible( TREENODE *node )
   {
     case NODETYPE_LOAD_STATE:
       return wii_snapshot_current_exists();
+    case NODETYPE_REWIND_BUTTON:
+      return wii_rewind;
     case NODETYPE_GX_VI_SCALER_SPACER:
     case NODETYPE_GX_VI_SCALER:
       return !wii_filter;

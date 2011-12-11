@@ -4,8 +4,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define PCE_BUTTON_COUNT         15
-
 // Control type
 #define PCE_CONTROL_2BUTTON   0
 #define PCE_CONTROL_6BUTTON   1
@@ -29,7 +27,7 @@ protected:
   void readEntryValue( dbEntry *entry, const char* name, const char* value );
 
 public:
-  static const MappableButton PCE_BUTTONS[PCE_BUTTON_COUNT];
+  static const MappableButton PCE_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   PCEFastDbManager( Emulator& emulator );

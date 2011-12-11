@@ -88,7 +88,11 @@ static const char *fname_extra = gettext_noop("See fname_format.txt for more inf
 
 static MDFNSetting MednafenSettings[] =
 {
+#ifndef WII
   { "srwcompressor", MDFNSF_NOFLAGS, gettext_noop("Compressor to use with state rewinding"), NULL, MDFNST_ENUM, "quicklz", NULL, NULL, NULL, NULL, CompressorList },
+#else
+  { "srwcompressor", MDFNSF_NOFLAGS, gettext_noop("Compressor to use with state rewinding"), NULL, MDFNST_ENUM, "minilzo", NULL, NULL, NULL, NULL, CompressorList },
+#endif
 
   { "srwframes", MDFNSF_NOFLAGS, gettext_noop("Number of frames to keep states for when state rewinding is enabled."), 
   gettext_noop("WARNING: Setting this to a large value may cause excessive RAM usage in some circumstances, such as with games that stream large volumes of data off of CDs."), MDFNST_UINT, "600", "10", "99999" },
@@ -280,10 +284,7 @@ void MDFNI_StopAVRecord(void)
       MDFNMP_Kill();
 
       MDFNGameInfo = NULL;
-
-#ifndef WII
       MDFN_StateEvilEnd();
-#endif
 
       if(CDInUse)
       {
@@ -519,8 +520,8 @@ void MDFNI_StopAVRecord(void)
 
 #ifndef WII
     TBlur_Init();
-    MDFN_StateEvilBegin();
 #endif
+    MDFN_StateEvilBegin();
 
     if(MDFNGameInfo->GameType != GMT_PLAYER)
     {
@@ -746,8 +747,8 @@ void MDFNI_StopAVRecord(void)
 #endif
 #ifndef WII
     TBlur_Init();
-    MDFN_StateEvilBegin();
 #endif
+    MDFN_StateEvilBegin();
 
     last_sound_rate = -1;
     memset(&last_pixel_format, 0, sizeof(MDFN_PixelFormat));
@@ -1297,9 +1298,8 @@ void MDFNI_StopAVRecord(void)
           MDFN_DispMessage(_("Music player rewinding is unsupported."));
         }
     }
-
-    espec->NeedSoundReverse = MDFN_StateEvil(espec->NeedRewind);
 #endif
+    espec->NeedSoundReverse = MDFN_StateEvil(espec->NeedRewind);
 
     MDFNGameInfo->Emulate(espec);
 

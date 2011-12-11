@@ -13,8 +13,9 @@
 #define GG_MAP_DOWN     7
 #define GG_MAP_BTN1_R   8
 #define GG_MAP_BTN2_R   9
+#define GG_MAP_REWIND   10
 
-const MappableButton GameGearDbManager::GG_BUTTONS[GG_BUTTON_COUNT] = 
+const MappableButton GameGearDbManager::GG_BUTTONS[] = 
 {
   { "(none)",   GG_NONE    },
   { "Button 1", GG_BTN1    }, 
@@ -25,8 +26,12 @@ const MappableButton GameGearDbManager::GG_BUTTONS[GG_BUTTON_COUNT] =
   { "Up",       GG_UP      },
   { "Down",     GG_DOWN    },
   { "Button 1", GG_BTN1_R  }, 
-  { "Button 2", GG_BTN2_R  } 
+  { "Button 2", GG_BTN2_R  },
+  { "(rewind)", GG_REWIND  }  
 };
+
+static const int buttonCount =  
+  sizeof(GameGearDbManager::GG_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton GameGearDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -105,7 +110,7 @@ void GameGearDbManager::resetToDefaults()
 
 int GameGearDbManager::getMappableButtonCount()
 {
-  return GG_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* GameGearDbManager::getMappableButton( int button )

@@ -19,8 +19,9 @@
 #define PCE_MAP_VI     12
 #define PCE_MAP_I_R    13
 #define PCE_MAP_II_R   14
+#define PCE_MAP_REWIND 15
 
-const MappableButton PCEFastDbManager::PCE_BUTTONS[PCE_BUTTON_COUNT] = 
+const MappableButton PCEFastDbManager::PCE_BUTTONS[] = 
 {
   { "(none)",   PCE_NONE    },
   { "I",        PCE_I       }, 
@@ -36,8 +37,12 @@ const MappableButton PCEFastDbManager::PCE_BUTTONS[PCE_BUTTON_COUNT] =
   { "V",        PCE_V       },
   { "VI",       PCE_VI      },
   { "I",        PCE_I_R     },
-  { "II",       PCE_II_R    }
+  { "II",       PCE_II_R    },
+  { "(rewind)", PCE_REWIND  }
 };
+
+static const int buttonCount =  
+  sizeof(PCEFastDbManager::PCE_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton PCEFastDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -116,7 +121,7 @@ void PCEFastDbManager::resetToDefaults()
 
 int PCEFastDbManager::getMappableButtonCount()
 {
-  return PCE_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* PCEFastDbManager::getMappableButton( int button )

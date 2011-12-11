@@ -17,9 +17,9 @@
 #define LYNX_MAP_B_R     11
 #define LYNX_MAP_OPT1_R  12
 #define LYNX_MAP_OPT2_R  13
+#define LYNX_MAP_REWIND  14
 
-
-const MappableButton LynxDbManager::LYNX_BUTTONS[LYNX_BUTTON_COUNT] = 
+const MappableButton LynxDbManager::LYNX_BUTTONS[] = 
 {
   { "(none)",   LYNX_NONE     },
   { "A",        LYNX_A        }, 
@@ -34,9 +34,12 @@ const MappableButton LynxDbManager::LYNX_BUTTONS[LYNX_BUTTON_COUNT] =
   { "A",        LYNX_A_R      }, 
   { "B",        LYNX_B_R      }, 
   { "Option 1", LYNX_OPT1_R   },
-  { "Option 2", LYNX_OPT2_R   }
-
+  { "Option 2", LYNX_OPT2_R   },
+  { "(rewind)", LYNX_REWIND   }
 };
+
+static const int buttonCount =  
+  sizeof(LynxDbManager::LYNX_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton LynxDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -81,10 +84,10 @@ const WiiButton LynxDbManager::
     { "Start",  PAD_BUTTON_START,             LYNX_MAP_PAUSE },
     { "A",      PAD_BUTTON_A,                 LYNX_MAP_A     },
     { "B",      PAD_BUTTON_B,                 LYNX_MAP_B     }, 
-    { "X",      PAD_BUTTON_X,                 LYNX_MAP_NONE  },
-    { "Y",      PAD_BUTTON_Y,                 LYNX_MAP_NONE  },
-    { "R",      PAD_TRIGGER_R,                LYNX_MAP_OPT1  },
-    { "L",      PAD_TRIGGER_L,                LYNX_MAP_OPT2  },
+    { "X",      PAD_BUTTON_X,                 LYNX_MAP_OPT1  },
+    { "Y",      PAD_BUTTON_Y,                 LYNX_MAP_OPT2  },
+    { "R",      PAD_TRIGGER_R,                LYNX_MAP_NONE  },
+    { "L",      PAD_TRIGGER_L,                LYNX_MAP_NONE  },
     { NULL,     0,                            LYNX_MAP_NONE  },
     { NULL,     0,                            LYNX_MAP_NONE  },
     { NULL,     0,                            LYNX_MAP_NONE  },
@@ -116,7 +119,7 @@ void LynxDbManager::resetToDefaults()
 
 int LynxDbManager::getMappableButtonCount()
 {
-  return LYNX_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* LynxDbManager::getMappableButton( int button )

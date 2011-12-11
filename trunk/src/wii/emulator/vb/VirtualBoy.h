@@ -35,7 +35,7 @@ typedef struct Vb3dMode
 #define VB_R_DOWN     0x2000
 #define VB_KEY_A_R    VB_KEY_A | BTN_RAPID
 #define VB_KEY_B_R    VB_KEY_B | BTN_RAPID
-
+#define VB_KEY_REWIND BTN_REWIND
 
 class VirtualBoy : public Emulator
 {
@@ -82,6 +82,8 @@ public:
 
   const ScreenSize* getDefaultScreenSizes();
   int getDefaultScreenSizesCount();
+
+  bool isRewindSupported();
 
   friend class VirtualBoyConfigManager;
 };

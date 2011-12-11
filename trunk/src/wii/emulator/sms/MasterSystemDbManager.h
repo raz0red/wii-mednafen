@@ -3,8 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define SMS_BUTTON_COUNT         10
-
 /*
  * MasterSystem database entry 
  */
@@ -19,7 +17,7 @@ private:
   MasterSystemDbEntry m_entry;
 
 public:
-  static const MappableButton SMS_BUTTONS[SMS_BUTTON_COUNT];
+  static const MappableButton SMS_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   MasterSystemDbManager( Emulator& emulator );

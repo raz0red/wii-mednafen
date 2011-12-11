@@ -4,8 +4,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define MD_BUTTON_COUNT         19
-
 // Control type
 #define MD_CONTROL_3BUTTON   0
 #define MD_CONTROL_6BUTTON   1
@@ -29,7 +27,7 @@ protected:
   void readEntryValue( dbEntry *entry, const char* name, const char* value );
 
 public:
-  static const MappableButton MD_BUTTONS[MD_BUTTON_COUNT];
+  static const MappableButton MD_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   MegaDriveDbManager( Emulator& emulator );

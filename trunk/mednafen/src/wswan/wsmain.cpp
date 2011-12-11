@@ -207,8 +207,11 @@ static bool TestMagic(const char *name, MDFNFILE *fp)
  return(TRUE);
 }
 
+int WS_SramSize = 0;
+
 static int Load(const char *name, MDFNFILE *fp)
 {
+ WS_SramSize = 0;
  uint32 real_rom_size;
 
  if(fp->size < 65536)
@@ -291,6 +294,8 @@ static int Load(const char *name, MDFNFILE *fp)
 
  if(SRAMSize)
   MDFN_printf(_("Battery-backed RAM:  %d bytes\n"), SRAMSize);
+
+ WS_SramSize = SRAMSize;
 
  MDFN_printf(_("Recorded Checksum:  0x%04x\n"), header[8] | (header[9] << 8));
  {

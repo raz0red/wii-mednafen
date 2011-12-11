@@ -16,8 +16,9 @@
 #define GBA_MAP_DOWN    10
 #define GBA_MAP_A_R     11
 #define GBA_MAP_B_R     12
+#define GBA_MAP_REW     13
 
-const MappableButton GameBoyAdvanceDbManager::GBA_BUTTONS[GBA_BUTTON_COUNT] = 
+const MappableButton GameBoyAdvanceDbManager::GBA_BUTTONS[] = 
 {
   { "(none)",   GBA_NONE    },
   { "A",        GBA_A       }, 
@@ -31,9 +32,14 @@ const MappableButton GameBoyAdvanceDbManager::GBA_BUTTONS[GBA_BUTTON_COUNT] =
   { "Up",       GBA_UP      },
   { "Down",     GBA_DOWN    },
   { "A",        GBA_A_R     }, 
-  { "B",        GBA_B_R     } 
-
+  { "B",        GBA_B_R     },
+#ifdef ENABLE_GBA_REWIND    
+  { "(rewind)", GBA_REWIND  } 
+#endif
 };
+
+static const int buttonCount =  
+  sizeof(GameBoyAdvanceDbManager::GBA_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton GameBoyAdvanceDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -112,7 +118,7 @@ void GameBoyAdvanceDbManager::resetToDefaults()
 
 int GameBoyAdvanceDbManager::getMappableButtonCount()
 {
-  return GBA_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* GameBoyAdvanceDbManager::getMappableButton( int button )

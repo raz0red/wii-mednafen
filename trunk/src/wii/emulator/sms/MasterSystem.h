@@ -19,6 +19,7 @@
 #define SMS_PAUSE     0x0040
 #define SMS_FIRE1_R   SMS_FIRE1 | BTN_RAPID
 #define SMS_FIRE2_R   SMS_FIRE2 | BTN_RAPID
+#define SMS_REWIND    BTN_REWIND
 
 class MasterSystem : public Emulator
 {
@@ -54,6 +55,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class MasterSystemConfigManager;
 };
