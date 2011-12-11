@@ -23,8 +23,10 @@
 #define MD_MAP_X_R    16
 #define MD_MAP_Y_R    17
 #define MD_MAP_Z_R    18
+#define MD_MAP_REWIND 19
 
-const MappableButton MegaDriveDbManager::MD_BUTTONS[MD_BUTTON_COUNT] = 
+
+const MappableButton MegaDriveDbManager::MD_BUTTONS[] = 
 {
   { "(none)",   MD_NONE     },
   { "A",        MD_A        }, 
@@ -44,9 +46,14 @@ const MappableButton MegaDriveDbManager::MD_BUTTONS[MD_BUTTON_COUNT] =
   { "C",        MD_C_R      },
   { "X",        MD_X_R      },
   { "Y",        MD_Y_R      },
-  { "Z",        MD_Z_R      }
-
+  { "Z",        MD_Z_R      },
+#ifdef ENABLE_MD_REWIND    
+  { "(rewind)", MD_REWIND   }
+#endif
 };
+
+static const int buttonCount =  
+  sizeof(MegaDriveDbManager::MD_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton MegaDriveDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -125,7 +132,7 @@ void MegaDriveDbManager::resetToDefaults()
 
 int MegaDriveDbManager::getMappableButtonCount()
 {
-  return MD_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* MegaDriveDbManager::getMappableButton( int button )

@@ -23,6 +23,7 @@
 #define LYNX_B_R      0x0002 | BTN_RAPID
 #define LYNX_OPT2_R   0x0004 | BTN_RAPID
 #define LYNX_OPT1_R   0x0008 | BTN_RAPID
+#define LYNX_REWIND   BTN_REWIND
 
 class Lynx : public Emulator
 {
@@ -51,6 +52,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class LynxConfigManager;
 };

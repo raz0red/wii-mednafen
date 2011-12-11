@@ -152,8 +152,13 @@ Vb3dMode VirtualBoy::getMode()
   return VB_MODES[getModeIndex()];
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void VirtualBoy::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -162,12 +167,23 @@ void VirtualBoy::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < VB_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )  
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = VirtualBoyDbManager::VB_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == VB_KEY_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }   
@@ -201,6 +217,12 @@ void VirtualBoy::updateControls( bool isRapid )
     result|=VB_R_DOWN;
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void VirtualBoy::onPostLoad()
@@ -216,6 +238,9 @@ void VirtualBoy::onPostLoad()
   {
     setMode( VirtualBoy::DEFAULT_MODE_KEY );
   }
+
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 void VirtualBoy::onPreLoop()
@@ -263,4 +288,13 @@ int VirtualBoy::getDefaultScreenSizesCount()
 bool VirtualBoy::isDoubleStrikeSupported()
 {
   return false;
+}
+
+bool VirtualBoy::isRewindSupported()
+{
+#ifdef ENABLE_VB_REWIND  
+  return true;
+#else
+  return false;
+#endif
 }

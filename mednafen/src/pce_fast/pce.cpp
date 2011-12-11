@@ -38,7 +38,7 @@ static Blip_Buffer sbuf[2];
 
 bool PCE_ACEnabled;
 
-static bool IsSGX;
+bool IsSGX;
 static bool IsHES;
 int pce_overclocked;
 

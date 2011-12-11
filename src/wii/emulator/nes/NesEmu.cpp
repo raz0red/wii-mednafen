@@ -61,6 +61,7 @@ extern MDFNGI *MDFNGameInfo;
 extern int FDS_DiskInsert(int oride);
 extern int FDS_DiskEject(void);
 extern int FDS_DiskSelect(void);
+extern bool DNeedRewind;
 
 static int flipdisk = 0;
 static bool specialheld = false;
@@ -94,12 +95,23 @@ void Nes::updateControls( bool isRapid )
 
     u16 result = 0;
     StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+    StandardDatabaseManager& dbManager = 
+      (StandardDatabaseManager&)getDbManager();
 
-    for( int i = 0; i < NES_BUTTON_COUNT; i++ )
+    for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
     {
       BEGIN_IF_BUTTON_HELD
         u32 val = NesDbManager::NES_BUTTONS[ i ].button;
-        if( val & NES_SPECIAL )
+        if( val == NES_REWIND )
+        {
+          special = true;
+          if( !specialheld )
+          {
+            specialheld = true;
+            DNeedRewind = true;
+          }                    
+        }
+        else if( val == NES_SPECIAL )
         {          
           special = true;
           if( !specialheld )
@@ -140,12 +152,14 @@ void Nes::updateControls( bool isRapid )
   if( !special )
   {
     specialheld = false;
+    DNeedRewind = false;
   }
 }
 
 void Nes::onPostLoad()
 {
   flipdisk = 0;
+  DNeedRewind = false;
   specialheld = false;
 }
 
@@ -188,4 +202,9 @@ int Nes::getDefaultScreenSizesCount()
 const ScreenSize* Nes::getDoubleStrikeScreenSize()
 {
   return &defaultScreenSizes[1];
+}
+
+bool Nes::isRewindSupported()
+{
+  return MDFNGameInfo->GameType != GMT_DISK;
 }

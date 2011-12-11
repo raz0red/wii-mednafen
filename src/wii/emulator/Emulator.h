@@ -23,7 +23,8 @@ typedef struct ScreenSize {
   const char* name;
 } ScreenSize;
 
-#define BTN_RAPID 0x80000000
+#define BTN_RAPID   0x80000000
+#define BTN_REWIND  0x40000000
 
 #define DOUBLE_STRIKE_DISABLED 0
 #define DOUBLE_STRIKE_ENABLED 1
@@ -88,6 +89,8 @@ public:
   Rect* getEmulatorScreenSize();
   Rect* getScreenSize();
   Rect* getRotatedScreenSize();
+
+  virtual bool isRewindSupported();
 
   int getVolume();
   void setVolume( int volume );

@@ -289,10 +289,6 @@ bool DatabaseManager::writeEntry( const char* hash, bool del )
   return true;
 }
 
-void DatabaseManager::applyButtonMap()
-{
-}
-
 void DatabaseManager::resetToDefaults()
 {
   dbEntry* entry = getEntry();
@@ -308,4 +304,12 @@ int DatabaseManager::getProfileCount()
 const char* DatabaseManager::getProfileName( int profile )
 {
   return "";
+}
+
+void DatabaseManager::applyButtonMap()
+{
+}
+
+void DatabaseManager::addRewindButtons()
+{
 }

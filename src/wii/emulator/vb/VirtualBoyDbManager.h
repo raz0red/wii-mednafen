@@ -8,8 +8,6 @@
 #define ROM_PATCH_ENABLED    1
 #define ROM_PATCH_DISABLED   2
 
-#define VB_BUTTON_COUNT       17
-
 /*
  * VB database entry 
  */
@@ -29,7 +27,7 @@ protected:
   void readEntryValue( dbEntry *entry, const char* name, const char* value );
 
 public:
-  static const MappableButton VB_BUTTONS[VB_BUTTON_COUNT];
+  static const MappableButton VB_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
 

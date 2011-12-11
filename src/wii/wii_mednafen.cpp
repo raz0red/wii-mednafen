@@ -71,6 +71,10 @@ BOOL wii_auto_load_save_state = FALSE;
 char wii_language[WII_MAX_PATH] = "";
 // Whether to use the GX/VI scaler
 BOOL wii_gx_vi_scaler = TRUE;
+// Whether to enable rewind
+BOOL wii_rewind = FALSE;
+// Whether to automatically add rewind buttons
+BOOL wii_rewind_add_buttons = TRUE;
 // Volume
 int wii_volume = 100;
 // The roms dir

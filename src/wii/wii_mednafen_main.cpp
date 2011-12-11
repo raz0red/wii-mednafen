@@ -388,6 +388,8 @@ void wii_mednafen_emu_loop( BOOL resume )
 
   wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
 
+  MDFNI_EnableStateRewind( wii_rewind && emu->isRewindSupported() );
+
   ClearSound();
   PauseSound( 0 );
 

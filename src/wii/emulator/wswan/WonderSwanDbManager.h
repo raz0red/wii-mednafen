@@ -5,7 +5,6 @@
 
 #define WS_PROFILE_NORMAL       0
 #define WS_PROFILE_ROTATED90    1
-#define WS_BUTTON_COUNT         15
 #define WS_PROFILE_COUNT        2
 
 /*
@@ -22,7 +21,7 @@ private:
   WswanDbEntry m_entry;
 
 public:
-  static const MappableButton WS_BUTTONS[WS_BUTTON_COUNT];
+  static const MappableButton WS_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WS_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   WonderSwanDbManager( Emulator& emulator );

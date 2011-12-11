@@ -53,8 +53,13 @@ MenuManager& GameGear::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void GameGear::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -63,12 +68,23 @@ void GameGear::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < GG_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = GameGearDbManager::GG_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == GG_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }
@@ -85,10 +101,18 @@ void GameGear::updateControls( bool isRapid )
     result|=GG_DOWN;
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void GameGear::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool GameGear::updateDebugText( 
@@ -115,4 +139,9 @@ int GameGear::getDefaultScreenSizesCount()
 const ScreenSize* GameGear::getDoubleStrikeScreenSize()
 {
   return &defaultScreenSizes[1];
+}
+
+bool GameGear::isRewindSupported()
+{
+  return true;
 }

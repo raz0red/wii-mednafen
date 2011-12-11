@@ -82,12 +82,12 @@ void StandardCartSettingsMenuHelper::getNodeName(
         int index = ( node->node_type - NODETYPE_BUTTON1 );
         const char* name = 
           dbManager.getMappedButton( 
-            m_currentProfile, m_currentController, index )->name;  // TODO:MULTIPROF
+            m_currentProfile, m_currentController, index )->name;
         if( name != NULL )
         {
           snprintf( buffer, WII_MENU_BUFF_SIZE, "%s", name );
           u8 btn = 
-            entry->buttonMap[m_currentProfile][m_currentController][index]; // TODO:MULTIPROF
+            entry->buttonMap[m_currentProfile][m_currentController][index];
           const MappableButton* mappedBtn = dbManager.getMappableButton( btn ); 
           const char* name = mappedBtn->name;
           u32 val = mappedBtn->button;
@@ -135,7 +135,9 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
   switch( node->node_type )
   {
     case NODETYPE_CARTRIDGE_SETTINGS_CONTROLS:
-      m_currentProfile = entry->profile; // TODO:MULTIPROF
+      m_currentProfile = entry->profile; 
+      // Add prior to viewing controls
+      dbManager.addRewindButtons();       
       break;
     case NODETYPE_WIIMOTE_SUPPORTED:
       entry->base.wiimoteSupported ^= 1;
@@ -168,11 +170,11 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
         int index = ( node->node_type - NODETYPE_BUTTON1 );
         const char* name = 
           dbManager.getMappedButton( 
-            m_currentProfile, m_currentController, index )->name; // TODO:MULTIPROF
+            m_currentProfile, m_currentController, index )->name;
         if( name != NULL )
         {
           u8 mappedBtn =  
-            entry->buttonMap[m_currentProfile][m_currentController][index]; // TODO:MULTIPROF
+            entry->buttonMap[m_currentProfile][m_currentController][index];
 
           mappedBtn++;
           if( mappedBtn >= dbManager.getMappableButtonCount() )
@@ -181,7 +183,7 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
           }
 
           entry->buttonMap[m_currentProfile][m_currentController][index] 
-            = mappedBtn; // TODO:MULTIPROF
+            = mappedBtn;
         }
       }
       break;     

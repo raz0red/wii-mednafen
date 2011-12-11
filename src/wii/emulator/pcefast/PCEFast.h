@@ -24,6 +24,7 @@
 #define PCE_VI     0x0800
 #define PCE_I_R    PCE_I  | BTN_RAPID
 #define PCE_II_R   PCE_II | BTN_RAPID
+#define PCE_REWIND BTN_REWIND
 
 #if 0
  { "mode_select", "2/6 Mode Select", 6, IDIT_BUTTON, NULL }, // ???
@@ -53,6 +54,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class PCEFastConfigManager;
 };

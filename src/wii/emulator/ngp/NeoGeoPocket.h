@@ -19,7 +19,7 @@
 #define NGP_OPTION  0x0040
 #define NGP_A_R     NGP_A | BTN_RAPID
 #define NGP_B_R     NGP_B | BTN_RAPID
-
+#define NGP_REWIND  BTN_REWIND
 
 class NeoGeoPocket : public Emulator
 {
@@ -48,6 +48,8 @@ public:
 
   void onPostLoad();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
+
+  bool isRewindSupported();
 
   friend class NeoGeoPocketConfigManager;
 };

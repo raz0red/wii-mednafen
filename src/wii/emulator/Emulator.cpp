@@ -301,4 +301,10 @@ int Emulator::getAppliedVolume()
   }
 }
 
+bool Emulator::isRewindSupported()
+{
+  return false;
+}
+
+
 

@@ -3,8 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define GG_BUTTON_COUNT         10
-
 /*
  * GameGear database entry 
  */
@@ -19,7 +17,7 @@ private:
   GameGearDbEntry m_entry;
 
 public:
-  static const MappableButton GG_BUTTONS[GG_BUTTON_COUNT];
+  static const MappableButton GG_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   GameGearDbManager( Emulator& emulator );

@@ -34,6 +34,7 @@ protected:
     FILE* file, const char* hash, const dbEntry *entry );
   virtual void readEntryValue( 
     dbEntry *entry, const char* name, const char* value );
+  virtual u32 getDefaultRewindButton( int profile, int controller );
 
 public:
   static const char* WII_CONTROLLER_NAMES[WII_CONTROLLER_COUNT];
@@ -44,6 +45,7 @@ public:
   virtual const MappableButton* getMappableButton( int button ) = 0;
   void resetButtons();
   virtual void applyButtonMap();
+  virtual void addRewindButtons();
 };
 
 #endif

@@ -119,6 +119,15 @@ extern "C" void wii_config_handle_read_value( char *name, char* value )
   {
     wii_volume = Util_sscandec( value );
   }  
+  else if( strcmp( name, "rewind" ) == 0 )
+  {
+    wii_rewind = Util_sscandec( value );
+  }  
+  else if( strcmp( name, "rewind_add_buttons" ) == 0 )
+  {
+    wii_rewind_add_buttons = Util_sscandec( value );
+  }  
+
   else
   {
     // Read configuration value for emulators
@@ -152,6 +161,8 @@ extern "C" void wii_config_handle_write_config( FILE *fp )
   fprintf( fp, "vi_gx_scaler=%d\n", wii_gx_vi_scaler );
   fprintf( fp, "16_9_correction=%d\n", wii_16_9_correction );
   fprintf( fp, "volume=%d\n", wii_volume );  
+  fprintf( fp, "rewind=%d\n", wii_rewind );  
+  fprintf( fp, "rewind_add_buttons=%d\n", wii_rewind_add_buttons );  
 
   // Write configuration settings for emulators
   emuRegistry.writeConfig( fp );

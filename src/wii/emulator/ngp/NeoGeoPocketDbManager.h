@@ -3,8 +3,6 @@
 
 #include "StandardDatabaseManager.h"
 
-#define NGP_BUTTON_COUNT         10
-
 // Game language
 #define NGP_LANG_JAPANESE   0
 #define NGP_LANG_ENGLISH    1
@@ -23,7 +21,7 @@ private:
   NeoGeoPocketDbEntry m_entry;
 
 public:
-  static const MappableButton NGP_BUTTONS[NGP_BUTTON_COUNT];
+  static const MappableButton NGP_BUTTONS[];
   static const WiiButton 
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   NeoGeoPocketDbManager( Emulator& emulator );

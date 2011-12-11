@@ -18,8 +18,9 @@
 #define VBK_MAP_RDOWN   14
 #define VBK_MAP_A_R     15
 #define VBK_MAP_B_R     16
+#define VBK_MAP_REWIND  17
 
-const MappableButton VirtualBoyDbManager::VB_BUTTONS[VB_BUTTON_COUNT] = 
+const MappableButton VirtualBoyDbManager::VB_BUTTONS[] = 
 {
   { "(none)",   VB_NONE        },
   { "A",        VB_KEY_A       }, 
@@ -37,8 +38,14 @@ const MappableButton VirtualBoyDbManager::VB_BUTTONS[VB_BUTTON_COUNT] =
   { "R-Up",     VB_R_UP        },
   { "R-Down",   VB_R_DOWN      },
   { "A",        VB_KEY_A_R     }, 
-  { "B",        VB_KEY_B_R     }, 
+  { "B",        VB_KEY_B_R     },
+#ifdef ENABLE_VB_REWIND  
+  { "(rewind)", VB_KEY_REWIND  } 
+#endif
 };
+
+static const int buttonCount =  
+  sizeof(VirtualBoyDbManager::VB_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton VirtualBoyDbManager::WII_BUTTONS
   [WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -119,7 +126,7 @@ void VirtualBoyDbManager::resetToDefaults()
 
 int VirtualBoyDbManager::getMappableButtonCount()
 {
-  return VB_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* VirtualBoyDbManager::getMappableButton( int button )

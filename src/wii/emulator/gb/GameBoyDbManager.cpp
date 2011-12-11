@@ -14,8 +14,9 @@
 #define GB_MAP_DOWN    8
 #define GB_MAP_A_R     9
 #define GB_MAP_B_R     10
+#define GB_MAP_REWIND  11
 
-const MappableButton GameBoyDbManager::GB_BUTTONS[GB_BUTTON_COUNT] = 
+const MappableButton GameBoyDbManager::GB_BUTTONS[] = 
 {
   { "(none)",   GB_NONE    },
   { "A",        GB_A       }, 
@@ -27,8 +28,12 @@ const MappableButton GameBoyDbManager::GB_BUTTONS[GB_BUTTON_COUNT] =
   { "Up",       GB_UP      },
   { "Down",     GB_DOWN    },
   { "A",        GB_A_R     }, 
-  { "B",        GB_B_R     } 
+  { "B",        GB_B_R     },
+  { "(rewind)", GB_REWIND  }  
 };
+
+static const int buttonCount =  
+  sizeof(GameBoyDbManager::GB_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton GameBoyDbManager::
   WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -107,7 +112,7 @@ void GameBoyDbManager::resetToDefaults()
 
 int GameBoyDbManager::getMappableButtonCount()
 {
-  return GB_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* GameBoyDbManager::getMappableButton( int button )

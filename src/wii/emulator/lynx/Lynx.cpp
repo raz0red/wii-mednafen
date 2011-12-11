@@ -71,8 +71,13 @@ MenuManager& Lynx::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void Lynx::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -81,12 +86,23 @@ void Lynx::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < LYNX_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = LynxDbManager::LYNX_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == LYNX_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }
@@ -125,10 +141,18 @@ void Lynx::updateControls( bool isRapid )
     result|=down;
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void Lynx::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool Lynx::updateDebugText( 
@@ -176,4 +200,9 @@ const ScreenSize* Lynx::getDoubleStrikeScreenSize()
 const ScreenSize* Lynx::getDoubleStrikeRotatedScreenSize()
 {
   return &defaultRotatedScreenSizes[1];
+}
+
+bool Lynx::isRewindSupported()
+{
+  return true;
 }

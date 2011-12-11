@@ -54,8 +54,13 @@ MenuManager& GameBoy::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
+static bool specialheld = false;
+
 void GameBoy::updateControls( bool isRapid )
 {
+  bool special = false;
+
   WPAD_ScanPads();
   PAD_ScanPads();
 
@@ -64,12 +69,23 @@ void GameBoy::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < GB_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = GameBoyDbManager::GB_BUTTONS[ i ].button;
-      if( !( val & BTN_RAPID ) || isRapid )
+      if( val == GB_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( !( val & BTN_RAPID ) || isRapid )
       {
         result |= ( val & 0xFFFF );
       }
@@ -86,10 +102,18 @@ void GameBoy::updateControls( bool isRapid )
     result|=GB_DOWN;
 
   m_padData[0] = result;
+
+  if( !special )
+  {
+    specialheld = false;
+    DNeedRewind = false;
+  }
 }
 
 void GameBoy::onPostLoad()
 {
+  specialheld = false;
+  DNeedRewind = false;
 }
 
 bool GameBoy::updateDebugText( 
@@ -118,3 +142,7 @@ const ScreenSize* GameBoy::getDoubleStrikeScreenSize()
   return &defaultScreenSizes[1];
 }
 
+bool GameBoy::isRewindSupported()
+{
+  return true;
+}

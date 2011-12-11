@@ -76,6 +76,7 @@ MenuManager& WonderSwan::getMenuManager()
   return m_menuManager;
 }
 
+extern bool DNeedRewind;
 static bool specialheld = false;
 
 void WonderSwan::updateControls( bool isRapid )
@@ -90,12 +91,23 @@ void WonderSwan::updateControls( bool isRapid )
 
   u16 result = 0;
   StandardDbEntry* entry = (StandardDbEntry*)getDbManager().getEntry();
+  StandardDatabaseManager& dbManager = 
+    (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < WS_BUTTON_COUNT; i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
   {
     BEGIN_IF_BUTTON_HELD
       u32 val = WonderSwanDbManager::WS_BUTTONS[ i ].button;
-      if( val == WS_ROTATE )
+      if( val == WS_REWIND )
+      {
+        special = true;
+        if( !specialheld )
+        {
+          specialheld = true;
+          DNeedRewind = true;
+        }                    
+      }
+      else if( val == WS_ROTATE )
       {        
         special = true;
         if( !specialheld )
@@ -136,12 +148,14 @@ void WonderSwan::updateControls( bool isRapid )
   if( !special )
   {
     specialheld = false;
+    DNeedRewind = false;
   }
 }
 
 void WonderSwan::onPostLoad()
 {
   specialheld = false;
+  DNeedRewind = false;
 }
 
 bool WonderSwan::updateDebugText( 
@@ -194,4 +208,11 @@ const ScreenSize* WonderSwan::getDoubleStrikeScreenSize()
 const ScreenSize* WonderSwan::getDoubleStrikeRotatedScreenSize()
 {
   return &defaultRotatedScreenSizes[1];
+}
+
+extern int WS_SramSize;
+
+bool WonderSwan::isRewindSupported()
+{
+  return WS_SramSize <= 32*1024;
 }

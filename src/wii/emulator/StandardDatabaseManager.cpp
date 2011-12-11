@@ -1,4 +1,11 @@
 #include "StandardDatabaseManager.h"
+#include "wii_mednafen.h"
+#include <wiiuse/wpad.h>
+
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
 
 const char* StandardDatabaseManager::WII_CONTROLLER_NAMES[
   WII_CONTROLLER_COUNT] =
@@ -23,9 +30,8 @@ void StandardDatabaseManager::resetButtons()
     {
       for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
       {
-        // TODO:MULTIPROF
         entry->buttonMap[x][i][j] = 
-          getMappedButton( x, i, j )->defaultMapping; // TODO:MULTIPROF
+          getMappedButton( x, i, j )->defaultMapping;
       }
     }
   }
@@ -33,6 +39,8 @@ void StandardDatabaseManager::resetButtons()
 
 void StandardDatabaseManager::applyButtonMap()
 {
+  addRewindButtons(); // If applicable
+
   StandardDbEntry* entry = (StandardDbEntry*)getEntry();
 
   memset( entry->appliedButtonMap, 0x0, sizeof(entry->appliedButtonMap) );
@@ -40,7 +48,7 @@ void StandardDatabaseManager::applyButtonMap()
   {
     for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
     {
-      u8 mappedButton = entry->buttonMap[entry->profile][i][j]; // TODO:MULTIPROF
+      u8 mappedButton = entry->buttonMap[entry->profile][i][j];
       if( mappedButton != KEY_MAP_NONE )
       {
         entry->appliedButtonMap[i][mappedButton] |= 
@@ -68,7 +76,7 @@ bool StandardDatabaseManager::writeEntryValues(
     {
       for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
       {
-        u8 val = entry->buttonMap[x][i][j]; // TODO:MULTIPROF
+        u8 val = entry->buttonMap[x][i][j]; 
         if( val != getMappedButton( x, i, j )->defaultMapping )
         {
           if( profileCount > 1 )
@@ -129,7 +137,7 @@ void StandardDatabaseManager::readEntryValue(
         snprintf( btnName, sizeof(btnName), "btn.%d.%d", i, j );
         if( !strcmp( name, btnName ) )
         {
-          entry->buttonMap[entry->profile][i][j] = Util_sscandec( value ); // TODO:MULTIPROF
+          entry->buttonMap[entry->profile][i][j] = Util_sscandec( value );
           btnFound = true;
         }
 
@@ -138,7 +146,7 @@ void StandardDatabaseManager::readEntryValue(
           snprintf( btnName, sizeof(btnName), "btn.%d.%d.%d", x, i, j );
           if( !strcmp( name, btnName ) )
           {
-            entry->buttonMap[x][i][j] = Util_sscandec( value ); // TODO:MULTIPROF
+            entry->buttonMap[x][i][j] = Util_sscandec( value );
             btnFound = true;
           }
         }
@@ -157,5 +165,77 @@ void StandardDatabaseManager::readEntryValue(
         value, sizeof(entry->buttonDesc[i]) );
       btnFound = true;
     }          
+  }
+}
+
+u32 StandardDatabaseManager::getDefaultRewindButton( 
+  int profile, int controller )
+{
+  switch( controller )
+  {
+    case WII_CONTROLLER_MOTE:
+      return WPAD_BUTTON_B;
+    case WII_CONTROLLER_CHUK:
+      return WPAD_BUTTON_2;
+    case WII_CONTROLLER_CLASSIC:
+      return WPAD_CLASSIC_BUTTON_ZL;
+    case WII_CONTROLLER_CUBE:
+      return PAD_TRIGGER_L;
+  }
+
+  return 0;
+}
+
+void StandardDatabaseManager::addRewindButtons()
+{
+  StandardDbEntry* entry = (StandardDbEntry*)getEntry();
+
+  //
+  // Map default rewind buttons (if enabled)
+  //
+  if( getEmulator().isRewindSupported() && 
+      wii_rewind &&
+      wii_rewind_add_buttons )
+  {
+    int i, j;
+    int rewindButtonValue = -1;
+    for( int i = 0; i < getMappableButtonCount(); i++ )
+    {
+      if( getMappableButton( i )->button == BTN_REWIND )
+      {
+        rewindButtonValue = i; 
+        break;
+      }
+    }
+
+    if( rewindButtonValue != -1 )
+    {
+      int profileCount = getProfileCount();  
+      for( int x = 0; x < profileCount; x++ )
+      {
+        for( i = 0; i < WII_CONTROLLER_COUNT; i++ )
+        {
+          bool rewindMapped = false;
+          for( j = 0; j < WII_MAP_BUTTON_COUNT && !rewindMapped; j++ )
+          {
+            rewindMapped = ( entry->buttonMap[x][i][j] == rewindButtonValue );
+          }
+
+          if( !rewindMapped )
+          {
+            u32 btnValue = getDefaultRewindButton( x, i );
+            for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+            {
+              const WiiButton* btn = getMappedButton( x, i, j );
+              if( btn->button == btnValue )
+              {
+                entry->buttonMap[x][i][j] = rewindButtonValue;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

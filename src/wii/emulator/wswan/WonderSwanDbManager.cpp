@@ -17,8 +17,9 @@
 #define WSK_MAP_A_R     12
 #define WSK_MAP_B_R     13
 #define WSK_MAP_ROT     14
+#define WSK_MAP_REW     15
 
-const MappableButton WonderSwanDbManager::WS_BUTTONS[WS_BUTTON_COUNT] = 
+const MappableButton WonderSwanDbManager::WS_BUTTONS[] = 
 {
   { "(none)",           WS_NONE   },
   { "A",                WS_A      }, 
@@ -34,8 +35,12 @@ const MappableButton WonderSwanDbManager::WS_BUTTONS[WS_BUTTON_COUNT] =
   { "Y4",               WS_Y4     },
   { "A",                WS_A_R    }, 
   { "B",                WS_B_R    },
-  { "(Rotate screen)",  WS_ROTATE } 
+  { "(rotate screen)",  WS_ROTATE },
+  { "(rewind)",         WS_REWIND } 
 };
+
+static const int buttonCount =  
+  sizeof(WonderSwanDbManager::WS_BUTTONS)/sizeof(MappableButton);
 
 const WiiButton WonderSwanDbManager::
   WII_BUTTONS[WS_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT] =
@@ -173,7 +178,7 @@ void WonderSwanDbManager::resetToDefaults()
 
 int WonderSwanDbManager::getMappableButtonCount()
 {
-  return WS_BUTTON_COUNT;
+  return buttonCount;
 }
 
 const MappableButton* WonderSwanDbManager::getMappableButton( int button )
