@@ -51,6 +51,10 @@
 #include	"movie.h"
 #endif
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
 
 static const char *CSD_forcemono = gettext_noop("Force monophonic sound output.");
 static const char *CSD_enable = gettext_noop("Enable (automatic) usage of this module.");
@@ -88,12 +92,7 @@ static const char *fname_extra = gettext_noop("See fname_format.txt for more inf
 
 static MDFNSetting MednafenSettings[] =
 {
-#ifndef WII
   { "srwcompressor", MDFNSF_NOFLAGS, gettext_noop("Compressor to use with state rewinding"), NULL, MDFNST_ENUM, "quicklz", NULL, NULL, NULL, NULL, CompressorList },
-#else
-  { "srwcompressor", MDFNSF_NOFLAGS, gettext_noop("Compressor to use with state rewinding"), NULL, MDFNST_ENUM, "minilzo", NULL, NULL, NULL, NULL, CompressorList },
-#endif
-
   { "srwframes", MDFNSF_NOFLAGS, gettext_noop("Number of frames to keep states for when state rewinding is enabled."), 
   gettext_noop("WARNING: Setting this to a large value may cause excessive RAM usage in some circumstances, such as with games that stream large volumes of data off of CDs."), MDFNST_UINT, "600", "10", "99999" },
 
@@ -265,6 +264,12 @@ void MDFNI_StopAVRecord(void)
   {
     if(MDFNGameInfo)
     {
+#ifdef WII
+      memset(PortDataCache, 0, sizeof(PortDataCache));
+      memset(PortDataLenCache, 0, sizeof(PortDataLenCache));
+      memset(PortDeviceCache, 0, sizeof(PortDeviceCache));
+#endif
+
 #ifndef WII
       if(MDFNnetplay)
         MDFNI_NetplayStop();
@@ -1299,7 +1304,13 @@ void MDFNI_StopAVRecord(void)
         }
     }
 #endif
+
+#ifndef WII
     espec->NeedSoundReverse = MDFN_StateEvil(espec->NeedRewind);
+#else
+    // Reversing the sound leads to very crackly audio...
+    MDFN_StateEvil(espec->NeedRewind);
+#endif
 
     MDFNGameInfo->Emulate(espec);
 
@@ -1591,6 +1602,10 @@ if(espec->InterlaceOn)
       PortDataCache[port] = ptr;
       PortDataLenCache[port] = ptr_len_thingy;
 
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, "MDFNI_SetInput, PortDataCache[%d]=0x%x, len=%d\n", port, ptr, ptr_len_thingy );
+#endif
+
       if(PortDeviceCache[port])
       {
         free(PortDeviceCache[port]);
@@ -1600,6 +1615,17 @@ if(espec->InterlaceOn)
       PortDeviceCache[port] = strdup(type);
 
       MDFNGameInfo->SetInput(port, type, ptr);
+
+#ifdef WII_NETTRACE
+net_print_string( NULL, 0, "MDFNI_SetInput, All ports:\n" );
+int x;
+for(x = 0; x < 16; x++)
+{
+  if(PortDataCache[x])
+  {
+    net_print_string( NULL, 0, "  PortDataCache[%d]=0x%x, len=%d\n", x, PortDataCache[x], PortDataLenCache[x] );
+  }
+}
+#endif
     }
   }
-

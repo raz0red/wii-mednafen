@@ -23,6 +23,12 @@
 
 #include "Emulators.h"
 
+#ifdef WII_NETTRACE
+#include <network.h>
+#include "net_print.h"  
+#endif
+
+
 namespace MDFN_IEN_SMS
 {
 
