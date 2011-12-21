@@ -369,6 +369,19 @@ void wii_mednafen_emu_loop( BOOL resume )
   reset_video();
 
   Emulator* emu = emuRegistry.getCurrentEmulator();
+
+  static bool lastrewind = false;
+  bool rewind = ( wii_rewind && emu->isRewindSupported() );
+
+  if( rewind != lastrewind )
+  {
+    lastrewind = rewind;
+    MDFNI_EnableStateRewind( rewind );    
+#ifdef WII_NETTRACE
+    net_print_string( NULL, 0, "RewindChanged:%d\n", rewind );
+#endif
+  }
+  
   emu->getDbManager().applyButtonMap(); // Apply the button map
   emu->onPreLoop();
 
@@ -386,20 +399,19 @@ void wii_mednafen_emu_loop( BOOL resume )
   WII_SetFilter( wii_filter );
   WII_SetRotation( emu->getRotation() * 90 );
 
-  wii_gx_push_callback( &gxrender_callback, TRUE, precallback );  
-
-  MDFNI_EnableStateRewind( wii_rewind && emu->isRewindSupported() );
+  wii_gx_push_callback( &gxrender_callback, TRUE, precallback );   
 
   ClearSound();
   PauseSound( 0 );
 
   GameThreadRun = 1;
   NeedVideoChange = 0;
-
-  GameLoop( NULL );
+ 
+  GameLoop( NULL );  
 
   PauseSound( 1 );
-  wii_gx_pop_callback();     
+
+  wii_gx_pop_callback();  
 }
 
 #define CB_PIXELSIZE 14

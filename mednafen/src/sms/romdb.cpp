@@ -15,7 +15,7 @@ static const rominfo_t game_list[] = {
     {0xd9a7f170, MAPPER_CODIES, DISPLAY_NTSC, TERRITORY_EXPORT, -1, "S.S. Lucifer" },
 
     {0x5e53c7f7, MAPPER_CODIES, DISPLAY_NTSC, TERRITORY_EXPORT, -1, "Ernie Els Golf" },
-    {0xc888222b, MAPPER_CODIES, DISPLAY_NTSC, TERRITORY_EXPORT, CONSOLE_SMS, "Fantastic Dizzy" },
+    {0xc888222b, MAPPER_CODIES, DISPLAY_NTSC, TERRITORY_EXPORT, -1 /*CONSOLE_SMS*/, "Fantastic Dizzy" },
 
 
     // SG-1000

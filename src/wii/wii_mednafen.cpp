@@ -103,7 +103,7 @@ void wii_handle_init()
 #endif
 
 #ifdef WII_NETTRACE
-  WII_SetDebugCallback( sdlTrace );
+//  WII_SetDebugCallback( sdlTrace );
 #endif
  
   // Read the config values

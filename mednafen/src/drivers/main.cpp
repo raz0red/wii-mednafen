@@ -539,7 +539,10 @@ void MDFND_PrintError(const char *s)
   }
 #else
 #ifdef WII_NETTRACE
-  net_print_string( NULL, 0, s );
+  if( s )
+  {
+    net_print_string( NULL, 0, "Error: %s", s );
+  }
 #endif
   wii_set_status_message( s );
 #endif
@@ -563,7 +566,10 @@ void MDFND_Message(const char *s)
   }
 #else
 #ifdef WII_NETTRACE
-  net_print_string( NULL, 0, s );
+  if( s )
+  {
+    net_print_string( NULL, 0, s );
+  }
 #endif
 #endif
 }
@@ -1678,9 +1684,10 @@ void MDFND_DispMessage(UTF8 *text)
   SendCEvent(CEVT_DISP_MESSAGE, text, NULL);
 #else
 #ifdef WII_NETTRACE
-  net_print_string( NULL, 0, "%s\n", text );
+  if( text )
+    net_print_string( NULL, 0, text );
 #endif
-  free(text);
+  if( text) free(text);
 #endif
 }
 

@@ -139,7 +139,7 @@ Rewind is currently supported for the following emulators:
  * Neo Geo Pocket
  * PC Engine/TurboGrafx 16 (excludes CD games)
  * Sega Master System
- * WonderSwan (Excludes large SRAM sizes: Dicing Knight, Judgment Silversword)
+ * WonderSwan (excludes large SRAM sizes: Dicing Knight, Judgment Silversword)
 
  Enabling rewind:
  ----------------
@@ -413,8 +413,62 @@ menu item.
 MegaDrive/Genesis
 --------------------------------------------
 
-TODO
+The MegaDrive emulator currently supports up to 2 3-button or 6-button
+controllers. Whether to use 3 or 6 button controllers can be specified via the
+Game-specific settings menu.
 
+Below are the "default" control mappings for the MegaDrive emulator. Controls
+can be overridden on a game-by-game basis via the "Game-specific settings"
+menu item.
+
+ Controls:
+ --------------
+
+   Wiimote:
+
+     D-pad          : Move
+     A              : A
+     1              : B
+     2              : C
+     +              : Start
+     -              : Mode
+     Home           : Display WiiMednafen menu (see above)
+
+   Wiimote + Nunchuk:
+
+     Analog         : Move
+     A              : A
+     B              : B
+     Z              : C
+     +              : Start
+     -              : Mode
+     Home           : Display WiiMednafen menu (see above)
+
+   Classic controller/Pro:
+
+     D-pad/Analog   : Move
+     Y              : A
+     B              : B
+     A              : C
+     L/zL           : X (6-button mode)
+     X              : Y (6-button mode)
+     R/zR           : Z (6-button mode)
+     +              : Start
+     -              : Mode
+     Home           : Display WiiMednafen menu (see above)
+
+   GameCube controller:
+
+     D-pad/Analog   : Move
+     B              : A
+     A              : B
+     X              : C
+     L              : X (6-button mode)
+     Y              : Y (6-button mode)
+     R              : Z (6-button mode)
+     Start          : Start
+     Home           : Display WiiMednafen menu (see above)
+     
 --------------------------------------------
 Nintendo Entertainment System (NES)
 --------------------------------------------
@@ -880,8 +934,7 @@ settings" menu item.
      B              : X4
      Start          : Start
      Home           : Display WiiMednafen menu (see above)
-     
-     
+         
 --------------------------------------------
 Language support
 --------------------------------------------
@@ -914,7 +967,7 @@ Ryphecha     : Providing an incredible multi-emulator, optimizing the
                Virtual Boy emulation, and putting up with my questions.
 Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
 Tantric      : Menu example code and SDL enhancements
-Eke-eke      : Double strike help and Color trap filter implementation.
+Eke-eke      : Double strike help and color trap filter implementation.
 
 --------------------------------------------
 Change Log
@@ -931,7 +984,7 @@ Change Log
    - Neo Geo Pocket
    - PC Engine/TurboGrafx 16 (excludes CD games)
    - Sega Master System
-   - WonderSwan (Excludes large SRAM sizes: Dicing Knight, 
+   - WonderSwan (excludes large SRAM sizes: Dicing Knight, 
        Judgment Silversword)
  - VI + GX scaler (eliminates majority of scaling artifacts). 
  - Default screen sizes per emulator (1x, 2x, Full, etc.).

@@ -526,7 +526,7 @@ void wii_menu_handle_select_node( TREENODE *node )
       node->node_type == NODETYPE_RESET )
   {   
     // Essentially blanks the screen
-  //  wii_gx_push_callback( NULL, FALSE, NULL );
+    //wii_gx_push_callback( NULL, FALSE, NULL );
 
     switch( node->node_type )
     {
@@ -552,7 +552,7 @@ void wii_menu_handle_select_node( TREENODE *node )
         break;
     }
 
- //   wii_gx_pop_callback();
+    //wii_gx_pop_callback();
   }
   else
   {

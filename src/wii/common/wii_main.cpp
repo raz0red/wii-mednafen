@@ -973,7 +973,7 @@ static int __out_write(struct _reent *r, int fd, const char *ptr, size_t len)
     return -1;
   }
   char message[512];
-  Util_strlcpy( message, ptr, sizeof(message) < len ? sizeof(message) : len );
+  Util_strlcpy( message, ptr, sizeof(message) < len ? sizeof(message) : len ); 
   net_print_string( NULL, 0, "%s\n", message );      
   return len;
 }
