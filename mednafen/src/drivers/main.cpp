@@ -568,7 +568,7 @@ void MDFND_Message(const char *s)
 #ifdef WII_NETTRACE
   if( s )
   {
-    net_print_string( NULL, 0, s );
+    net_print_string( NULL, 0, "%s", s );
   }
 #endif
 #endif
@@ -1685,7 +1685,7 @@ void MDFND_DispMessage(UTF8 *text)
 #else
 #ifdef WII_NETTRACE
   if( text )
-    net_print_string( NULL, 0, text );
+    net_print_string( NULL, 0, "%s", text );
 #endif
   if( text) free(text);
 #endif

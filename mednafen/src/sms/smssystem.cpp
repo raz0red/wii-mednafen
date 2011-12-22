@@ -28,6 +28,7 @@
 #include "net_print.h"  
 #endif
 
+#include "romdb.h"
 
 namespace MDFN_IEN_SMS
 {
@@ -276,22 +277,66 @@ static int LoadCommon(const char *name, MDFNFILE *fp)
  return(1);
 }
 
+#ifdef WII
+static int GetSystemFromDB( MDFNFILE *fp )
+{
+  if( strcasecmp(fp->ext, "sms") && 
+      strcasecmp(fp->ext, "sg") && 
+      strcasecmp(fp->ext, "sc") &&
+      strcasecmp(fp->ext, "gg") )
+  {
+    return -1;
+  }
+
+  int32 size = fp->size;
+  const uint8 *data_ptr = fp->data;
+
+  if(size & 512)
+  {
+    size -= 512;
+    data_ptr += 512;
+  }
+
+  uint32 crc = crc32(0, data_ptr, size);
+  const rominfo_t* info = find_rom_in_db( crc );
+
+  return info != NULL ? info->system : -1;
+}
+#endif
+
 static bool TestMagicSMS(const char *name, MDFNFILE *fp)
 {
- if(strcasecmp(fp->ext, "sms") && strcasecmp(fp->ext, "sg") && strcasecmp(fp->ext, "sc"))
+#ifdef WII
+ int system = GetSystemFromDB( fp );
+#endif
+
+ if(strcasecmp(fp->ext, "sms") && 
+    strcasecmp(fp->ext, "sg") && 
+    strcasecmp(fp->ext, "sc") 
+#ifdef WII
+    && system != CONSOLE_SMS    
+#endif
+ )
   return(FALSE);
 
- return(TRUE);
+ return TRUE;
 }
 
 static bool TestMagicGG(const char *name, MDFNFILE *fp)
 {
- if(strcasecmp(fp->ext, "gg"))
+#ifdef WII
+ int system = GetSystemFromDB( fp );
+#endif
+
+ if(strcasecmp(fp->ext, "gg")
+#ifdef WII
+    && system != CONSOLE_GG    
+#endif   
+ )
   return(FALSE);
 
- return(TRUE);
+ return TRUE;
 }
-
 
 static int LoadSMS(const char *name, MDFNFILE *fp)
 {
