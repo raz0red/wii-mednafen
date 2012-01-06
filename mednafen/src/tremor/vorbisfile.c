@@ -64,7 +64,17 @@ static long _get_data(OggVorbis_File *vf){
     unsigned char *buffer=ogg_sync_bufferin(vf->oy,CHUNKSIZE);
     long bytes=(vf->callbacks.read_func)(buffer,1,CHUNKSIZE,vf->datasource);
     if(bytes>0)ogg_sync_wrote(vf->oy,bytes);
-    if(bytes==0 && errno)return(-1);
+
+#ifndef WII
+    if(bytes==0 && errno ) 
+#else
+    // Not sure what is up with this... appears that EOVERFLOW is set whenever
+    // we read to the end of the file...
+    if(bytes==0 && errno && errno != EOVERFLOW ) 
+#endif
+    {
+      return(-1);
+    }
     return(bytes);
   }else
     return(0);
@@ -72,7 +82,7 @@ static long _get_data(OggVorbis_File *vf){
 
 /* save a tiny smidge of verbosity to make the code more readable */
 static void _seek_helper(OggVorbis_File *vf,ogg_int64_t offset){
-  if(vf->datasource){ 
+  if(vf->datasource){
     (vf->callbacks.seek_func)(vf->datasource, offset, SEEK_SET);
     vf->offset=offset;
     ogg_sync_reset(vf->oy);

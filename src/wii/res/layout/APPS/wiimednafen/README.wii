@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1-pre121011 release README
+WiiMednafen v0.1 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -53,7 +53,7 @@ Known issues
 This is a very early release of this port, and as such there are a number of
 known issues. Further, this emulator hasn't had a tremendous amount of testing
 so I am fairly certain there are a number of unknown issues as well. Please 
-let me know if you experience any via the Google Code project.
+let me know if you experience any via the Google Code project issues list.
 
  * Only standard controllers are supported in this release (no support for
    NES Zapper, etc.).
@@ -84,7 +84,7 @@ USB device (retain the hierarchical structure exactly).
 
 Game ROMs and CD images can be loaded via SD, USB, and SMB (Network).
 
-NOTE: The "/wiimednafen" directory (containing saves, BIOS images, etc.) must
+*NOTE* The "/wiimednafen" directory (containing saves, BIOS images, etc.) must
 reside on the same device as the "/apps/wiimednafen" directory (containing the
 application binary). These two directories must not be split across two
 different devices. However, game ROMs and CD images can be loaded from any of
@@ -121,16 +121,74 @@ Please note that loading CD images over the network will cause noticeable
 slowdown.
 
 --------------------------------------------
+CD-ROM Emulation
+--------------------------------------------
+
+There has been some discussion about the types of CD-ROM emulation formats
+WiiMednafen supports, so I added this section in hopes of clearing up any
+misconceptions. There are really two types of CD-ROM emulation formats
+supported by WiiMednafen. 
+
+  CUE+BIN
+  -------
+  
+  CUE+BIN is the standard format popularized by CDRWin. All of the tracks are
+  contained within a single BIN file. The CUE file indicates where each of the
+  tracks are located within that BIN file. This is the preferred method for
+  WiiMednafen since a properly dumped disk will always work.
+  
+  CUE+ISO+Audio(Ogg Vorbis and MusePack)
+  --------------------------------------
+  
+  In this format, the CUE file refers to one or more external files that
+  represent the different tracks (versus all being in one BIN file). The data
+  tracks are typically represented by ISO files, while the audio tracks 
+  are represented by various audio format files. WiiMednefan only supports Ogg
+  Vorbis and MusePack audio formats (MP3, WAV, FLAC, etc. are not currently 
+  supported). 
+  
+  Many people have created dumps of PC Engine and PC-FX games in this format
+  in an effort to reduce the overall game size. Unfortunately, many of these
+  dumps leverage the MP3 audio format that is not support by WiiMednafen 
+  (or Mednafen proper) due to patent issues.
+  
+So, in summary CUE+BIN of a properly dumped game will always work with 
+WiiMednafen. If you want to reduce the size of a dump, you must use Ogg Vorbis
+or MusePack audio formats. In the future, I may look at adding additional
+audio formats (FLAC, WAV, etc.) based on the feedback I receive. However, in
+keeping in alignment with Mednafen proper, MP3 support will never be added.
+  
+--------------------------------------------
 Double strike (240p) mode support
 --------------------------------------------
 
-TODO
+Double strike (240p) mode is supported for all emulators except Virtual Boy.
+You can enable double strike globally via "Advanced" > "Video Settings" >
+"Double strike". The global value can be overridden a per-emulator basis
+via "Emulator settings" > "Double strike".
+
+By default, double strike is explicitly disabled for all handheld systems.
+If you want to enable double strike for those emulators, you must set their
+double strike mode (in "Emulator settings") to either "(default)" (observe
+global setting) or "Enabled" (explicitly enable double strike regardless of
+global setting).
+
+*NOTE* Double strike mode has not been tested on PAL Wii systems and as such
+may not function properly. Further, double strike for PAL-based games (288p)
+has not been implemented. If there is enough interest, I will look into 
+adding support in a future release.
 
 --------------------------------------------
 Rewind support
 --------------------------------------------
 
-Rewind is currently supported for the following emulators:
+*NOTE* Rewind support should be considered "experimental" for the current 
+release. Enabling rewind may cause performance and/or stability issues. If 
+you experience odd performance behavior or periodic crashes, you should 
+consider disabling rewind.
+
+Due to the amount of memory and processing required, rewind support is
+currently limited to the following emulators:
 
  * GameBoy/GameBoy Color
  * Game Gear
@@ -144,12 +202,52 @@ Rewind is currently supported for the following emulators:
  Enabling rewind:
  ----------------
  
- TODO
+ To enable rewind, set the "Advanced" > "Rewind" option to "Enabled". 
 
  Rewind buttons (auto vs. manual)
  --------------------------------
  
- TODO
+ When rewind is enabled, an additional menu item is displayed,
+ "Rewind buttons", that controls how rewind buttons are added to the 
+ different controllers supported by WiiMednafen (Wiimote, Wiimote + Nunchuk, 
+ Classic, GameCube).
+ 
+ When "auto" mode is selected, each of the supported controllers are examined
+ in turn to determine if a "(rewind)" button has been explicitly mapped (via 
+ "control settings" for the current game). If a "(rewind)" button has not
+ been explicitly mapped for a controller, the "default" rewind button is added
+ automatically (see the "default rewind buttons" table below).
+ 
+ When "manual" mode is selected, rewind buttons must be mapped manually for
+ each controller via a game's "control settings" (available in the 
+ "Game-specific settings" menu). You might be wondering why you would ever
+ want to use manual mode versus having the buttons added automatically. One 
+ reason is that with the manual mapping mode, a rewind button does not need
+ to be added to each of the controllers. For example, you might be playing a 
+ game that requires all of the buttons on the GameCube controller so you don't
+ have one available for the rewind button. You could set the mode to manual and 
+ only map the rewind button to the Wiimote. Therefore, you can play the game 
+ using all of the GameCube's buttons, and still have the capability to rewind 
+ via the Wiimote.
+ 
+   Default rewind buttons (auto):
+   ------------------------------
+
+     Wiimote:
+
+       B  : Rewind
+
+     Wiimote + Nunchuk:
+
+       2  : Rewind
+
+     Classic controller/Pro:
+
+       zL : Rewind
+     
+     GameCube controller:
+
+       L  : Rewind
  
 --------------------------------------------
 Menu settings and navigation
@@ -415,7 +513,7 @@ MegaDrive/Genesis
 
 The MegaDrive emulator currently supports up to 2 3-button or 6-button
 controllers. Whether to use 3 or 6 button controllers can be specified via the
-Game-specific settings menu.
+"Game-specific settings" menu.
 
 Below are the "default" control mappings for the MegaDrive emulator. Controls
 can be overridden on a game-by-game basis via the "Game-specific settings"
@@ -534,7 +632,7 @@ item.
  PAL mode:
  --------------
 
- Currently, the only way to have a ROM play in PAL mode is via the file name
+ Currently, the only way to have a game play in PAL mode is via the file name
  of the ROM. To enable PAL mode for a ROM, ensure the file name contains
  "(P)". In the future I will be adding the ability to force PAL mode via
  "Game-specific settings".
@@ -598,7 +696,7 @@ PC Engine CD emulation requires that the PC Engine CD BIOS file,
 
 The PC Engine emulator currently supports up to 4 2-button or 6-button
 controllers. Whether to use 2 or 6 button controllers can be specified via the
-Game-specific settings menu.
+"Game-specific settings" menu.
 
 *NOTE* Using a 6-button controller on a game that has not been designed to 
 work with it will exhibit strange behaviors. Only use 6-button controllers on
@@ -973,7 +1071,7 @@ Eke-eke      : Double strike help and color trap filter implementation.
 Change Log
 --------------------------------------------
 
-12/10/11 (0.1-pre)
+01/07/12 (0.1)
 -------------------
  - Added support for MegaDrive/Genesis.
  - Added rewind support for the following emulators:
@@ -1002,6 +1100,11 @@ Change Log
      saving mappings for both orientations for a single game (Klonoa, etc.).
  - Updated Game Gear to display with proper aspect ratio.
  - Ability to set Volume globally and per-emulator.   
+ - Additional SMS/GG compatibility
+ - Fixed bug that prevented certain Ogg Vorbis files (multiples of 1024, go
+     figure) from loading as part of a CD image (CUE sheet).
+ - Fixed bug that prevented some FDS games (Metroid) from properly flipping
+     the disk.
  
 10/10/11 (0.0)
 -------------------

@@ -63,7 +63,7 @@ static GXRModeObj* grxModes[4] = { NULL, NULL, NULL, NULL };
 /*** 2D Video ***/
 #define HASPECT 			320
 #define VASPECT 			240
-#define TEXTUREMEM_SIZE 	(640*574*4)
+#define TEXTUREMEM_SIZE 	(640*480*4)
 
 unsigned int *xfb[2] = { NULL, NULL }; // Double buffered
 int whichfb = 0; // Switch
@@ -117,7 +117,7 @@ static camera cam = {
   {0.0F, 0.0F, -0.5F}
 };
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if DEBUG
 char debugMsg[512] = "";
@@ -1016,7 +1016,7 @@ writeDebugMsg( debugMsg );
 
   vmode->viWidth = 
       rotated ? 
-        ( ( yscale * width ) / 240 ) ) : 
+        ( ( yscale * width ) / 240 ) : 
         ( ( xscale * width ) / 320 );
 
   if( widescreen )
