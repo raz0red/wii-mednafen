@@ -43,6 +43,7 @@
 // Redefine these so we don't see the verbose debug output.
 // Comment this block out if you want to see debug info.
 #define MDFN_malloc(size,name) malloc(size)
+#define MDFN_calloc(count,size,name) calloc(count,size)
 #define MDFN_realloc(ptr,size,name) realloc(ptr,size)
 #define MDFN_free(ptr) free(ptr)
 #endif

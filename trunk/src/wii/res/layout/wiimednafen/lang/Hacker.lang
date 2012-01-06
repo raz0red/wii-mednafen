@@ -22,11 +22,23 @@ msgstr "(3d) R3D/gR33n"
 msgid "(3d) Yellow/blue"
 msgstr "(3D) Y3llow/8lU3"
 
+msgid "(auto)"
+msgstr "(@U70)"
+
 msgid "(default)"
 msgstr "(D3f@uL7)"
 
 msgid "(none)"
 msgstr "(N0N3)"
+
+msgid "(normal)"
+msgstr "(noRM@L)"
+
+msgid "(rewind)"
+msgstr "(R3WiND)"
+
+msgid "(rotate screen)"
+msgstr "(Rot@73 scRe3n)"
 
 msgid "(special)"
 msgstr "(5p3cIal)"
@@ -34,20 +46,32 @@ msgstr "(5p3cIal)"
 msgid "1 item found."
 msgstr "1 I73M FouNd."
 
+msgid "16:9 correction"
+msgstr "16:9 C0rr3c7i0N"
+
 msgid "2-button pad"
 msgstr "2-8u770N p@d"
 
 msgid "270 degrees"
 msgstr "270 degr335"
 
+msgid "2x/Full screen"
+msgstr "2x/FULl $cr33n"
+
+msgid "3-button pad"
+msgstr "3-8u770n P@d"
+
+msgid "3x/Full screen"
+msgstr "3x/FUll sCr33N"
+
+msgid "4x/Full screen"
+msgstr "4x/fuLL scR33N"
+
 msgid "6-button pad"
 msgstr "6-8u7t0n p@d"
 
 msgid "90 degrees"
 msgstr "90 d3Gr335"
-
-msgid "A-Rapid"
-msgstr "A-R@pID"
 
 msgid "A/2 button"
 msgstr "A/2 8U7t0n"
@@ -85,8 +109,8 @@ msgstr "@773mp7ing 70 m0uN7 drIv3..."
 msgid "Auto fire"
 msgstr "@u70 fiR3"
 
-msgid "B-Rapid"
-msgstr "B-R@piD"
+msgid "Auto"
+msgstr "@u70"
 
 msgid "B/1 button"
 msgstr "B/1 bU77oN"
@@ -94,20 +118,17 @@ msgstr "B/1 bU77oN"
 msgid "Back"
 msgstr "8ack"
 
+msgid "Bilinear filter"
+msgstr "8ILin3ar fIL73r"
+
 msgid "Bowl"
 msgstr "80wl"
 
 msgid "Button 1"
 msgstr "8U770N 1"
 
-msgid "Button 1-Rapid"
-msgstr "bu7t0n 1-R@PiD"
-
 msgid "Button 2"
 msgstr "8u770n 2"
-
-msgid "Button 2-Rapid"
-msgstr "8ut70n 2-r@pid"
 
 msgid "Button mappings"
 msgstr "8u770n M@ppiNG5"
@@ -144,6 +165,12 @@ msgstr "cH3CK c0nfIguRa7i0n fIle."
 
 msgid "Classic"
 msgstr "Cl@$$Ic"
+
+msgid "Color trap filter"
+msgstr "col0r 7r@p fIL73r"
+
+msgid "Console region"
+msgstr "c0ns0l3 r3gi0N"
 
 msgid "Control settings"
 msgstr "c0N7r0l 5377ing5"
@@ -187,6 +214,12 @@ msgstr "dI$pl@y m0D3"
 msgid "Display settings"
 msgstr "Di$PL@Y 5e77iNGs"
 
+msgid "Domestic (Japan)"
+msgstr "d0m3$7IC (J@P@N)"
+
+msgid "Double strike (240p)"
+msgstr "d0Uble 5tRIke (240P)"
+
 msgid "Down"
 msgstr "d0wn"
 
@@ -214,6 +247,9 @@ msgstr "3n@8l3d"
 msgid "English"
 msgstr "3nGlI5h"
 
+msgid "Europe"
+msgstr "3uR0P3"
+
 msgid "Evasive maneuver"
 msgstr "3v@$iv3 M@n3Uv3r"
 
@@ -223,20 +259,23 @@ msgstr "3x3cU7e"
 msgid "Exit"
 msgstr "3xit"
 
+msgid "Export (World)"
+msgstr "3xp0r7 (woRLd)"
+
+msgid "External BIOS"
+msgstr "3X73Rn@l 8i05"
+
+msgid "Fill screen"
+msgstr "Fill $CR33n"
+
 msgid "Fire 1"
 msgstr "Fir3 1"
-
-msgid "Fire 1-Rapid"
-msgstr "fir3 1-R@Pid"
 
 msgid "Fire 1/Start"
 msgstr "fir3 1/s7art"
 
 msgid "Fire 2"
 msgstr "fiRe 2"
-
-msgid "Fire 2-Rapid"
-msgstr "FIR3 2-raPId"
 
 msgid "Fire down"
 msgstr "fIRe d0WN"
@@ -256,11 +295,20 @@ msgstr "fIr3"
 msgid "Fires cannon/homing missile"
 msgstr "FIr3$ Cann0n/h0mIng mIs$iL3"
 
+msgid "Fixed (double strike)"
+msgstr "fIX3D (D0U8l3 $7rIk3)"
+
 msgid "Flip disk"
 msgstr "FLiP dI$k"
 
 msgid "Frame skip"
 msgstr "fram3 sKip"
+
+msgid "Full screen"
+msgstr "FUlL 5cr33N"
+
+msgid "Full widescreen"
+msgstr "full WId35CR33N"
 
 msgid "Game Gear"
 msgstr "G@m3 g3@r"
@@ -286,6 +334,12 @@ msgstr "g0 L3f7"
 msgid "Go right"
 msgstr "g0 riGh7"
 
+msgid "GX + VI"
+msgstr "gX + vi"
+
+msgid "GX"
+msgstr "Gx"
+
 msgid "Hacker"
 msgstr "haCk3r"
 
@@ -297,12 +351,6 @@ msgstr "h00K Fi$h"
 
 msgid "Horiz."
 msgstr "H0riz."
-
-msgid "I-Rapid"
-msgstr "I-r@pid"
-
-msgid "II-Rapid"
-msgstr "II-R@PID"
 
 msgid "Increase speed"
 msgstr "incR3@53 5p33D"
@@ -318,6 +366,9 @@ msgstr "inv@liD n3tW0rk $3ttiNg5"
 
 msgid "items found, displaying"
 msgstr "i7eM5 F0UnD, DI5PlaYiNG"
+
+msgid "Japan"
+msgstr "J@pan"
 
 msgid "Japanese"
 msgstr "J@P@n353"
@@ -376,14 +427,26 @@ msgstr "lyNx"
 msgid "Maneuver faster"
 msgstr "m@n3Uv3r f@$73r"
 
+msgid "Manual"
+msgstr "M@nU@l"
+
 msgid "Map"
 msgstr "M@P"
+
+msgid "Match game header"
+msgstr "M@7cH gaM3 H3aD3r"
+
+msgid "Mega Drive"
+msgstr "M3g@ DRIv3"
 
 msgid "Minus"
 msgstr "miNus"
 
 msgid "Minus/LTrigger"
 msgstr "miNu$/l7rIgG3r"
+
+msgid "Mode"
+msgstr "M0D3"
 
 msgid "Move block"
 msgstr "MoV3 8L0Ck"
@@ -409,20 +472,26 @@ msgstr "N3$"
 msgid "Network Share"
 msgstr "N37w0rK 5haR3"
 
+msgid "No"
+msgstr "N0"
+
 msgid "None"
 msgstr "NoN3"
+
+msgid "Normal"
+msgstr "norm@L"
+
+msgid "North America"
+msgstr "nor7h @Meric@"
+
+msgid "Note: Enabling rewind may affect performance."
+msgstr "n073: 3n@8lING r3WIND m@y @FF3c7 perf0Rmanc3."
 
 msgid "Option 1"
 msgstr "0ptI0n 1"
 
-msgid "Option 1-Rapid"
-msgstr "0Pti0N 1-RapiD"
-
 msgid "Option 2"
 msgstr "0P7i0n 2"
-
-msgid "Option 2-Rapid"
-msgstr "0p7ion 2-R@pId"
 
 msgid "Option"
 msgstr "0P7i0N"
@@ -447,6 +516,9 @@ msgstr "Plu5/r7rIgG3r"
 
 msgid "Portuguese"
 msgstr "p0r7Ugu353"
+
+msgid "Profile"
+msgstr "PR0Fil3"
 
 msgid "R-Down"
 msgstr "R-d0wn"
@@ -484,6 +556,12 @@ msgstr "resuM3"
 msgid "Revert to saved settings"
 msgstr "r3ver7 7o 5@V3d $3t7INg5"
 
+msgid "Rewind buttons"
+msgstr "r3wINd 8U770N$"
+
+msgid "Rewind"
+msgstr "r3WiND"
+
 msgid "Right flipper"
 msgstr "rIgH7 FLiPp3r"
 
@@ -517,6 +595,9 @@ msgstr "R07a73 c0un73r-cl0ckWI5e"
 msgid "Rotate forward"
 msgstr "R07@73 F0rW@RD"
 
+msgid "Rotated"
+msgstr "Rot@73d"
+
 msgid "Rotation"
 msgstr "R07@7ion"
 
@@ -531,6 +612,9 @@ msgstr "s@v3 57a7e"
 
 msgid "Save states"
 msgstr "5@V3 57a735"
+
+msgid "Scaler"
+msgstr "$c@L3R"
 
 msgid "Screen size"
 msgstr "5CRe3n 5Iz3"
@@ -625,6 +709,9 @@ msgstr "70ggl3 @/R l0cK"
 msgid "Toggle auto rotation"
 msgstr "t0gGL3 @ut0 r0t@7i0n"
 
+msgid "Toggle screen sizes"
+msgstr "70Ggl3 $cR33N siZ35"
+
 msgid "Top menu exit"
 msgstr "70P M3nu exIt"
 
@@ -655,8 +742,14 @@ msgstr "V3R7."
 msgid "Video filter"
 msgstr "vIde0 fil73R"
 
+msgid "Video settings"
+msgstr "vid3o s3ttiNg$"
+
 msgid "Virtual Boy"
 msgstr "vIr7Ual 80y"
+
+msgid "Volume"
+msgstr "voLUM3"
 
 msgid "Wiimote (menu)"
 msgstr "wIim0te (MenU)"
@@ -672,4 +765,3 @@ msgstr "W0nD3r5W@n"
 
 msgid "Yes"
 msgstr "y3s"
-

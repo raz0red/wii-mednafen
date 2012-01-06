@@ -75,13 +75,13 @@ void Nes::updateControls( bool isRapid )
   {
     switch( flipdisk )
     {
-      case 30:
+      case 60:
         FDS_DiskEject();
         break;
-      case 20:
+      case 30:
         FDS_DiskSelect();
         break;
-      case 10:
+      case 1:
         FDS_DiskInsert(-1);
         break;
     }
@@ -123,7 +123,7 @@ void Nes::updateControls( bool isRapid )
             }
             else if( MDFNGameInfo->GameType == GMT_DISK && !flipdisk )
             {
-              flipdisk = 30;
+              flipdisk = 60;
             }
           }                    
         }
