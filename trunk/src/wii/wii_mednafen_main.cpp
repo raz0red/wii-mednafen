@@ -441,7 +441,12 @@ static void gxrender_callback()
 
   GXColor color = (GXColor){0x0, 0x0, 0x0, 0x80};                       
 
-  if( wii_debug )
+  bool doubleStrike =  
+    emuRegistry.getCurrentEmulator()->isDoubleStrikeEnabled();
+
+  // Do debug output if we are not using double strike and we are
+  // not using the GX+VI scaler or filtering is enabled.
+  if( wii_debug && !doubleStrike && ( !wii_gx_vi_scaler || wii_filter ) )
   {    
     static char virtfps[64];
     static char drawnfps[64];
@@ -493,15 +498,29 @@ static void gxrender_callback()
     }
     else
     {
+      int textWidth = wii_gx_gettextwidth( CB_PIXELSIZE, (char*)message );
+      int y = -(doubleStrike ? ( CB_Y >> 1 ) : CB_Y );
+
+      wii_gx_drawrectangle( 
+        -(textWidth >> 1) + -CB_PADDING, 
+        y + CB_H + CB_PADDING, 
+        textWidth + (CB_PADDING<<1), 
+        CB_H + (CB_PADDING<<1), 
+        (GXColor){0x0, 0x0, 0x0, 0xC0}, TRUE );
+
+#if 0
       wii_gx_drawrectangle( 
         CB_X + -CB_PADDING, 
         -CB_Y + CB_H + CB_PADDING, 
         wii_gx_gettextwidth( CB_PIXELSIZE, (char*)message ) + (CB_PADDING<<1), 
         CB_H + (CB_PADDING<<1), 
         color, TRUE );
+#endif
 
       wii_gx_drawtext( 
-        CB_X, -CB_Y, CB_PIXELSIZE, message, ftgxWhite, FTGX_ALIGN_BOTTOM );
+        0 /*CB_X*/, y, 
+        CB_PIXELSIZE, message, ftgxWhite, 
+        FTGX_ALIGN_BOTTOM | FTGX_JUSTIFY_CENTER  );
     }
   }
 }

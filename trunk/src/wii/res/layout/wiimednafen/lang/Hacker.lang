@@ -550,6 +550,9 @@ msgstr "r3$37"
 msgid "Resize screen"
 msgstr "r35iz3 $CR3eN"
 
+msgid "Resizing not supported for double strike mode."
+msgstr "r35IziNg N07 $UpP0r73D F0R d0Ubl3 57rIKe Mod3."
+
 msgid "Resume"
 msgstr "resuM3"
 
@@ -714,6 +717,9 @@ msgstr "70Ggl3 $cR33N siZ35"
 
 msgid "Top menu exit"
 msgstr "70P M3nu exIt"
+
+msgid "U/D"
+msgstr "U/d"
 
 msgid "Unable to mount"
 msgstr "un@bl3 70 m0UNt"
