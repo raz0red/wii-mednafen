@@ -74,6 +74,7 @@ let me know if you experience any via the Google Code project issues list.
    be added with subsequent releases.
  * The front-end is functional but minimal. This is something that may be 
    addressed once I am satisfied with the overall state of the port. 
+ * Some Mega Drive/Genesis games may not run at 100% speed (Thunder Force IV).
 
 --------------------------------------------
 Installation
@@ -1060,18 +1061,19 @@ of the following locations:
 Credits / Special Thanks
 --------------------------------------------
 
-mastershoes  : Creating the WiiMednafen channel
 Ryphecha     : Providing an incredible multi-emulator, optimizing the
                Virtual Boy emulation, and putting up with my questions.
+mastershoes  : Creating the WiiMednafen channel
+Hielkenator  : Testing, Dutch translation
 Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
-Tantric      : Menu example code and SDL enhancements
 Eke-eke      : Double strike help and color trap filter implementation.
+Tantric      : Menu example code and SDL enhancements
 
 --------------------------------------------
 Change Log
 --------------------------------------------
 
-01/07/12 (0.1)
+01/11/12 (0.1)
 -------------------
  - Added support for MegaDrive/Genesis.
  - Added rewind support for the following emulators:

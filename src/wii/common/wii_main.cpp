@@ -298,7 +298,8 @@ static void wii_menu_get_header( TREENODE* menu, char *buffer )
   if( strlen( buffer ) == 0 )
   {
     snprintf( buffer, WII_MENU_BUFF_SIZE, 
-      "U/D = %s%s%s, A = %s%s%s, %s = %s", 
+      "%s = %s%s%s, A = %s%s%s, %s = %s", 
+      gettextmsg( "U/D" ),
       gettextmsg( "Scroll" ),
       ( menu->child_count > MENU_PAGESIZE ? ", L/R = " : "" ),
       ( menu->child_count > MENU_PAGESIZE ? gettextmsg( "Page" ) : "" ),      
