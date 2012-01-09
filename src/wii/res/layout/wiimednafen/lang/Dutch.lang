@@ -5,10 +5,10 @@ msgid "(2d) White/black"
 msgstr "(2D) Wit/Zwart"
 
 msgid "(3d) Green/red"
-msgstr "(3d) Groen/Rood"
+msgstr "(3D) Groen/Rood"
 
 msgid "(3d) Red/blue"
-msgstr "(3d) Rood/Blauw"
+msgstr "(3D) Rood/Blauw"
 
 msgid "(3d) Red/cyan"
 msgstr "(3D) Rood/Cyaan"
@@ -17,31 +17,34 @@ msgid "(3d) Red/electric cyan"
 msgstr "(3D) Rood/Elektro Cyaan"
 
 msgid "(3d) Red/green"
-msgstr "(3d) Rood/Groen"
+msgstr "(3D) Rood/Groen"
 
 msgid "(3d) Yellow/blue"
 msgstr "(3D) Geel/Blauw"
 
+msgid "ROM image is too large; maximum size allowed is 67108864 bytes."
+msgstr "Het ROM bestand is te groot; maximum toegestane grootte is 64 MB."
+
 msgid "(auto)"
-msgstr "(Auto)"
+msgstr "(automatisch)"
 
 msgid "(default)"
-msgstr "(Standaard)"
+msgstr "(standaard)"
 
 msgid "(none)"
-msgstr "(Geen)"
+msgstr "(geen)"
 
 msgid "(normal)"
-msgstr "(Normaal)"
+msgstr "(normaal)"
 
 msgid "(rewind)"
-msgstr "(Terugspoelen)"
+msgstr "(terugspoelen)"
 
 msgid "(rotate screen)"
-msgstr "(Draai scherm)"
+msgstr "(draai scherm)"
 
 msgid "(special)"
-msgstr "(Speciaal)"
+msgstr "(speciaal)"
 
 msgid "1 item found."
 msgstr "1 item gevonden."
@@ -76,13 +79,13 @@ msgid "A/2 button"
 msgstr "A/2 knop"
 
 msgid "Accept changes"
-msgstr "Bevestig wijzigingen"
+msgstr "Uw wijzigingen bevestigen"
 
 msgid "Activate spin/power meter"
 msgstr "Activeer draai/kracht meter"
 
 msgid "Advanced"
-msgstr "Uitgebreide opties"
+msgstr "> Uitgebreide opties <"
 
 msgid "Aim left"
 msgstr "Richt links"
@@ -94,7 +97,7 @@ msgid "Aim"
 msgstr "Right"
 
 msgid "Ascend"
-msgstr "Vooruit"
+msgstr "Stijgen"
 
 msgid "Aspect ratio"
 msgstr "Beeld verhouding"
@@ -103,7 +106,7 @@ msgid "Attack"
 msgstr "Aanvallen"
 
 msgid "Attempting to mount drive..."
-msgstr "Poging met drive te verbinden"
+msgstr "Probeert een verbinding te maken met drive..."
 
 msgid "Auto fire"
 msgstr "Automatisch vuren"
@@ -130,13 +133,13 @@ msgid "Button 2"
 msgstr "Knop 2"
 
 msgid "Button mappings"
-msgstr "Knop toewijzingen"
+msgstr "> Knop toewijzingen aanpassen <"
 
 msgid "button pad"
 msgstr "knops pad"
 
 msgid "Cancel changes"
-msgstr "Annuleer wijzigingen"
+msgstr "Uw wijzigingen annuleren"
 
 msgid "Cancel"
 msgstr "Annuleren"
@@ -160,22 +163,22 @@ msgid "Cheats"
 msgstr "Cheats"
 
 msgid "Check configuration file."
-msgstr "Check configuratie bestand."
+msgstr "Controleer uw configuratie."
 
 msgid "Classic"
 msgstr "Classic"
 
 msgid "Color trap filter"
-msgstr "Kleur 'Vang' filter"
+msgstr "Kleur filter"
 
 msgid "Console region"
 msgstr "Console regio"
 
 msgid "Control settings"
-msgstr "Besturings opties"
+msgstr "> Besturings opties <"
 
 msgid "Controller"
-msgstr "Controller"
+msgstr "Besturing met"
 
 msgid "Custom"
 msgstr "Aangepast"
@@ -190,7 +193,7 @@ msgid "Decrease speed"
 msgstr "Snelheid verlagen"
 
 msgid "Delete settings"
-msgstr "Verwijder instellingen"
+msgstr "De huidige instellingen wissen"
 
 msgid "Descend"
 msgstr "Dalen"
@@ -202,16 +205,16 @@ msgid "Disabled"
 msgstr "Uitgeschakeld"
 
 msgid "Disk 0 side A inserted."
-msgstr "Disk 0 kant A ingevoerd."
+msgstr "Speldisk zijde A is ingevoerd."
 
 msgid "Disk 0 side B inserted."
-msgstr "Disk 0 kant B ingevoerd."
+msgstr "Speldisk zijde B is ingevoerd."
 
 msgid "Display mode"
-msgstr "Beeld stand"
+msgstr "Weergave stand"
 
 msgid "Display settings"
-msgstr "Beeld instellingen"
+msgstr "> Weergave opties <"
 
 msgid "Domestic (Japan)"
 msgstr "Domestiek (Japan)"
@@ -238,7 +241,7 @@ msgid "Drop faster"
 msgstr "Val sneller"
 
 msgid "Emulator settings"
-msgstr "Emulator instellingen"
+msgstr "> Emulator opties <  "
 
 msgid "Enabled"
 msgstr "Ingeschakeld"
@@ -295,13 +298,13 @@ msgid "Fires cannon/homing missile"
 msgstr "Vuurt kannon/zoekende raket"
 
 msgid "Fixed (double strike)"
-msgstr "Vergrendeld (double strike)"
+msgstr "Vast formaat (double strike)"
 
 msgid "Flip disk"
-msgstr "Wissel disk"
+msgstr "Wisselt speldisk zijde"
 
 msgid "Frame skip"
-msgstr "Frame overslaan"
+msgstr "Frames overslaan"
 
 msgid "Full screen"
 msgstr "Volledig scherm"
@@ -316,7 +319,7 @@ msgid "Game Genie"
 msgstr "Game Genie"
 
 msgid "Game-specific settings"
-msgstr "Spel-specifieke instellingen"
+msgstr "> Spel-specifieke opties <"
 
 msgid "GameBoy Advance"
 msgstr "GameBoy Advance"
@@ -355,13 +358,13 @@ msgid "Increase speed"
 msgstr "Verhoog snelheid"
 
 msgid "Insert coin"
-msgstr "Munt inwerpen"
+msgstr " 'Muntje' inwerpen"
 
 msgid "Invalid network settings - Check configuration file."
-msgstr "Netwerk instellingen onjuist - check configuratie bestand."
+msgstr "Netwerk instellingen onjuist - check uw configuratie."
 
 msgid "Invalid network settings"
-msgstr "Netwerk instellingen onjuist"
+msgstr "Netwerk instellingen zijn onjuist"
 
 msgid "items found, displaying"
 msgstr "Items gevonden, getoond worden"
@@ -370,7 +373,7 @@ msgid "Japan"
 msgstr "Japan"
 
 msgid "Japanese"
-msgstr "Japanse"
+msgstr "Japans"
 
 msgid "Jump"
 msgstr "Spring"
@@ -388,13 +391,13 @@ msgid "L-Up"
 msgstr "L-omhoog"
 
 msgid "Language (game)"
-msgstr "Taal (Spel)"
+msgstr "(spel) Taal"
 
 msgid "Language"
 msgstr "Taal"
 
 msgid "Latest"
-msgstr "Meest recente"
+msgstr "= meest recente spelstatus"
 
 msgid "Left flipper"
 msgstr "linker flipper"
@@ -409,13 +412,13 @@ msgid "Left"
 msgstr "links"
 
 msgid "Load game"
-msgstr "Spel laden"
+msgstr "| Een spel kiezen |"
 
 msgid "Load state"
-msgstr "Status laden"
+msgstr "De gekozen spelstatus laden"
 
 msgid "Loading game..."
-msgstr "Spel aan het laden..."
+msgstr "Bezig met laden..."
 
 msgid "Locked"
 msgstr "Vergrendeld"
@@ -433,7 +436,7 @@ msgid "Map"
 msgstr "Kaart"
 
 msgid "Match game header"
-msgstr "Bijbehorende header"
+msgstr "Gebruik orginele header"
 
 msgid "Mega Drive"
 msgstr "Mega Drive"
@@ -468,7 +471,7 @@ msgid "NES"
 msgstr "NES"
 
 msgid "Network Share"
-msgstr "Netwerk / gedeelde map"
+msgstr "Netwerk / Gedeelde Map"
 
 msgid "No"
 msgstr "Nee"
@@ -483,7 +486,7 @@ msgid "North America"
 msgstr "Noord Amerika"
 
 msgid "Note: Enabling rewind may affect performance."
-msgstr "let op: Terugspoelen kan prestatie beinvloeden."
+msgstr "Opgelet: Terugspoelfunctie kan de prestatie beinvloeden!"
 
 msgid "Option 1"
 msgstr "Optie 1"
@@ -534,25 +537,28 @@ msgid "Rapid"
 msgstr "Snel"
 
 msgid "Reading file list..."
-msgstr "Lezen van bestandslijst..."
+msgstr "Laden van de bestandslijst..."
 
 msgid "Reload"
 msgstr "Herladen"
 
 msgid "Reset to defaults"
-msgstr "Standaard instellingen"
+msgstr "Herstellen van standaard instellingen"
 
 msgid "Reset"
-msgstr "Resetten"
+msgstr "Het huidige spel resetten"
 
 msgid "Resize screen"
-msgstr "Scherm formaat aanpassen"
+msgstr "Het beeldformaat aanpassen"
+
+msgid "Resizing not supported for double strike mode."
+msgstr "Aanpassing onmogelijk i.v.m. double strike mode."
 
 msgid "Resume"
-msgstr "Spel hervatten"
+msgstr "Het huidige spel hervatten"
 
 msgid "Revert to saved settings"
-msgstr "Opgeslagen instellingen laden"
+msgstr "Opgeslagen spelinstellingen laden"
 
 msgid "Rewind buttons"
 msgstr "Terugspoel knoppen"
@@ -603,19 +609,19 @@ msgid "Run"
 msgstr "Rennen"
 
 msgid "Save settings"
-msgstr "Instellingen opslaan"
+msgstr "Spel instellingen opslaan"
 
 msgid "Save state"
-msgstr "Status opslaan"
+msgstr "Huidige spelstatus opslaan"
 
 msgid "Save states"
-msgstr "Status menu"
+msgstr "> Spelstatus menu <"
 
 msgid "Scaler"
-msgstr "Verhouding / schaler"
+msgstr "Schaal methode"
 
 msgid "Screen size"
-msgstr "Formaat scherm"
+msgstr "Beeldformaat"
 
 msgid "Scroll"
 msgstr "Bladeren"
@@ -627,7 +633,7 @@ msgid "Sega Master System"
 msgstr "Sega Master System"
 
 msgid "Select unit"
-msgstr "Kies apparaat"
+msgstr "Kies een apparaat"
 
 msgid "Select"
 msgstr "Kies"
@@ -645,7 +651,7 @@ msgid "Sideways"
 msgstr "Horizontaal"
 
 msgid "Slot"
-msgstr "Plaats"
+msgstr "Spelstatus nr."
 
 msgid "Soft shot, lob"
 msgstr "Zacht schot, lob"
@@ -657,16 +663,16 @@ msgid "Start"
 msgstr "Start"
 
 msgid "Successfully deleted cartridge settings."
-msgstr "Cartridge instellingen wissen gelukt."
+msgstr "Wissen van cartridge instellingen is gelukt."
 
 msgid "Successfully reverted to saved settings."
-msgstr "Laden van opgeslagen instellingen gelukt."
+msgstr "Laden van opgeslagen instellingen is gelukt."
 
 msgid "Successfully saved cartridge settings."
-msgstr "Cartridge instellingen opslaan gelukt."
+msgstr "Cartridge instellingen opslaan is gelukt."
 
 msgid "Successly saved state."
-msgstr "Status opslaan gelukt."
+msgstr "Opslaan van uw spelstatus is gelukt."
 
 msgid "Supported"
 msgstr "Ondersteund"
@@ -681,7 +687,7 @@ msgid "Swing up"
 msgstr "Zwaai omhoog"
 
 msgid "Switch camera"
-msgstr "Wissel camera"
+msgstr "Wissel tussen camera"
 
 msgid "Throw down"
 msgstr "Werp naar beneden"
@@ -708,13 +714,16 @@ msgid "Toggle auto rotation"
 msgstr "Wissel auto rotatie"
 
 msgid "Toggle screen sizes"
-msgstr "Wissel scherm formaten"
+msgstr "Wissel tussen scherm formaten"
 
 msgid "Top menu exit"
 msgstr "Top menu afsluiten"
 
+msgid "U/D"
+msgstr "Op/Neer"
+
 msgid "Unable to mount"
-msgstr "Niet in staat te verbinden"
+msgstr "Wiimednafen is niet in staat verbinding te maken..."
 
 msgid "Unlocked"
 msgstr "Ontgrendeld"
@@ -738,10 +747,10 @@ msgid "Vert."
 msgstr "Vert."
 
 msgid "Video filter"
-msgstr "Video filter"
+msgstr "Weergave filter"
 
 msgid "Video settings"
-msgstr "Video instellingen"
+msgstr "> Weergave opties <"
 
 msgid "Virtual Boy"
 msgstr "Virtual Boy"

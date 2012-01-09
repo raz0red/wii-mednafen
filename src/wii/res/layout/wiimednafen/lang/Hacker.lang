@@ -577,6 +577,9 @@ msgstr "riGH7 punch/bL0cK"
 msgid "Right"
 msgstr "RigH7"
 
+msgid "ROM image is too large; maximum size allowed is 67108864 bytes."
+msgstr "R0m im@G3 i5 to0 L@Rg3; m@xiMuM $Iz3 @Ll0w3d i$ 67108864 8Yt3$."
+
 msgid "ROM patching"
 msgstr "R0M p@7cHInG"
 
