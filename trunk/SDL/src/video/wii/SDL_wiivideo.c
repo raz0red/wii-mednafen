@@ -244,7 +244,7 @@ static void * flip_thread (void *arg)
       draw_square(gx_view); // render textured quad
     }
 
-    if( rendercallback && vmode == grxModes[DEFAULT_MODE] )
+    if( rendercallback /*&& vmode == grxModes[DEFAULT_MODE]*/ )
     {
       GX_SetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_CLEAR);  
       GX_SetTevOp (GX_TEVSTAGE0, GX_PASSCLR);
