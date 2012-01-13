@@ -1073,7 +1073,7 @@ Tantric      : Menu example code and SDL enhancements
 Change Log
 --------------------------------------------
 
-01/11/12 (0.1)
+01/13/12 (0.1)
 -------------------
  - Added support for MegaDrive/Genesis.
  - Added rewind support for the following emulators:
