@@ -1,0 +1,774 @@
+msgid "(2d) Red/black"
+msgstr "(2D) Rood/Zwart"
+
+msgid "(2d) White/black"
+msgstr "(2D) Wit/Zwart"
+
+msgid "(3d) Green/red"
+msgstr "(3D) Groen/Rood"
+
+msgid "(3d) Red/blue"
+msgstr "(3D) Rood/Blauw"
+
+msgid "(3d) Red/cyan"
+msgstr "(3D) Rood/Cyaan"
+
+msgid "(3d) Red/electric cyan"
+msgstr "(3D) Rood/Elektro Cyaan"
+
+msgid "(3d) Red/green"
+msgstr "(3D) Rood/Groen"
+
+msgid "(3d) Yellow/blue"
+msgstr "(3D) Geel/Blauw"
+
+msgid "ROM image is too large; maximum size allowed is 67108864 bytes."
+msgstr "Het ROM bestand is te groot; maximum toegestane grootte is 64 MB."
+
+msgid "(auto)"
+msgstr "(automatisch)"
+
+msgid "(default)"
+msgstr "(standaard)"
+
+msgid "(none)"
+msgstr "(geen)"
+
+msgid "(normal)"
+msgstr "(normaal)"
+
+msgid "(rewind)"
+msgstr "(terugspoelen)"
+
+msgid "(rotate screen)"
+msgstr "(draai scherm)"
+
+msgid "(special)"
+msgstr "(speciaal)"
+
+msgid "1 item found."
+msgstr "1 item gevonden."
+
+msgid "16:9 correction"
+msgstr "16:9 correctie"
+
+msgid "2-button pad"
+msgstr "2-knops pad"
+
+msgid "270 degrees"
+msgstr "270 graden"
+
+msgid "2x/Full screen"
+msgstr "2x/Volledig scherm"
+
+msgid "3-button pad"
+msgstr "3-knops pad"
+msgid "3x/Full screen"
+msgstr "3x/Volledig scherm"
+
+msgid "4x/Full screen"
+msgstr "4x/Volledig scherm"
+
+msgid "6-button pad"
+msgstr "6-knops pad"
+
+msgid "90 degrees"
+msgstr "90 graden"
+
+msgid "A/2 button"
+msgstr "A/2 knop"
+
+msgid "Accept changes"
+msgstr "Uw wijzigingen bevestigen"
+
+msgid "Activate spin/power meter"
+msgstr "Activeer draai/kracht meter"
+
+msgid "Advanced"
+msgstr "> Uitgebreide opties <"
+
+msgid "Aim left"
+msgstr "Richt links"
+
+msgid "Aim right"
+msgstr "Richt rechts"
+
+msgid "Aim"
+msgstr "Right"
+
+msgid "Ascend"
+msgstr "Stijgen"
+
+msgid "Aspect ratio"
+msgstr "Beeld verhouding"
+
+msgid "Attack"
+msgstr "Aanvallen"
+
+msgid "Attempting to mount drive..."
+msgstr "Probeert een verbinding te maken met drive..."
+
+msgid "Auto fire"
+msgstr "Automatisch vuren"
+
+msgid "Auto"
+msgstr "Automatisch"
+
+msgid "B/1 button"
+msgstr "B/1 knop"
+
+msgid "Back"
+msgstr "Terug"
+
+msgid "Bilinear filter"
+msgstr "Bilinear filteren"
+
+msgid "Bowl"
+msgstr "Kom"
+
+msgid "Button 1"
+msgstr "Knop 1"
+
+msgid "Button 2"
+msgstr "Knop 2"
+
+msgid "Button mappings"
+msgstr "> Knop toewijzingen aanpassen <"
+
+msgid "button pad"
+msgstr "knops pad"
+
+msgid "Cancel changes"
+msgstr "Uw wijzigingen annuleren"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Cast/reel in"
+msgstr "Werp/inhalen"
+
+msgid "Change altitude"
+msgstr "Wijzig hoogte"
+
+msgid "Change layer"
+msgstr "Wijzig laag"
+
+msgid "Change perspective"
+msgstr "Wijzig perspectief"
+
+msgid "Charge power"
+msgstr "Laad kracht"
+
+msgid "Cheats"
+msgstr "Cheats"
+
+msgid "Check configuration file."
+msgstr "Controleer uw configuratie."
+
+msgid "Classic"
+msgstr "Classic"
+
+msgid "Color trap filter"
+msgstr "Kleur filter"
+
+msgid "Console region"
+msgstr "Console regio"
+
+msgid "Control settings"
+msgstr "> Besturings opties <"
+
+msgid "Controller"
+msgstr "Besturing met"
+
+msgid "Custom"
+msgstr "Aangepast"
+
+msgid "D-pad/Analog"
+msgstr "D-pad/Analoog"
+
+msgid "Debug mode"
+msgstr "Debug stand"
+
+msgid "Decrease speed"
+msgstr "Snelheid verlagen"
+
+msgid "Delete settings"
+msgstr "De huidige instellingen wissen"
+
+msgid "Descend"
+msgstr "Dalen"
+
+msgid "Destroy drone"
+msgstr "Vernietig drone"
+
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+msgid "Disk 0 side A inserted."
+msgstr "Speldisk zijde A is ingevoerd."
+
+msgid "Disk 0 side B inserted."
+msgstr "Speldisk zijde B is ingevoerd."
+
+msgid "Display mode"
+msgstr "Weergave stand"
+
+msgid "Display settings"
+msgstr "> Weergave opties <"
+
+msgid "Domestic (Japan)"
+msgstr "Domestiek (Japan)"
+
+msgid "Double strike (240p)"
+msgstr "Double strike (240P)"
+
+msgid "Down"
+msgstr "Naar beneden"
+
+msgid "Drone 1"
+msgstr "Drone 1"
+
+msgid "Drone 2"
+msgstr "Drone 2"
+
+msgid "Drone 3"
+msgstr "Drone 3"
+
+msgid "Drone controls"
+msgstr "Drone besturing"
+
+msgid "Drop faster"
+msgstr "Val sneller"
+
+msgid "Emulator settings"
+msgstr "> Emulator opties <  "
+
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+msgid "English"
+msgstr "Engels"
+
+msgid "Europe"
+msgstr "Europa"
+
+msgid "Evasive maneuver"
+msgstr "Ontwijkende maneuvre"
+
+msgid "Execute"
+msgstr "Uitvoeren"
+
+msgid "Exit"
+msgstr "Afsluiten"
+
+msgid "Export (World)"
+msgstr "Export (Wereld)"
+
+msgid "External BIOS"
+msgstr "Externe bios"
+
+msgid "Fill screen"
+msgstr "Scherm vullen"
+
+msgid "Fire 1"
+msgstr "Vuren 1"
+
+msgid "Fire 1/Start"
+msgstr "Vuren 1/Start"
+
+msgid "Fire 2"
+msgstr "Vuren 2"
+
+msgid "Fire down"
+msgstr "Vuren naar beneden"
+
+msgid "Fire left"
+msgstr "Vuren links"
+
+msgid "Fire right"
+msgstr "Vuren rechts"
+
+msgid "Fire up"
+msgstr "Vuren omhoog"
+
+msgid "Fire"
+msgstr "Vuren"
+
+msgid "Fires cannon/homing missile"
+msgstr "Vuurt kannon/zoekende raket"
+
+msgid "Fixed (double strike)"
+msgstr "Vast formaat (double strike)"
+
+msgid "Flip disk"
+msgstr "Wisselt speldisk zijde"
+
+msgid "Frame skip"
+msgstr "Frames overslaan"
+
+msgid "Full screen"
+msgstr "Volledig scherm"
+
+msgid "Full widescreen"
+msgstr "Volledig breedbeeld"
+
+msgid "Game Gear"
+msgstr "Game Gear"
+
+msgid "Game Genie"
+msgstr "Game Genie"
+
+msgid "Game-specific settings"
+msgstr "> Spel-specifieke opties <"
+
+msgid "GameBoy Advance"
+msgstr "GameBoy Advance"
+
+msgid "GameBoy Color"
+msgstr "GameBoy Color"
+
+msgid "GameCube"
+msgstr "GameCube"
+
+msgid "Go left"
+msgstr "Ga links"
+
+msgid "Go right"
+msgstr "Ga rechts"
+
+msgid "GX + VI"
+msgstr "GX + VI"
+
+msgid "GX"
+msgstr "G"
+
+msgid "Hacker"
+msgstr "Hacker"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Hook fish"
+msgstr "Vis gehaakt"
+
+msgid "Horiz."
+msgstr "Horiz."
+
+msgid "Increase speed"
+msgstr "Verhoog snelheid"
+
+msgid "Insert coin"
+msgstr " 'Muntje' inwerpen"
+
+msgid "Invalid network settings - Check configuration file."
+msgstr "Netwerk instellingen onjuist - check uw configuratie."
+
+msgid "Invalid network settings"
+msgstr "Netwerk instellingen zijn onjuist"
+
+msgid "items found, displaying"
+msgstr "Items gevonden, getoond worden"
+
+msgid "Japan"
+msgstr "Japan"
+
+msgid "Japanese"
+msgstr "Japans"
+
+msgid "Jump"
+msgstr "Spring"
+
+msgid "L-Down"
+msgstr "L-beneden"
+
+msgid "L-Left"
+msgstr "L-links"
+
+msgid "L-Right"
+msgstr "L-rechts"
+
+msgid "L-Up"
+msgstr "L-omhoog"
+
+msgid "Language (game)"
+msgstr "(spel) Taal"
+
+msgid "Language"
+msgstr "Taal"
+
+msgid "Latest"
+msgstr "= meest recente spelstatus"
+
+msgid "Left flipper"
+msgstr "linker flipper"
+
+msgid "Left punch"
+msgstr "linkse stoot"
+
+msgid "Left punch/block"
+msgstr "linkse stoot/spar"
+
+msgid "Left"
+msgstr "links"
+
+msgid "Load game"
+msgstr "| Een spel kiezen |"
+
+msgid "Load state"
+msgstr "De gekozen spelstatus laden"
+
+msgid "Loading game..."
+msgstr "Bezig met laden..."
+
+msgid "Locked"
+msgstr "Vergrendeld"
+
+msgid "Lynx"
+msgstr "Lynx"
+
+msgid "Maneuver faster"
+msgstr "Maneuvreer sneller"
+
+msgid "Manual"
+msgstr "Handmatig"
+
+msgid "Map"
+msgstr "Kaart"
+
+msgid "Match game header"
+msgstr "Gebruik orginele header"
+
+msgid "Mega Drive"
+msgstr "Mega Drive"
+
+msgid "Minus"
+msgstr "Min"
+
+msgid "Minus/LTrigger"
+msgstr "Min/L-knop"
+
+msgid "Mode"
+msgstr "Stand"
+
+msgid "Move block"
+msgstr "Verplaats blok"
+
+msgid "Move cursor"
+msgstr "Verplaats cursor"
+
+msgid "Move left"
+msgstr "Verplaats links"
+
+msgid "Move right"
+msgstr "verplaats rechts
+msgid "Move"
+msgstr "Verplaats"
+
+msgid "Neo Geo Pocket"
+msgstr "Neo Geo Pocket"
+
+msgid "NES"
+msgstr "NES"
+
+msgid "Network Share"
+msgstr "Netwerk / Gedeelde Map"
+
+msgid "No"
+msgstr "Nee"
+
+msgid "None"
+msgstr "Geen"
+
+msgid "Normal"
+msgstr "Normaal"
+
+msgid "North America"
+msgstr "Noord Amerika"
+
+msgid "Note: Enabling rewind may affect performance."
+msgstr "Opgelet: Terugspoelfunctie kan de prestatie beinvloeden!"
+
+msgid "Option 1"
+msgstr "Optie 1"
+
+msgid "Option 2"
+msgstr "Optie 2"
+
+msgid "Option"
+msgstr "Optie"
+
+msgid "Page"
+msgstr "Pagina"
+
+msgid "Pause"
+msgstr "Pauze"
+
+msgid "PC Engine"
+msgstr "PC Engine"
+
+msgid "PC-FX"
+msgstr "PC-FX"
+
+msgid "Plus"
+msgstr "Plus"
+
+msgid "Plus/RTrigger"
+msgstr "Plus/R-knop"
+
+msgid "Portuguese"
+msgstr "Portugees"
+
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "R-Down"
+msgstr "R-Beneden"
+
+msgid "R-Left"
+msgstr "R-Links"
+
+msgid "R-Right"
+msgstr "R-Rechts"
+
+msgid "R-Up"
+msgstr "R-Omhoog"
+
+msgid "Rapid"
+msgstr "Snel"
+
+msgid "Reading file list..."
+msgstr "Laden van de bestandslijst..."
+
+msgid "Reload"
+msgstr "Herladen"
+
+msgid "Reset to defaults"
+msgstr "Herstellen van standaard instellingen"
+
+msgid "Reset"
+msgstr "Het huidige spel resetten"
+
+msgid "Resize screen"
+msgstr "Het beeldformaat aanpassen"
+
+msgid "Resizing not supported for double strike mode."
+msgstr "Aanpassing onmogelijk i.v.m. double strike mode."
+
+msgid "Resume"
+msgstr "Het huidige spel hervatten"
+
+msgid "Revert to saved settings"
+msgstr "Opgeslagen spelinstellingen laden"
+
+msgid "Rewind buttons"
+msgstr "Terugspoel knoppen"
+
+msgid "Rewind"
+msgstr "Terugspoelen"
+
+msgid "Right flipper"
+msgstr "Rechter flipper"
+
+msgid "Right punch"
+msgstr "Rechter stoot"
+
+msgid "Right punch/block"
+msgstr "Rechter stoot/spar"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "ROM patching"
+msgstr "ROM patchen"
+
+msgid "Rotate backward"
+msgstr "Terug draaien"
+
+msgid "Rotate clockwise"
+msgstr "Rechtsom draaien"
+
+msgid "Rotate container left"
+msgstr "Container linksom draaien"
+
+msgid "Rotate container right"
+msgstr "Container rechtsom draaien"
+
+msgid "Rotate counter-clockwise"
+msgstr "Linksom draaien"
+
+msgid "Rotate forward"
+msgstr "Vooruit draaien"
+
+msgid "Rotated"
+msgstr "Gedraaid"
+
+msgid "Rotation"
+msgstr "Rotatie"
+
+msgid "Run"
+msgstr "Rennen"
+
+msgid "Save settings"
+msgstr "Spel instellingen opslaan"
+
+msgid "Save state"
+msgstr "Huidige spelstatus opslaan"
+
+msgid "Save states"
+msgstr "> Spelstatus menu <"
+
+msgid "Scaler"
+msgstr "Schaal methode"
+
+msgid "Screen size"
+msgstr "Beeldformaat"
+
+msgid "Scroll"
+msgstr "Bladeren"
+
+msgid "SD Card"
+msgstr "SD Kaart"
+
+msgid "Sega Master System"
+msgstr "Sega Master System"
+
+msgid "Select unit"
+msgstr "Kies een apparaat"
+
+msgid "Select"
+msgstr "Kies"
+
+msgid "Shake"
+msgstr "Schud"
+
+msgid "Shoot"
+msgstr "Schiet"
+
+msgid "Show menu"
+msgstr "Toon menu"
+
+msgid "Sideways"
+msgstr "Horizontaal"
+
+msgid "Slot"
+msgstr "Spelstatus nr."
+
+msgid "Soft shot, lob"
+msgstr "Zacht schot, lob"
+
+msgid "Solid shot"
+msgstr "Stevig schot"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Successfully deleted cartridge settings."
+msgstr "Wissen van cartridge instellingen is gelukt."
+
+msgid "Successfully reverted to saved settings."
+msgstr "Laden van opgeslagen instellingen is gelukt."
+
+msgid "Successfully saved cartridge settings."
+msgstr "Cartridge instellingen opslaan is gelukt."
+
+msgid "Successly saved state."
+msgstr "Opslaan van uw spelstatus is gelukt."
+
+msgid "Supported"
+msgstr "Ondersteund"
+
+msgid "Swing left"
+msgstr "Zwaai links"
+
+msgid "Swing right"
+msgstr "Zwaai rechts"
+
+msgid "Swing up"
+msgstr "Zwaai omhoog"
+
+msgid "Switch camera"
+msgstr "Wissel tussen camera"
+
+msgid "Throw down"
+msgstr "Werp naar beneden"
+
+msgid "Throw left"
+msgstr "Werp naar links"
+
+msgid "Throw right"
+msgstr "Werp naar rechts"
+
+msgid "Throw up"
+msgstr "Werp omhoog"
+
+msgid "Throw"
+msgstr "Werp"
+
+msgid "to"
+msgstr "t/m"
+
+msgid "Toggle A/R lock"
+msgstr "Vergrendeling beeldverhouding"
+
+msgid "Toggle auto rotation"
+msgstr "Wissel auto rotatie"
+
+msgid "Toggle screen sizes"
+msgstr "Wissel tussen scherm formaten"
+
+msgid "Top menu exit"
+msgstr "Top menu afsluiten"
+
+msgid "U/D"
+msgstr "Op/Neer"
+
+msgid "Unable to mount"
+msgstr "Wiimednafen is niet in staat verbinding te maken..."
+
+msgid "Unlocked"
+msgstr "Ontgrendeld"
+
+msgid "Up"
+msgstr "Omhoog"
+
+msgid "Upright"
+msgstr "Verticaal"
+
+msgid "USB Device"
+msgstr "USB apparaat"
+
+msgid "Use power"
+msgstr "Gebruik kracht"
+
+msgid "Use special"
+msgstr "Gebruik speciaal"
+
+msgid "Vert."
+msgstr "Vert."
+
+msgid "Video filter"
+msgstr "Weergave filter"
+
+msgid "Video settings"
+msgstr "> Weergave opties <"
+
+msgid "Virtual Boy"
+msgstr "Virtual Boy"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Wiimote (menu)"
+msgstr "Wiimote (menu)"
+
+msgid "Wiimote + Nunchuk"
+msgstr "Wiimote + Nunchuk"
+
+msgid "Wiimote"
+msgstr "Wiimote"
+
+msgid "WonderSwan"
+msgstr "WonderSwan"
+
+msgid "Yes"
+msgstr "Ja"
