@@ -183,14 +183,17 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
       retVal = emulator->onShowControlsScreen();
     }
 
-    if( retVal )
-    {
+    // This is currently disabled due to the fact that if you exit from
+    // the controls screen, you can attempt to "resize", but the screen 
+    // has not been displayed which will lead to a dump...
+//    if( retVal )
+//    {
       // Wait until no buttons are pressed
       wii_wait_until_no_buttons( 2 );
 
       // Start the emulator loop
       wii_mednafen_emu_loop( resume );            
-    }
+//    }
 
     // Pop the callback
     wii_gx_pop_callback();
