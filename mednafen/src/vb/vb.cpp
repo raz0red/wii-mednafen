@@ -1934,6 +1934,10 @@ static const struct VBGameEntry VBGames[] =
        0x07000bb4,
        0x07000ac8,
  } },
+
+ { { 0x44C2B723 } , "Space Pinball (Prototype)", { 
+       0x0702EA7A
+ }},
 };
 
 #ifndef WII

@@ -663,6 +663,25 @@ btnDesc11=Fire left
 btnDesc12=Fire right
 btnDesc13=Fire up
 btnDesc14=Fire down
+[786774a6209d1433f15757c63962c894]
+name=Space Pinball (Prototype)
+wiimoteSupported=1
+btn.0.2=4
+btn.0.3=1
+btn.0.4=3
+btn.0.5=2
+btnDesc1=Shoot
+btnDesc3=Left flipper
+btnDesc4=Right flipper
+btnDesc5=Shoot
+btnDesc7=Left flipper
+btnDesc8=Left flipper
+btnDesc9=Left flipper
+btnDesc10=Left flipper
+btnDesc11=Right flipper
+btnDesc12=Right flipper
+btnDesc13=Right flipper
+btnDesc14=Right flipper
 [e100366a75b508c679796c9e3c368f4f]
 name=Space Squash (J) [T+Eng]
 wiimoteSupported=0

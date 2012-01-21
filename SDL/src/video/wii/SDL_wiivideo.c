@@ -795,6 +795,7 @@ void WII_InitVideoSystem()
   vmode->viXOrigin = (VI_MAX_WIDTH_NTSC - vmode->viWidth ) / 2;
   //vmode = &TVPal574IntDfScale;
 #endif
+  //vmode = &TVEurgb60Hz480Int;
 
   switch (vmode->viTVMode >> 2)
   {
@@ -839,10 +840,11 @@ void WII_InitVideoSystem()
   switch (vmode->viTVMode >> 2)
   {
   case VI_PAL: // 576 lines (PAL 50hz)
-    grxModes[mode]->viHeight = 574;
-    grxModes[mode]->xfbHeight = grxModes[mode]->efbHeight = 287;
+    grxModes[mode]->viHeight = 572;
+    grxModes[mode]->xfbHeight = grxModes[mode]->efbHeight = 286;
     grxModes[mode]->viYOrigin = 
       (VI_MAX_HEIGHT_PAL/2 - grxModes[mode]->viHeight/2 ) / 2;
+    grxModes[mode]->viTVMode = VI_TVMODE_PAL_DS;
     break;
 
   case VI_NTSC: // 480 lines (NTSC 60hz)
@@ -852,7 +854,7 @@ void WII_InitVideoSystem()
 
   default: // 480 lines (PAL 60Hz)
     grxModes[mode]->viYOrigin = 
-      (VI_MAX_WIDTH_EURGB60/2 - grxModes[mode]->viHeight/2 ) / 2;
+      (VI_MAX_HEIGHT_EURGB60/2 - grxModes[mode]->viHeight/2 ) / 2;
     break;
   }
 
