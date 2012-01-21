@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1 release README
+WiiMednafen v0.1.1 release README
 --------------------------------------------
 
 Ported by raz0red
@@ -174,10 +174,8 @@ double strike mode (in "Emulator settings") to either "(default)" (observe
 global setting) or "Enabled" (explicitly enable double strike regardless of
 global setting).
 
-*NOTE* Double strike mode has not been tested on PAL Wii systems and as such
-may not function properly. Further, double strike for PAL-based games (288p)
-has not been implemented. If there is enough interest, I will look into 
-adding support in a future release.
+*NOTE* Double strike for PAL-based games (288p) has not been implemented. If
+there is enough interest, I will look into adding support in a future release.
 
 --------------------------------------------
 Rewind support
@@ -1061,17 +1059,29 @@ of the following locations:
 Credits / Special Thanks
 --------------------------------------------
 
-Ryphecha     : Providing an incredible multi-emulator, optimizing the
-               Virtual Boy emulation, and putting up with my questions.
-mastershoes  : Creating the WiiMednafen channel
-Hielkenator  : Testing, Dutch translation
-Arikado      : Helping with the initial Virtual Boy (WiirtualBoy) port.
-Eke-eke      : Double strike help and color trap filter implementation.
-Tantric      : Menu example code and SDL enhancements
+Ryphecha        : Providing an incredible multi-emulator, optimizing the
+                  Virtual Boy emulation, and putting up with my questions.
+mastershoes     : WiiMednafen channel
+Hielkenator     : Testing, Dutch translation
+Thiago Alves    : NTSC double strike testing, feedback, and more testing
+Davide Arielli  : PAL double strike testing
+Arikado         : Helping with the initial Virtual Boy (WiirtualBoy) port.
+Eke-eke         : Double strike help and color trap filter implementation.
+Tantric         : Menu example code and SDL enhancements
 
 --------------------------------------------
 Change Log
 --------------------------------------------
+
+01/22/12 (0.1.1)
+-------------------
+ - Minor update from 0.1
+   - Double strike fixes for PAL display modes
+     - PAL50: fixed minor display corruption issue
+     - PAL60: was completely broken, now works correctly
+   - Space Pinball Prototype (Virtual Boy)
+     - Added idle loop patch, it now runs at full speed w/o frame skipping
+     - Added proper control mappings
 
 01/13/12 (0.1)
 -------------------
