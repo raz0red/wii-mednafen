@@ -1,0 +1,776 @@
+msgid "(2d) Red/black"
+msgstr "(2D) r3D/bl@Ck"
+
+msgid "(2d) White/black"
+msgstr "(2D) whIt3/bl@Ck"
+
+msgid "(3d) Green/red"
+msgstr "(3d) GRe3n/R3d"
+
+msgid "(3d) Red/blue"
+msgstr "(3d) r3d/8Lu3"
+
+msgid "(3d) Red/cyan"
+msgstr "(3D) r3d/cYan"
+
+msgid "(3d) Red/electric cyan"
+msgstr "(3D) R3D/3L3CtriC cy@n"
+
+msgid "(3d) Red/green"
+msgstr "(3d) R3D/gR33n"
+
+msgid "(3d) Yellow/blue"
+msgstr "(3D) Y3llow/8lU3"
+
+msgid "(auto)"
+msgstr "(@U70)"
+
+msgid "(default)"
+msgstr "(D3f@uL7)"
+
+msgid "(none)"
+msgstr "(N0N3)"
+
+msgid "(normal)"
+msgstr "(noRM@L)"
+
+msgid "(rewind)"
+msgstr "(R3WiND)"
+
+msgid "(rotate screen)"
+msgstr "(Rot@73 scRe3n)"
+
+msgid "(special)"
+msgstr "(5p3cIal)"
+
+msgid "1 item found."
+msgstr "1 I73M FouNd."
+
+msgid "16:9 correction"
+msgstr "16:9 C0rr3c7i0N"
+
+msgid "2-button pad"
+msgstr "2-8u770N p@d"
+
+msgid "270 degrees"
+msgstr "270 degr335"
+
+msgid "2x/Full screen"
+msgstr "2x/FULl $cr33n"
+
+msgid "3-button pad"
+msgstr "3-8u770n P@d"
+
+msgid "3x/Full screen"
+msgstr "3x/FUll sCr33N"
+
+msgid "4x/Full screen"
+msgstr "4x/fuLL scR33N"
+
+msgid "6-button pad"
+msgstr "6-8u7t0n p@d"
+
+msgid "90 degrees"
+msgstr "90 d3Gr335"
+
+msgid "A/2 button"
+msgstr "A/2 8U7t0n"
+
+msgid "Accept changes"
+msgstr "acC3P7 chang35"
+
+msgid "Activate spin/power meter"
+msgstr "@ctiV@73 5Pin/poW3r M373r"
+
+msgid "Advanced"
+msgstr "@DV@nCed"
+
+msgid "Aim left"
+msgstr "@Im L3f7"
+
+msgid "Aim right"
+msgstr "@iM rIgh7"
+
+msgid "Aim"
+msgstr "@IM"
+
+msgid "Ascend"
+msgstr "@5C3nd"
+
+msgid "Aspect ratio"
+msgstr "@sP3ct r@7i0"
+
+msgid "Attack"
+msgstr "@77@Ck"
+
+msgid "Attempting to mount drive..."
+msgstr "@773mp7ing 70 m0uN7 drIv3..."
+
+msgid "Auto fire"
+msgstr "@u70 fiR3"
+
+msgid "Auto"
+msgstr "@u70"
+
+msgid "B/1 button"
+msgstr "B/1 bU77oN"
+
+msgid "Back"
+msgstr "8ack"
+
+msgid "Bilinear filter"
+msgstr "8ILin3ar fIL73r"
+
+msgid "Bowl"
+msgstr "80wl"
+
+msgid "Button 1"
+msgstr "8U770N 1"
+
+msgid "Button 2"
+msgstr "8u770n 2"
+
+msgid "Button mappings"
+msgstr "8u770n M@ppiNG5"
+
+msgid "button pad"
+msgstr "8u770n P@D"
+
+msgid "Cancel changes"
+msgstr "c@Nc3l ch@ng3$"
+
+msgid "Cancel"
+msgstr "c@nC3l"
+
+msgid "Cast/reel in"
+msgstr "ca57/r3el In"
+
+msgid "Change altitude"
+msgstr "cH@NG3 al7i7UD3"
+
+msgid "Change layer"
+msgstr "CH@ng3 l@y3r"
+
+msgid "Change perspective"
+msgstr "Ch@nge Per5P3ctiV3"
+
+msgid "Charge power"
+msgstr "ch@RG3 P0weR"
+
+msgid "Cheats"
+msgstr "Ch3@75"
+
+msgid "Check configuration file."
+msgstr "cH3CK c0nfIguRa7i0n fIle."
+
+msgid "Classic"
+msgstr "Cl@$$Ic"
+
+msgid "Color trap filter"
+msgstr "col0r 7r@p fIL73r"
+
+msgid "Console region"
+msgstr "c0ns0l3 r3gi0N"
+
+msgid "Control settings"
+msgstr "c0N7r0l 5377ing5"
+
+msgid "Controller"
+msgstr "c0n7r0lL3r"
+
+msgid "Custom"
+msgstr "cu5t0M"
+
+msgid "D-pad/Analog"
+msgstr "d-P@D/@n@l0g"
+
+msgid "Debug mode"
+msgstr "D38ug mod3"
+
+msgid "Decrease speed"
+msgstr "decr3@53 5p33d"
+
+msgid "Delete settings"
+msgstr "D3L373 $et7ING5"
+
+msgid "Descend"
+msgstr "d35cend"
+
+msgid "Destroy drone"
+msgstr "d357r0y Dr0n3"
+
+msgid "Disabled"
+msgstr "Di5@8L3d"
+
+msgid "Disk 0 side A inserted."
+msgstr "di5K 0 5Id3 @ in53R73d."
+
+msgid "Disk 0 side B inserted."
+msgstr "dI$k 0 $iDe b IN$3r7ed."
+
+msgid "Display mode"
+msgstr "dI$pl@y m0D3"
+
+msgid "Display settings"
+msgstr "Di$PL@Y 5e77iNGs"
+
+msgid "Domestic (Japan)"
+msgstr "d0m3$7IC (J@P@N)"
+
+msgid "Double strike (240p)"
+msgstr "d0Uble 5tRIke (240P)"
+
+msgid "Down"
+msgstr "d0wn"
+
+msgid "Drone 1"
+msgstr "DR0n3 1"
+
+msgid "Drone 2"
+msgstr "DR0n3 2"
+
+msgid "Drone 3"
+msgstr "dR0N3 3"
+
+msgid "Drone controls"
+msgstr "dR0Ne C0ntR0l5"
+
+msgid "Drop faster"
+msgstr "dr0p f@s73r"
+
+msgid "Emulator settings"
+msgstr "3mUL@7or 537tiNg5"
+
+msgid "Enabled"
+msgstr "3n@8l3d"
+
+msgid "English"
+msgstr "3nGlI5h"
+
+msgid "Europe"
+msgstr "3uR0P3"
+
+msgid "Evasive maneuver"
+msgstr "3v@$iv3 M@n3Uv3r"
+
+msgid "Execute"
+msgstr "3x3cU7e"
+
+msgid "Exit"
+msgstr "3xit"
+
+msgid "Export (World)"
+msgstr "3xp0r7 (woRLd)"
+
+msgid "External BIOS"
+msgstr "3X73Rn@l 8i05"
+
+msgid "Fill screen"
+msgstr "Fill $CR33n"
+
+msgid "Fire 1"
+msgstr "Fir3 1"
+
+msgid "Fire 1/Start"
+msgstr "fir3 1/s7art"
+
+msgid "Fire 2"
+msgstr "fiRe 2"
+
+msgid "Fire down"
+msgstr "fIRe d0WN"
+
+msgid "Fire left"
+msgstr "fire l3F7"
+
+msgid "Fire right"
+msgstr "fiRe Righ7"
+
+msgid "Fire up"
+msgstr "FIR3 up"
+
+msgid "Fire"
+msgstr "fIr3"
+
+msgid "Fires cannon/homing missile"
+msgstr "FIr3$ Cann0n/h0mIng mIs$iL3"
+
+msgid "Fixed (double strike)"
+msgstr "fIX3D (D0U8l3 $7rIk3)"
+
+msgid "Flip disk"
+msgstr "FLiP dI$k"
+
+msgid "Frame skip"
+msgstr "fram3 sKip"
+
+msgid "Full screen"
+msgstr "FUlL 5cr33N"
+
+msgid "Full widescreen"
+msgstr "full WId35CR33N"
+
+msgid "Game Gear"
+msgstr "G@m3 g3@r"
+
+msgid "Game Genie"
+msgstr "G@M3 g3ni3"
+
+msgid "Game-specific settings"
+msgstr "g@M3-speCiFic $377INgs"
+
+msgid "GameBoy Advance"
+msgstr "gaM380y @dv@nC3"
+
+msgid "GameBoy Color"
+msgstr "G@m380Y c0L0R"
+
+msgid "GameCube"
+msgstr "g@m3Cu83"
+
+msgid "Go left"
+msgstr "g0 L3f7"
+
+msgid "Go right"
+msgstr "g0 riGh7"
+
+msgid "GX + VI"
+msgstr "gX + vi"
+
+msgid "GX"
+msgstr "Gx"
+
+msgid "Hacker"
+msgstr "haCk3r"
+
+msgid "Home"
+msgstr "H0me"
+
+msgid "Hook fish"
+msgstr "h00K Fi$h"
+
+msgid "Horiz."
+msgstr "H0riz."
+
+msgid "Increase speed"
+msgstr "incR3@53 5p33D"
+
+msgid "Insert coin"
+msgstr "iN5er7 c0in"
+
+msgid "Invalid network settings - Check configuration file."
+msgstr "inV@LId Ne7work $377iNg5 - cH3CK c0NFIgur@7I0N file."
+
+msgid "Invalid network settings"
+msgstr "inv@liD n3tW0rk $3ttiNg5"
+
+msgid "items found, displaying"
+msgstr "i7eM5 F0UnD, DI5PlaYiNG"
+
+msgid "Japan"
+msgstr "J@pan"
+
+msgid "Japanese"
+msgstr "J@P@n353"
+
+msgid "Jump"
+msgstr "JuMp"
+
+msgid "L-Down"
+msgstr "L-d0wn"
+
+msgid "L-Left"
+msgstr "L-l3F7"
+
+msgid "L-Right"
+msgstr "L-riGh7"
+
+msgid "L-Up"
+msgstr "L-uP"
+
+msgid "Language (game)"
+msgstr "l@ngU@G3 (g@M3)"
+
+msgid "Language"
+msgstr "L@ngu@g3"
+
+msgid "Latest"
+msgstr "L@73$7"
+
+msgid "Left flipper"
+msgstr "l3f7 FLIPp3R"
+
+msgid "Left punch"
+msgstr "l3f7 PuncH"
+
+msgid "Left punch/block"
+msgstr "L3f7 pUNCH/8lock"
+
+msgid "Left"
+msgstr "l3f7"
+
+msgid "Load game"
+msgstr "l0@D G@M3"
+
+msgid "Load state"
+msgstr "l0@d s7@t3"
+
+msgid "Loading game..."
+msgstr "lo@dIng g@m3..."
+
+msgid "Locked"
+msgstr "l0ck3d"
+
+msgid "Lynx"
+msgstr "lyNx"
+
+msgid "Maneuver faster"
+msgstr "m@n3Uv3r f@$73r"
+
+msgid "Manual"
+msgstr "M@nU@l"
+
+msgid "Map"
+msgstr "M@P"
+
+msgid "Match game header"
+msgstr "M@7cH gaM3 H3aD3r"
+
+msgid "Mega Drive"
+msgstr "M3g@ DRIv3"
+
+msgid "Minus"
+msgstr "miNus"
+
+msgid "Minus/LTrigger"
+msgstr "miNu$/l7rIgG3r"
+
+msgid "Mode"
+msgstr "M0D3"
+
+msgid "Move block"
+msgstr "MoV3 8L0Ck"
+
+msgid "Move cursor"
+msgstr "m0V3 cuR50R"
+
+msgid "Move left"
+msgstr "M0ve l3f7"
+
+msgid "Move right"
+msgstr "m0V3 RiGH7"
+
+msgid "Move"
+msgstr "Mov3"
+
+msgid "Neo Geo Pocket"
+msgstr "N30 g30 p0cK37"
+
+msgid "NES"
+msgstr "N3$"
+
+msgid "Network Share"
+msgstr "N37w0rK 5haR3"
+
+msgid "No"
+msgstr "N0"
+
+msgid "None"
+msgstr "NoN3"
+
+msgid "Normal"
+msgstr "norm@L"
+
+msgid "North America"
+msgstr "nor7h @Meric@"
+
+msgid "Note: Enabling rewind may affect performance."
+msgstr "n073: 3n@8lING r3WIND m@y @FF3c7 perf0Rmanc3."
+
+msgid "Option 1"
+msgstr "0ptI0n 1"
+
+msgid "Option 2"
+msgstr "0P7i0n 2"
+
+msgid "Option"
+msgstr "0P7i0N"
+
+msgid "Page"
+msgstr "P@Ge"
+
+msgid "Pause"
+msgstr "p@u53"
+
+msgid "PC Engine"
+msgstr "Pc 3NgIN3"
+
+msgid "PC-FX"
+msgstr "pc-fX"
+
+msgid "Plus"
+msgstr "pLU$"
+
+msgid "Plus/RTrigger"
+msgstr "Plu5/r7rIgG3r"
+
+msgid "Portuguese"
+msgstr "p0r7Ugu353"
+
+msgid "Profile"
+msgstr "PR0Fil3"
+
+msgid "R-Down"
+msgstr "R-d0wn"
+
+msgid "R-Left"
+msgstr "r-L3F7"
+
+msgid "R-Right"
+msgstr "r-RIgH7"
+
+msgid "R-Up"
+msgstr "R-up"
+
+msgid "Rapid"
+msgstr "r@pId"
+
+msgid "Reading file list..."
+msgstr "R3@Ding Fil3 Li5t..."
+
+msgid "Reload"
+msgstr "R3L0aD"
+
+msgid "Reset to defaults"
+msgstr "r353t 70 D3f@UL7$"
+
+msgid "Reset"
+msgstr "r3$37"
+
+msgid "Resize screen"
+msgstr "r35iz3 $CR3eN"
+
+msgid "Resizing not supported for double strike mode."
+msgstr "r35IziNg N07 $UpP0r73D F0R d0Ubl3 57rIKe Mod3."
+
+msgid "Resume"
+msgstr "resuM3"
+
+msgid "Revert to saved settings"
+msgstr "r3ver7 7o 5@V3d $3t7INg5"
+
+msgid "Rewind buttons"
+msgstr "r3wINd 8U770N$"
+
+msgid "Rewind"
+msgstr "r3WiND"
+
+msgid "Right flipper"
+msgstr "rIgH7 FLiPp3r"
+
+msgid "Right punch"
+msgstr "rIgh7 puNch"
+
+msgid "Right punch/block"
+msgstr "riGH7 punch/bL0cK"
+
+msgid "Right"
+msgstr "RigH7"
+
+msgid "ROM image is too large; maximum size allowed is 67108864 bytes."
+msgstr "R0m im@G3 i5 to0 L@Rg3; m@xiMuM $Iz3 @Ll0w3d i$ 67108864 8Yt3$."
+
+msgid "ROM patching"
+msgstr "R0M p@7cHInG"
+
+msgid "Rotate backward"
+msgstr "rot@73 8@cKW@rD"
+
+msgid "Rotate clockwise"
+msgstr "R07@73 CloCKwI53"
+
+msgid "Rotate container left"
+msgstr "r0t@73 c0n7@in3r l3ft"
+
+msgid "Rotate container right"
+msgstr "r07a73 c0N7@iN3R riGh7"
+
+msgid "Rotate counter-clockwise"
+msgstr "R07a73 c0un73r-cl0ckWI5e"
+
+msgid "Rotate forward"
+msgstr "R07@73 F0rW@RD"
+
+msgid "Rotated"
+msgstr "Rot@73d"
+
+msgid "Rotation"
+msgstr "R07@7ion"
+
+msgid "Run"
+msgstr "RuN"
+
+msgid "Save settings"
+msgstr "$@ve $377iNG$"
+
+msgid "Save state"
+msgstr "s@v3 57a7e"
+
+msgid "Save states"
+msgstr "5@V3 57a735"
+
+msgid "Scaler"
+msgstr "$c@L3R"
+
+msgid "Screen size"
+msgstr "5CRe3n 5Iz3"
+
+msgid "Scroll"
+msgstr "5cr0Ll"
+
+msgid "SD Card"
+msgstr "sd C@rD"
+
+msgid "Sega Master System"
+msgstr "s3g@ M@5teR 5y$73m"
+
+msgid "Select unit"
+msgstr "53L3c7 Unit"
+
+msgid "Select"
+msgstr "53l3ct"
+
+msgid "Shake"
+msgstr "$H@k3"
+
+msgid "Shoot"
+msgstr "5H00t"
+
+msgid "Show menu"
+msgstr "$h0W m3nu"
+
+msgid "Sideways"
+msgstr "5iD3W@Y$"
+
+msgid "Slot"
+msgstr "sl07"
+
+msgid "Soft shot, lob"
+msgstr "sof7 $h07, lo8"
+
+msgid "Solid shot"
+msgstr "s0LiD 5H0t"
+
+msgid "Start"
+msgstr "$7@r7"
+
+msgid "Successfully deleted cartridge settings."
+msgstr "succe$$FulLY d3Le73d c@R7RIdg3 5377INg$."
+
+msgid "Successfully reverted to saved settings."
+msgstr "$uCc3$sfULLy R3v3R73d 70 $@v3d $377InG5."
+
+msgid "Successfully saved cartridge settings."
+msgstr "$ucce$$fuLly $@v3d c@r7Ridge $377iNGs."
+
+msgid "Successly saved state."
+msgstr "$ucc35$Ly $av3d 57@73."
+
+msgid "Supported"
+msgstr "suppoR73d"
+
+msgid "Swing left"
+msgstr "5wIng lef7"
+
+msgid "Swing right"
+msgstr "5wing RigH7"
+
+msgid "Swing up"
+msgstr "5WinG up"
+
+msgid "Switch camera"
+msgstr "$Witch cameR@"
+
+msgid "Throw down"
+msgstr "tHr0w dowN"
+
+msgid "Throw left"
+msgstr "7hroW L3f7"
+
+msgid "Throw right"
+msgstr "7hR0W rIGH7"
+
+msgid "Throw up"
+msgstr "7hrow uP"
+
+msgid "Throw"
+msgstr "7hR0W"
+
+msgid "to"
+msgstr "7o"
+
+msgid "Toggle A/R lock"
+msgstr "70ggl3 @/R l0cK"
+
+msgid "Toggle auto rotation"
+msgstr "t0gGL3 @ut0 r0t@7i0n"
+
+msgid "Toggle screen sizes"
+msgstr "70Ggl3 $cR33N siZ35"
+
+msgid "Top menu exit"
+msgstr "70P M3nu exIt"
+
+msgid "U/D"
+msgstr "U/d"
+
+msgid "Unable to mount"
+msgstr "un@bl3 70 m0UNt"
+
+msgid "Unlocked"
+msgstr "UNl0cK3d"
+
+msgid "Up"
+msgstr "Up"
+
+msgid "Upright"
+msgstr "uprIGh7"
+
+msgid "USB Device"
+msgstr "u$b d3Vic3"
+
+msgid "Use power"
+msgstr "u$3 pow3r"
+
+msgid "Use special"
+msgstr "u$3 5p3CI@L"
+
+msgid "Vert."
+msgstr "V3R7."
+
+msgid "Video filter"
+msgstr "vIde0 fil73R"
+
+msgid "Video settings"
+msgstr "vid3o s3ttiNg$"
+
+msgid "Virtual Boy"
+msgstr "vIr7Ual 80y"
+
+msgid "Volume"
+msgstr "voLUM3"
+
+msgid "Wiimote (menu)"
+msgstr "wIim0te (MenU)"
+
+msgid "Wiimote + Nunchuk"
+msgstr "wIim073 + NUnCHuk"
+
+msgid "Wiimote"
+msgstr "WiiM073"
+
+msgid "WonderSwan"
+msgstr "W0nD3r5W@n"
+
+msgid "Yes"
+msgstr "y3s"
