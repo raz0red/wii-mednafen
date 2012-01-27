@@ -1063,8 +1063,9 @@ Ryphecha        : Providing an incredible multi-emulator, optimizing the
                   Virtual Boy emulation, and putting up with my questions.
 mastershoes     : WiiMednafen channel
 Hielkenator     : Testing, Dutch translation
-Thiago Alves    : NTSC double strike testing, feedback, and more testing
-Davide Arielli  : PAL double strike testing
+cloudskipa      : Testing
+Thiago Alves    : Testing
+Davide Arielli  : Testing
 Arikado         : Helping with the initial Virtual Boy (WiirtualBoy) port.
 Eke-eke         : Double strike help and color trap filter implementation.
 Tantric         : Menu example code and SDL enhancements
@@ -1073,7 +1074,7 @@ Tantric         : Menu example code and SDL enhancements
 Change Log
 --------------------------------------------
 
-01/22/12 (0.1.1)
+01/25/12 (0.1.1)
 -------------------
  - Minor update from 0.1
    - Double strike fixes for PAL display modes
