@@ -352,7 +352,7 @@ struct BADINF {
 
 static struct BADINF BadROMImages[]=
 {
- #include "ines-bad.h"
+ #include "ines-bad.inc"
 };
 
 void CheckBad(uint64 md5partial)
@@ -440,7 +440,7 @@ static void CheckHInfo(void)
 
  static struct CHINF moo[]=
  {
-  #include "ines-correct.h"
+  #include "ines-correct.inc"
  };
  int tofix=0;
  int x;

@@ -116,6 +116,8 @@ static void UpdateZapper(int w, void *data)
  uint32 new_y = (uint32)MDFN_de32lsb(data_8 + 4);
  uint8 new_b = *(uint8 *)(data_8 + 8);
 
+ NESPPU_TranslateMouseXY(new_x, new_y);
+
  if(ZD[w].bogo)
   ZD[w].bogo--;
 

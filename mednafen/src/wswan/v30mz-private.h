@@ -151,6 +151,7 @@ typedef enum { AH,AL,CH,CL,DH,DL,BH,BL,SPH,SPL,BPH,BPL,IXH,IXL,IYH,IYL } BREGS;
 	{										\
 		I.pc = (uint16)(I.pc+tmp);			\
 		CLK(3);	\
+		ADDBRANCHTRACE(I.sregs[PS], I.pc);		\
 		return;								\
 	}
 

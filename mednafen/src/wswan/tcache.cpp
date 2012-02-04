@@ -22,6 +22,10 @@
 #include "gfx.h"
 #include "memory.h"
 
+namespace MDFN_IEN_WSWAN
+{
+
+
 uint8	tiles[256][256][2][8];
 uint8	wsTCache[512*64];			
 uint8	wsTCache2[512*64];			
@@ -299,4 +303,6 @@ void wsGetTile(uint32 number,uint32 line,int flipv,int fliph,int bank)
   else
    memcpy(&wsTileRow[0],&wsTCache2[(number<<6)|(line<<3)],8);
  }
+}
+
 }

@@ -1,6 +1,10 @@
 #ifndef __WSWAN_GFX_H
 #define __WSWAN_GFX_H
 
+namespace MDFN_IEN_WSWAN
+{
+
+
 void WSWan_TCacheInvalidByAddr(uint32);
 
 extern uint8		wsTCache[512*64];		  //tiles cache
@@ -45,5 +49,7 @@ int WSwan_GfxStateAction(StateMem *sm, int load, int data_only);
 void WSwan_GfxSetGraphicsDecode(MDFN_Surface *surface, int line, int which, int xscroll, int yscroll, int pbn);
 uint32 WSwan_GfxGetRegister(const std::string &oname, std::string *special);
 #endif
+
+}
 
 #endif

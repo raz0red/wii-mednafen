@@ -54,10 +54,21 @@ static uint8 ReadARKFC(int w,uint8 ret)
  return(ret);
 }
 
-static uint32 FixX(uint32 x)
+static uint32 FixX(uint32 in_x)
 {
- x=98+x*144/240;
- if(x>242) x=242;
+ uint32 dummy = 0;
+ int32 x;
+
+ NESPPU_TranslateMouseXY(in_x, dummy);
+
+ x = (int32)in_x + 98 - 32;
+
+ if(x < 98)
+  x = 98;
+
+ if(x > 242)
+  x = 242;
+
  x=~x;
  return(x);
 }
@@ -138,7 +149,8 @@ static void StrobeARK(int w)
 static void UpdateARK(int w, void *data)
 {
  uint8 *ptr = (uint8*)data;
- NESArk[w].mzx=FixX((uint32)MDFN_de32lsb(ptr + 0));
+
+ NESArk[w].mzx=FixX(MDFN_de32lsb(ptr + 0));
  NESArk[w].mzb=ptr[4]?1:0;
 }
 

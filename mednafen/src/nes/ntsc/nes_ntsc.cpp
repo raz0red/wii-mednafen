@@ -200,10 +200,10 @@ static void init_ntsc_impl( struct ntsc_impl_t* impl, nes_ntsc_setup_t const* se
 			int n;
 			for ( n = 3; n; --n )
 			{
-				float i = *in++;
-				float q = *in++;
-				*out++ = i * c - q * s;
-				*out++ = i * s + q * c;
+				float vi = *in++;
+				float vq = *in++;
+				*out++ = vi * c - vq * s;
+				*out++ = vi * s + vq * c;
 			}
 			hue -= PI / 180 * 120;
 		}
@@ -279,15 +279,15 @@ static void gen_kernel( struct ntsc_impl_t* impl, float y, float i, float q, nts
 			int n;
 			for ( n = rgb_kernel_size; n; --n )
 			{
-				float i = k[0]*ic0 + k[2]*ic2;
-				float q = k[1]*qc1 + k[3]*qc3;
-				float y = k[kernel_size+0]*yc0 + k[kernel_size+1]*yc1 +
+				float vi = k[0]*ic0 + k[2]*ic2;
+				float vq = k[1]*qc1 + k[3]*qc3;
+				float vy = k[kernel_size+0]*yc0 + k[kernel_size+1]*yc1 +
 				          k[kernel_size+2]*yc2 + k[kernel_size+3]*yc3 + rgb_offset;
 				if ( k >= &impl->kernel [kernel_size * 2 * (rescale_out - 1)] )
 					k -= kernel_size * 2 * (rescale_out - 1) + 2;
 				else
 					k += kernel_size * 2 - 1;
-				*out++ = TO_RGB( y, i, q, to_rgb ) - ntsc_rgb_bias;
+				*out++ = TO_RGB( vy, vi, vq, to_rgb ) - ntsc_rgb_bias;
 			}
 		}
 		while ( pixel++ < &pixels [alignment_count - 1] );
@@ -406,18 +406,18 @@ static void nes_ntsc_init_( ntsc_rgb_t* table, nes_ntsc_setup_t const* setup, in
 				else
 				{
 					static unsigned char tints [8] = { 0, 6, 10, 8, 2, 4, 0, 0 };
-					float angle = TO_ANGLE( tints [tint] );
-					float sat = hi * (0.5f - atten_mul * 0.5f) + atten_sub * 0.5f;
-					y -= sat * 0.5f;
+					float vangle = TO_ANGLE( tints [tint] );
+					float vsat = hi * (0.5f - atten_mul * 0.5f) + atten_sub * 0.5f;
+					y -= vsat * 0.5f;
 					if ( tint >= 3 && tint != 4 )
 					{
 						/* combined tint bits */
-						sat *= 0.6f;
-						y -= sat;
+						vsat *= 0.6f;
+						y -= vsat;
 					}
-					sat *= rgb_unit;
-					i += (float) sin( angle ) * sat;
-					q += (float) cos( angle ) * sat;
+					vsat *= rgb_unit;
+					i += (float) sin( vangle ) * vsat;
+					q += (float) cos( vangle ) * vsat;
 				}
 			}
 			

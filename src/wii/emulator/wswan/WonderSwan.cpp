@@ -41,7 +41,8 @@ WonderSwan::WonderSwan() :
   Emulator( "wswan", "WonderSwan" ),
   m_configManager( *this ),
   m_dbManager( *this ),
-  m_menuManager( *this )
+  m_menuManager( *this ),
+  m_gameLanguage( WS_LANG_ENGLISH )
 {
   // The emulator screen size
   m_emulatorScreenSize.w = 224;
@@ -210,9 +211,21 @@ const ScreenSize* WonderSwan::getDoubleStrikeRotatedScreenSize()
   return &defaultRotatedScreenSizes[1];
 }
 
-extern int WS_SramSize;
+namespace MDFN_IEN_WSWAN {
+  extern int WS_SramSize;
+}
 
 bool WonderSwan::isRewindSupported()
 {
-  return WS_SramSize <= 32*1024;
+  return MDFN_IEN_WSWAN::WS_SramSize <= 32*1024;
+}
+
+int WonderSwan::getGameLanguage()
+{
+  return m_gameLanguage;
+}
+
+void  WonderSwan::setGameLanguage( int lang )
+{
+  m_gameLanguage = lang;
 }

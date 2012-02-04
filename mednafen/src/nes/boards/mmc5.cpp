@@ -232,7 +232,7 @@ static void MMC5PRG(void)
   case 0:
            MMC5ROMWrProtect[0]=MMC5ROMWrProtect[1]=
            MMC5ROMWrProtect[2]=MMC5ROMWrProtect[3]=1;
-           setprg32(0x8000,((PRGBanks[1]&0x7F)>>2));
+           setprg32(0x8000,((PRGBanks[3]&0x7F)>>2));
 	   for(x=0;x<4;x++)
  	    MMC5MemIn[1+x]=1;
            break;
@@ -298,11 +298,17 @@ static DECLFW(Mapper5_write)
 {
  if(A >= 0x5120 && A<=0x5127)
  {
-  //printf("Write: %04x %02x\n", A, V);
+  MDFNPPU_LineUpdate();
   ABMode = 0;
   CHRBanksA[A&7] = V | (MMC5BigCHRSelect << 8);
-  //printf("%04x\n", CHRBanksA[A & 0x7]);
   MMC5CHRA();
+ }
+ else if(A >= 0x5128 && A <= 0x512B)
+ {
+  MDFNPPU_LineUpdate();
+  ABMode=1;
+  CHRBanksB[A&3] = V | (MMC5BigCHRSelect << 8);
+  MMC5CHRB();
  }
  else switch(A)
  {
@@ -310,6 +316,7 @@ static DECLFW(Mapper5_write)
 	   //printf("$%04x, $%02x\n",A,V);
 	   break;
    case 0x5105:
+		MDFNPPU_LineUpdate();
                 {
                 int x;
                 for(x=0;x<4;x++)
@@ -334,7 +341,8 @@ static DECLFW(Mapper5_write)
 	       MMC5PRG();
 	       break;
 
-   case 0x5101:mmc5vsize=V;
+   case 0x5101:MDFNPPU_LineUpdate();
+	       mmc5vsize=V;
                if(!ABMode)
                 {MMC5CHRB();MMC5CHRA();}
                else
@@ -349,27 +357,22 @@ static DECLFW(Mapper5_write)
 	       MMC5PRG();
 	       break;
 
-   case 0x5128:
-   case 0x5129:
-   case 0x512a:
-   case 0x512b:ABMode=1;
-               CHRBanksB[A&3] = V | (MMC5BigCHRSelect << 8);
-	       MMC5CHRB();
-	       break;
-
    case 0x5102:WRAMMaskEnable[0]=V;
 	       break;
 
    case 0x5103:WRAMMaskEnable[1]=V;
 	       break;
 
-   case 0x5104:CHRMode=V;
+   case 0x5104:MDFNPPU_LineUpdate();
+	       CHRMode=V;
 	       MMC5HackCHRMode=V&3;
 	       break;
 
    case 0x5106:if(V!=NTFill)
                {
 		uint32 t;
+
+		MDFNPPU_LineUpdate();
 		t=V|(V<<8)|(V<<16)|(V<<24);
                 memset(MMC5fill,t,0x3c0);
                }
@@ -380,6 +383,8 @@ static DECLFW(Mapper5_write)
                {
                 unsigned char moop;
                 uint32 t;
+
+		MDFNPPU_LineUpdate();
                 moop=V|(V<<2)|(V<<4)|(V<<6);
 		t=moop|(moop<<8)|(moop<<16)|(moop<<24);
                 memset(MMC5fill+0x3c0,t,0x40);

@@ -161,6 +161,7 @@ static void CloseGame(void)
 
  Genie_Kill();
  MDFNSND_Close();
+ MDFNPPU_Close();
 }
 
 static void InitCommon(const char *name)
@@ -478,6 +479,7 @@ static MDFNSetting NESSettings[] =
   { "nes.slendp", MDFNSF_NOFLAGS, gettext_noop("Last displayedscanlines in PAL mode."), NULL, MDFNST_UINT, "239", "0", "239" },
   { "nes.ntscblitter", MDFNSF_NOFLAGS, gettext_noop("Enable NTSC color generation and blitter."), 
 	gettext_noop("NOTE: If your refresh rate isn't very close to 60.1Hz(+-0.1), you will need to set the nes.ntsc.mergefields setting to \"1\" to avoid excessive flickering."), MDFNST_BOOL, "0" },
+
 
   { "nes.ntsc.preset", MDFNSF_NOFLAGS, gettext_noop("Video quality/type preset."), NULL, MDFNST_ENUM, "none", NULL, NULL, NULL, NULL, NTSCPresetList },
   { "nes.ntsc.mergefields", MDFNSF_NOFLAGS, gettext_noop("Merge fields to partially work around !=60.1Hz refresh rates."), NULL, MDFNST_BOOL, "0" },

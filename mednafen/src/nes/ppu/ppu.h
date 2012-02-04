@@ -2,6 +2,7 @@
 #define __NES_PPU_H
 
 void MDFNPPU_Init(void);
+void MDFNPPU_Close(void);
 void MDFNPPU_Reset(void);
 void MDFNPPU_Power(void);
 int MDFNPPU_Loop(MDFN_Surface *, int skip);
@@ -9,7 +10,7 @@ int MDFNPPU_Loop(MDFN_Surface *, int skip);
 void MDFNPPU_LineUpdate();
 
 void NESPPU_GetDisplayRect(MDFN_Rect *DisplayRect);
-
+void NESPPU_TranslateMouseXY(uint32 &new_x, uint32 &new_y);
 
 
 extern void (*PPU_hook)(uint32 A);

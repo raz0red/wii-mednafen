@@ -56,8 +56,8 @@ void MDFN_DrawGunSight(MDFN_Surface *surface, int xc, int yc)
     if(a)
     {
      c = (yc+y-7);
-     d = (x-7) + xc * (DisplayRect.w + DisplayRect.x) / 256;
-     if(c>=0 && d>=0 && d<DisplayRect.w && c<240)
+     d = (x-7) + xc * DisplayRect.w / 256;
+     if(c>=0 && d>=0 && d < surface->w && c < surface->h)
      {
       if(a==3)
        buf[c * surface->pitch32 + d] = ~(buf[c * surface->pitch32 + d]);
@@ -89,9 +89,9 @@ void MDFN_DrawCursor(MDFN_Surface *surface, int xc, int yc)
    if(a)
    {
     c =(yc+y);
-    d =x + xc * (DisplayRect.w + DisplayRect.x) / 256;
+    d =x + xc * DisplayRect.w / 256;
 
-    if(c>=0 && d>=0 && d<DisplayRect.w && c<240)
+    if(c>=0 && d>=0 && d < surface->w && c < surface->h)
      buf[c * surface->pitch32 + d] = ctransform[a & 0x3]; // + 0xFF; //+ 127;
 
    }

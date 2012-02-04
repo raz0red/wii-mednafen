@@ -296,10 +296,11 @@ uint32 CSusie::PaintSprites(void)
 	}
 
 	cycles_used=0;
-	everonscreen=0;
 
 	do
 	{
+		everonscreen = 0;
+
 		TRACE_SUSIE1("PaintSprites() ************ Rendering Sprite %03d ************",sprcount);
 
 		// Step 1 load up the SCB params into Susie
@@ -935,7 +936,8 @@ INLINE uint32 CSusie::LineGetBits(uint32 bits)
 
         // Only return data IF there is enought bits left in the packet
 
-        if(mLinePacketBitsLeft<bits) return 0;
+        //if(mLinePacketBitsLeft<bits) return 0;
+	if(mLinePacketBitsLeft<=bits) return 0;	// Hardware bug(<= instead of <), apparently
 
         // Make sure shift reg has enough bits to fulfil the request
 

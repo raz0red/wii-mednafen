@@ -305,7 +305,7 @@ void MDFN_VSUniCheck(uint64 md5partial, int *MapperNo, int *Mirroring)
    secptr = 0;
 
    {
-    static uint64 tko=0x6e1ee06171d8ce3aULL, rbi=0x6a02d345812938afULL;
+    static const uint64 tko=0x6e1ee06171d8ce3aULL, rbi=0x6a02d345812938afULL;
     if(md5partial == tko)
      secptr=secdata[0]; 
     if(md5partial == rbi)

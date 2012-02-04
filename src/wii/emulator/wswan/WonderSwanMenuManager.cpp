@@ -18,6 +18,8 @@ WonderSwanMenuManager::WonderSwanMenuManager( Emulator &emulator ) :
   // The emulator menu
   // 
   m_emulatorMenu = m_emuMenuHelper.createEmulatorMenu();
+  TREENODE* child = wii_create_tree_node( NODETYPE_GAME_LANGUAGE, "Language (game)" );
+  wii_add_child( m_emulatorMenu, child );  
 
   //
   // The cartridge settings (current) menu
@@ -41,7 +43,7 @@ WonderSwanMenuManager::WonderSwanMenuManager( Emulator &emulator ) :
       m_cartridgeSettingsMenu );
 
   m_cartSettingsMenuHelper.addSpacerNode( display );
-  TREENODE* child = wii_create_tree_node( NODETYPE_ORIENT, "Rotation" );
+  child = wii_create_tree_node( NODETYPE_ORIENT, "Rotation" );
   wii_add_child( display, child );
 
   // Save/Revert/Delete
@@ -65,6 +67,11 @@ void WonderSwanMenuManager::getNodeName(
       snprintf( value, WII_MENU_BUFF_SIZE, "%s",
         ( entry->profile ?  "90 degrees" : "None" ) );
       break;
+    case NODETYPE_GAME_LANGUAGE:
+      snprintf( value, WII_MENU_BUFF_SIZE, 
+        emu.getGameLanguage() == WS_LANG_ENGLISH ?
+          "English" : "Japanese" );
+      break;
   }
 }
 
@@ -84,6 +91,9 @@ void WonderSwanMenuManager::selectNode( TREENODE *node )
   {
     case NODETYPE_ORIENT:
       entry->profile ^= 1;
+      break;
+    case NODETYPE_GAME_LANGUAGE:
+      emu.setGameLanguage( !emu.getGameLanguage() );
       break;
   }
 
