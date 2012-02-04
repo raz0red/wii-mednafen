@@ -308,7 +308,10 @@ bool NSFLoad(const char *name, MDFNFILE *fp, NESGameType *gt)
  gt->Reset = NSF_Reset;
  gt->Close = NSF_Close;
 
- Player_Init(NSFInfo->TotalSongs, NSFInfo->GameName, NSFInfo->Artist, NSFInfo->Copyright, NSFInfo->SongNames);
+ Player_Init(NSFInfo->TotalSongs, NSFInfo->GameName ? NSFInfo->GameName : (UTF8*)"",
+				  NSFInfo->Artist ? NSFInfo->Artist : (UTF8*)"",
+				  NSFInfo->Copyright ? NSFInfo->Copyright : (UTF8*)"",
+				  NSFInfo->SongNames);
  return 1;
 }
 

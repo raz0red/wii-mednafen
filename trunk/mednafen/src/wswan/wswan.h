@@ -5,12 +5,15 @@
 #include "../state.h"
 #include "../general.h"
 
+#include "interrupt.h"
+
+namespace MDFN_IEN_WSWAN
+{
+
 #define  mBCD(value) (((value)/10)<<4)|((value)%10)
 
 extern          uint32 rom_size;
 extern          int wsc;
-
-#include "interrupt.h"
 
 enum
 {
@@ -25,5 +28,7 @@ enum
  WSWAN_BLOOD_O = 3,
  WSWAN_BLOOD_AB = 4
 };
+
+}
 
 #endif

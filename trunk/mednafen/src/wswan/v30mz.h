@@ -1,6 +1,9 @@
 #ifndef __V30MZ_H_
 #define __V30MZ_H_
 
+namespace MDFN_IEN_WSWAN
+{
+
 enum {
 	NEC_PC=1, NEC_AW, NEC_CW, NEC_DW, NEC_BW, NEC_SP, NEC_BP, NEC_IX, NEC_IY,
 	NEC_FLAGS, NEC_DS1, NEC_PS, NEC_SS, NEC_DS0
@@ -24,6 +27,9 @@ int v30mz_StateAction(StateMem *sm, int load, int data_only);
 
 
 #ifdef WANT_DEBUGGER
-void v30mz_debug(void (*CPUHook)(uint32), uint8 (*ReadHook)(uint32), void (*WriteHook)(uint32, uint8), uint8 (*PortReadHook)(uint32), void (*PortWriteHook)(uint32, uint8));
+void v30mz_debug(void (*CPUHook)(uint32), uint8 (*ReadHook)(uint32), void (*WriteHook)(uint32, uint8), uint8 (*PortReadHook)(uint32), void (*PortWriteHook)(uint32, uint8),
+			void (*BranchTraceHook)(uint16 from_CS, uint16 from_IP, uint16 to_CS, uint16 to_IP, bool interrupt) );
 #endif
 #endif
+
+}

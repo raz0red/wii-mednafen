@@ -7,6 +7,10 @@
 #define WS_PROFILE_ROTATED90    1
 #define WS_PROFILE_COUNT        2
 
+// Game language
+#define WS_LANG_JAPANESE   0
+#define WS_LANG_ENGLISH    1
+
 /*
  * Wonderswan database entry 
  */

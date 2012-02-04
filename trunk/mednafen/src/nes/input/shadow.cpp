@@ -125,6 +125,8 @@ static void UpdateZapper(void *data)
   ZD.mzx=(uint32)MDFN_de32lsb(ptr + 0);
   ZD.mzy=(uint32)MDFN_de32lsb(ptr + 4);
   ZD.mzb=ptr[8];
+
+  NESPPU_TranslateMouseXY(ZD.mzx, ZD.mzy);
 }
 
 static void StrobeShadow(void)

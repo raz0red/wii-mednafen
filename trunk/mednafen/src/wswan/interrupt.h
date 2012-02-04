@@ -1,6 +1,10 @@
 #ifndef __WSWAN_INTERRUPT_H
 #define __WSWAN_INTERRUPT_H
 
+namespace MDFN_IEN_WSWAN
+{
+
+
 
 enum
 {
@@ -23,9 +27,17 @@ void WSwan_InterruptReset(void);
 void WSwan_InterruptDebugForce(unsigned int level);
 
 #ifdef WANT_DEBUGGER
-uint32 WSwan_InterruptGetRegister(const std::string &oname, std::string *special);
-void WSwan_InterruptSetRegister(const std::string &oname, uint32 value);
+enum
+{
+ INT_GSREG_ISTATUS = 0,
+ INT_GSREG_IENABLE,
+ INT_GSREG_IVECTORBASE
+};
+uint32 WSwan_InterruptGetRegister(const unsigned int id, char *special, const uint32 special_len);
+void WSwan_InterruptSetRegister(const unsigned int id, uint32 value);
 
 #endif
+
+}
 
 #endif

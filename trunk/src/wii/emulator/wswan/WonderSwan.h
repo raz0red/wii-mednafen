@@ -29,6 +29,7 @@
 class WonderSwan : public Emulator
 {
 private:
+  int m_gameLanguage;
   WonderSwanConfigManager m_configManager;
   WonderSwanDbManager m_dbManager;
   WonderSwanMenuManager m_menuManager;  
@@ -45,6 +46,9 @@ public:
   void updateControls( bool isRapid );
   bool isRotationSupported();
   int getRotation();
+
+  int getGameLanguage();
+  void setGameLanguage( int lang );
 
   const ScreenSize* getDefaultScreenSizes();
   int getDefaultScreenSizesCount();

@@ -6,7 +6,7 @@
 #if defined(_MSC_VER)
 #define INLINE __forceinline
 #elif defined(__GNUC__)
-#define INLINE __inline__
+#define INLINE __inline__ __attribute__((always_inline))
 #elif defined(_MWERKS_)
 #define INLINE inline
 #else

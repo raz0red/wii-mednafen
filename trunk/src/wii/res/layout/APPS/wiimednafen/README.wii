@@ -1,5 +1,5 @@
 --------------------------------------------
-WiiMednafen v0.1.1 release README
+WiiMednafen v0.2-pre release README
 --------------------------------------------
 
 Ported by raz0red
@@ -1073,6 +1073,24 @@ Tantric         : Menu example code and SDL enhancements
 --------------------------------------------
 Change Log
 --------------------------------------------
+
+02/03/12 (0.2-pre)
+-------------------
+ - Added ability to specify language for WonderSwan via emulator settings.
+     (see Mednafen 0.9.19 merge notes below)
+ - Merged changes from 0.9.19 (Mednafen proper)
+   - LYNX emulation     - Fixed EVERON detection emulation, and emulated a hardware bug         regarding SCB data reading, the latter of which fixes a graphical         glitch in "Joust".
+   - NES emulation
+     - Improved iNES mapper 69 expansion sound emulation accuracy (volume
+         interpretation and channel frequencies were off). (Gimmick! sound)
+     - Fixed a bug in the MMC5 split-screen emulation that caused a garbage
+         scanline in the intro sequence of "Uchuu Keibitai SDF".      
+     - Fixed MMC5 32K PRG switching mode.
+   - WonderSwan emulation
+     - Fixed a reset initialization bug (due to a design flaw) that was 
+         partially corrupting internal and external EEPROM.
+     - Implemented experimental setting "wswan.language"; it's only known to
+         affect "Digimon Tamers: Battle Spirit".
 
 01/25/12 (0.1.1)
 -------------------

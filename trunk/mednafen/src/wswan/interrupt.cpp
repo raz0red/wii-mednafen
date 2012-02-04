@@ -1,6 +1,11 @@
 #include "wswan.h"
 #include "interrupt.h"
 #include "v30mz.h"
+#include <trio/trio.h>
+
+namespace MDFN_IEN_WSWAN
+{
+
 
 static uint8 IStatus;
 static uint8 IEnable;
@@ -84,53 +89,57 @@ void WSwan_InterruptReset(void)
 #ifdef WANT_DEBUGGER
 static const char *PrettyINames[8] = { "Serial Send", "Key Press", "RTC Alarm", "Serial Recv", "Line Hit", "VBlank Timer", "VBlank", "HBlank Timer" };
 
-uint32 WSwan_InterruptGetRegister(const std::string &oname, std::string *special)
+uint32 WSwan_InterruptGetRegister(const unsigned int id, char *special, const uint32 special_len)
 {
- if(oname == "IStatus")
- {
-  if(special) 
-  {
-   char tmpstr[256];
-   tmpstr[0] = 0;
+ uint32 ret = 0;
 
-   for(int i = 0; i < 8; i++)
-   {
-    if(i) strcat(tmpstr, ", ");
-    sprintf(tmpstr + strlen(tmpstr), "%s: %d", PrettyINames[i], (IStatus & (1 << i)) ? 1 : 0 );
-   }
-   *special = std::string(tmpstr);
-  }
-  return(IStatus);
- }
- if(oname == "IEnable")
+ switch(id)
  {
-  if(special)
-  {
-   char tmpstr[256];
-   tmpstr[0] = 0;
+  case INT_GSREG_ISTATUS:
+	ret = IStatus;
+	break;
 
-   for(int i = 0; i < 8; i++)
-   {
-    if(i) strcat(tmpstr, ", ");
-    sprintf(tmpstr + strlen(tmpstr), "%s: %d", PrettyINames[i], (IEnable & (1 << i)) ? 1 : 0 );
-   }
-   *special = std::string(tmpstr);
+  case INT_GSREG_IENABLE:
+	ret = IEnable;
+	break;
+
+  case INT_GSREG_IVECTORBASE:
+	ret = IVectorBase;
+	break;
   }
-  return(IEnable);
- }
- if(oname == "IVectorBase")
-  return(IVectorBase);
- return(0);
+
+ if(special && (id == INT_GSREG_ISTATUS || id == INT_GSREG_IENABLE))
+   {
+  trio_snprintf(special, special_len, "%s: %d, %s: %d, %s: %d, %s: %d, %s: %d, %s: %d, %s: %d, %s: %d",
+		PrettyINames[0], (ret >> 0) & 1,
+	        PrettyINames[1], (ret >> 1) & 1,
+	        PrettyINames[2], (ret >> 2) & 1,
+	        PrettyINames[3], (ret >> 3) & 1,
+	        PrettyINames[4], (ret >> 4) & 1,
+	        PrettyINames[5], (ret >> 5) & 1,
+	        PrettyINames[6], (ret >> 6) & 1,
+	        PrettyINames[7], (ret >> 7) & 1);
+   }
+
+ return(ret);
 }
 
-void WSwan_InterruptSetRegister(const std::string &oname, uint32 value)
+void WSwan_InterruptSetRegister(const unsigned int id, uint32 value)
 {
- if(oname == "IStatus")
+ switch(id)
+ {
+  case INT_GSREG_ISTATUS:
   IStatus = value;
- if(oname == "IEnable")
+	break;
+
+  case INT_GSREG_IENABLE:
   IEnable = value;
- if(oname == "IVectorBase")
+	break;
+
+  case INT_GSREG_IVECTORBASE:
   IVectorBase = value;
+	break;
+ }
 
  RecalcInterrupt();
 }
@@ -156,3 +165,4 @@ int WSwan_InterruptStateAction(StateMem *sm, int load, int data_only)
  return(1);
 }
 
+}

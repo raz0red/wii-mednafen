@@ -30,6 +30,10 @@
 #include <math.h>
 #include <trio/trio.h>
 
+namespace MDFN_IEN_WSWAN
+{
+
+
 static bool SkipSL; // Skip save and load
 
 uint32 wsRAMSize;
@@ -53,6 +57,8 @@ static uint8 SoundDMAControl;
 static uint8 BankSelector[4];
 
 static uint8 CommControl, CommData;
+
+static bool language;
 
 extern uint16 WSButtonStatus;
 
@@ -218,7 +224,7 @@ uint8 WSwan_readport(uint32 number)
  }
 
  if(number >= 0xC8)
-  return(0xD1);
+  return(0xD0 | language);
 
  return(0);
 }
@@ -322,6 +328,24 @@ static void GetAddressSpaceBytes(const char *name, uint32 Address, uint32 Length
    Buffer++;
   }
  }
+ else if(!strcmp(name, "cs") || !strcmp(name, "ds") || !strcmp(name, "ss") || !strcmp(name, "es"))
+ {
+  uint32 segment;
+  uint32 phys_address;
+
+  if(!strcmp(name, "cs"))
+   segment = v30mz_get_reg(NEC_PS);
+  else if(!strcmp(name, "ss"))
+   segment = v30mz_get_reg(NEC_SS);
+  else if(!strcmp(name, "ds"))
+   segment = v30mz_get_reg(NEC_DS0);
+  else if(!strcmp(name, "es"))
+   segment = v30mz_get_reg(NEC_DS1);
+
+  phys_address = (Address + (segment << 4)) & 0xFFFFF;
+
+  GetAddressSpaceBytes("physical", phys_address, Length, Buffer);
+ }
 }
 
 static void PutAddressSpaceBytes(const char *name, uint32 Address, uint32 Length, uint32 Granularity, bool hl, const uint8 *Buffer)
@@ -378,66 +402,78 @@ static void PutAddressSpaceBytes(const char *name, uint32 Address, uint32 Length
    Buffer++;
   }
  }
+ else if(!strcmp(name, "cs") || !strcmp(name, "ds") || !strcmp(name, "ss") || !strcmp(name, "es"))
+ {
+  uint32 segment;
+  uint32 phys_address;
+
+  if(!strcmp(name, "cs"))
+   segment = v30mz_get_reg(NEC_PS);
+  else if(!strcmp(name, "ss"))
+   segment = v30mz_get_reg(NEC_SS);
+  else if(!strcmp(name, "ds"))
+   segment = v30mz_get_reg(NEC_DS0);
+  else if(!strcmp(name, "es"))
+   segment = v30mz_get_reg(NEC_DS1);
+
+  phys_address = (Address + (segment << 4)) & 0xFFFFF;
+
+  PutAddressSpaceBytes("physical", phys_address, Length, Granularity, hl, Buffer);
+ }
 }
 
-static RegType MiscRegs[] =
+uint32 WSwan_MemoryGetRegister(const unsigned int id, char *special, const uint32 special_len)
 {
- { 0, "ROMBBSLCT", "ROM Bank Base Selector for 64KiB banks 0x4-0xF", 1 },
- { 0, "BNK1SLCT", "???", 1 },
- { 0, "BNK2SLCT", "ROM Bank Selector for 64KiB bank 0x2", 1 },
- { 0, "BNK3SLCT", "ROM Bank Selector for 64KiB bank 0x3", 1 },
- { 0, "IStatus", "Interrupt Status", 1 },
- { 0, "IEnable", "Interrupt Enable", 1 },
- { 0, "IVectorBase", "Interrupt Vector Base", 1 },
- { 0, "", "", 0 },
-};
+ uint32 ret = 0;
 
-static uint32 GetRegister(const std::string &oname, std::string *special)
-{
- if(oname == "ROMBBSLCT")
+ switch(id)
  {
+  case MEMORY_GSREG_ROMBBSLCT:
+        ret = BankSelector[0];
+
   if(special)
   {
-   char tmpstr[256];
-   trio_snprintf(tmpstr, 256, "((0x%02x * 0x100000) %% 0x%08x) + 20 bit address = 0x%08x + 20 bit address", BankSelector[0], rom_size, (BankSelector[0] * 0x100000) & (rom_size - 1));
-   *special = std::string(tmpstr);
+         trio_snprintf(special, special_len, "((0x%02x * 0x100000) %% 0x%08x) + 20 bit address = 0x%08x + 20 bit address", BankSelector[0], rom_size, (BankSelector[0] * 0x100000) & (rom_size - 1));
   }
-  return(BankSelector[0]);
+        break;
+
+  case MEMORY_GSREG_BNK1SLCT:
+        ret = BankSelector[1];
+        break;
+
+  case MEMORY_GSREG_BNK2SLCT:
+        ret = BankSelector[2];
+        break;
+
+  case MEMORY_GSREG_BNK3SLCT:
+        ret = BankSelector[3];
+        break;
  }
- if(oname == "BNK1SLCT")
-  return(BankSelector[1]);
- if(oname == "BNK2SLCT")
-  return(BankSelector[2]);
- if(oname == "BNK3SLCT")
-  return(BankSelector[3]);
 
- return WSwan_InterruptGetRegister(oname, special);
+ return(ret);
 }
 
-static void SetRegister(const std::string &oname, uint32 value)
+void WSwan_MemorySetRegister(const unsigned int id, uint32 value)
 {
- if(oname == "ROMBBSLCT")
+ switch(id)
+ {
+  case MEMORY_GSREG_ROMBBSLCT:
   BankSelector[0] = value;
- else if(oname == "BNK1SLCT")
+	break;
+
+  case MEMORY_GSREG_BNK1SLCT:
   BankSelector[1] = value;
- if(oname == "BNK2SLCT")
+	break;
+
+  case MEMORY_GSREG_BNK2SLCT:
   BankSelector[2] = value;
- if(oname == "BNK3SLCT")
+	break;
+
+  case MEMORY_GSREG_BNK3SLCT:
   BankSelector[3] = value;
- else
-  WSwan_InterruptSetRegister(oname, value);
+	break;
+ }
 }
-
-static RegGroupType MiscRegsGroup =
-{
- "Misc",
- MiscRegs,
- NULL,
- NULL,
- GetRegister,
- SetRegister,
-};
-
 
 #endif
 
@@ -463,48 +499,40 @@ void WSwan_MemoryKill(void)
  }
 }
 
-void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
+void WSwan_MemoryInit(bool lang, bool IsWSC, uint32 ssize, bool SkipSaveLoad)
 {
+ const uint16 byear = MDFN_GetSettingUI("wswan.byear");
+ const uint8 bmonth = MDFN_GetSettingUI("wswan.bmonth");
+ const uint8 bday = MDFN_GetSettingUI("wswan.bday");
+ const uint8 sex = MDFN_GetSettingI("wswan.sex");
+ const uint8 blood = MDFN_GetSettingI("wswan.blood");
+
+ language = lang;
  SkipSL = SkipSaveLoad;
 
  wsRAMSize = 65536;
  sram_size = ssize;
 
- MDFNMP_AddRAM(wsRAMSize, 0x00000, wsRAM);
+ #ifdef WANT_DEBUGGER
+ {
+ ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "physical", "CPU Physical", 20);
+ ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "ram", "RAM", (int)(log(wsRAMSize) / log(2)));
+
+  ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "cs", "Code Segment", 16);
+  ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "ss", "Stack Segment", 16);
+  ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "ds", "Data Segment", 16);
+  ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "es", "Extra Segment", 16);
+ }
+ #endif
+
+ // WSwan_EEPROMInit() will also clear wsEEPROM
+ WSwan_EEPROMInit(MDFN_GetSettingS("wswan.name").c_str(), byear, bmonth, bday, sex, blood);
 
  if(sram_size)
  {
   wsSRAM = (uint8*)MDFN_malloc(sram_size, "wsSRAM");
   memset(wsSRAM, 0, sram_size);
  }
-
- if(sram_size)
-  MDFNMP_AddRAM(sram_size, 0x10000, wsSRAM);
-
- #ifdef WANT_DEBUGGER
- MDFNDBG_AddRegGroup(&MiscRegsGroup);
- ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "physical", "CPU Physical", 20);
- ASpace_Add(GetAddressSpaceBytes, PutAddressSpaceBytes, "ram", "RAM", (int)(log(wsRAMSize) / log(2)));
- #endif
-
- uint16 byear = MDFN_GetSettingUI("wswan.byear");
- uint8 bmonth = MDFN_GetSettingUI("wswan.bmonth");
- uint8 bday = MDFN_GetSettingUI("wswan.bday");
- uint8 sex, blood;
-
- sex = MDFN_GetSettingI("wswan.sex");
- blood = MDFN_GetSettingI("wswan.blood");
-
- // WSwan_EEPROMInit() will also clear wsEEPROM
- WSwan_EEPROMInit(MDFN_GetSettingS("wswan.name").c_str(), byear, bmonth, bday, sex, blood);
-
-#if 0
- if(sram_size)
- {
-  wsSRAM = (uint8*)MDFN_malloc(sram_size);
-  memset(wsSRAM, 0, sram_size);
- }
-#endif
 
  if((sram_size || eeprom_size) && !SkipSL)
  {
@@ -521,12 +549,15 @@ void WSwan_MemoryInit(bool IsWSC, uint32 ssize, bool SkipSaveLoad)
   }
  }
 
+ MDFNMP_AddRAM(wsRAMSize, 0x00000, wsRAM);
 
+ if(sram_size)
+  MDFNMP_AddRAM(sram_size, 0x10000, wsSRAM);
 }
 
 void WSwan_MemoryReset(void)
 {
- memset(&wsRAM,0,65536);
+ memset(wsRAM, 0, 65536);
 
  wsRAM[0x75AC] = 0x41;
  wsRAM[0x75AD] = 0x5F;
@@ -592,3 +623,4 @@ int WSwan_MemoryStateAction(StateMem *sm, int load, int data_only)
  return(1);
 }
 
+}

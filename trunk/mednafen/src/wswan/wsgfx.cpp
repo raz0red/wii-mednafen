@@ -26,6 +26,9 @@
 #include "../video.h"
 #include <trio/trio.h>
 
+namespace MDFN_IEN_WSWAN
+{
+
 static uint32 wsMonoPal[16][4];
 static uint32 wsColors[8];
 static uint32 wsCols[16][16];
@@ -999,3 +1002,5 @@ void WSwan_GfxSetGraphicsDecode(MDFN_Surface *surface, int line, int which, int 
 }
 
 #endif
+
+}

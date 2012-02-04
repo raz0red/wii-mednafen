@@ -31,7 +31,7 @@
 
 #include "gfx.h"
 #include "memory.h"
-#include "start.h"
+#include "start.inc"
 #include "sound.h"
 #include "v30mz.h"
 #include "rtc.h"
@@ -44,6 +44,10 @@
 #ifdef MEM2
 #include "mem2.h"
 #endif
+
+namespace MDFN_IEN_WSWAN
+{
+
 
 int 		wsc = 1;			/*color/mono*/
 uint32		rom_size;
@@ -67,7 +71,10 @@ static void Reset(void)
 	WSwan_EEPROMReset();
 
 	for(u0=0;u0<0xc9;u0++)
+	{
+	 if(u0 != 0xC4 && u0 != 0xC5 && u0 != 0xBA && u0 != 0xBB)
 	 WSwan_writeport(u0,startio[u0]);
+	}
 
 	v30mz_set_reg(NEC_SS,0);
 	v30mz_set_reg(NEC_SP,0x2000);
@@ -93,7 +100,9 @@ static void Emulate(EmulateSpecStruct *espec)
   WSwan_SetSoundRate(espec->SoundRate);
 
  uint16 butt_data = chee[0] | (chee[1] << 8);
+
  WSButtonStatus = butt_data;
+
 
  MDFNMP_ApplyPeriodicCheats();
 
@@ -156,7 +165,7 @@ typedef struct
  const char *name;
 } DLEntry;
 
-static DLEntry Developers[] =
+static const DLEntry Developers[] =
 {
  { 0x01, "Bandai" },
  { 0x02, "Taito" },
@@ -324,8 +333,17 @@ static int Load(const char *name, MDFNFILE *fp)
 
  MDFNMP_Init(16384, (1 << 20) / 1024);
 
+ #ifdef WANT_DEBUGGER
+ WSwanDBG_Init();
+ #endif
+
  v30mz_init(WSwan_readmem20, WSwan_writemem20, WSwan_readport, WSwan_writeport);
- WSwan_MemoryInit(wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.
+
+#ifndef WII
+  WSwan_MemoryInit(MDFN_GetSettingB("wswan.language"), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+#else
+  WSwan_MemoryInit(!!emuRegistry.WonderSwanEmu.getGameLanguage(), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+#endif
  WSwan_GfxInit();
  MDFNGameInfo->fps = (uint32)((uint64)3072000 * 65536 * 256 / (159*256));
  MDFNGameInfo->GameSetMD5Valid = FALSE;
@@ -397,7 +415,7 @@ static void DoSimpleCommand(int cmd)
  }
 }
 
-static MDFNSetting_EnumList SexList[] =
+static const MDFNSetting_EnumList SexList[] =
 {
  { "m", WSWAN_SEX_MALE },
  { "male", WSWAN_SEX_MALE, gettext_noop("Male") },
@@ -410,7 +428,7 @@ static MDFNSetting_EnumList SexList[] =
  { NULL, 0 },
 };
 
-static MDFNSetting_EnumList BloodList[] =
+static const MDFNSetting_EnumList BloodList[] =
 {
  { "a", WSWAN_BLOOD_A, "A" },
  { "b", WSWAN_BLOOD_B, "B" },
@@ -422,9 +440,21 @@ static MDFNSetting_EnumList BloodList[] =
  { NULL, 0 },
 };
 
-static MDFNSetting WSwanSettings[] =
+static const MDFNSetting_EnumList LanguageList[] =
+{
+ { "japanese", 0, gettext_noop("Japanese") },
+ { "0", 0 },
+
+ { "english", 1, gettext_noop("English") },
+ { "1", 1 },
+
+ { NULL, 0 },
+};
+
+static const MDFNSetting WSwanSettings[] =
 {
  { "wswan.rotateinput", MDFNSF_NOFLAGS, gettext_noop("Virtually rotate D-pads along with screen."), NULL, MDFNST_BOOL, "0" },
+ { "wswan.language", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Language games should display text in."), gettext_noop("The only game this setting is known to affect is \"Digimon Tamers - Battle Spirit\"."), MDFNST_ENUM, "english", NULL, NULL, NULL, NULL, LanguageList },
  { "wswan.name", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Name"), NULL, MDFNST_STRING, "Mednafen" },
  { "wswan.byear", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Birth Year"), NULL, MDFNST_UINT, "1989", "0", "9999" },
  { "wswan.bmonth", MDFNSF_EMU_STATE | MDFNSF_UNTRUSTED_SAFE, gettext_noop("Birth Month"), NULL, MDFNST_UINT, "6", "1", "12" },
@@ -507,6 +537,10 @@ static const FileExtensionSpecStruct KnownExtensions[] =
  { NULL, NULL }
 };
 
+}
+
+using namespace MDFN_IEN_WSWAN;
+
 MDFNGI EmulatedWSwan =
 {
  "wswan",
@@ -533,7 +567,7 @@ MDFNGI EmulatedWSwan =
  Emulate,
  SetInput,
  DoSimpleCommand,
- WSwanSettings,
+ (MDFNSetting*)WSwanSettings,
  MDFN_MASTERCLOCK_FIXED(3072000),
  0,
  FALSE, // Multires possible?
@@ -550,4 +584,3 @@ MDFNGI EmulatedWSwan =
 
  2,     // Number of output sound channels
 };
-

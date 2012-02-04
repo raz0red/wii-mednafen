@@ -127,7 +127,7 @@ bool NeoGeoPocket::isRotationSupported()
   return false;
 }
 
-int  NeoGeoPocket::getGameLanguage()
+int NeoGeoPocket::getGameLanguage()
 {
   return m_gameLanguage;
 }

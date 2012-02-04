@@ -77,6 +77,8 @@ static void OK_Update(void *data)
  OKX = (uint32)MDFN_de32lsb((uint8 *)data + 0);
  OKY = (uint32)MDFN_de32lsb((uint8 *)data + 4);
  OKB=((uint8*)data)[8];
+
+ NESPPU_TranslateMouseXY(OKX, OKY);
 }
 
 static void DrawOeka(MDFN_Surface *surface)

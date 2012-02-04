@@ -30,6 +30,7 @@
 #include        "../input.h"  
 #include	"../ntsc/nes_ntsc.h"
 
+
 #define VBlankON        (PPU[0]&0x80)   /* Generate VBlank NMI */
 #define Sprite16        (PPU[0]&0x20)   /* Sprites 8x16/8x8        */
 #define BGAdrHI         (PPU[0]&0x10)   /* BG pattern adr $0000/$1000 */
@@ -607,17 +608,11 @@ static void RefreshLine(int lastpixel)
    {
     const int MMC5Mode = 4;
 
-    ys=((scanline>>3)+MMC5HackSPScroll)&0x1F;
-    if(ys>=0x1E) ys-=0x1E;
-
     #include "ppu-subline.h"
    }
    else if (MMC5HackCHRMode==1 && (MMC5HackSPMode&0x80))
    {
     const int MMC5Mode = 3;
-
-    ys=((scanline>>3)+MMC5HackSPScroll)&0x1F;
-    if(ys>=0x1E) ys-=0x1E;
 
     #include "ppu-subline.h"
    }
@@ -766,6 +761,12 @@ static void DoLine(MDFN_Surface *surface, int skip)
  ResetRL(target);
 
  if(scanline >= 0 && MMC5Hack && (ScreenON || SpriteON)) MMC5_hb(scanline);
+
+ if(MMC5Hack)
+ {
+  ys=((scanline>>3)+MMC5HackSPScroll)&0x1F;
+  if(ys>=0x1E) ys-=0x1E;
+ }
 
  X6502_Run(256);
  if(firstpixel < 240)
@@ -1310,6 +1311,16 @@ void NESPPU_GetDisplayRect(MDFN_Rect *DisplayRect)
  memcpy(DisplayRect, &PPUDisplayRect, sizeof(MDFN_Rect));
 }
 
+void NESPPU_TranslateMouseXY(uint32 &new_x, uint32 &new_y)
+{
+ MDFN_Rect dr;
+
+ NESPPU_GetDisplayRect(&dr);
+
+ new_x = (uint32)(((new_x + ((double)dr.x * MDFNGameInfo->nominal_width) / dr.w) * 256 / MDFNGameInfo->nominal_width));
+ new_y = new_y + dr.y;
+}
+
 static void RedoRL(void)
 {
  PPUDisplayRect.x = NTSCBlitter ? 4 : 0;
@@ -1347,6 +1358,15 @@ static void RedoRL(void)
  MDFNGameInfo->lcm_height = MDFNGameInfo->nominal_height;
 
  MDFNGameInfo->fb_width = (NTSCBlitter ? 768 : 256);
+}
+
+void MDFNPPU_Close(void)
+{
+ if(NTSCBlitter)
+ {
+  MDFN_free(NTSCBlitter);
+  NTSCBlitter = NULL;
+ }
 }
 
 void MDFNPPU_Init(void) 

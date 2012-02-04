@@ -125,9 +125,10 @@ static uint8 ZNTable[256];
   _PC+=disp;	\
   if((tmp^_PC)&0x100)   \
   ADDCYC(1);    \
+		\
+  ADDBT(_PC);	\
  }	\
  else _PC++;	\
- ADDBT(_PC);	\
 }
 
 
@@ -437,7 +438,7 @@ static void X6502_RunDebug(int32 cycles)
 {
 	#define RdMem RdMemHook
 	#define WrMem WrMemHook
-        #define ADDBT(x) NESDBG_AddBranchTrace(x)
+        #define ADDBT(to) NESDBG_AddBranchTrace(old_PC, to, 0)
 
         if(PAL)
          cycles*=15;          // 15*4=60
@@ -449,6 +450,7 @@ static void X6502_RunDebug(int32 cycles)
 	PenguinPower:
         while(_count>0)
         {
+	 const uint16 old_PC = _PC;
          int32 temp;   
          uint8 b1;
 
@@ -458,7 +460,7 @@ static void X6502_RunDebug(int32 cycles)
           {
            _PC=RdMem(0xFFFC);
            _PC|=RdMem(0xFFFD)<<8;
-	   ADDBT(_PC);
+	   NESDBG_AddBranchTrace(old_PC, _PC, 0xFFFC); //	   ADDBT(_PC);
            _jammed=0;
            _PI=_P=I_FLAG;
            _IRQlow&=~MDFN_IQRESET;
@@ -479,7 +481,7 @@ static void X6502_RunDebug(int32 cycles)
             _P|=I_FLAG; 
             _PC=RdMem(0xFFFA); 
             _PC|=RdMem(0xFFFB)<<8;
-	    ADDBT(_PC);
+	    NESDBG_AddBranchTrace(old_PC, _PC, 0xFFFA); //    ADDBT(_PC);
             _IRQlow&=~MDFN_IQNMI;
            }
           }
@@ -494,7 +496,7 @@ static void X6502_RunDebug(int32 cycles)
             _P|=I_FLAG;
             _PC=RdMem(0xFFFE);
             _PC|=RdMem(0xFFFF)<<8;
-	    ADDBT(_PC);
+	    NESDBG_AddBranchTrace(old_PC, _PC, 0xFFFE);	//ADDBT(_PC);
            }
           }
           _IRQlow&=~(MDFN_IQTEMP);

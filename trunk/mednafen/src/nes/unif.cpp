@@ -336,7 +336,7 @@ static int LoadCHR(MDFNFILE *fp)
 #define BMCFLAG_FORCE4	1
 #define BMCFLAG_32KCHRR	2	// Generic UNIF code should make available 32K CHR RAM if no VROM is present(else just 8KB CHR RAM).
 
-static BMAPPING bmap[] = 
+static const BMAPPING bmap[] = 
 {
  { "BTR", BTR_Init, 0 },
 
@@ -418,7 +418,7 @@ static BMAPPING bmap[] =
  {0,0,0}
 };
 
-static BFMAPPING bfunc[] = {
+static const BFMAPPING bfunc[] = {
  { "CTRL", CTRL },
  { "TVCI", TVCI },
  { "BATR", EnableBattery },

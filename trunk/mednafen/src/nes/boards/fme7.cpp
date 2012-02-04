@@ -17,6 +17,7 @@
 
 #include "mapinc.h"
 #include "../nsf.h"
+#include <math.h>
 
 static uint8 WRAM[8192];
 static void AYSoundHQ(void);
@@ -29,11 +30,12 @@ static uint8 Mirroring;
 
 static uint8 reg_select;
 static uint8 wram_control;
+static int32 amp_lut[0x10];
 static uint8 sr[0x10];
 static uint8 sr_index;
 
 static int32 vcount[3];
-static int32 dcount[3];
+static uint32 dcount[3];
 static uint32 CAYBC[3];
 
 
@@ -132,23 +134,22 @@ static DECLFW(Mapper69_write)
 
 static void DoAYSQHQ(int x) 
 {
+ const int32 period = sr[x * 2] | ((sr[(x * 2) + 1] & 0xF) << 8);
+ const int32 amp = amp_lut[(sr[0x8 + x] & 0xF)];
  uint32 V;
- int32 freq=((sr[x<<1]|((sr[(x<<1)+1]&15)<<8))+1)<<4;
- int32 amp=(sr[0x8+x]&15)<<6;
-
- amp+=amp>>1;
 
  if(!(sr[0x7]&(1<<x)))
  {
   for(V=CAYBC[x];V<SOUNDTS;V++)
   {
-   if(dcount[x])
+   if(dcount[x] & 0x10)
     WaveHiEx[V]+=amp;
-   vcount[x]--;
-   if(vcount[x]<=0)
+
+   vcount[x]++;
+   if(vcount[x] >= period)
    {
-    dcount[x]^=1;
-    vcount[x]=freq;
+    dcount[x] = (dcount[x] + 1) & 0x1F;
+    vcount[x] = 0;
    }
   } 
  }
@@ -212,6 +213,19 @@ static int StateAction(StateMem *sm, int load, int data_only)
 
 void Mapper69_ESI(EXPSOUND *ep)
 {
+ for(int i = 0; i < 0x10; i++)
+ {
+  double vl = 1.0 / pow(2, 1.0 / 2 * (15 - i));
+
+  //amp_lut[i] = i * 96;
+  amp_lut[i] = 7000 * vl; //7500 * vl; //6500 * vl; //8192 * vl; //(int32)(48 * 128 * vl);
+
+  if(!i)
+   amp_lut[i] = 0;
+
+  //printf("%d %f, %d\n", i, vl, amp_lut[i]);
+ }
+
  ep->HiFill=AYSoundHQ;
  ep->HiSync=AYHiSync;
  memset(dcount,0,sizeof(dcount));

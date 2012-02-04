@@ -36,10 +36,19 @@
 #include "v30mz-private.h"
 #include "debug.h"
 
+namespace MDFN_IEN_WSWAN
+{
+
+static uint16 old_CS, old_IP;
+
 #ifdef WANT_DEBUGGER
-#define ADDBRANCHTRACE(x,y) WSwanDBG_AddBranchTrace(x,y)
+ #define ADDBRANCHTRACE(x,y) { if(branch_trace_hook) branch_trace_hook(old_CS, old_IP, x, y, false); }
+ #define ADDBRANCHTRACE_INT(x,y) { if(branch_trace_hook) branch_trace_hook(old_CS, old_IP, x,y, true); }
+ #define SETOLDCSIP() { old_CS = I.sregs[PS]; old_IP = I.pc; }
 #else
-#define ADDBRANCHTRACE(x,y)
+ #define ADDBRANCHTRACE(x,y)	{ }
+ #define ADDBRANCHTRACE_INT(x,y)	{ }
+ #define SETOLDCSIP() {  }
 #endif
 
 typedef union
@@ -85,10 +94,11 @@ static void (*write_hook)(uint32, uint8) = NULL;
 static uint8 (*port_read_hook)(uint32) = NULL;
 static void (*port_write_hook)(uint32, uint8) = NULL;
 static bool hookie_hickey = 0;
+static void (*branch_trace_hook)(uint16 from_CS, uint16 from_IP, uint16 to_CS, uint16 to_IP, bool interrupt) = NULL;
 #endif
 
-#include "v30mz-ea.h"
-#include "v30mz-modrm.h"
+#include "v30mz-ea.inc"
+#include "v30mz-modrm.inc"
 
 static uint8 parity_table[256];
 
@@ -108,44 +118,8 @@ static INLINE void i_real_popf(void)
 
 /***************************************************************************/
 
-#ifdef WANT_DEBUGGER
-static RegType DBGCPURegs[] =
-{
-        { 0, "IP", "Instruction Pointer", 2 },
-        { 0, "PSW", "Program Status Word", 2 },
-        { 0, "AX", "Accumulator", 2 },
-        { 0, "BX", "Base", 2 },
-        { 0, "CX", "Counter", 2 },
-        { 0, "DX", "Data", 2 },
-        { 0, "SP", "Stack Pointer", 2 },
-        { 0, "BP", "Base Pointer", 2 },
-        { 0, "SI", "Source Index", 2 },
-        { 0, "DI", "Dest Index", 2 },
-        { 0, "CS", "Program Segment", 2 },
-        { 0, "SS", "Stack Segment", 2 },
-        { 0, "DS", "Data Segment", 2 },
-        { 0, "ES", "Extra Segment(Destination)", 2 },
-        { 0, "", "", 0 },
-};
-
-static RegGroupType DBGCPURegsGroup =
-{
- "V30MZ",
- DBGCPURegs,
- NULL,
- NULL,
- WSwanDBG_GetRegister,
- WSwanDBG_SetRegister,
-};
-
-#endif
-
 void v30mz_init(uint8 (*readmem20)(uint32), void (*writemem20)(uint32,uint8), uint8 (*readport)(uint32), void (*writeport)(uint32, uint8))
 {
- #ifdef WANT_DEBUGGER
- MDFNDBG_AddRegGroup(&DBGCPURegsGroup);
- #endif
-
  cpu_readmem20 = readmem20;
  cpu_writemem20 = writemem20;
 
@@ -209,7 +183,7 @@ void v30mz_int(uint32 vector, bool IgnoreIF)
 		PUSH(I.pc);
 		I.pc = (uint16)dest_off;
 		I.sregs[PS] = (uint16)dest_seg;
-		ADDBRANCHTRACE(I.sregs[PS], I.pc);
+		ADDBRANCHTRACE_INT(I.sregs[PS], I.pc);
 		CLK(32);
 	}
 }
@@ -710,8 +684,8 @@ OP( 0xc1, i_rotshft_wd8 ) {
 	}
 } OP_EPILOGUE;
 
-OP( 0xc2, i_ret_d16  ) { uint32 count = FETCH; count += FETCH << 8; POP(I.pc); I.regs.w[SP]+=count; CLK(6); } OP_EPILOGUE;
-OP( 0xc3, i_ret      ) { POP(I.pc); CLK(6); } OP_EPILOGUE;
+OP( 0xc2, i_ret_d16  ) { uint32 count = FETCH; count += FETCH << 8; POP(I.pc); I.regs.w[SP]+=count; CLK(6); ADDBRANCHTRACE(I.sregs[PS], I.pc); } OP_EPILOGUE;
+OP( 0xc3, i_ret      ) { POP(I.pc); CLK(6); ADDBRANCHTRACE(I.sregs[PS], I.pc); } OP_EPILOGUE;
 OP( 0xc4, i_les_dw   ) { GetModRM; uint16 tmp = GetRMWord(ModRM); RegWord(ModRM)=tmp; I.sregs[DS1] = GetnextRMWord; CLK(6); } OP_EPILOGUE;
 OP( 0xc5, i_lds_dw   ) { GetModRM; uint16 tmp = GetRMWord(ModRM); RegWord(ModRM)=tmp; I.sregs[DS0] = GetnextRMWord; CLK(6); } OP_EPILOGUE;
 OP( 0xc6, i_mov_bd8  ) { GetModRM; PutImmRMByte(ModRM); CLK(1); } OP_EPILOGUE;
@@ -744,12 +718,12 @@ OP( 0xc9, i_leave ) {
 	CLK(2);
 } OP_EPILOGUE;
 
-OP( 0xca, i_retf_d16  ) { uint32 count = FETCH; count += FETCH << 8; POP(I.pc); POP(I.sregs[PS]); I.regs.w[SP]+=count; CLK(9); } OP_EPILOGUE;
-OP( 0xcb, i_retf      ) { POP(I.pc); POP(I.sregs[PS]); CLK(8); } OP_EPILOGUE;
+OP( 0xca, i_retf_d16  ) { uint32 count = FETCH; count += FETCH << 8; POP(I.pc); POP(I.sregs[PS]); I.regs.w[SP]+=count; CLK(9); ADDBRANCHTRACE(I.sregs[PS], I.pc); } OP_EPILOGUE;
+OP( 0xcb, i_retf      ) { POP(I.pc); POP(I.sregs[PS]); CLK(8); ADDBRANCHTRACE(I.sregs[PS], I.pc); } OP_EPILOGUE;
 OP( 0xcc, i_int3      ) { nec_interrupt(3); CLK(9); } OP_EPILOGUE;
 OP( 0xcd, i_int       ) { nec_interrupt(FETCH); CLK(10); } OP_EPILOGUE;
 OP( 0xce, i_into      ) { if (FLAG_O) { nec_interrupt(4); CLK(13); } else CLK(6); } OP_EPILOGUE;
-OP( 0xcf, i_iret      ) { POP(I.pc); POP(I.sregs[PS]); i_real_popf(); CLK(10); } OP_EPILOGUE;
+OP( 0xcf, i_iret      ) { POP(I.pc); POP(I.sregs[PS]); i_real_popf(); CLK(10); ADDBRANCHTRACE(I.sregs[PS], I.pc); } OP_EPILOGUE;
 
 OP( 0xd0, i_rotshft_b ) {
 	uint32 src, dst; GetModRM; src = (uint32)GetRMByte(ModRM); dst=src;
@@ -822,8 +796,8 @@ OP( 0xd7, i_trans  ) { uint32 dest = (I.regs.w[BW]+I.regs.b[AL])&0xffff; I.regs.
 
 OP_RANGE(0xd8, 0xdf, i_fpo) { /*printf("FPO1, Op:%02x\n", opcode);*/ GetModRM; CLK(1); } OP_EPILOGUE;
 
-OP( 0xe0, i_loopne ) { int8 disp = (int8)FETCH; I.regs.w[CW]--; if (!ZF && I.regs.w[CW]) { I.pc = (uint16)(I.pc+disp);  CLK(6); } else CLK(3); ADDBRANCHTRACE(I.sregs[PS], I.pc);} OP_EPILOGUE;
-OP( 0xe1, i_loope  ) { int8 disp = (int8)FETCH; I.regs.w[CW]--; if ( ZF && I.regs.w[CW]) { I.pc = (uint16)(I.pc+disp);  CLK(6); } else CLK(3); ADDBRANCHTRACE(I.sregs[PS], I.pc);} OP_EPILOGUE;
+OP( 0xe0, i_loopne ) { int8 disp = (int8)FETCH; I.regs.w[CW]--; if (!ZF && I.regs.w[CW]) { I.pc = (uint16)(I.pc+disp);  CLK(6); ADDBRANCHTRACE(I.sregs[PS], I.pc); } else CLK(3); } OP_EPILOGUE;
+OP( 0xe1, i_loope  ) { int8 disp = (int8)FETCH; I.regs.w[CW]--; if ( ZF && I.regs.w[CW]) { I.pc = (uint16)(I.pc+disp);  CLK(6); ADDBRANCHTRACE(I.sregs[PS], I.pc); } else CLK(3); } OP_EPILOGUE;
 OP( 0xe2, i_loop   ) { int8 disp = (int8)FETCH; I.regs.w[CW]--; if (I.regs.w[CW]) { I.pc = (uint16)(I.pc+disp);  CLK(5); ADDBRANCHTRACE(I.sregs[PS], I.pc); } else CLK(2); } OP_EPILOGUE;
 OP( 0xe3, i_jcxz   ) { int8 disp = (int8)FETCH; if (I.regs.w[CW] == 0) { I.pc = (uint16)(I.pc+disp);  CLK(4); ADDBRANCHTRACE(I.sregs[PS], I.pc); } else CLK(1); } OP_EPILOGUE;
 OP( 0xe4, i_inal   ) { uint8 port = FETCH; I.regs.b[AL] = read_port(port); CLK(6);				     	} OP_EPILOGUE;
@@ -1060,6 +1034,7 @@ void v30mz_execute(int cycles)
 
  if(InHLT)
  {
+  SETOLDCSIP();
   WSwan_InterruptCheck();
   if(InHLT)
   {
@@ -1078,6 +1053,8 @@ void v30mz_execute(int cycles)
 
  while(v30mz_ICount > 0) 
  {
+  SETOLDCSIP();
+
   WSwan_InterruptCheck();
   
   #ifdef WANT_DEBUGGER
@@ -1088,6 +1065,10 @@ void v30mz_execute(int cycles)
    v30mz_regs_t save_I = I;
    uint32 save_prefix_base = prefix_base;
    char save_seg_prefix = seg_prefix;
+   void (*save_branch_trace_hook)(uint16 from_CS, uint16 from_IP, uint16 to_CS, uint16 to_IP, bool interrupt) = branch_trace_hook;
+
+   branch_trace_hook = NULL;
+
    save_cpu_writemem20 = cpu_writemem20;
    save_cpu_readport = cpu_readport;
    save_cpu_writeport = cpu_writeport;
@@ -1100,6 +1081,7 @@ void v30mz_execute(int cycles)
 
    DoOP(FETCHOP);
 
+   branch_trace_hook = save_branch_trace_hook;
    v30mz_timestamp = save_timestamp;
    v30mz_ICount = save_ICount;
    I = save_I;
@@ -1123,7 +1105,7 @@ void v30mz_execute(int cycles)
 
 #ifdef WANT_DEBUGGER
 void v30mz_debug(void (*CPUHook)(uint32), uint8 (*ReadHook)(uint32), void (*WriteHook)(uint32, uint8), uint8 (*PortReadHook)(uint32), 
-	void (*PortWriteHook)(uint32, uint8))
+	void (*PortWriteHook)(uint32, uint8), void (*BranchTraceHook)(uint16 from_CS, uint16 from_IP, uint16 to_CS, uint16 to_IP, bool interrupt))
 {
  cpu_hook = CPUHook;
  read_hook = ReadHook;
@@ -1132,6 +1114,8 @@ void v30mz_debug(void (*CPUHook)(uint32), uint8 (*ReadHook)(uint32), void (*Writ
  port_write_hook = PortWriteHook;
 
  hookie_hickey = read_hook || write_hook || port_read_hook || port_write_hook;
+
+ branch_trace_hook = BranchTraceHook;
 }
 #endif
 
@@ -1166,3 +1150,4 @@ int v30mz_StateAction(StateMem *sm, int load, int data_only)
  return(1);
 }
 
+}

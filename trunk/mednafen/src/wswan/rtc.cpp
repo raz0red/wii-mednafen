@@ -21,6 +21,10 @@
 #include "wswan.h"
 #include <time.h>
 
+namespace MDFN_IEN_WSWAN
+{
+
+
 static uint64 CurrentTime;
 static uint32 ClockCycleCounter;
 static uint8 wsCA15;
@@ -108,3 +112,4 @@ int WSwan_RTCStateAction(StateMem *sm, int load, int data_only)
  return(1);
 }
 
+}
