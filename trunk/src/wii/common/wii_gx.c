@@ -183,6 +183,7 @@ void wii_gx_drawimage(
   GXTexObj texObj;
   
   GX_InitTexObj( &texObj, data, width, height, GX_TF_RGBA8, GX_CLAMP, GX_CLAMP, GX_FALSE );
+  //GX_InitTexObjLOD(&texObj,GX_NEAR,GX_NEAR_MIP_NEAR,0.0,10.0,0.0,GX_FALSE,GX_FALSE,GX_ANISO_1);
   GX_LoadTexObj( &texObj, GX_TEXMAP0 );
   GX_InvalidateTexAll();
 

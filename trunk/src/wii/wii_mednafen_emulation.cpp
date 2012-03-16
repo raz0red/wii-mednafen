@@ -83,6 +83,9 @@ void wii_start_emulation( char *romfile, const char *savefile, bool reset, bool 
     Mem2ManagerReset(); // Reset the MEM2 manager
 #endif
 
+    // Reset the control mappings
+    wii_mednafen_set_reset_controls();
+
     wii_cartridge_hash[0] = '\0'; // Reset the cartridge hash
     wii_cartridge_hash_with_header[0] = '\0';
     wii_snapshot_reset(); // Reset snapshot related state

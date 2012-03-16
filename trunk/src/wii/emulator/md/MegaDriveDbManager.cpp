@@ -130,12 +130,12 @@ void MegaDriveDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int MegaDriveDbManager::getMappableButtonCount()
+int MegaDriveDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* MegaDriveDbManager::getMappableButton( int button )
+const MappableButton* MegaDriveDbManager::getMappableButton( int profile, int button )
 {
   return &MD_BUTTONS[button];
 }

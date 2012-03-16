@@ -25,6 +25,8 @@
 #include "../general.h"
 #include "dvdisaster.h"
 
+#include <locale.h>
+
 #ifdef WII
 #include <ogcsys.h>
 #endif

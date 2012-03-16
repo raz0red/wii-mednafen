@@ -63,8 +63,14 @@ static uint32 FixX(uint32 in_x)
 
  x = (int32)in_x + 98 - 32;
 
+
+#ifdef WII
+ if(x < 98 - 32)
+  x = 98 - 32;
+#else
  if(x < 98)
   x = 98;
+#endif
 
  if(x > 242)
   x = 242;
@@ -75,9 +81,15 @@ static uint32 FixX(uint32 in_x)
 
 static void UpdateARKFC(void *data)
 {
+#ifndef WII
  uint32 *ptr=(uint32 *)data;
  FCArk.mzx=FixX(ptr[0]);
  FCArk.mzb=ptr[2]?1:0;
+#else
+ uint8 *ptr = (uint8*)data;
+ FCArk.mzx=FixX(MDFN_de32lsb(ptr + 0));
+ FCArk.mzb=ptr[4]?1:0;
+#endif
 }
 
 static int StateAction(int w, StateMem *sm, int load, int data_only)

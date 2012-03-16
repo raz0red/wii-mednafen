@@ -179,7 +179,9 @@ static void InitCommon(const char *name)
 
         MDFNGameInfo->cspecial = NULL;
         MDFNGameInfo->GameSetMD5Valid = FALSE;
-
+#ifdef WII
+        MDFNGameInfo->DesiredInput.clear();
+#endif
 
         if(MDFN_GetSettingB("nes.fnscan"))
         {

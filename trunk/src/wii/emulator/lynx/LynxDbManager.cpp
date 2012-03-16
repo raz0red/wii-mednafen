@@ -117,12 +117,12 @@ void LynxDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int LynxDbManager::getMappableButtonCount()
+int LynxDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* LynxDbManager::getMappableButton( int button )
+const MappableButton* LynxDbManager::getMappableButton( int profile, int button )
 {
   return &LYNX_BUTTONS[button];
 }

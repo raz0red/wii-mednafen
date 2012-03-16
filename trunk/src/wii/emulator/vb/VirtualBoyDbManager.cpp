@@ -124,12 +124,12 @@ void VirtualBoyDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int VirtualBoyDbManager::getMappableButtonCount()
+int VirtualBoyDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* VirtualBoyDbManager::getMappableButton( int button )
+const MappableButton* VirtualBoyDbManager::getMappableButton( int profile, int button )
 {
   return &VB_BUTTONS[button];
 }

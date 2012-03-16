@@ -108,12 +108,12 @@ void NeoGeoPocketDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int NeoGeoPocketDbManager::getMappableButtonCount()
+int NeoGeoPocketDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* NeoGeoPocketDbManager::getMappableButton( int button )
+const MappableButton* NeoGeoPocketDbManager::getMappableButton( int profile, int button )
 {
   return &NGP_BUTTONS[button];
 }

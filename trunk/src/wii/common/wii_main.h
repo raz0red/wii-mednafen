@@ -115,6 +115,15 @@ extern unsigned int *xfb[2];
 extern TREENODE* wii_create_tree_node( enum NODETYPE type, const char *name );
 
 /*
+* Attempts to find the tree node with the specified type
+*
+* root     Where to start the search
+* type     The type of the node
+* return   The found tree node or NULL
+*/
+extern TREENODE* wii_find_tree_node( TREENODE* root, enum NODETYPE type );
+
+/*
  * Clears the children for the specified node
  *
  * node     The node to clear the children for

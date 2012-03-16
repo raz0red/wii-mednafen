@@ -22,8 +22,8 @@ public:
     WII_BUTTONS[WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   GameBoyDbManager( Emulator& emulator );
   const WiiButton* getMappedButton( int profile, int controller, int button );
-  int getMappableButtonCount();
-  const MappableButton* getMappableButton( int button );
+  int getMappableButtonCount( int profile );
+  const MappableButton* getMappableButton( int profile, int button );
   void resetToDefaults();
   dbEntry* getEntry();
 };

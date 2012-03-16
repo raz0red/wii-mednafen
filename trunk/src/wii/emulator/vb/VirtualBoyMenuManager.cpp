@@ -95,19 +95,21 @@ void VirtualBoyMenuManager::getNodeName(
       break;
     case NODETYPE_ROM_PATCH_CART:
       {
-        const char* strmode;
         switch( entry->romPatch )
         {
           case ROM_PATCH_ENABLED:
-            strmode = "Enabled";
-            break;
           case ROM_PATCH_DISABLED:
-            strmode = "Disabled";
+            snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+                m_emuMenuHelper.getEnabledText( 
+                  entry->romPatch == ROM_PATCH_ENABLED ) );
             break;
           default:
-            strmode = "(default)";
+            snprintf( value, WII_MENU_BUFF_SIZE, "(%s, %s)", 
+              gettextmsg( 
+                m_emuMenuHelper.getEnabledText( emu.getPatchRom() ) ),
+              gettextmsg( "emulator" ) );
+            break;
         }
-        snprintf( value, WII_MENU_BUFF_SIZE, "%s", strmode );
       }
       break;
   }

@@ -22,6 +22,7 @@ public:
   virtual void getNodeName( TREENODE* node, char *buffer, char* value ) = 0;
   virtual void selectNode( TREENODE* node ) = 0;
   virtual bool isNodeVisible( TREENODE* node ) = 0;
+  const char* getEnabledText( bool isEnabled );
 };
 
 #endif

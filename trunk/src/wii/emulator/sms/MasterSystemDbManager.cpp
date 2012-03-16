@@ -108,12 +108,12 @@ void MasterSystemDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int MasterSystemDbManager::getMappableButtonCount()
+int MasterSystemDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* MasterSystemDbManager::getMappableButton( int button )
+const MappableButton* MasterSystemDbManager::getMappableButton( int profile, int button )
 {
   return &SMS_BUTTONS[button];
 }

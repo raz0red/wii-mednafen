@@ -63,7 +63,7 @@ void PCFX::updateControls( bool isRapid )
 
     for( int i = 0; i < PCFX_BUTTON_COUNT; i++ )
     {
-      BEGIN_IF_BUTTON_HELD
+      BEGIN_IF_BUTTON_HELD(entry->profile)
         result |= PCFXDbManager::PCFX_BUTTONS[ i ].button;
       END_IF_BUTTON_HELD
     }    

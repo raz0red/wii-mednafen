@@ -1074,8 +1074,19 @@ Tantric         : Menu example code and SDL enhancements
 Change Log
 --------------------------------------------
 
-02/03/12 (0.2-pre)
+03/16/12 (0.2-pre)
 -------------------
+ - NES controls support
+   - Added Arkanoid controller support (via Wiimote IR, Twist, and Tilt)
+   - Added Space Shadow gun support (via Wiimote IR)
+   - Added Zapper support (via Wiimote IR)
+   - Added Oeka Kids support (via Wiimote IR)
+   - Added Hypershot controller support (Hyper Sports)
+ - CD ROM cue sheets 
+   - Added support for UTF-8 files.
+   - Added support for high-ascii characters.
+ - Inherited settings now display the inherited value and where they are 
+     being inherited from.
  - Added ability to specify language for WonderSwan via emulator settings.
      (see Mednafen 0.9.19 merge notes below)
  - Merged changes from 0.9.19 (Mednafen proper)

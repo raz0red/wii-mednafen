@@ -30,8 +30,8 @@ public:
     WII_BUTTONS[WS_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
   WonderSwanDbManager( Emulator& emulator );
   const WiiButton* getMappedButton( int profile, int controller, int button );
-  int getMappableButtonCount();
-  const MappableButton* getMappableButton( int button );
+  int getMappableButtonCount( int profile );
+  const MappableButton* getMappableButton( int profile, int button );
   void resetToDefaults();
   dbEntry* getEntry();
   int getProfileCount(); 

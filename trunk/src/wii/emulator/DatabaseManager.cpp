@@ -296,6 +296,11 @@ void DatabaseManager::resetToDefaults()
   entry->frameSkip = FRAME_SKIP_DEFAULT;
 }
 
+bool DatabaseManager::isProfileAvailable( int profile )
+{
+  return true;
+}
+
 int DatabaseManager::getProfileCount()
 {
   return 1;

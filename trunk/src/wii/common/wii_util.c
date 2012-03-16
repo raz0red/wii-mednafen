@@ -298,3 +298,27 @@ u32 Util_rgbatovalue( RGBA* rgba, BOOL includeAlpha )
   }
   return val;
 }
+
+/*
+ * Converts the specified Ansi string to UTF-8
+ * NOTE: out must be at least twice the size of in
+ *
+ * in   The Ansi string
+ * out  The UTF-8 string 
+ */
+void Util_ansitoUTF8( unsigned char* in, unsigned char* out )
+{
+  while( *in )
+  {
+    if( *in <128 ) 
+    { 
+      *out++ = *in++;
+    }
+    else
+    {
+      *out++ = 0xc2+(*in>0xbf);
+      *out++ = (*in++&0x3f)+0x80;
+    }
+  }
+  *out = '\0';
+}

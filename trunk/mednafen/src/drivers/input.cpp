@@ -44,7 +44,11 @@
 
 #include <math.h>
 
+#ifndef WII
 static int RewindState = 0;
+#else
+int RewindState = 0;
+#endif
 static uint32 MouseData[3];
 static double MouseDataRel[2];
 
@@ -235,7 +239,7 @@ static std::vector<RotateOffsets_t> PortButtRotateOffsets[16];
 static std::vector<uint32> PortButtExclusionBitOffsets[16]; // 0xFFFFFFFF represents none
 static std::vector<char *> PortButtSettingNames[16];
 
-static void KillPortInfo(void) // Murder it!!
+void KillPortInfo(void) // Murder it!!
 {
   for(unsigned int port = 0; port < NumPorts; port++)
   {
@@ -269,7 +273,7 @@ static void KillPortInfo(void) // Murder it!!
   NumPorts = 0;
 }
 
-static void BuildPortInfo(MDFNGI *gi)
+void BuildPortInfo(MDFNGI *gi)
 {
   const RotateOffsets_t NullRotate = { { ~0, ~0, ~0 } };
 
@@ -284,15 +288,19 @@ static void BuildPortInfo(MDFNGI *gi)
 
     if(PortPossibleDevices[gi->shortname][NumPorts].size() > 1)
     {  
+#ifndef WII
       if(CurGame->DesiredInput.size() > NumPorts && CurGame->DesiredInput[NumPorts])
       {
         port_device_name = strdup(CurGame->DesiredInput[NumPorts]);
       }
       else
       {
+#endif
         trio_snprintf(tmp_setting_name, 256, "%s.input.%s", gi->shortname, gi->InputInfo->Types[NumPorts].ShortName);
         port_device_name = strdup(MDFN_GetSettingS(tmp_setting_name).c_str());
+#ifndef WII
       }
+#endif
     }
     else
     {
@@ -1399,6 +1407,7 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       continue;
 
     memset(PortData[x], 0, PortDataSize[x]);
+//printf( "Port data size:%d,%d\n", x, PortDataSize[x] );
 
 #ifndef WII
     if(IConfig != none)
@@ -1434,13 +1443,8 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       }
     }
 #else
-    if( x < 4 )
-    {
-      uint8 *tptr = (uint8 *)PortData[x];
-      u16 padData = emuRegistry.getCurrentEmulator()->getPadData()[x];
-      tptr[0] = padData & 0xFF;
-      tptr[1] = ( padData >> 8 ) & 0xFF;    
-    }
+    emuRegistry.getCurrentEmulator()->updateInputDeviceData( 
+      x, (uint8*)PortData[x], PortDataSize[x] );
 #endif
 
     // Handle button exclusion!

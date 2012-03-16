@@ -176,12 +176,12 @@ void WonderSwanDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int WonderSwanDbManager::getMappableButtonCount()
+int WonderSwanDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* WonderSwanDbManager::getMappableButton( int button )
+const MappableButton* WonderSwanDbManager::getMappableButton( int profile, int button )
 {
   return &WS_BUTTONS[button];
 }

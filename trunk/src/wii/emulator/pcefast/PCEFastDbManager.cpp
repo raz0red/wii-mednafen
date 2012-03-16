@@ -119,12 +119,12 @@ void PCEFastDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int PCEFastDbManager::getMappableButtonCount()
+int PCEFastDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* PCEFastDbManager::getMappableButton( int button )
+const MappableButton* PCEFastDbManager::getMappableButton( int profile, int button )
 {
   return &PCE_BUTTONS[button];
 }

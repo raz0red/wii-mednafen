@@ -23,8 +23,8 @@ typedef struct StandardDbEntry
   dbEntry base;
   u8 profile;  
   u8 buttonMap[WII_MAX_PROFILE_COUNT][WII_CONTROLLER_COUNT][WII_MAP_BUTTON_COUNT];
-  u32 appliedButtonMap[WII_CONTROLLER_COUNT][32];
-  char buttonDesc[32][255];
+  u32 appliedButtonMap[WII_MAX_PROFILE_COUNT][WII_CONTROLLER_COUNT][32];
+  char buttonDesc[WII_MAX_PROFILE_COUNT][32][255];
 } StandardDbEntry;
 
 class StandardDatabaseManager : public DatabaseManager
@@ -41,8 +41,8 @@ public:
   StandardDatabaseManager( Emulator& emulator );  
   virtual const WiiButton* getMappedButton( 
     int profile, int controller, int button ) = 0;  
-  virtual int getMappableButtonCount() = 0;
-  virtual const MappableButton* getMappableButton( int button ) = 0;
+  virtual int getMappableButtonCount( int profile ) = 0;
+  virtual const MappableButton* getMappableButton( int profile, int button ) = 0;
   void resetButtons();
   virtual void applyButtonMap();
   virtual void addRewindButtons();

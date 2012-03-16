@@ -1,6 +1,8 @@
 #include "CartridgeSettingsMenuHelper.h"
 #include "DatabaseManager.h"
 
+#include "gettext.h"
+
 #include "wii_gx.h"
 #include "wii_sdl.h"
 #include "wii_app.h"
@@ -83,7 +85,6 @@ void CartridgeSettingsMenuHelper::getNodeName(
   Emulator& emu = getEmulator();
   DatabaseManager& dbManager = emu.getDbManager();
 
-  const char *strmode = NULL;
   switch( node->node_type )
   {
     case NODETYPE_CART_FRAME_SKIP:
@@ -92,16 +93,15 @@ void CartridgeSettingsMenuHelper::getNodeName(
       switch( entry->frameSkip )
       {
         case FRAME_SKIP_DEFAULT:
-          strmode = "(default)";
-          break;
-        case FRAME_SKIP_ENABLED:
-          strmode = "Enabled";
+          snprintf( value, WII_MENU_BUFF_SIZE, "(%s, %s)",              
+            gettextmsg( getEnabledText( emu.getFrameSkip() ) ),
+            gettextmsg( "emulator" ) );
           break;
         default:
-          strmode = "Disabled";
+           snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+             getEnabledText( entry->frameSkip == FRAME_SKIP_ENABLED ) );
           break;
-      }
-      snprintf( value, WII_MENU_BUFF_SIZE, "%s", strmode );
+      }     
     }
     break;
   }
