@@ -44,18 +44,18 @@
     }                                                                         \
   }                                                                           \
 
-#define BEGIN_IF_BUTTON_HELD                               \
+#define BEGIN_IF_BUTTON_HELD(p)                            \
   if( ( held &                                             \
         ( ( isClassic ?                                    \
-              entry->appliedButtonMap[                     \
+              entry->appliedButtonMap[p][                  \
                 WII_CONTROLLER_CLASSIC ][ i ] : 0 ) |      \
           ( isNunchuk ?                                    \
-              entry->appliedButtonMap[                     \
+              entry->appliedButtonMap[p][                  \
                 WII_CONTROLLER_CHUK ][ i ] :               \
-              entry->appliedButtonMap[                     \
+              entry->appliedButtonMap[p][                  \
                 WII_CONTROLLER_MOTE ][ i ] ) ) ) ||        \
       ( gcHeld &                                           \
-          entry->appliedButtonMap[                         \
+          entry->appliedButtonMap[p][                      \
             WII_CONTROLLER_CUBE ][ i ] ) )                 \
   {                                                        \
 

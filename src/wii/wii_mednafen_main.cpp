@@ -25,6 +25,8 @@ distribution.
 
 #include "main.h"
 #include "sound.h"
+#include "input.h"
+#include <trio/trio.h>
 
 #include "wii_app.h"
 #include "wii_gx.h"
@@ -97,6 +99,9 @@ extern void KillInputSettings(void);
 extern void CalcFramerates(char *virtfps, char *drawnfps, char *blitfps, size_t maxlen);
 extern void FPS_IncBlitted(void);
 
+extern void KillPortInfo();
+extern void BuildPortInfo(MDFNGI *gi);
+
 // The wiimote not supported image data
 static gx_imagedata* mote_not_supported_idata = NULL;
 
@@ -108,6 +113,27 @@ static u32 message_time;
 
 // The last width/height displayed
 static Rect lastRect = { 0, 0 };
+
+// Reset controls
+static bool resetControls = false;
+
+/*
+ * Whether the controls should be reset prior to entering the emulator loop.
+ */
+void wii_mednafen_set_reset_controls()
+{
+  resetControls = true;
+}
+
+/*
+ * Returns the last display rect
+ *
+ * return   The last display rect
+ */
+Rect* wii_mednafen_get_last_rect()
+{
+  return &lastRect;
+}
 
 /**
  * Resets the last cached display rect size
@@ -359,6 +385,77 @@ net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n",
   }
 }
 
+extern int RewindState;
+static bool lastrewind = false;
+
+/*
+ * Enables/disables rewind
+ *
+ * val  Whether rewind should be enabled
+ */
+void wii_mednafen_enable_rewind( bool val )
+{
+  Emulator* emu = emuRegistry.getCurrentEmulator();
+  bool rewind = ( val && emu->isRewindSupported() );
+  if( rewind != lastrewind )
+  {
+    lastrewind = rewind;
+    RewindState = rewind;
+    MDFNI_EnableStateRewind( rewind );    
+#ifdef WII_NETTRACE
+    net_print_string( NULL, 0, "RewindChanged:%d\n", rewind );
+#endif
+  }
+}
+
+static void update_ports()
+{
+#ifdef WII_NETTRACE
+  net_print_string( NULL, 0, "ResetControls:%d\n", resetControls );
+#endif
+
+  if( !resetControls )
+  {
+    return;
+  }
+
+  resetControls = false; // Mark the controls as having been reset
+
+  Emulator* emu = emuRegistry.getCurrentEmulator();
+  const char** devices = emu->getInputDevices();
+
+  if( devices != NULL )
+  {
+    if( lastrewind )
+    {
+      wii_mednafen_enable_rewind( false );
+    }
+
+    KillPortInfo();
+
+    //const char* devices[] = { "gamepad", "gamepad", "gamepad", "gamepad", "none", NULL };
+    int port = 0;
+printf( "Total ports:%d\n", MDFNGameInfo->InputInfo->InputPorts );
+    while( devices[port] != NULL && port < MDFNGameInfo->InputInfo->InputPorts )
+    {
+      char tmp_setting_name[256];
+      trio_snprintf( tmp_setting_name, 256, "%s.input.%s", 
+        MDFNGameInfo->shortname, MDFNGameInfo->InputInfo->Types[port].ShortName );    
+printf( "Device setting:%s=%s\n", tmp_setting_name, devices[port] );
+      MDFNI_SetSetting( tmp_setting_name, devices[port] );
+
+      port++;
+    }
+
+    BuildPortInfo( MDFNGameInfo );
+
+    if( lastrewind )
+    {
+      wii_mednafen_enable_rewind( true );
+    }
+  }
+}
+
 /*
  * The emulation loop
  *
@@ -366,22 +463,12 @@ net_print_string( NULL, 0, "DisplayRect: %d, %d, %dx%d, %dx%d, %d, %dx%d\n",
  */
 void wii_mednafen_emu_loop( BOOL resume )
 {
+  Emulator* emu = emuRegistry.getCurrentEmulator();
+  update_ports();
+  wii_mednafen_enable_rewind( wii_rewind ); // Update rewind  
+
   reset_video();
 
-  Emulator* emu = emuRegistry.getCurrentEmulator();
-
-  static bool lastrewind = false;
-  bool rewind = ( wii_rewind && emu->isRewindSupported() );
-
-  if( rewind != lastrewind )
-  {
-    lastrewind = rewind;
-    MDFNI_EnableStateRewind( rewind );    
-#ifdef WII_NETTRACE
-    net_print_string( NULL, 0, "RewindChanged:%d\n", rewind );
-#endif
-  }
-  
   emu->getDbManager().applyButtonMap(); // Apply the button map
   emu->onPreLoop();
 

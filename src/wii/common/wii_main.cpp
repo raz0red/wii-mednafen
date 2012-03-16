@@ -189,6 +189,32 @@ TREENODE* wii_create_tree_node( enum NODETYPE type, const char *name )
 }
 
 /*
+* Attempts to find the tree node with the specified type
+*
+* root     Where to start the search
+* type     The type of the node
+* return   The found tree node or NULL
+*/
+TREENODE* wii_find_tree_node( TREENODE* root, enum NODETYPE type )
+{
+  TREENODE* ret = NULL;
+  for( int i = 0; i < root->child_count && !ret; i++ )
+  {
+    TREENODE* currChild = root->children[i];
+    if( currChild->node_type == type )
+    {
+      ret = currChild;
+    }
+    else
+    {
+      ret = wii_find_tree_node( currChild, type );
+    }
+  }
+
+  return ret;
+}
+
+/*
 * Adds the specified child node to the specified parent
 *
 * parent   The parent

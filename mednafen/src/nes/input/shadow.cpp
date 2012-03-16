@@ -63,7 +63,11 @@ static void ZapperFrapper(uint8 *bg, uint8 *spr, uint32  linets, int final)
      a1&=63;
  
      sum=ActiveNESPalette[a1].r+ActiveNESPalette[a1].g+ActiveNESPalette[a1].b;
+#ifndef WII
      if(sum>=100*3)
+#else
+     if(sum>=220*3)
+#endif
      {
       ZD.zaphit=timestampbase + timestamp;
       goto endo;

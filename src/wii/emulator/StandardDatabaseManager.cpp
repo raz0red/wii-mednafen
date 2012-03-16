@@ -44,15 +44,20 @@ void StandardDatabaseManager::applyButtonMap()
   StandardDbEntry* entry = (StandardDbEntry*)getEntry();
 
   memset( entry->appliedButtonMap, 0x0, sizeof(entry->appliedButtonMap) );
-  for( int i = 0; i < WII_CONTROLLER_COUNT; i++ )
+
+  int profileCount = getProfileCount();
+  for( int x = 0; x < profileCount; x++ )
   {
-    for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+    for( int i = 0; i < WII_CONTROLLER_COUNT; i++ )
     {
-      u8 mappedButton = entry->buttonMap[entry->profile][i][j];
-      if( mappedButton != KEY_MAP_NONE )
+      for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
       {
-        entry->appliedButtonMap[i][mappedButton] |= 
-          getMappedButton( entry->profile, i, j )->button;
+        u8 mappedButton = entry->buttonMap[x][i][j];
+        if( mappedButton != KEY_MAP_NONE )
+        {
+          entry->appliedButtonMap[x][i][mappedButton] |= 
+            getMappedButton( x, i, j )->button;
+        }
       }
     }
   }
@@ -79,26 +84,21 @@ bool StandardDatabaseManager::writeEntryValues(
         u8 val = entry->buttonMap[x][i][j]; 
         if( val != getMappedButton( x, i, j )->defaultMapping )
         {
-          if( profileCount > 1 )
-          {
-            fprintf( file, "btn.%d.%d.%d=%d\n", x, i, j, val );            
-          }
-          else
-          {
-            // Backward compatibility
-            fprintf( file, "btn.%d.%d=%d\n", i, j, val );
-          }
+          fprintf( file, "btn.%d.%d.%d=%d\n", x, i, j, val );            
         }
       }
     }
   }
 
-  for( i = 1; i < getMappableButtonCount(); i++ )
+  for( int x = 0; x < profileCount; x++ )
   {
-    char* desc = entry->buttonDesc[i];
-    if( desc[0] != '\0' )
-    {      
-      fprintf( file, "btnDesc%d=%s\n", i, desc );
+    for( i = 1; i < getMappableButtonCount( x ); i++ )
+    {
+      char* desc = entry->buttonDesc[x][i];
+      if( desc[0] != '\0' )
+      {      
+        fprintf( file, "btnDesc.%d.%d=%s\n", x, i, desc );
+      }
     }
   }
 
@@ -116,16 +116,12 @@ void StandardDatabaseManager::readEntryValue(
   if( !strcmp( name, "profile" ) )
   {
     entry->profile = Util_sscandec( value );
-    // This is a hack for now. Requires that profile be read prior to the 
-    // button mappings... The other option is to write out all button 
-    // mappings (don't skip the defaults).
-    resetButtons(); 
   }
 
-  int i;
+  int x, i;
   bool btnFound = false;
   int profileCount = getProfileCount();
-  for( int x = 0; x < profileCount; x++ )
+  for( x = 0; x < profileCount; x++ )
   {
     for( i = 0; !btnFound && i < WII_CONTROLLER_COUNT; i++ )
     {
@@ -154,17 +150,37 @@ void StandardDatabaseManager::readEntryValue(
     }
   }
 
+  // Backward compatibility
   btnFound = false;
-  for( i = 1; !btnFound && i < getMappableButtonCount(); i++ )
+  for( i = 1; !btnFound && i < getMappableButtonCount( entry->profile ); i++ )
   {
     char button[255];
+
+    // Backward compatibility
     snprintf( button, sizeof(button), "btnDesc%d", i );
     if( !strcmp( name, button ) )
     {
-      Util_strlcpy( entry->buttonDesc[i], 
-        value, sizeof(entry->buttonDesc[i]) );
+      Util_strlcpy( entry->buttonDesc[entry->profile][i], 
+        value, sizeof(entry->buttonDesc[entry->profile][i]) );
       btnFound = true;
     }          
+  }
+
+  for( x = 0; x < profileCount; x++ )
+  {
+    for( i = 1; !btnFound && i < getMappableButtonCount( x ); i++ )
+    {
+      char button[255];
+
+      // Backward compatibility
+      snprintf( button, sizeof(button), "btnDesc.%d.%d", x, i );
+      if( !strcmp( name, button ) )
+      {
+        Util_strlcpy( entry->buttonDesc[x][i], 
+          value, sizeof(entry->buttonDesc[x][i]) );
+        btnFound = true;
+      }          
+    }
   }
 }
 
@@ -198,40 +214,43 @@ void StandardDatabaseManager::addRewindButtons()
       wii_rewind_add_buttons )
   {
     int i, j;
-    int rewindButtonValue = -1;
-    for( int i = 0; i < getMappableButtonCount(); i++ )
+    int profileCount = getProfileCount();  
+    for( int x = 0; x < profileCount; x++ )
     {
-      if( getMappableButton( i )->button == BTN_REWIND )
+      int rewindButtonValue = -1;
+      for( i = 0; i < getMappableButtonCount( x ); i++ )
       {
-        rewindButtonValue = i; 
-        break;
-      }
-    }
-
-    if( rewindButtonValue != -1 )
-    {
-      int profileCount = getProfileCount();  
-      for( int x = 0; x < profileCount; x++ )
-      {
-        for( i = 0; i < WII_CONTROLLER_COUNT; i++ )
+        if( getMappableButton( x, i )->button == BTN_REWIND )
         {
-          bool rewindMapped = false;
-          for( j = 0; j < WII_MAP_BUTTON_COUNT && !rewindMapped; j++ )
-          {
-            rewindMapped = ( entry->buttonMap[x][i][j] == rewindButtonValue );
-          }
+          rewindButtonValue = i; 
+          break;
+        }
+      }
 
-          if( !rewindMapped )
+      if( rewindButtonValue == -1 )
+      {
+        // No rewind button for profile?
+        continue;
+      }
+
+      for( i = 0; i < WII_CONTROLLER_COUNT; i++ )
+      {
+        bool rewindMapped = false;
+        for( j = 0; j < WII_MAP_BUTTON_COUNT && !rewindMapped; j++ )
+        {
+          rewindMapped = ( entry->buttonMap[x][i][j] == rewindButtonValue );
+        }
+
+        if( !rewindMapped )
+        {
+          u32 btnValue = getDefaultRewindButton( x, i );
+          for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
           {
-            u32 btnValue = getDefaultRewindButton( x, i );
-            for( int j = 0; j < WII_MAP_BUTTON_COUNT; j++ )
+            const WiiButton* btn = getMappedButton( x, i, j );
+            if( btn->button == btnValue )
             {
-              const WiiButton* btn = getMappedButton( x, i, j );
-              if( btn->button == btnValue )
-              {
-                entry->buttonMap[x][i][j] = rewindButtonValue;
-                break;
-              }
+              entry->buttonMap[x][i][j] = rewindButtonValue;
+              break;
             }
           }
         }

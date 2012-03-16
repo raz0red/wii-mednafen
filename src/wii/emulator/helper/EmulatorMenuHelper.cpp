@@ -2,6 +2,7 @@
 #include "wii_app.h"
 #include "wii_gx.h"
 #include "wii_sdl.h"
+#include "wii_mednafen.h"
 #include "wii_mednafen_resize_screen.h"
 #include "gettext.h"
 
@@ -10,7 +11,7 @@ EmulatorMenuHelper::EmulatorMenuHelper( Emulator& emulator ) :
 {
 }
 
-TREENODE* EmulatorMenuHelper::createEmulatorMenu()
+TREENODE* EmulatorMenuHelper::createEmulatorMenu( bool addControls )
 {
   TREENODE* menu = wii_create_tree_node( NODETYPE_EMULATOR_SETTINGS, "" );  
   TREENODE* child = wii_create_tree_node( NODETYPE_RESIZE_SCREEN, 
@@ -19,10 +20,17 @@ TREENODE* EmulatorMenuHelper::createEmulatorMenu()
 
   addSpacerNode(  menu );
 
+  if( addControls )
+  {
+    TREENODE *controls = wii_create_tree_node( 
+      NODETYPE_CONTROLS_SETTINGS, "Control settings" );                                                        
+    wii_add_child( menu, controls );
+
+    addSpacerNode( menu );
+  }
+
   child = wii_create_tree_node( NODETYPE_VOLUME_CART, "Volume" );
     wii_add_child( menu, child );
-
-//  addSpacerNode(  menu );
 
   Emulator& emu = getEmulator();
   if( emu.isDoubleStrikeSupported() )
@@ -50,7 +58,8 @@ void EmulatorMenuHelper::getNodeName(
         int volume = emu.getVolume();
         if( volume == VOLUME_DEFAULT )
         {
-          snprintf( value, WII_MENU_BUFF_SIZE, "(default)" ); 
+          snprintf( value, WII_MENU_BUFF_SIZE, "(%d, %s)", 
+            wii_volume / 10, gettextmsg( "global" ) ); 
         }
         else
         {
@@ -62,20 +71,19 @@ void EmulatorMenuHelper::getNodeName(
       break;
     case NODETYPE_DOUBLE_STRIKE_CART:
       {
-        const char* strmode;
         switch( emu.getDoubleStrikeMode() )
         {
           case DOUBLE_STRIKE_DEFAULT:
-            strmode = "(default)";
-            break;
-          case DOUBLE_STRIKE_ENABLED:
-            strmode = "Enabled";
+            snprintf( value, WII_MENU_BUFF_SIZE, "(%s, %s)", 
+              gettextmsg( getEnabledText( wii_double_strike_mode ) ),
+              gettextmsg( "global" ) );
             break;
           default:
-            strmode = "Disabled";
+             snprintf( value, WII_MENU_BUFF_SIZE, "%s", 
+               getEnabledText( 
+                  emu.getDoubleStrikeMode() == DOUBLE_STRIKE_ENABLED ) );
             break;
         }
-        snprintf( value, WII_MENU_BUFF_SIZE, "%s", strmode );
       }
       break;
     case NODETYPE_FRAME_SKIP:
@@ -151,6 +159,9 @@ void EmulatorMenuHelper::selectNode( TREENODE* node )
 
   switch( node->node_type )
   {
+    case NODETYPE_CONTROLS_SETTINGS:
+      wii_menu_push( node );
+      break;
     case NODETYPE_VOLUME_CART:
       {
         int volume = emu.getVolume();

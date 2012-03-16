@@ -110,12 +110,12 @@ void PCFXDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int PCFXDbManager::getMappableButtonCount()
+int PCFXDbManager::getMappableButtonCount( int profile )
 {
   return PCFX_BUTTON_COUNT;
 }
 
-const MappableButton* PCFXDbManager::getMappableButton( int button )
+const MappableButton* PCFXDbManager::getMappableButton( int profile, int button )
 {
   return &PCFX_BUTTONS[button];
 }

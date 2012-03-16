@@ -95,9 +95,9 @@ void WonderSwan::updateControls( bool isRapid )
   StandardDatabaseManager& dbManager = 
     (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount( entry->profile ); i++ )
   {
-    BEGIN_IF_BUTTON_HELD
+    BEGIN_IF_BUTTON_HELD(entry->profile)
       u32 val = WonderSwanDbManager::WS_BUTTONS[ i ].button;
       if( val == WS_REWIND )
       {
@@ -119,11 +119,6 @@ void WonderSwan::updateControls( bool isRapid )
           entry->profile ^= 1;
           WII_SetRotation( entry->profile * 90 ); // Rotate screen
           wii_mednafen_reset_last_rect(); // Clear last rect cache (reset)
-
-          // Update the button mappings
-          WonderSwanDbManager& dbManager = 
-            (WonderSwanDbManager&)getDbManager();
-          dbManager.applyButtonMap();
         }     
       }
       else if( !( val & BTN_RAPID ) || isRapid )

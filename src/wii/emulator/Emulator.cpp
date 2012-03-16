@@ -56,11 +56,6 @@ const char* Emulator::getName()
   return m_name;
 }
 
-u16* Emulator::getPadData()
-{
-  return m_padData;
-}
-
 void Emulator::onPostLoad()
 {
 }
@@ -306,5 +301,23 @@ bool Emulator::isRewindSupported()
   return false;
 }
 
+const char** Emulator::getInputDevices()
+{
+  return NULL;
+}
 
-
+void Emulator::updateInputDeviceData( int device, u8 *data, int size )
+{
+  if( device < 4 )
+  {
+    u16 padData = m_padData[device];
+    if( size >= 1 )
+    {
+      data[0] = padData & 0xFF;
+    }
+    if( size >= 2 )
+    {
+      data[1] = ( padData >> 8 ) & 0xFF;    
+    }
+  }
+}

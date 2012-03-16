@@ -77,7 +77,7 @@ extern char* wii_get_roms_dir();
  *
  * newDir   The new roms directory
  */
-void wii_set_roms_dir( const char* newDir );
+extern void wii_set_roms_dir( const char* newDir );
 
 /*
  * Returns the lang directory
@@ -92,5 +92,4 @@ extern char* wii_get_lang_dir();
  * return   The bae directory
  */
 extern char* wii_get_base_dir();
-
 #endif

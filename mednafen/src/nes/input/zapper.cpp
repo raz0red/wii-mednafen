@@ -112,8 +112,8 @@ static void DrawZapper(int w, MDFN_Surface *surface)
 static void UpdateZapper(int w, void *data)
 {
  uint8 *data_8 = (uint8 *)data;
- uint32 new_x = (uint32)MDFN_de32lsb(data_8 + 0);
- uint32 new_y = (uint32)MDFN_de32lsb(data_8 + 4);
+ uint32 new_x = (uint32)MDFN_de32lsb(data_8 + 0);//50;
+ uint32 new_y = (uint32)MDFN_de32lsb(data_8 + 4);//50;
  uint8 new_b = *(uint8 *)(data_8 + 8);
 
  NESPPU_TranslateMouseXY(new_x, new_y);

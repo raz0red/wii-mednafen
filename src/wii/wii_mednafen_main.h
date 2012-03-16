@@ -26,6 +26,8 @@ distribution.
 #ifndef WII_MEDNAFEN_MAIN_H
 #define WII_MEDNAFEN_MAIN_H
 
+#include "Emulator.h"
+
 /*
  * Initializes the emulator
  */
@@ -66,9 +68,21 @@ extern int wii_mednafen_show_controls_screen();
  */
 extern void wii_mednafen_set_message( const char* message );
 
-/**
+/*
+ * Returns the last display rect
+ *
+ * return   The last display rect
+ */
+extern Rect* wii_mednafen_get_last_rect();
+
+/*
  * Resets the last cached display rect size
  */
 extern void wii_mednafen_reset_last_rect();
+
+/*
+ * Whether the controls should be reset prior to entering the emulator loop.
+ */
+void wii_mednafen_set_reset_controls();
 
 #endif

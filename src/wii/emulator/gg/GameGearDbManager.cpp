@@ -108,12 +108,12 @@ void GameGearDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int GameGearDbManager::getMappableButtonCount()
+int GameGearDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* GameGearDbManager::getMappableButton( int button )
+const MappableButton* GameGearDbManager::getMappableButton( int profile, int button )
 {
   return &GG_BUTTONS[button];
 }

@@ -89,9 +89,9 @@ void Lynx::updateControls( bool isRapid )
   StandardDatabaseManager& dbManager = 
     (StandardDatabaseManager&)getDbManager();
 
-  for( int i = 0; i < dbManager.getMappableButtonCount(); i++ )
+  for( int i = 0; i < dbManager.getMappableButtonCount( entry->profile ); i++ )
   {
-    BEGIN_IF_BUTTON_HELD
+    BEGIN_IF_BUTTON_HELD(entry->profile)
       u32 val = LynxDbManager::LYNX_BUTTONS[ i ].button;
       if( val == LYNX_REWIND )
       {

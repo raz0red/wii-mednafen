@@ -17,6 +17,7 @@ public:
   void addButtonMappingNodes( TREENODE* parent );
   void getNodeName( TREENODE* node, char *buffer, char* value );
   void selectNode( TREENODE* node );
+  void setCurrentProfile( int profile );
   bool isNodeVisible( TREENODE* node );
 };
 

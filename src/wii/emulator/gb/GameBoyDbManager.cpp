@@ -110,12 +110,12 @@ void GameBoyDbManager::resetToDefaults()
   applyButtonMap();
 }
 
-int GameBoyDbManager::getMappableButtonCount()
+int GameBoyDbManager::getMappableButtonCount( int profile )
 {
   return buttonCount;
 }
 
-const MappableButton* GameBoyDbManager::getMappableButton( int button )
+const MappableButton* GameBoyDbManager::getMappableButton( int profile, int button )
 {
   return &GB_BUTTONS[button];
 }

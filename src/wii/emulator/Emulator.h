@@ -96,7 +96,8 @@ public:
   void setVolume( int volume );
   int getAppliedVolume();
 
-  u16* getPadData();
+  virtual void updateInputDeviceData( int device, u8 *data, int size );
+  virtual const char** getInputDevices();
   
   bool getFrameSkip();
   void setFrameSkip( bool skip );

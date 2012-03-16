@@ -88,7 +88,8 @@ void StandardCartSettingsMenuHelper::getNodeName(
           snprintf( buffer, WII_MENU_BUFF_SIZE, "%s", name );
           u8 btn = 
             entry->buttonMap[m_currentProfile][m_currentController][index];
-          const MappableButton* mappedBtn = dbManager.getMappableButton( btn ); 
+          const MappableButton* mappedBtn = 
+            dbManager.getMappableButton( m_currentProfile, btn ); 
           const char* name = mappedBtn->name;
           u32 val = mappedBtn->button;
           
@@ -103,7 +104,8 @@ void StandardCartSettingsMenuHelper::getNodeName(
             Util_strlcpy( btnName, gettextmsg(name), sizeof(btnName) );
           }
 
-          const char* desc = ( btn != 0 ? entry->buttonDesc[btn] : "" );
+          const char* desc = 
+            ( btn != 0 ? entry->buttonDesc[m_currentProfile][btn] : "" );
           if( desc[0] != '\0' )
           {
             snprintf( value, WII_MENU_BUFF_SIZE, "%s (%s)", 
@@ -143,10 +145,20 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
       entry->base.wiimoteSupported ^= 1;
       break;
     case NODETYPE_PROFILE:
-      m_currentProfile++; 
-      if( m_currentProfile >= dbManager.getProfileCount() )
       {
-        m_currentProfile = 0;
+        while( true )
+        {
+          m_currentProfile++; 
+          if( m_currentProfile >= dbManager.getProfileCount() )
+          {
+            m_currentProfile = 0;
+          }
+
+          if( dbManager.isProfileAvailable( m_currentProfile ) )
+          {
+            break;
+          }
+        }
       }
       break;
     case NODETYPE_CONTROLLER:
@@ -177,7 +189,7 @@ void StandardCartSettingsMenuHelper::selectNode( TREENODE* node )
             entry->buttonMap[m_currentProfile][m_currentController][index];
 
           mappedBtn++;
-          if( mappedBtn >= dbManager.getMappableButtonCount() )
+          if( mappedBtn >= dbManager.getMappableButtonCount( m_currentProfile ) )
           {
             mappedBtn = 0;
           }
@@ -225,4 +237,9 @@ bool StandardCartSettingsMenuHelper::isNodeVisible( TREENODE* node )
   }
 
   return true;
+}
+
+void StandardCartSettingsMenuHelper::setCurrentProfile( int profile )
+{
+  m_currentProfile = profile;
 }

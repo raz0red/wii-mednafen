@@ -31,6 +31,8 @@ extern int Util_hextodec( const char* hex );
 extern void Util_hextorgba( const char* hex, RGBA* rgba );
 extern void Util_dectohex( int dec, char *hex, int fill );
 extern void Util_rgbatohex( RGBA* rgba, char *hex );
+extern void Util_ansitoUTF8( unsigned char* in, unsigned char* out );
+
 
 /*
  * Converts the RGBA to an integer value
