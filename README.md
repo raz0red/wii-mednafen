@@ -1059,16 +1059,16 @@ of the following locations:
 Credits / Special Thanks
 --------------------------------------------
 
- Ryphecha        : Providing an incredible multi-emulator, optimizing the
-                   Virtual Boy emulation, and putting up with my questions.
- mastershoes     : WiiMednafen channel
- Hielkenator     : Testing, Dutch translation
- cloudskipa      : Testing
- Thiago Alves    : Testing
- Davide Arielli  : Testing
- Arikado         : Helping with the initial Virtual Boy (WiirtualBoy) port.
- Eke-eke         : Double strike help and color trap filter implementation.
- Tantric         : Menu example code and SDL enhancements
+   Ryphecha        : Providing an incredible multi-emulator, optimizing the
+                     Virtual Boy emulation, and putting up with my questions.
+   mastershoes     : WiiMednafen channel
+   Hielkenator     : Testing, Dutch translation
+   cloudskipa      : Testing
+   Thiago Alves    : Testing
+   Davide Arielli  : Testing
+   Arikado         : Helping with the initial Virtual Boy (WiirtualBoy) port.
+   Eke-eke         : Double strike help and color trap filter implementation.
+   Tantric         : Menu example code and SDL enhancements
 
 --------------------------------------------
 Change Log
