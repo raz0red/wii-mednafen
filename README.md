@@ -4,6 +4,14 @@ WiiMednafen v0.2-pre release README
 
 Ported by raz0red
 
+_Wii Mednafen 0.1 Update Video_
+
+<a href='http://www.youtube.com/watch?feature=player_embedded&v=JKMr3YnTHfg' target='_blank'><img src='http://img.youtube.com/vi/JKMr3YnTHfg/0.jpg' width='425' height=344 /></a>
+
+_Wii Mednafen Overview Video_
+
+<a href='http://www.youtube.com/watch?feature=player_embedded&v=qpWFx-QGfb8' target='_blank'><img src='http://img.youtube.com/vi/qpWFx-QGfb8/0.jpg' width='425' height=344 /></a>
+
 --------------------------------------------
 Overview
 --------------------------------------------
