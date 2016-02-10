@@ -277,8 +277,8 @@ const WiiButton NesDbManager::
     { "1",      WPAD_BUTTON_1,          NES_MAP_SPECIAL }, \
     { "A",      WPAD_BUTTON_A,          NES_MAP_HS_RUN  }, \
     { "B",      WPAD_BUTTON_B,          NES_MAP_HS_RUN  }, \
-    { "C",      WPAD_NUNCHUK_BUTTON_C,  NES_MAP_B       }, \
-    { "Z",      WPAD_NUNCHUK_BUTTON_Z,  NES_MAP_NONE    }, \
+    { "C",      WPAD_NUNCHUK_BUTTON_C,  NES_MAP_HS_JUMP }, \
+    { "Z",      WPAD_NUNCHUK_BUTTON_Z,  NES_MAP_HS_JUMP }, \
     { NULL,     0,                      NES_MAP_NONE    }, \
     { NULL,     0,                      NES_MAP_NONE    }  \
   },
@@ -287,8 +287,8 @@ const WiiButton NesDbManager::
     { "Minus",  WPAD_CLASSIC_BUTTON_MINUS,    NES_MAP_SELECT  }, \
     { "A",      WPAD_CLASSIC_BUTTON_A,        NES_MAP_HS_RUN  }, \
     { "B",      WPAD_CLASSIC_BUTTON_B,        NES_MAP_HS_RUN  }, \
-    { "X",      WPAD_CLASSIC_BUTTON_X,        NES_MAP_NONE    }, \
-    { "Y",      WPAD_CLASSIC_BUTTON_Y,        NES_MAP_NONE    }, \
+    { "X",      WPAD_CLASSIC_BUTTON_X,        NES_MAP_HS_JUMP }, \
+    { "Y",      WPAD_CLASSIC_BUTTON_Y,        NES_MAP_HS_JUMP }, \
     { "R",      WPAD_CLASSIC_BUTTON_FULL_R,   NES_MAP_SPECIAL }, \
     { "L",      WPAD_CLASSIC_BUTTON_FULL_L,   NES_MAP_SPECIAL }, \
     { "zR",     WPAD_CLASSIC_BUTTON_ZR,       NES_MAP_SPECIAL }, \
@@ -298,7 +298,7 @@ const WiiButton NesDbManager::
     { "Start",  PAD_BUTTON_START,             NES_MAP_START   }, \
     { "A",      PAD_BUTTON_A,                 NES_MAP_HS_RUN  }, \
     { "B",      PAD_BUTTON_B,                 NES_MAP_HS_RUN  }, \
-    { "X",      PAD_BUTTON_X,                 NES_MAP_SELECT  }, \
+    { "X",      PAD_BUTTON_X,                 NES_MAP_HS_JUMP }, \
     { "Y",      PAD_BUTTON_Y,                 NES_MAP_SELECT  }, \
     { "R",      PAD_TRIGGER_R,                NES_MAP_SPECIAL }, \
     { "L",      PAD_TRIGGER_L,                NES_MAP_SPECIAL }, \
