@@ -640,7 +640,7 @@ item.
  Arkanoid:
  --------------
  
-    Wiimote:
+   Wiimote:
 
      IR             : Move (IR Wiimote mode)
                       In this mode, you point the Wiimote at the screen and 
@@ -1196,7 +1196,10 @@ Change Log
  - Added ability to specify language for WonderSwan via emulator settings.
      (see Mednafen 0.9.19 merge notes below)
  - Merged changes from 0.9.19 (Mednafen proper)
-   - LYNX emulation     - Fixed EVERON detection emulation, and emulated a hardware bug         regarding SCB data reading, the latter of which fixes a graphical         glitch in "Joust".
+   - LYNX emulation
+     - Fixed EVERON detection emulation, and emulated a hardware bug
+         regarding SCB data reading, the latter of which fixes a graphical
+         glitch in "Joust".
    - NES emulation
      - Improved iNES mapper 69 expansion sound emulation accuracy (volume
          interpretation and channel frequencies were off). (Gimmick! sound)
