@@ -63,8 +63,6 @@ known issues. Further, this emulator hasn't had a tremendous amount of testing
 so I am fairly certain there are a number of unknown issues as well. Please 
 let me know if you experience any via the Google Code project issues list.
 
- * Only standard controllers are supported in this release (no support for
-   NES Zapper, etc.).
  * Save states do not display an associated screenshot.
  * PC-FX emulation is extremely slow.
  * Loading CD images via SMB (Network) will cause noticeable slowdown.
@@ -578,8 +576,10 @@ menu item.
 Nintendo Entertainment System (NES)
 --------------------------------------------
 
-The NES emulator currently supports up to 4 standard controllers (other
-controllers such as the NES Zapper, etc. are not supported yet).
+The NES emulator currently supports up to 4 standard controllers, Zapper 
+support (via Wiimote IR), Arkanoid controller support (via Wiimote IR, Twist,
+and Tilt), Space Shadow gun support (via Wiimote IR), Oeka Kids support 
+(via Wiimote IR), and up to 2 Hypershot controllers (Hyper Sports).
 
 To play Famicom Disk System (FDS) games, the disk system BIOS, "disksys.rom"
 must exist in the "/wiimednafen" directory.
@@ -588,7 +588,7 @@ Below are the "default" control mappings for the NES emulator. Controls can
 be overridden on a game-by-game basis via the "Game-specific settings" menu
 item.
 
- Controls:
+ Gamepad:
  --------------
 
    Wiimote:
@@ -629,6 +629,112 @@ item.
      Start          : Start
      X/Y            : Select
      R/L            : *Special (See notes below)
+     Home           : Display WiiMednafen menu (see above)
+
+ Zapper:
+ --------------
+
+   Wiimote:
+
+     IR             : Aim (Point the Wiimote at the screen)
+     B              : Zapper Trigger
+     2              : A
+     1              : B
+     +              : Start
+     -              : Select
+     A              : *Special (See notes below)
+     Home           : Display WiiMednafen menu (see above)
+
+ Arkanoid:
+ --------------
+ 
+   Wiimote:
+
+     IR             : Move (IR Wiimote mode)
+                      In this mode, you point the Wiimote at the screen and 
+                      move it left and right
+     Tilt           : Move (Tilt Wiimote mode)
+                      In this mode, you hold the Wiimote horizontally and 
+                      tilt it up and down (like a seesaw)
+     Twist          : Move (Twist Wiimote mode)
+                      In this mode, you hold the Wiimote horizontally and 
+                      twist it forward and backward (like the Wiiware game
+                      Bit Trip Beat)     
+     2/B            : Arkanoid Button
+     A              : A
+     1              : B
+     +              : Start
+     -              : Select     
+     Home           : Display WiiMednafen menu (see above)
+
+ Space Shadow Gun:
+ -----------------
+
+   Wiimote:
+
+     D-pad          : Move
+     IR             : Aim (Point the Wiimote at the screen)
+     A              : Grenade
+     B              : Fire
+     2              : A
+     1              : B
+     +              : Start (Pause)
+     -              : Select
+     Home           : Display WiiMednafen menu (see above)
+
+ Hypershot (Hyper Sports):
+ -------------------------
+
+   Wiimote:
+
+     D-pad          : Jump
+     2/1            : Run
+     A              : Jump
+     +              : Start
+     -              : Select     
+     Home           : Display WiiMednafen menu (see above)
+     
+   Wiimote + Nunchuk:
+
+     Analog         : Jump
+     A/B            : Run 
+     C/Z            : Jump
+     +              : Start
+     -              : Select     
+     1/2            : *Special (See notes below)
+     Home           : Display WiiMednafen menu (see above)
+
+   Classic controller/Pro:
+
+     D-pad/Analog   : Jump
+     A/B            : Run
+     X/Y            : Jump
+     +              : Start
+     -              : Select
+     L/R/zL/zR      : *Special (See notes below)
+     Home           : Display WiiMednafen menu (see above)
+
+   GameCube controller:
+
+     D-pad/Analog   : Jump
+     A/B            : Run
+     X              : Jump
+     Start          : Start     
+     Y              : Select
+     R/L            : *Special (See notes below)
+     Home           : Display WiiMednafen menu (see above)
+
+ Oeka Kids Tablet:
+ -----------------
+
+   Wiimote:
+
+     IR (Point)     : Move Cursor (Point the Wiimote at the screen)
+     B              : Oeka Kids Button     
+     2              : A
+     1              : B
+     +              : Start
+     -              : Select
      Home           : Display WiiMednafen menu (see above)
 
  *Special is used for "Vs. Unisystem" and "Famicom Disk System" (FDS) games.
@@ -1060,7 +1166,7 @@ WiiMednafen crashes, code dumps, etc.
 If you are having issues with WiiMednafen, please let me know about it via one
 of the following locations:
 
-[http://code.google.com/p/wii-mednafen/issues/list]
+[https://github.com/raz0red/wii-mednafen/issues]
 [http://www.wiibrew.org/wiki/Talk:WiiMednafen]
 
 --------------------------------------------
