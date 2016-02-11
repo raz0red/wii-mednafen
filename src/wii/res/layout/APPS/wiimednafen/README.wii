@@ -571,7 +571,7 @@ Nintendo Entertainment System (NES)
 The NES emulator currently supports up to 4 standard controllers, Zapper 
 support (via Wiimote IR), Arkanoid controller support (via Wiimote IR, Twist,
 and Tilt), Space Shadow gun support (via Wiimote IR), Oeka Kids support 
-(via Wiimote IR), and Hypershot controller support (Hyper Sports).
+(via Wiimote IR), and up to 2 Hypershot controllers (Hyper Sports).
 
 To play Famicom Disk System (FDS) games, the disk system BIOS, "disksys.rom"
 must exist in the "/wiimednafen" directory.
@@ -628,13 +628,13 @@ item.
 
    Wiimote:
 
-     IR (Point)     : Aim
-     +              : Start
-     -              : Select
+     IR             : Aim (Point the Wiimote at the screen)
+     B              : Zapper Trigger
      2              : A
      1              : B
+     +              : Start
+     -              : Select
      A              : *Special (See notes below)
-     B              : Zapper Trigger
      Home           : Display WiiMednafen menu (see above)
 
  Arkanoid:
@@ -643,21 +643,21 @@ item.
     Wiimote:
 
      IR             : Move (IR Wiimote mode)
-                      In this mode, you point the Wiimote at the Wii sensor
-                      bar and move it left and right
+                      In this mode, you point the Wiimote at the screen and 
+                      move it left and right
      Tilt           : Move (Tilt Wiimote mode)
                       In this mode, you hold the Wiimote horizontally and 
                       tilt it up and down (like a seesaw)
-                      Bit Trip Beat)          
      Twist          : Move (Twist Wiimote mode)
                       In this mode, you hold the Wiimote horizontally and 
                       twist it forward and backward (like the Wiiware game
                       Bit Trip Beat)     
+     2/B            : Arkanoid Button
+     A              : A
+     1              : B
      +              : Start
      -              : Select     
-     2/B            : Arkanoid Button
-     1              : B
-     A              : A
+     Home           : Display WiiMednafen menu (see above)
 
  Space Shadow Gun:
  -----------------
@@ -665,53 +665,53 @@ item.
    Wiimote:
 
      D-pad          : Move
-     IR (Point)     : Aim
-     +              : Start (Pause)
-     -              : Select
-     2              : A
-     1              : B
+     IR             : Aim (Point the Wiimote at the screen)
      A              : Grenade
      B              : Fire
+     2              : A
+     1              : B
+     +              : Start (Pause)
+     -              : Select
      Home           : Display WiiMednafen menu (see above)
 
- Hypershot:
- --------------
+ Hypershot (Hyper Sports):
+ -------------------------
 
    Wiimote:
 
      D-pad          : Jump
-     +              : Start
-     -              : Select
      2/1            : Run
      A              : Jump
+     +              : Start
+     -              : Select     
      Home           : Display WiiMednafen menu (see above)
      
    Wiimote + Nunchuk:
 
      Analog         : Jump
-     +              : Start
-     -              : Select
-     1/2            : *Special (See notes below)
      A/B            : Run 
-     C/Z            : Jump     
+     C/Z            : Jump
+     +              : Start
+     -              : Select     
+     1/2            : *Special (See notes below)
      Home           : Display WiiMednafen menu (see above)
 
    Classic controller/Pro:
 
      D-pad/Analog   : Jump
-     +              : Start
-     -              : Select
      A/B            : Run
      X/Y            : Jump
+     +              : Start
+     -              : Select
      L/R/zL/zR      : *Special (See notes below)
      Home           : Display WiiMednafen menu (see above)
 
    GameCube controller:
 
      D-pad/Analog   : Jump
-     Start          : Start
      A/B            : Run
      X              : Jump
+     Start          : Start     
      Y              : Select
      R/L            : *Special (See notes below)
      Home           : Display WiiMednafen menu (see above)
@@ -721,12 +721,12 @@ item.
 
    Wiimote:
 
-     IR (Point)     : Move
-     +              : Start
-     -              : Select
+     IR (Point)     : Move Cursor (Point the Wiimote at the screen)
+     B              : Oeka Kids Button     
      2              : A
      1              : B
-     B              : Oeka Kids Button
+     +              : Start
+     -              : Select
      Home           : Display WiiMednafen menu (see above)
 
  *Special is used for "Vs. Unisystem" and "Famicom Disk System" (FDS) games.
