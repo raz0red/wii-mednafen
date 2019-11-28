@@ -896,7 +896,7 @@ static int game_name_compare( const void *a, const void *b )
   TREENODE** aptr = (TREENODE**)a;
   TREENODE** bptr = (TREENODE**)b;
   int type = (*aptr)->node_type - (*bptr)->node_type;
-  return type != 0 ? type : stricmp( (*aptr)->name, (*bptr)->name );
+  return type != 0 ? type : strcasecmp( (*aptr)->name, (*bptr)->name );
 }
 
 /*

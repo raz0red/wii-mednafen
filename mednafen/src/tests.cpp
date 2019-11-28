@@ -39,8 +39,8 @@ typedef struct
   int32 mostnegresult;
 } MathTestEntry;
 
-#define ADD_MTE(_bits) { _bits, ((uint32)1 << _bits) - 1, (uint32)1 << (_bits - 1), 0 - ((uint32)1 << (_bits - 1)) }
-
+#define ADD_MTE(_bits) { _bits, ((uint32)1 << _bits) - 1, (uint32)1 << (_bits - 1), (int32)(0 - ((uint32)1 << (_bits - 1))) }
+ 
 MathTestEntry math_test_vals[] =
 {
   {  9, 0x01FF, 0x0100, -256 },

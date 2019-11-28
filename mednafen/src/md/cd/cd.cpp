@@ -69,11 +69,11 @@ static uint16 COMM_FLAGS;
 static uint8 COMM_CMD[8 * 2];
 static uint8 COMM_STATUS[8 * 2];
 
-#define DEBUGMAIN(format, ...) { printf("MAIN "format, ## __VA_ARGS__); }
-#define DEBUGSUB(format, ...) { printf("SUB "format, ## __VA_ARGS__); }
+#define DEBUGMAIN(format, ...) { printf("MAIN " format, ## __VA_ARGS__); }
+#define DEBUGSUB(format, ...) { printf("SUB " format, ## __VA_ARGS__); }
 
-#define UNDEFMAIN(format, ...) { printf("MAIN Undefined "format, ## __VA_ARGS__); }
-#define UNDEFSUB(format, ...) { printf("SUB Undefined "format, ## __VA_ARGS__); }
+#define UNDEFMAIN(format, ...) { printf("MAIN Undefined " format, ## __VA_ARGS__); }
+#define UNDEFSUB(format, ...) { printf("SUB Undefined " format, ## __VA_ARGS__); }
 
 //#if 0
 #define DEBUGMAIN(format, ...) { }

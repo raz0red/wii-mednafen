@@ -31,6 +31,7 @@ extern "C" {
 
 #include <gccore.h>
 #include <sys/dir.h>
+#include <sys/param.h>
 #include <unistd.h>
 
 #include "wii_app_common.h"
