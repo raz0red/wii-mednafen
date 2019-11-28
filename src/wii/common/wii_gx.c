@@ -32,6 +32,7 @@ distribution.
 
 extern Mtx gx_view;
 extern void WII_SetRenderCallback( void (*cb)(void) );
+extern void WII_SetPreRenderCallback( void (*cb)(void) );
 extern void WII_SetRenderScreen( BOOL render );
 
 static gx_imagedata* getimagedata( IMGCTX ctx );
