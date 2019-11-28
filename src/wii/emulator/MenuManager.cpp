@@ -27,5 +27,6 @@ void MenuManager::selectNode( TREENODE *node )
 
 bool MenuManager::isNodeVisible( TREENODE *node )
 {
+  return TRUE;
 }
 

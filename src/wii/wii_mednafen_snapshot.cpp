@@ -87,6 +87,8 @@ int wii_snapshot_next()
  
   wii_snapshot_reset();
   stateStatus = MDFNI_SelectState( nextState );
+  
+  return nextState;
 }
 
 extern "C" void wii_snapshot_handle_get_name( 
@@ -110,6 +112,8 @@ extern "C" BOOL wii_snapshot_handle_save( char* filename )
   {
     refresh();
   }
+  
+  return success;
 }
 
 BOOL wii_start_snapshot()

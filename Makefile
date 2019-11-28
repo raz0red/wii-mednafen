@@ -118,7 +118,11 @@ INCLUDES	:= \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
     src/wii/emulator/wswan \
-    src/wii/emulator/sms
+    src/wii/emulator/sms \
+    thirdparty/freetype/include \
+    thirdparty/zlib/include \
+    thirdparty/sdl/include \
+    thirdparty/png/include
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -138,6 +142,7 @@ CFLAGS	= \
   --param large-function-growth=800 \
   --param inline-unit-growth=200 \
   -Wno-strict-aliasing \
+  -Wno-narrowing \
   -DWII \
   -DVB_BPP=8 \
   -DWSWAN_BPP=16 \
@@ -166,7 +171,11 @@ LIBS	:=	-ltinysmb -lSDL -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=
+LIBDIRS	:= \
+    thirdparty/freetype/lib \
+    thirdparty/zlib/lib \
+    thirdparty/sdl/lib \
+    thirdparty/png/lib
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -207,14 +216,14 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD) \
-					-I$(LIBOGC_INC) -I$(LIBOGC_INC)/sdl
+					-I$(LIBOGC_INC)
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
 #---------------------------------------------------------------------------------
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib) \
-					-L$(LIBOGC_LIB) -I$(LIBOGC_LIB)/sdl
-
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(CURDIR)/$(dir)) \
+					-L$(LIBOGC_LIB) \
+					-L$(DEVKITPRO)/portlibs/ppc/lib
 
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
 .PHONY: $(BUILD) clean

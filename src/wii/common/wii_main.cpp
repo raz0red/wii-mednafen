@@ -873,7 +873,7 @@ int wii_menu_name_compare( const void *a, const void *b )
   TREENODE** aptr = (TREENODE**)a;
   TREENODE** bptr = (TREENODE**)b;
 
-  return stricmp( (*aptr)->name, (*bptr)->name );
+  return strcasecmp( (*aptr)->name, (*bptr)->name );
 }
 
 /*

@@ -31,7 +31,7 @@
 
 #include "fileop.h"
 #include "networkop.h"
-#include "sdl.h"
+#include "SDL.h"
 #include "net_print.h"
 
 #define THREAD_SLEEP 100

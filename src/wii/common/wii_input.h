@@ -85,10 +85,10 @@ extern float wii_exp_analog_val( const expansion_t* exp, BOOL isX, BOOL isRjs );
 extern float wii_exp_analog_val_range( 
   const expansion_t* exp, BOOL isX, BOOL isRjs, float range );
 
-extern inline BOOL wii_analog_right( float expX, s8 gcX ) { return expX > 60 || gcX > 46; }
-extern inline BOOL wii_analog_left( float expX, s8 gcX ) { return expX < -60 || gcX < -46; }
-extern inline BOOL wii_analog_up( float expY, s8 gcY ) { return expY > 70 || gcY > 54; }
-extern inline BOOL wii_analog_down( float expY, s8 gcY ) { return expY < -70 || gcY < -54; }
+inline BOOL wii_analog_right( float expX, s8 gcX ) { return expX > 60 || gcX > 46; }
+inline BOOL wii_analog_left( float expX, s8 gcX ) { return expX < -60 || gcX < -46; }
+inline BOOL wii_analog_up( float expY, s8 gcY ) { return expY > 70 || gcY > 54; }
+inline BOOL wii_analog_down( float expY, s8 gcY ) { return expY < -70 || gcY < -54; }
 
 /*
  * Whether the right digital pad is pressed
