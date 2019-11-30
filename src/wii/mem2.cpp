@@ -18,12 +18,14 @@ static u8* head = NULL;
 static u8* last_head = NULL;
 static u32 last_size = 0;
 
+#define ROUNDUP32(v) (((u32)(v) + 0x1f) & ~0x1f)
+
 void InitMem2Manager()
-{
-  int size = (32*1024*1024)+(256*1024)+32;
+{  
   u32 level;
   _CPU_ISR_Disable(level);
-  mem2_ptr = (u8*)((u32)SYS_GetArena2Hi()-size);
+  u32 size = ((uint32)(36 * 1024 * 1024)) + 1024 * 256;
+  mem2_ptr = (u8*) ROUNDUP32((u32)SYS_GetArena2Hi()-size);
   SYS_SetArena2Hi(mem2_ptr); 
   _CPU_ISR_Restore(level);
   mem2_size = size;
@@ -37,7 +39,7 @@ void InitMem2Manager()
 void Mem2ManagerReset()
 {
   //memset( mem2_ptr, 0x0, mem2_size );
-  head = last_head = (u8*)(((u32)mem2_ptr+0x1f)&(~0x1f)); // Align to 32 bytes
+  head = last_head = (u8*)ROUNDUP32((u32)mem2_ptr); // Align to 32 bytes
   last_size = 0;
 }
 
@@ -53,7 +55,7 @@ u8* Mem2ManagerAlloc( u32 size, const char* purpose )
     last_head = head;
     last_size = size;
     head += size;
-    head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 32 bytes
+    head = (u8*)ROUNDUP32((u32)head); // Align to 32 bytes
 
 #ifdef WII_NETTRACE
   net_print_string( NULL, 0, "Mem2ManagerAlloc: %s = 0x%x, %0.2f\n", 
@@ -72,11 +74,6 @@ u8* Mem2ManagerCalloc( int count, u32 size, const char* purpose )
 
   u32 realSize = size * count;
   u8* result = Mem2ManagerAlloc( realSize, purpose );
-  //if( result != NULL )
-  //{
-  //  memset( result, 0x0, realSize );
-  //}
-
   return result;
 }
 
@@ -94,7 +91,7 @@ u8* Mem2ManagerAdjust( u8* mem, u32 size, const char* purpose )
   }
  
   head = last_head + size;
-  head = (u8*)(((u32)head+0x1f)&(~0x1f)); // Align to 32 bytes
+  head = (u8*)ROUNDUP32((u32)head); // Align to 32 bytes
   last_size = size;
 #ifdef WII_NETTRACE
   net_print_string( NULL, 0, "Mem2ManagerAdjust: %s = 0x%x, %0.2f\n", 

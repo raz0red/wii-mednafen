@@ -53,5 +53,7 @@ int MDFN_RawInputStateAction(StateMem *sm, int load, int data_only);
 #include "endian.h"
 #include "memory.h"
 
+#define puts(x) (void)0
+
 #define _MEDNAFEN_H
 #endif

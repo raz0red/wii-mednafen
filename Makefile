@@ -136,7 +136,7 @@ INCLUDES	:= \
 
 
 CFLAGS	= \
-  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -DMEM2 -fno-strict-overflow -fsigned-char \
+  -g -O2 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -DMEM2 -fno-strict-overflow -fsigned-char \
   -Winline \
   -fomit-frame-pointer \
   --param large-function-growth=800 \
@@ -153,6 +153,7 @@ CFLAGS	= \
   -DMD_BPP=16 \
   -DPLAYER_BPP=16
   
+#  -g
 #  -DWII_NETTRACE
 #  -DTRACK_UNIQUE_MSGIDS  
 #  -DUSB_WIILOAD \
@@ -165,7 +166,9 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-ltinysmb -lSDL -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz 
+LIBS	:= \
+    -ltinysmb -lSDL -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz \
+    -lwiikeyboard -lbz2
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -216,7 +219,9 @@ export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 					-I$(CURDIR)/$(BUILD) \
-					-I$(LIBOGC_INC)
+					-I$(LIBOGC_INC) \
+					-I$(DEVKITPRO)/portlibs/ppc/include \
+					-I$(DEVKITPRO)/portlibs/ppc/include/freetype2
 
 #---------------------------------------------------------------------------------
 # build a list of library paths
