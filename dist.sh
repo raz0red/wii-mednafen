@@ -67,3 +67,7 @@ VERSION_NO_DOTS="${VERSION//./_}"
 DIST_FILE=wiimednafen-$VERSION_NO_DOTS.zip
 cd $DIST_DIR || { fail 'Error changing to distribution directory.'; }
 zip -r $DIST_FILE . || { fail 'Error creating zip file.'; }
+rm -rf $DIST_DIR/wiimednafen \
+    || { fail 'Error deleting wiimednafen directory in dist.'; }
+rm -rf $DIST_DIR/APPS \
+    || { fail 'Error deleting APPS directory in dist.'; }
