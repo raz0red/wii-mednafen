@@ -1,5 +1,5 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
-[![Actions Status](https://github.com/raz0red/wii-mednafen/workflows/CI/badge.svg)](https://github.com/raz0red/wii-mednafen/actions)
+[![Actions Status](https://github.com/raz0red/wii-mednafen/workflows/Build/badge.svg)](https://github.com/raz0red/wii-mednafen/actions)
 
 # WiiMednafen v0.2-pre release
 
