@@ -341,7 +341,7 @@ bool MDFNFILE::MakeMemWrap(void *tz, int type)
     }
 #endif
 
-    while((howmany = gzread(tz, f_data + cur_size, cur_alloced - cur_size)) > 0)
+    while((howmany = gzread((gzFile)tz, f_data + cur_size, cur_alloced - cur_size)) > 0)
     {
       cur_size += howmany;
       cur_alloced <<= 1;
@@ -436,7 +436,7 @@ doret:
   }
   else if(type == MDFN_FILETYPE_GZIP)
   {
-    gzclose(tz);
+    gzclose((gzFile)tz);
   }
   else if(type == MDFN_FILETYPE_ZIP)
   {
@@ -623,7 +623,7 @@ bool MDFNFILE::Open(const char *path, const FileExtensionSpecStruct *known_ext, 
 #endif
       if(!MakeMemWrap(t, 1))
       {
-        gzclose(t);
+        gzclose((gzFile)t);
         return(0);
       }
 

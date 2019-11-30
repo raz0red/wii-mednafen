@@ -393,6 +393,7 @@ static INLINE uint8 read_1808(int32 timestamp, const bool PeekMode)
  return(ret);
 }
 
+#ifndef WII
 bool PCECD_SetSettings(const PCECD_Settings *settings)
 {
         CDDAVolumeSetting = settings ? settings->CDDA_Volume : 1.0;
@@ -403,6 +404,7 @@ bool PCECD_SetSettings(const PCECD_Settings *settings)
 
 	SCSICD_SetTransferRate(126000 * (settings ? settings->CD_Speed : 1));
 }
+#endif
 
 bool PCECD_Init(const PCECD_Settings *settings, void (*irqcb)(bool), double master_clock, unsigned int ocm, Blip_Buffer *soundbuf_l, Blip_Buffer *soundbuf_r)
 {
@@ -426,7 +428,17 @@ bool PCECD_Init(const PCECD_Settings *settings, void (*irqcb)(bool), double mast
          return(0);
         }
 
+#ifdef WII
+        CDDAVolumeSetting = settings ? settings->CDDA_Volume : 1.0;
+	Fader_SyncWhich();
+
+        ADPCMSynth.volume(0.42735f * (settings ? settings->ADPCM_Volume : 1.0));
+        ADPCMLP = settings ? settings->ADPCM_LPF : 0;
+
+	SCSICD_SetTransferRate(126000 * (settings ? settings->CD_Speed : 1));
+#else        
 	PCECD_SetSettings(settings);
+#endif
 
         ADPCM.bigdivacc = (int64)((double)master_clock * OC_Multiplier * 65536 / 32087.5);
 
