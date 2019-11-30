@@ -4,8 +4,10 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 DATE="$( date '+%Y%m%d%H%S' )"
 DIST_DIR=$SCRIPTPATH/dist
 LAYOUT_DIR=$SCRIPTPATH/src/wii/res/layout/
-BOOT_DOL_SRC=$SCRIPTPATH/boot.*
+BOOT_DOL_SRC=$SCRIPTPATH/boot.dol
 BOOT_DOL_DEST=$DIST_DIR/apps/wiimednafen
+BOOT_ELF_SRC=$SCRIPTPATH/boot.elf
+BOOT_ELF_DEST=$DIST_DIR
 META_FILE=$DIST_DIR/apps/wiimednafen/meta.xml
 
 #
@@ -71,3 +73,4 @@ rm -rf $DIST_DIR/wiimednafen \
     || { fail 'Error deleting wiimednafen directory in dist.'; }
 rm -rf $DIST_DIR/apps \
     || { fail 'Error deleting apps directory in dist.'; }
+cp $BOOT_ELF_SRC $BOOT_ELF_DEST || { fail 'Error copying boot.elf.'; }
