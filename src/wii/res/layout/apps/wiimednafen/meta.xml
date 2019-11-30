@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>WiiMednafen</name>
+  <coder>raz0red</coder>
+  <version>0.3-SNAPSHOT</version>
+  <release_date>000000000000</release_date>
+  <short_description>Mednafen Emulator</short_description>
+  <long_description>WiiMednafen is a port of the Mednafen Emulator.
+
+Wii port by raz0red.
+  </long_description>
+</app>
+ 
