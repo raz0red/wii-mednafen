@@ -5,8 +5,8 @@ DATE="$( date '+%Y%m%d%H%S' )"
 DIST_DIR=$SCRIPTPATH/dist
 LAYOUT_DIR=$SCRIPTPATH/src/wii/res/layout/
 BOOT_DOL_SRC=$SCRIPTPATH/boot.*
-BOOT_DOL_DEST=$DIST_DIR/APPS/wiimednafen
-META_FILE=$DIST_DIR/APPS/wiimednafen/meta.xml
+BOOT_DOL_DEST=$DIST_DIR/apps/wiimednafen
+META_FILE=$DIST_DIR/apps/wiimednafen/meta.xml
 
 #
 # Function that is invoked when the script fails.
@@ -69,5 +69,5 @@ cd $DIST_DIR || { fail 'Error changing to distribution directory.'; }
 zip -r $DIST_FILE . || { fail 'Error creating zip file.'; }
 rm -rf $DIST_DIR/wiimednafen \
     || { fail 'Error deleting wiimednafen directory in dist.'; }
-rm -rf $DIST_DIR/APPS \
-    || { fail 'Error deleting APPS directory in dist.'; }
+rm -rf $DIST_DIR/apps \
+    || { fail 'Error deleting apps directory in dist.'; }
