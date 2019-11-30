@@ -9,6 +9,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - run: docker pull raz0red/devkitppc
     - run: docker run raz0red/devkitppc /opt/devkitpro/pacman/bin/pacman -Q 
-    - run: docker run -v $(pwd):/source raz0red/devkitppc make -C /source
+    - run: docker run -v $(pwd):/source raz0red/devkitppc ./dist.sh
