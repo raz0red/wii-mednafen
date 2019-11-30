@@ -19,6 +19,10 @@ function fail() {
     exit 1
 }
 
+# Change to script directory
+echo "Changing to script directory..."
+cd $SCRIPTPATH || { fail 'Error changing to script directory.'; }
+
 # Build WiiMednafen
 echo "Building WiiMednafen..."
 make || { fail 'Error building WiiMednafen.'; }
