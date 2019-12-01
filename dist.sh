@@ -9,6 +9,7 @@ BOOT_DOL_DEST=$DIST_DIR/apps/wiimednafen
 BOOT_ELF_SRC=$SCRIPTPATH/boot.elf
 BOOT_ELF_DEST=$DIST_DIR
 META_FILE=$DIST_DIR/apps/wiimednafen/meta.xml
+SDL_DIR=$SCRIPTPATH/thirdparty/sdl
 
 #
 # Function that is invoked when the script fails.
@@ -20,6 +21,11 @@ function fail() {
     echo "Exiting."
     exit 1
 }
+
+# Build SDL
+echo "Building SDL..."
+cd $SDL_DIR || { fail 'Error changing to SDL directory.'; }
+make || { fail 'Error building SDL.'; }
 
 # Change to script directory
 echo "Changing to script directory..."
