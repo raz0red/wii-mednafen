@@ -119,10 +119,8 @@ INCLUDES	:= \
     src/wii/emulator/pcfx \
     src/wii/emulator/wswan \
     src/wii/emulator/sms \
-    thirdparty/freetype/include \
-    thirdparty/zlib/include \
-    thirdparty/sdl/include \
-    thirdparty/png/include
+    thirdparty/sdl/SDL/include \
+    thirdparty/sdl/SDL_ttf/include
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -175,10 +173,7 @@ LIBS	:= \
 # include and lib
 #---------------------------------------------------------------------------------
 LIBDIRS	:= \
-    thirdparty/freetype/lib \
-    thirdparty/zlib/lib \
-    thirdparty/sdl/lib \
-    thirdparty/png/lib
+    thirdparty/sdl/SDL/lib
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
