@@ -35,10 +35,6 @@ if [ -d $DIST_DIR ]; then
     rm -rf $DIST_DIR || { fail 'Error clearing dist directory.'; }
 fi
 
-# Create dist directory
-echo "Creating dist directory..."
-mkdir -p $DIST_DIR || { fail 'Error creating dist directory.'; }
-
 # Copy layout
 echo "Copy layout..."
 cp -R $LAYOUT_DIR $DIST_DIR || { fail 'Error copying layout.'; }
