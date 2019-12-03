@@ -95,8 +95,10 @@ struct CDRFile
 };
 
 
+#ifndef WII
 // 1-bit per sector on the physical CD.  If set, don't read that sector.
 static uint8 SkipSectorRead[65536];
+#endif
 
 // lookup table for crc calculation
 static uint16 subq_crctab[256] = 

@@ -290,6 +290,11 @@ void *ReadThreadStart(void *arg)
 #endif
 }
 
+#ifdef WII
+#define CDR_STACK_SIZE 32*1024
+static u8 *_cdr_stack[CDR_STACK_SIZE] ATTRIBUTE_ALIGN(8);
+#endif
+
 bool CDIF_Open(const char *device_name)
 {
  CDIF_Message msg;
@@ -308,7 +313,8 @@ bool CDIF_Open(const char *device_name)
 #ifndef WII
  CDReadThread = MDFND_CreateThread(ReadThreadStart, device_name ? strdup(device_name) : NULL);
 #else
-  LWP_CreateThread(&CDReadThread, ReadThreadStart, device_name ? strdup(device_name) : NULL, 0, 0, 80);
+  LWP_CreateThread(&CDReadThread, ReadThreadStart, 
+    device_name ? strdup(device_name) : NULL, _cdr_stack, CDR_STACK_SIZE, 80);
 #endif
 
  EmuThreadQueue->Read(&msg);
