@@ -8,7 +8,7 @@
 #include "MegaDriveConfigManager.h"
 #include "MegaDriveMenuManager.h"
 
-// PCE Keys
+// MegaDrive Keys
 #define MD_NONE   0x0000
 #define MD_UP     0x0001
 #define MD_DOWN   0x0002
@@ -67,6 +67,7 @@ public:
   void onPreLoop();
   bool updateDebugText( char* output, const char* defaultOutput, int len );
 
+  const char** getInputDevices();
   bool isRewindSupported();
 
   friend class MegaDriveConfigManager;
