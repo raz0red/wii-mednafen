@@ -135,6 +135,21 @@ void MegaDrive::onPostLoad()
   DNeedRewind = false;
 }
 
+static const char* devices[2] = { NULL, NULL };
+
+const char** MegaDrive::getInputDevices()
+{
+  MegaDriveDbEntry* entry = (MegaDriveDbEntry*)getDbManager().getEntry();
+  for( int c = 0; c < 2; c++ )
+  {
+    devices[c] = 
+      entry->controlType[c] == MD_CONTROL_3BUTTON ? "gamepad" : "gamepad6";
+  }
+
+  return devices;
+}
+
+
 void MegaDrive::onPreLoop()
 {
   MegaDriveDbEntry* entry = (MegaDriveDbEntry*)getDbManager().getEntry();
