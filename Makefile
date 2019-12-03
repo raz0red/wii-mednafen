@@ -134,7 +134,7 @@ INCLUDES	:= \
 
 
 CFLAGS	= \
-  -g -O2 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -DMEM2 -fno-strict-overflow -fsigned-char \
+  -g -O3 $(MACHDEP) $(INCLUDE) -DHAVE_CONFIG_H -DHAVE_FLOAT_H -DMEM2 -fno-strict-overflow -fsigned-char \
   -Winline \
   -fomit-frame-pointer \
   --param large-function-growth=800 \
