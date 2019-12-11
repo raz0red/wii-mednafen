@@ -3,7 +3,7 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 DATE="$( date '+%Y%m%d%H%S' )"
 DIST_DIR=$SCRIPTPATH/dist
-LAYOUT_DIR=$SCRIPTPATH/src/wii/res/layout/
+LAYOUT_DIR=$SCRIPTPATH/res/layout/
 BOOT_DOL_SRC=$SCRIPTPATH/boot.dol
 BOOT_DOL_DEST=$DIST_DIR/apps/wiimednafen
 BOOT_ELF_SRC=$SCRIPTPATH/boot.elf

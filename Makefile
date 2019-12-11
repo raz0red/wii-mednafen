@@ -20,53 +20,53 @@ TARGET      :=  boot
 BUILD		:=	build
 
 DATA		:=	\
-    src/wii/res/fonts \
-    src/wii/res/gfx
+    res/fonts \
+    res/gfx
    
 SOURCES		:=	\
-    mednafen/src \
-    mednafen/src/compress \
-    mednafen/src/drivers \
-    mednafen/src/sexyal \
-    mednafen/src/sexyal/drivers \
-    mednafen/src/sound \
-    mednafen/src/string \
-    mednafen/src/trio \
-    mednafen/src/video \
-    mednafen/src/gb \
-    mednafen/src/gba \
-    mednafen/src/lynx \
-    mednafen/src/md \
-    mednafen/src/md/cart \
-    mednafen/src/md/cd \
-    mednafen/src/md/input \
-    mednafen/src/nes \
-    mednafen/src/nes/boards \
-    mednafen/src/nes/input \
-    mednafen/src/nes/ntsc \
-    mednafen/src/nes/ppu \
-    mednafen/src/ngp \
-    mednafen/src/ngp/TLCS-900h \
-    mednafen/src/pce_fast \
-    mednafen/src/pcfx \
-    mednafen/src/pcfx/input \
-    mednafen/src/sms \
-    mednafen/src/vb \
-    mednafen/src/wswan \
-    mednafen/src/hw_cpu/c68k \
-    mednafen/src/hw_cpu/v810 \
-    mednafen/src/hw_cpu/v810/fpu-new \
-    mednafen/src/hw_cpu/z80-fuse \
-    mednafen/src/hw_sound/gb_apu \
-    mednafen/src/hw_sound/pce_psg \
-    mednafen/src/hw_sound/sms_apu \
-    mednafen/src/hw_sound/ym2413 \
-    mednafen/src/hw_sound/ym2612 \
-    mednafen/src/hw_misc/arcade_card \
-    mednafen/src/hw_video/huc6270 \
-    mednafen/src/mpcdec \
-    mednafen/src/cdrom \
-    mednafen/src/tremor \
+    src/mednafen/src \
+    src/mednafen/src/compress \
+    src/mednafen/src/drivers \
+    src/mednafen/src/sexyal \
+    src/mednafen/src/sexyal/drivers \
+    src/mednafen/src/sound \
+    src/mednafen/src/string \
+    src/mednafen/src/trio \
+    src/mednafen/src/video \
+    src/mednafen/src/gb \
+    src/mednafen/src/gba \
+    src/mednafen/src/lynx \
+    src/mednafen/src/md \
+    src/mednafen/src/md/cart \
+    src/mednafen/src/md/cd \
+    src/mednafen/src/md/input \
+    src/mednafen/src/nes \
+    src/mednafen/src/nes/boards \
+    src/mednafen/src/nes/input \
+    src/mednafen/src/nes/ntsc \
+    src/mednafen/src/nes/ppu \
+    src/mednafen/src/ngp \
+    src/mednafen/src/ngp/TLCS-900h \
+    src/mednafen/src/pce_fast \
+    src/mednafen/src/pcfx \
+    src/mednafen/src/pcfx/input \
+    src/mednafen/src/sms \
+    src/mednafen/src/vb \
+    src/mednafen/src/wswan \
+    src/mednafen/src/hw_cpu/c68k \
+    src/mednafen/src/hw_cpu/v810 \
+    src/mednafen/src/hw_cpu/v810/fpu-new \
+    src/mednafen/src/hw_cpu/z80-fuse \
+    src/mednafen/src/hw_sound/gb_apu \
+    src/mednafen/src/hw_sound/pce_psg \
+    src/mednafen/src/hw_sound/sms_apu \
+    src/mednafen/src/hw_sound/ym2413 \
+    src/mednafen/src/hw_sound/ym2612 \
+    src/mednafen/src/hw_misc/arcade_card \
+    src/mednafen/src/hw_video/huc6270 \
+    src/mednafen/src/mpcdec \
+    src/mednafen/src/cdrom \
+    src/mednafen/src/tremor \
     src/wii \
     src/wii/emulator \
     src/wii/emulator/helper \
@@ -92,16 +92,16 @@ INCLUDES	:= \
     wii-emucommon/sdl/SDL/include \
     wii-emucommon/sdl/SDL_ttf/include \
     wii-emucommon/sdl/SDL_image/include \
-    mednafen/include \
-    mednafen/include/blip \
-    mednafen/src/drivers \
-    mednafen/src/md \
-    mednafen/src/ngp \
-    mednafen/src/ngp/TLCS-900h \
-    mednafen/src/hw_sound \
-    mednafen/src/hw_misc \
-    mednafen/src/hw_cpu \
-    mednafen/src/hw_video \
+    src/mednafen/include \
+    src/mednafen/include/blip \
+    src/mednafen/src/drivers \
+    src/mednafen/src/md \
+    src/mednafen/src/ngp \
+    src/mednafen/src/ngp/TLCS-900h \
+    src/mednafen/src/hw_sound \
+    src/mednafen/src/hw_misc \
+    src/mednafen/src/hw_cpu \
+    src/mednafen/src/hw_video \
     src/wii \
     src/wii/emulator \
     src/wii/emulator/helper \
