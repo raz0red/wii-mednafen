@@ -4,6 +4,7 @@ WiiMednafen : Wii port of the Mednafen emulator
 Copyright (C) 2011 raz0red
 */
 
+#include "wii_app_common.h"
 #include "wii_app.h"
 #include "wii_config.h"
 #include "wii_input.h"
@@ -67,6 +68,24 @@ static void sdlTrace( char* msg )
   net_print_string( NULL, 0, msg );
 }
 #endif
+
+/**
+ * Returns the base directory for the application
+ * 
+ * @return  The base directory for the application
+ */
+const char* wii_get_app_base_dir() {
+    return WII_BASE_APP_DIR;
+}
+
+/**
+ * Returns the location of the config file
+ * 
+ * @return  The location of the config file
+ */
+const char* wii_get_config_file_path() {
+    return WII_CONFIG_FILE;
+}
 
 /*
  * Initializes the application

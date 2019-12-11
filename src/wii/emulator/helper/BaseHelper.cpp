@@ -1,5 +1,7 @@
 #include "BaseHelper.h"
 
+#include "wii_app_common.h"
+
 BaseHelper::BaseHelper( Emulator& emulator ) : m_emulator( emulator )
 {
 }

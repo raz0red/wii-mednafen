@@ -9,6 +9,7 @@ Copyright (C) 2011 raz0red
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "wii_app_common.h"
 #include "wii_app.h"
 #include "wii_mednafen_resize_screen.h"
 #include "wii_sdl.h"
@@ -53,6 +54,24 @@ static u8 language_index = 0;
 // Forward refs
 static void wii_read_game_list( TREENODE *menu );
 static void read_lang_list( TREENODE *menu );
+
+/**
+ * Returns the space node type
+ *
+ * @return  The spacer node type
+ */
+int wii_get_nodetype_spacer() {
+    return NODETYPE_SPACER;
+}
+
+/**
+ * Returns the rom node type
+ *
+ * @return  The rom node type
+ */
+int wii_get_nodetype_rom() {
+    return NODETYPE_ROM;
+}
 
 /*
  * Loads the currently selected language

@@ -4,6 +4,7 @@
 #include "gettext.h"
 
 #include "wii_app.h"
+#include "wii_app_common.h"
 #include "wii_sdl.h"
 #include "wii_mednafen.h"
 

@@ -68,11 +68,6 @@ SOURCES		:=	\
     mednafen/src/cdrom \
     mednafen/src/tremor \
     src/wii \
-    src/wii/common \
-    src/wii/common/netprint \
-    src/wii/common/pngu \
-    src/wii/common/i18n \
-    src/wii/common/FreeTypeGX \
     src/wii/emulator \
     src/wii/emulator/helper \
     src/wii/emulator/gb \
@@ -89,6 +84,14 @@ SOURCES		:=	\
     src/wii/emulator/sms
 
 INCLUDES	:= \
+    wii-emucommon/include \
+    wii-emucommon/netprint/include \
+    wii-emucommon/pngu/include \
+    wii-emucommon/FreeTypeGX/include \
+    wii-emucommon/i18n/include \
+    wii-emucommon/sdl/SDL/include \
+    wii-emucommon/sdl/SDL_ttf/include \
+    wii-emucommon/sdl/SDL_image/include \
     mednafen/include \
     mednafen/include/blip \
     mednafen/src/drivers \
@@ -100,11 +103,6 @@ INCLUDES	:= \
     mednafen/src/hw_cpu \
     mednafen/src/hw_video \
     src/wii \
-    src/wii/common \
-    src/wii/common/netprint \
-    src/wii/common/pngu \
-    src/wii/common/i18n \
-    src/wii/common/FreeTypeGX \
     src/wii/emulator \
     src/wii/emulator/helper \
     src/wii/emulator/gb \
@@ -118,9 +116,7 @@ INCLUDES	:= \
     src/wii/emulator/pcefast \
     src/wii/emulator/pcfx \
     src/wii/emulator/wswan \
-    src/wii/emulator/sms \
-    thirdparty/sdl/SDL/include \
-    thirdparty/sdl/SDL_ttf/include
+    src/wii/emulator/sms
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -165,15 +161,18 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
 LIBS	:= \
-    -ltinysmb -lSDL -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype -lz \
-    -lwiikeyboard -lbz2
+    -lSDL -lemucommon -ltinysmb -lfat -lwiiuse -lbte -logc -lm -lpng -lfreetype \
+    -lz -lwiikeyboard -lbz2
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
 LIBDIRS	:= \
-    thirdparty/sdl/SDL/lib
+    wii-emucommon/ \
+    wii-emucommon/sdl/SDL/lib \
+    wii-emucommon/sdl/SDL_ttf/lib \
+    wii-emucommon/sdl/SDL_image/lib
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional

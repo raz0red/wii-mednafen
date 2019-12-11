@@ -1,4 +1,3 @@
-[submodule "thirdparty/sdl"]
-	path = thirdparty/sdl
-	url = https://github.com/raz0red/sdl-wii.git
-	branch = video-mods
+[submodule "wii-emucommon"]
+	path = wii-emucommon
+	url = https://github.com/raz0red/wii-emucommon.git

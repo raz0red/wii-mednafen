@@ -1,4 +1,5 @@
 #include "EmulatorMenuHelper.h"
+#include "wii_app_common.h"
 #include "wii_app.h"
 #include "wii_gx.h"
 #include "wii_sdl.h"

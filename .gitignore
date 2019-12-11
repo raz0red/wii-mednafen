@@ -1,0 +1,8 @@
+build
+dist
+.vscode
+boot.*
+*.vcproj*
+*.suo
+*.sln
+*.ncb

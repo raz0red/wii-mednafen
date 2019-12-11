@@ -1,4 +1,6 @@
 #include "DatabaseManager.h"
+
+#include "wii_app_common.h"
 #include "wii_app.h"
 
 #ifdef WII_NETTRACE
