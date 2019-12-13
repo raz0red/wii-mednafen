@@ -82,7 +82,7 @@ void wii_config_handle_read_value(char* name, char* value) {
         wii_trap_filter = Util_sscandec(value);
     } else if (strcmp(name, "vi_gx_scaler") == 0) {
         wii_gx_vi_scaler = Util_sscandec(value);
-    } else if (strcmp(name, "16_9_correction") == 0) {
+    } else if (strcmp(name, "16_9_correct") == 0) {
         wii_16_9_correction = Util_sscandec(value);
     } else if (strcmp(name, "volume") == 0) {
         wii_volume = Util_sscandec(value);
@@ -121,7 +121,7 @@ void wii_config_handle_write_config(FILE* fp) {
     fprintf(fp, "usb_keepalive=%d\n", wii_usb_keepalive);
     fprintf(fp, "trap_filter=%d\n", wii_trap_filter);
     fprintf(fp, "vi_gx_scaler=%d\n", wii_gx_vi_scaler);
-    fprintf(fp, "16_9_correction=%d\n", wii_16_9_correction);
+    fprintf(fp, "16_9_correct=%d\n", wii_16_9_correction);
     fprintf(fp, "volume=%d\n", wii_volume);
     fprintf(fp, "rewind=%d\n", wii_rewind);
     fprintf(fp, "rewind_add_buttons=%d\n", wii_rewind_add_buttons);

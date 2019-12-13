@@ -111,6 +111,15 @@ const char* wii_get_config_file_path() {
 }
 
 /**
+ * Returns the location of the data directory
+ *
+ * @return  The location of the data directory
+ */
+const char* wii_get_data_path() {
+    return WII_FILES_DIR;
+}
+
+/**
  * Initializes the application
  */
 void wii_handle_init() {
