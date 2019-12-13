@@ -395,12 +395,15 @@ void wii_menu_handle_get_node_name(TREENODE* node, char* buffer, char* value) {
             snprintf(value, WII_MENU_BUFF_SIZE, "%s",
                      language_menu->children[language_index]->name);
             break;
-        case NODETYPE_FULL_WIDESCREEN:
-            snprintf(value, WII_MENU_BUFF_SIZE, "%s",
-                     (wii_full_widescreen == WS_AUTO
-                          ? "(auto)"
-                          : (wii_full_widescreen ? "Enabled" : "Disabled")));
-            break;
+        case NODETYPE_16_9_CORRECTION:
+        case NODETYPE_FULL_WIDESCREEN: {
+            int val = node->node_type == NODETYPE_16_9_CORRECTION
+                          ? wii_16_9_correction
+                          : wii_full_widescreen;
+            snprintf(
+                value, WII_MENU_BUFF_SIZE, "%s",
+                (val == WS_AUTO ? "(auto)" : (val ? "Enabled" : "Disabled")));
+        } break;
         case NODETYPE_GX_VI_SCALER:
             snprintf(value, WII_MENU_BUFF_SIZE, "%s",
                      (wii_gx_vi_scaler ? "GX + VI" : "GX"));
@@ -421,15 +424,11 @@ void wii_menu_handle_get_node_name(TREENODE* node, char* buffer, char* value) {
         case NODETYPE_DOUBLE_STRIKE:
         case NODETYPE_CHEATS:
         case NODETYPE_TRAP_FILTER:
-        case NODETYPE_16_9_CORRECTION:
         case NODETYPE_REWIND: {
             BOOL enabled = FALSE;
             switch (node->node_type) {
                 case NODETYPE_REWIND:
                     enabled = wii_rewind;
-                    break;
-                case NODETYPE_16_9_CORRECTION:
-                    enabled = wii_16_9_correction;
                     break;
                 case NODETYPE_TRAP_FILTER:
                     enabled = wii_trap_filter;
@@ -556,7 +555,10 @@ void wii_menu_handle_select_node(TREENODE* node) {
                 }
                 break;
             case NODETYPE_16_9_CORRECTION:
-                wii_16_9_correction ^= 1;
+                wii_16_9_correction++;
+                if (wii_16_9_correction > WS_AUTO) {
+                    wii_16_9_correction = 0;
+                }
                 break;
             case NODETYPE_GX_VI_SCALER:
                 wii_gx_vi_scaler ^= 1;

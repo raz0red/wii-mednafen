@@ -223,7 +223,7 @@ static void wii_resize_render_callback() {
  * @param   y The new y
  */
 static void changeSquare(int x, int y) {
-    if (wii_16_9_correction) {
+    if (wii_16_9_correction == WS_AUTO ? is_widescreen : wii_16_9_correction) {
         if (resizeinfo->rotated) {
             y = (y * 3) / 4;
         } else {
