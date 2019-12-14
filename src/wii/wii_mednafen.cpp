@@ -39,6 +39,7 @@
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 #include "wii_mednafen_menu.h"
+#include "wii_mednafen_emulation.h"
 
 #include "FreeTypeGX.h"
 #include "font_ttf.h"
@@ -175,6 +176,11 @@ void wii_handle_free_resources() {
  */
 void wii_handle_run() {
     // WII_VideoStop();
+
+    // Start specified rom (if applicable)
+    if (wii_initial_rom[0] != '\0') {
+        wii_start_emulation(wii_initial_rom);
+    }
 
     // Show the menu
     wii_menu_show();
