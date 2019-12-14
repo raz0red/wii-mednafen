@@ -353,18 +353,30 @@ static void precallback() {
             if (emu->isDoubleStrikeEnabled()) {
                 if ((VTDRReady->h + VTDRReady->y) > 240) {
                     WII_SetInterlaceVideoMode(r.w, r.h, width);
+#ifdef WII_NETTRACE
+                    net_print_string(NULL, 0, "Interlace video mode\n");
+#endif
                 } else {
                     WII_SetDoubleStrikeVideoMode(
                         (emu->getRotation() ? r.w >> 1 : r.w),
                         (emu->getRotation() ? r.h : r.h >> 1), width);
+#ifdef WII_NETTRACE
+                    net_print_string(NULL, 0, "Double strike video mode\n");
+#endif
                 }
             } else {
-                if (wii_gx_vi_scaler && !wii_filter) {
+                if (wii_gx_vi_scaler) {
                     // GX + VI scaler
                     WII_SetStandardVideoMode(r.w, r.h, width);
+#ifdef WII_NETTRACE
+                    net_print_string(NULL, 0, "GX+VI video mode\n");
+#endif
                 } else {
                     // GX scaler
                     emu->resizeScreen();
+#ifdef WII_NETTRACE
+                    net_print_string(NULL, 0, "GX video mode\n");
+#endif
                 }
             }
         }
@@ -467,7 +479,15 @@ void wii_mednafen_emu_loop(BOOL resume) {
     wii_sdl_black_back_surface();
 
     memset(&lastRect, 0, sizeof(Rect));  // Clear the last rect
-    WII_SetFilter(wii_filter);
+
+    // Only allow filter if we are in GX mode (not 240p and not GX+VI)
+    bool enableFilter =
+        !wii_gx_vi_scaler && !emu->isDoubleStrikeEnabled() ? wii_filter : 0;
+    WII_SetFilter(enableFilter);
+#ifdef WII_NETTRACE
+    net_print_string(NULL, 0, "Video filter:%d\n", enableFilter);
+#endif
+
     WII_SetRotation(emu->getRotation() * 90);
 
     wii_gx_push_callback(&gxrender_callback, TRUE, precallback);
@@ -515,8 +535,8 @@ static void gxrender_callback() {
         emuRegistry.getCurrentEmulator()->isDoubleStrikeEnabled();
 
     // Do debug output if we are not using double strike and we are
-    // not using the GX+VI scaler or filtering is enabled.
-    if (wii_debug && !doubleStrike && (!wii_gx_vi_scaler || wii_filter)) {
+    // not using the GX+VI scaler
+    if (wii_debug && !doubleStrike && !wii_gx_vi_scaler) {
         static char virtfps[64];
         static char drawnfps[64];
         static char blitfps[64];

@@ -218,32 +218,17 @@ void wii_mednafen_menu_init() {
     child = wii_create_tree_node(NODETYPE_16_9_CORRECTION, "16:9 correction");
     wii_add_child(video_settings, child);
 
-#if 0
-    child = wii_create_tree_node(NODETYPE_SPACER, "");
+    child = wii_create_tree_node(NODETYPE_TRAP_FILTER, "Color trap filter");
     wii_add_child(video_settings, child);
-#endif
 
     child =
         wii_create_tree_node(NODETYPE_DOUBLE_STRIKE, "Double strike (240p)");
     wii_add_child(video_settings, child);
 
-#if 0
-    child = wii_create_tree_node(NODETYPE_SPACER, "");
+    child = wii_create_tree_node(NODETYPE_GX_VI_SCALER, "Scaler");
     wii_add_child(video_settings, child);
-#endif
 
     child = wii_create_tree_node(NODETYPE_FILTER, "Bilinear filter");
-    wii_add_child(video_settings, child);
-
-    child = wii_create_tree_node(NODETYPE_TRAP_FILTER, "Color trap filter");
-    wii_add_child(video_settings, child);
-
-#if 0
-    child = wii_create_tree_node(NODETYPE_GX_VI_SCALER_SPACER, "");
-    wii_add_child(video_settings, child);
-#endif
-
-    child = wii_create_tree_node(NODETYPE_GX_VI_SCALER, "Scaler");
     wii_add_child(video_settings, child);
 
     child = wii_create_tree_node(NODETYPE_SPACER, "");
@@ -681,10 +666,9 @@ BOOL wii_menu_handle_is_node_visible(TREENODE* node) {
         case NODETYPE_LOAD_STATE:
             return wii_snapshot_current_exists();
         case NODETYPE_REWIND_BUTTON:
-            return wii_rewind;
-        case NODETYPE_GX_VI_SCALER_SPACER:
-        case NODETYPE_GX_VI_SCALER:
-            return !wii_filter;
+            return wii_rewind;        
+        case NODETYPE_FILTER: 
+            return !wii_gx_vi_scaler;
         case NODETYPE_RESET:
         case NODETYPE_RESUME:
         case NODETYPE_EMULATOR_SETTINGS_SPACER:
