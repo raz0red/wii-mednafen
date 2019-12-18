@@ -54,6 +54,29 @@ function fail() {
     exit 1
 }
 
+#
+# Build in directory specified (if applicable)
+#
+if [ ! -z $1 ]; then
+    BUILD_DIR=$1
+    echo "Building in: $BUILD_DIR..."
+    rm -rf $BUILD_DIR \
+        || { fail 'Unable to delete build directory.'; }
+    cp -R $SCRIPTPATH $BUILD_DIR \
+        || { fail 'Unable to copy files to build directory.'; }
+    find $BUILD_DIR -type f \
+        \( -name "*.o" -or -name "*.a" -or -name "*.dol" -or -name "*.elf" \) \
+        -exec rm {} + \
+        || { fail 'Unable to delete previous build output files.'; }
+    $BUILD_DIR/dist.sh \
+        || { fail 'Error running dist script.'; }
+    rm -rf $DIST_DIR \
+        || { fail 'Unable to remove dist directory.'; }
+    cp -R $BUILD_DIR/dist $DIST_DIR  \
+        || { fail 'Unable to copy files to final dist directory.'; }
+    exit 0
+fi
+
 # Build wii-emucommon
 echo "Building wii-emucommon..."
 $EMUCOMMON_DIR/dist.sh || { fail 'Error building wii-emucommon.'; }
