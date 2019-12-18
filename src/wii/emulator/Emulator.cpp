@@ -131,7 +131,7 @@ void Emulator::getResizeScreenRect( Rect* rect )
   VTDRReady->w, VTDRReady->h, ratiox, ratioy, rect->w, rect->h );
 #endif
 
-  if( wii_16_9_correction )
+  if (wii_16_9_correction == WS_AUTO ? is_widescreen : wii_16_9_correction)
   {
     if( getRotation() )
     {
