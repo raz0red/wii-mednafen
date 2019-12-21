@@ -1177,6 +1177,7 @@ Credits / Special Thanks
 * Ryphecha        : Providing an incredible multi-emulator, optimizing the
                     Virtual Boy emulation, and putting up with my questions.
 * mastershoes     : WiiMednafen channel
+* NeoRame         : Icon
 * Hielkenator     : Testing, Dutch translation
 * cloudskipa      : Testing
 * Thiago Alves    : Testing
