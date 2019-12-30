@@ -1,6 +1,7 @@
+#include "main.h"
 #include "Emulator.h"
 #include "DatabaseManager.h"
-#include "main.h"
+
 #include "wii_mednafen.h"
 #include "wii_mednafen_main.h"
 
