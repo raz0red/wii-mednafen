@@ -10,17 +10,27 @@
 #include "net_print.h"
 #endif
 
+// External Mednafen references
 extern volatile MDFN_Rect* VTDRReady;
 extern volatile MDFN_Surface* VTReady;
 extern MDFNGI* MDFNGameInfo;
 
 extern uint32 round_up_pow2(uint32 v);
 
+// External SDL references
 extern "C" {
 void WII_SetRotation(int rot);
 void WII_ChangeSquare(int xscale, int yscale, int xshift, int yshift);
 }
 
+
+/**
+ * Constructs the emulator
+ *
+ * @param   key The key associated with the specific emulator in the map of
+ *          emulators
+ * @param   name The name of the emulator
+ */
 Emulator::Emulator(const char* key, const char* name)
     : m_key(key), m_name(name), m_frameSkip(true) {
     memset(m_padData, 0, sizeof(u32) << 2);
@@ -28,28 +38,35 @@ Emulator::Emulator(const char* key, const char* name)
     m_volume = VOLUME_DEFAULT;
 }
 
+/** {@inheritDoc} */
 Rect* Emulator::getScreenSize() {
     return &m_screenSize;
 }
 
+/** {@inheritDoc} */
 Rect* Emulator::getRotatedScreenSize() {
     return &m_rotatedScreenSize;
 }
 
+/** {@inheritDoc} */
 Rect* Emulator::getEmulatorScreenSize() {
     return &m_emulatorScreenSize;
 }
 
+/** {@inheritDoc} */
 const char* Emulator::getKey() {
     return m_key;
 }
 
+/** {@inheritDoc} */
 const char* Emulator::getName() {
     return m_name;
 }
 
+/** {@inheritDoc} */
 void Emulator::onPostLoad() {}
 
+/** {@inheritDoc} */
 bool Emulator::onShowControlsScreen() {
     dbEntry* entry = getDbManager().getEntry();
     if (entry->wiimoteSupported) {
@@ -60,27 +77,33 @@ bool Emulator::onShowControlsScreen() {
     return wii_mednafen_show_controls_screen();
 }
 
+/** {@inheritDoc} */
 void Emulator::onPreLoop() {}
 
+/** {@inheritDoc} */
 bool Emulator::updateDebugText(char* output,
                                const char* defaultOutput,
                                int len) {
     return false;
 }
 
+/** {@inheritDoc} */
 bool Emulator::isRotationSupported() {
     return false;
 }
 
+/** {@inheritDoc} */
 int Emulator::getRotation() {
     return MDFN_ROTATE0;
 }
 
+/** {@inheritDoc} */
 void Emulator::getCurrentScreenSizeRatio(float* ratiox, float* ratioy) {
     *ratiox = (float)MDFNGameInfo->nominal_width / (float)VTDRReady->w;
     *ratioy = (float)MDFNGameInfo->nominal_height / (float)VTDRReady->h;
 }
 
+/** {@inheritDoc} */
 void Emulator::getResizeScreenRect(Rect* rect) {
     float ratiox, ratioy;
     getCurrentScreenSizeRatio(&ratiox, &ratioy);
@@ -119,6 +142,7 @@ void Emulator::getResizeScreenRect(Rect* rect) {
     rect->h = ((rect->h + 1) & ~1);
 }
 
+/** {@inheritDoc} */
 void Emulator::resizeScreen() {
     Rect r;
     getResizeScreenRect(&r);
@@ -128,14 +152,17 @@ void Emulator::resizeScreen() {
 #endif
 }
 
+/** {@inheritDoc} */
 bool Emulator::getFrameSkip() {
     return m_frameSkip;
 }
 
+/** {@inheritDoc} */
 void Emulator::setFrameSkip(bool skip) {
     m_frameSkip = skip;
 }
 
+/** {@inheritDoc} */
 bool Emulator::getAppliedFrameSkip() {
     dbEntry* entry = getDbManager().getEntry();
     if (entry->frameSkip == FRAME_SKIP_DEFAULT) {
@@ -145,25 +172,32 @@ bool Emulator::getAppliedFrameSkip() {
     return entry->frameSkip == FRAME_SKIP_ENABLED;
 }
 
+/** {@inheritDoc} */
 bool Emulator::isDoubleStrikeSupported() {
     return true;
 }
 
+/** {@inheritDoc} */
 u8 Emulator::getBpp() {
     return 32;
 }
 
+/** {@inheritDoc} */
 const ScreenSize* Emulator::getDefaultScreenSizes() {
     return NULL;
 }
 
+/** {@inheritDoc} */
 int Emulator::getDefaultScreenSizesCount() {
     return 0;
 }
+
+/** {@inheritDoc} */
 const char* Emulator::getScreenSizeName() {
     return getScreenSizeName(m_screenSize.w, m_screenSize.h);
 }
 
+/** {@inheritDoc} */
 const char* Emulator::getScreenSizeName(int w, int h) {
     const ScreenSize* sizes = getDefaultScreenSizes();
     for (int i = 0; i < getDefaultScreenSizesCount(); i++) {
@@ -175,19 +209,23 @@ const char* Emulator::getScreenSizeName(int w, int h) {
     return "Custom";
 }
 
+/** {@inheritDoc} */
 const ScreenSize* Emulator::getDefaultRotatedScreenSizes() {
     return NULL;
 }
 
+/** {@inheritDoc} */
 int Emulator::getDefaultRotatedScreenSizesCount() {
     return 0;
 }
 
+/** {@inheritDoc} */
 const char* Emulator::getRotatedScreenSizeName() {
     return getRotatedScreenSizeName(m_rotatedScreenSize.w,
                                     m_rotatedScreenSize.h);
 }
 
+/** {@inheritDoc} */
 const char* Emulator::getRotatedScreenSizeName(int w, int h) {
     const ScreenSize* sizes = getDefaultRotatedScreenSizes();
     for (int i = 0; i < getDefaultRotatedScreenSizesCount(); i++) {
@@ -199,22 +237,27 @@ const char* Emulator::getRotatedScreenSizeName(int w, int h) {
     return "Custom";
 }
 
+/** {@inheritDoc} */
 const ScreenSize* Emulator::getDoubleStrikeScreenSize() {
     return NULL;
 }
 
+/** {@inheritDoc} */
 const ScreenSize* Emulator::getDoubleStrikeRotatedScreenSize() {
     return NULL;
 }
 
+/** {@inheritDoc} */
 void Emulator::setDoubleStrikeMode(int mode) {
     m_doubleStrike = mode;
 }
 
+/** {@inheritDoc} */
 int Emulator::getDoubleStrikeMode() {
     return m_doubleStrike;
 }
 
+/** {@inheritDoc} */
 bool Emulator::isDoubleStrikeEnabled() {
     return isDoubleStrikeSupported() &&
            ((m_doubleStrike == DOUBLE_STRIKE_ENABLED) ||
@@ -222,13 +265,17 @@ bool Emulator::isDoubleStrikeEnabled() {
              wii_double_strike_mode));
 }
 
+/** {@inheritDoc} */
 int Emulator::getVolume() {
     return m_volume;
 }
+
+/** {@inheritDoc} */
 void Emulator::setVolume(int volume) {
     m_volume = volume;
 }
 
+/** {@inheritDoc} */
 int Emulator::getAppliedVolume() {
     if (m_volume == VOLUME_DEFAULT) {
         return wii_volume;
@@ -237,14 +284,17 @@ int Emulator::getAppliedVolume() {
     }
 }
 
+/** {@inheritDoc} */
 bool Emulator::isRewindSupported() {
     return false;
 }
 
+/** {@inheritDoc} */
 const char** Emulator::getInputDevices() {
     return NULL;
 }
 
+/** {@inheritDoc} */
 void Emulator::updateInputDeviceData(int device, u8* data, int size) {
     if (device < 4) {
         u16 padData = m_padData[device];

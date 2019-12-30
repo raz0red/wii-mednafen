@@ -44,8 +44,8 @@ typedef struct ScreenSize {
 
 /**
  * Base class for the various emulators supported by WiiMednafen.
- * This class and its sub-classes attempt to encapsulate the features that
- * specific to each emulator.
+ * This class and its sub-classes attempt to encapsulate the functionality that
+ * is specific to each emulator.
  */
 class Emulator {
 private:
@@ -148,7 +148,7 @@ public:
      * Gives emulator an opportunity to show a "controls" screen. displays 
      * applicable controllers, etc.
      * 
-     * @return  Whether a controls screen was displayed
+     * @return  Whether to start emulation after the screen was displayed
      */
     virtual bool onShowControlsScreen();
 
