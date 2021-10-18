@@ -1,0 +1,781 @@
+msgid "(2d) Red/black"
+msgstr "(2D) Rouge/Noir"
+
+msgid "(2d) White/black"
+msgstr "(2D) Blanc/Noir"
+
+msgid "(3d) Green/red"
+msgstr "(3D) Vert/Rouge"
+
+msgid "(3d) Red/blue"
+msgstr "(3D) Rouge/Bleu"
+
+msgid "(3d) Red/cyan"
+msgstr "(3D) Rouge/Cyan"
+
+msgid "(3d) Red/electric cyan"
+msgstr "(3D) Rouge/Cyan Electrique"
+
+msgid "(3d) Red/green"
+msgstr "(3D) Rouge/Vert"
+
+msgid "(3d) Yellow/blue"
+msgstr "(3D) Jaune/Bleu"
+
+msgid "ROM image is too large; maximum size allowed is 67108864 bytes."
+msgstr "L'image ROM est trop grande; La plus grande taille possible est de 64 Mo."
+
+msgid "(auto)"
+msgstr "(automatique)"
+
+msgid "(default)"
+msgstr "(standard)"
+
+msgid "(none)"
+msgstr "(aucun)"
+
+msgid "(normal)"
+msgstr "(normal)"
+
+msgid "(rewind)"
+msgstr "(retour)"
+
+msgid "(rotate screen)"
+msgstr "(pivoter l'écran)"
+
+msgid "(special)"
+msgstr "(special)"
+
+msgid "1 item found."
+msgstr "1 objet trouvé."
+
+msgid "16:9 correction"
+msgstr "Correction 16:9"
+
+msgid "2-button pad"
+msgstr "pad à 2 boutons"
+
+msgid "270 degrees"
+msgstr "270 degrés"
+
+msgid "2x/Full screen"
+msgstr "2x/Plein écran"
+
+msgid "3-button pad"
+msgstr "pad à 3 boutons"
+msgid "3x/Full screen"
+msgstr "3x/Plein écran"
+
+msgid "4x/Full screen"
+msgstr "4x/Plein écran"
+
+msgid "6-button pad"
+msgstr "pad à 6 boutons"
+
+msgid "90 degrees"
+msgstr "90 degrés"
+
+msgid "A/2 button"
+msgstr "bouton A/2"
+
+msgid "Accept changes"
+msgstr "Accepter les changements"
+
+msgid "Activate spin/power meter"
+msgstr "Activeer le spin/wattmètre"
+
+msgid "Advanced"
+msgstr "Options générales"
+
+msgid "Aim left"
+msgstr "Viser à gauche"
+
+msgid "Aim right"
+msgstr "Viser à droite"
+
+msgid "Aim"
+msgstr "Viser"
+
+msgid "Ascend"
+msgstr "Monter"
+
+msgid "Aspect ratio"
+msgstr "Ratio d'aspect"
+
+msgid "Attack"
+msgstr "Attaquer"
+
+msgid "Attempting to mount drive..."
+msgstr "Tentative de montage du périphérique "
+
+msgid "Auto fire"
+msgstr "Feu Automatique"
+
+msgid "Auto"
+msgstr "Automatique"
+
+msgid "B/1 button"
+msgstr "Bouton B/1"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Bilinear filter"
+msgstr "Filtre bilinéaire"
+
+msgid "Bowl"
+msgstr "Bol"
+
+msgid "Button 1"
+msgstr "Bouton 1"
+
+msgid "Button 2"
+msgstr "Bouton 2"
+
+msgid "Button mappings"
+msgstr "Assignation des boutons"
+
+msgid "button pad"
+msgstr "bouton pad"
+
+msgid "Cancel changes"
+msgstr "Annuler les changements"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cast/reel in"
+msgstr "Cast/reel in"
+
+msgid "Change altitude"
+msgstr "Changer l'altitude"
+
+msgid "Change layer"
+msgstr "Changer de couche"
+
+msgid "Change perspective"
+msgstr "Changer la perspective"
+
+msgid "Charge power"
+msgstr "Charger"
+
+msgid "Cheats"
+msgstr "Cheats"
+
+msgid "Check configuration file."
+msgstr "Verification de fichier de configuration."
+
+msgid "Classic"
+msgstr "Classique"
+
+msgid "Color trap filter"
+msgstr "Filtre à couleurs"
+
+msgid "Console region"
+msgstr "Region de la Console"
+
+msgid "Control settings"
+msgstr "Personaliser commandes"
+
+msgid "Controller"
+msgstr "Manette"
+
+msgid "Custom"
+msgstr "Personaliser"
+
+msgid "D-pad/Analog"
+msgstr "Pad D/Stick analogique"
+
+msgid "Debug mode"
+msgstr "Mode Debug"
+
+msgid "Decrease speed"
+msgstr "Baisser la vitesse"
+
+msgid "Delete settings"
+msgstr "Supprimer les préférences"
+
+msgid "Descend"
+msgstr "Descendre"
+
+msgid "Destroy drone"
+msgstr "Détruire le drone"
+
+msgid "Disabled"
+msgstr "Désactivé"
+
+msgid "Disk 0 side A inserted."
+msgstr "Disque 0 face A inséré."
+
+msgid "Disk 0 side B inserted."
+msgstr "Disque 0 face B inséré"
+
+msgid "Display mode"
+msgstr "Mode d'affichage"
+
+msgid "Display settings"
+msgstr "Options d'affichage"
+
+msgid "Domestic (Japan)"
+msgstr "Domestique (Japon)"
+
+msgid "Double strike (240p)"
+msgstr "Double strike (240P)"
+
+msgid "Down"
+msgstr "En Bas"
+
+msgid "Drone 1"
+msgstr "Drone 1"
+
+msgid "Drone 2"
+msgstr "Drone 2"
+
+msgid "Drone 3"
+msgstr "Drone 3"
+
+msgid "Drone controls"
+msgstr "Contrôles du drône"
+
+msgid "Drop faster"
+msgstr "Laisser tomber plus vite"
+
+msgid "Emulator settings"
+msgstr "Réglages de l'émulateur "
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "Europe"
+msgstr "Europe"
+
+msgid "Evasive maneuver"
+msgstr "Manoeuvre évasive"
+
+msgid "Execute"
+msgstr "Executer"
+
+msgid "Exit"
+msgstr "Quitter"
+
+msgid "Export (World)"
+msgstr "Exporer (Monde)"
+
+msgid "External BIOS"
+msgstr "BIOS Externe"
+
+msgid "Fill screen"
+msgstr "Remplir l'écran"
+
+msgid "Fire 1"
+msgstr "Feu 1"
+
+msgid "Fire 1/Start"
+msgstr "Feu 1/Start"
+
+msgid "Fire 2"
+msgstr "Feu 2"
+
+msgid "Fire down"
+msgstr "Feu bas"
+
+msgid "Fire left"
+msgstr "Feu gauche"
+
+msgid "Fire right"
+msgstr "Feu droite"
+
+msgid "Fire up"
+msgstr "Feu haut"
+
+msgid "Fire"
+msgstr "Feu"
+
+msgid "Fires cannon/homing missile"
+msgstr "Canon de tir/Missile à tête chercheuse"
+
+msgid "Fixed (double strike)"
+msgstr "Taille fixe (double strike)"
+
+msgid "Flip disk"
+msgstr "Retourner le disque"
+
+msgid "Frame skip"
+msgstr "Frame skip"
+
+msgid "French"
+msgstr "Français"
+
+msgid "Full screen"
+msgstr "Plein écran"
+
+msgid "Full widescreen"
+msgstr "Plein écran"
+
+msgid "Game Gear"
+msgstr "Game Gear"
+
+msgid "Game Genie"
+msgstr "Game Genie"
+
+msgid "Game-specific settings"
+msgstr "Préférences"
+
+msgid "GameBoy Advance"
+msgstr "GameBoy Advance"
+
+msgid "GameBoy Color"
+msgstr "GameBoy Color"
+
+msgid "GameCube"
+msgstr "GameCube"
+
+msgid "Go left"
+msgstr "Aller à gauche"
+
+msgid "Go right"
+msgstr "Aller à droite"
+
+msgid "GX + VI"
+msgstr "GX + VI"
+
+msgid "GX"
+msgstr "GX"
+
+msgid "Hacker"
+msgstr "Hacker"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "Hook fish"
+msgstr "Hameçon"
+
+msgid "Horiz."
+msgstr "Horiz."
+
+msgid "Increase speed"
+msgstr "Augmenter la vitesse"
+
+msgid "Insert coin"
+msgstr "Insérez une pièce"
+
+msgid "Invalid network settings - Check configuration file."
+msgstr "Réglages résau non valides - Vérifiez le fichier de configuration."
+
+msgid "Invalid network settings"
+msgstr "Réglages résau non valides"
+
+msgid "items found, displaying"
+msgstr "Objets trouvés, affichage en cours"
+
+msgid "Japan"
+msgstr "Japon"
+
+msgid "Japanese"
+msgstr "Japonais"
+
+msgid "Jump"
+msgstr "Saut"
+
+msgid "L-Down"
+msgstr "L-bas"
+
+msgid "L-Left"
+msgstr "L-gauche"
+
+msgid "L-Right"
+msgstr "L-droite"
+
+msgid "L-Up"
+msgstr "L-haut"
+
+msgid "Language (game)"
+msgstr "Langue (Jeu)"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Latest"
+msgstr "Plus récent"
+
+msgid "Left flipper"
+msgstr "Flipper gauche"
+
+msgid "Left punch"
+msgstr "Coup de poing gauche"
+
+msgid "Left punch/block"
+msgstr "Coup de poing gauche/parer"
+
+msgid "Left"
+msgstr "Gauche"
+
+msgid "Load game"
+msgstr "Lancer un jeu"
+
+msgid "Load state"
+msgstr "Charger état"
+
+msgid "Loading game..."
+msgstr "Chargement..."
+
+msgid "Locked"
+msgstr "Vérouillé"
+
+msgid "Lynx"
+msgstr "Lynx"
+
+msgid "Maneuver faster"
+msgstr "Manoeuvrer plus rapidement"
+
+msgid "Manual"
+msgstr "Manuel
+
+msgid "Map"
+msgstr "Carte"
+
+msgid "Match game header"
+msgstr "Jeu"
+
+msgid "Mega Drive"
+msgstr "Mega Drive"
+
+msgid "Minus"
+msgstr "Moins"
+
+msgid "Minus/LTrigger"
+msgstr "Moins/Gâchette L"
+
+msgid "Mode"
+msgstr "Mode"
+
+msgid "Move block"
+msgstr "Déplacer bloc"
+
+msgid "Move cursor"
+msgstr "Déplacer curseur"
+
+msgid "Move left"
+msgstr "Déplacer à gauche"
+
+msgid "Move right"
+msgstr "Déplacer à droite"
+
+msgid "Move"
+msgstr "Déplacer"
+
+msgid "Neo Geo Pocket"
+msgstr "Neo Geo Pocket"
+
+msgid "NES"
+msgstr "NES"
+
+msgid "Network Share"
+msgstr "Partage réseau"
+
+msgid "No"
+msgstr "Non"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "North America"
+msgstr "Amérique du nord"
+
+msgid "Note: Enabling rewind may affect performance."
+msgstr "Note: Activer la fonction rembobinner peut affecter la performance. "
+
+msgid "Option 1"
+msgstr "Option 1"
+
+msgid "Option 2"
+msgstr "Option 2"
+
+msgid "Option"
+msgstr "Option"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "PC Engine"
+msgstr "PC Engine"
+
+msgid "PC-FX"
+msgstr "PC-FX"
+
+msgid "Plus"
+msgstr "Plus"
+
+msgid "Plus/RTrigger"
+msgstr "Plus/Gâchette R"
+
+msgid "Portuguese"
+msgstr "Portugais"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "R-Down"
+msgstr "R-bas"
+
+msgid "R-Left"
+msgstr "R-gauche"
+
+msgid "R-Right"
+msgstr "R-droite"
+
+msgid "R-Up"
+msgstr "R-haut"
+
+msgid "Rapid"
+msgstr "Rapide"
+
+msgid "Reading file list..."
+msgstr "Lecture de la liste de fichiers..."
+
+msgid "Reload"
+msgstr "Recharger"
+
+msgid "Reset to defaults"
+msgstr "Réinitialiser"
+
+msgid "Reset"
+msgstr "Réinitialiser"
+
+msgid "Resize screen"
+msgstr "Réajuster l'écran"
+
+msgid "Resizing not supported for double strike mode."
+msgstr "Le mode double strike ne gère pas le réajustement."
+
+msgid "Resume"
+msgstr "Reprendre la partie"
+
+msgid "Revert to saved settings"
+msgstr "Charger préférences"
+
+msgid "Rewind buttons"
+msgstr "Boutons de retour"
+
+msgid "Rewind"
+msgstr "Rembobinner"
+
+msgid "Right flipper"
+msgstr "Flipper droit"
+
+msgid "Right punch"
+msgstr "Coup de poing droit"
+
+msgid "Right punch/block"
+msgstr "Coup de poing droit/parer"
+
+msgid "Right"
+msgstr "Droite"
+
+msgid "ROM patching"
+msgstr "Patch ROM"
+
+msgid "Rotate backward"
+msgstr "Rotation anti-horraire"
+
+msgid "Rotate clockwise"
+msgstr "Rotation horraire"
+
+msgid "Rotate container left"
+msgstr "Pivoter le conteneur vers la gauche "
+
+msgid "Rotate container right"
+msgstr "Pivoter le conteneur vers la droite"
+
+msgid "Rotate counter-clockwise"
+msgstr "Rotation anti horraire"
+
+msgid "Rotate forward"
+msgstr "Rotation horraire"
+
+msgid "Rotated"
+msgstr "Pivoté"
+
+msgid "Rotation"
+msgstr "Rotation"
+
+msgid "Run"
+msgstr "Lancer"
+
+msgid "Save settings"
+msgstr "Sauvegarder les préférences"
+
+msgid "Save state"
+msgstr "Sauvegarde d'état"
+
+msgid "Save states"
+msgstr "Sauvegardes d'état"
+
+msgid "Scaler"
+msgstr "Echelle"
+
+msgid "Screen size"
+msgstr "Taille d'écran"
+
+msgid "Scroll"
+msgstr "Naviguer"
+
+msgid "SD Card"
+msgstr "Carte SD"
+
+msgid "Sega Master System"
+msgstr "Sega Master System"
+
+msgid "Select unit"
+msgstr "Sélectionner"
+
+msgid "Select"
+msgstr "Selectionner"
+
+msgid "Shake"
+msgstr "Secouer"
+
+msgid "Shoot"
+msgstr "Tirer"
+
+msgid "Show menu"
+msgstr "Montrer le menu"
+
+msgid "Sideways"
+msgstr "Horizontal"
+
+msgid "Slot"
+msgstr "Port"
+
+msgid "Soft shot, lob"
+msgstr "Tir doux, lob"
+
+msgid "Solid shot"
+msgstr "Tir Solide"
+
+msgid "Spanish"
+msgstr "Espagnol"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Successfully deleted cartridge settings."
+msgstr "Suppression des paramètres cartouche réussie."
+
+msgid "Successfully reverted to saved settings."
+msgstr "Retour aux paramètres sauvegardés réussi."
+
+msgid "Successfully saved cartridge settings."
+msgstr "Sauvegarde des paramètres cartouche réussie."
+
+msgid "Successly saved state."
+msgstr "Sauvegarde réussie."
+
+msgid "Supported"
+msgstr "Supporté"
+
+msgid "Swing left"
+msgstr "Balancer à gauche"
+
+msgid "Swing right"
+msgstr "Balancer à droite"
+
+msgid "Swing up"
+msgstr "Balancer en haut"
+
+msgid "Switch camera"
+msgstr "Changer de camera"
+
+msgid "Throw down"
+msgstr "Lancer en bas"
+
+msgid "Throw left"
+msgstr "Lancer à gauche"
+
+msgid "Throw right"
+msgstr "Lancer à droite"
+
+msgid "Throw up"
+msgstr "Lancer en haut"
+
+msgid "Throw"
+msgstr "Lancer"
+
+msgid "to"
+msgstr "à"
+
+msgid "Toggle A/R lock"
+msgstr "Verouillage du rapport hauteur/largeur"
+
+msgid "Toggle auto rotation"
+msgstr "Vérouillage autorotation"
+
+msgid "Toggle screen sizes"
+msgstr "Vérouillage tailles d'écrans"
+
+msgid "Top menu exit"
+msgstr "Retour Menu Principal"
+
+msgid "U/D"
+msgstr "Haut/bas"
+
+msgid "Unable to mount"
+msgstr "Montage impossible"
+
+msgid "Unlocked"
+msgstr "Débloqué"
+
+msgid "Up"
+msgstr "En haut"
+
+msgid "Upright"
+msgstr "Vertical"
+
+msgid "USB Device"
+msgstr "Appareil USB"
+
+msgid "Use power"
+msgstr "Utiliser le pouvoir"
+
+msgid "Use special"
+msgstr "Utiliser le spécial"
+
+msgid "Vert."
+msgstr "Vert."
+
+msgid "Video filter"
+msgstr "Filtre vidéo"
+
+msgid "Video settings"
+msgstr "Réglages vidéo"
+
+msgid "Virtual Boy"
+msgstr "Virtual Boy"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Wiimote (menu)"
+msgstr "Wiimote (menu)"
+
+msgid "Wiimote + Nunchuk"
+msgstr "Wiimote + Nunchuk"
+
+msgid "Wiimote"
+msgstr "Wiimote"
+
+msgid "WonderSwan"
+msgstr "WonderSwan"
+
+msgid "Yes"
+msgstr "Oui"
