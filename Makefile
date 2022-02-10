@@ -130,7 +130,7 @@ LINK_FLAGS := \
 	-s ASSERTIONS=0 \
 	-s EXIT_RUNTIME=0 \
 	-s EXPORTED_RUNTIME_METHODS="['FS', 'cwrap']" \
-    -s EXPORTED_FUNCTIONS="['_LoadGame', '_emInit', '_emStep']" \
+    -s EXPORTED_FUNCTIONS="['_LoadGame', '_emInit', '_emStep', '_emPceSet6PadEnabled']" \
 	-s INVOKE_RUN=0 \
     -flto
 

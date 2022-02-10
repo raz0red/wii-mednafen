@@ -205,6 +205,17 @@ extern "C" void emInit() {
     FPS_Init();        
 }
 
+// Mednafen extern
+namespace PCE_Fast
+{
+  extern bool AVPad6Enabled[5];
+}
+
+extern "C" void emPceSet6PadEnabled(int index, bool enabled) {
+    printf("PCE 6 pad enabled: %d = %d\n", index, enabled);
+    PCE_Fast::AVPad6Enabled[index] = enabled;
+}
+
 static int firstLoop = true;
 
 static int lastWidth = 0;
