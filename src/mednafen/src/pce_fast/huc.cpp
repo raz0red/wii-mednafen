@@ -26,7 +26,9 @@
 #include "../cdrom/cdromif.h"
 #include "../mempatcher.h"
 
+#if defined(WII) && !defined(WRC)
 #include "wii_mednafen.h"
+#endif
 
 #ifdef MEM2
 #include "mem2.h"

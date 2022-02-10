@@ -183,7 +183,9 @@ static SexyAL_driver drivers[] =
 #endif
 
 #if HAVE_SDL
+#ifndef WRC
   { SEXYAL_TYPE_SDL, "SDL", "sdl", SexyALI_SDL_Open, NULL },
+#endif  
 #endif
 
 #if HAVE_JACK
@@ -194,7 +196,9 @@ static SexyAL_driver drivers[] =
   { SEXYAL_TYPE_WII, "WII", "wii", SexyALI_WII_Open, NULL },
 #endif
 
+#ifndef WRC
   { SEXYAL_TYPE_DUMMY, "Dummy", "dummy", SexyALI_Dummy_Open, NULL },
+#endif  
 
   { 0, NULL, NULL, NULL, NULL }
 };

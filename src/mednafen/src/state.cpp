@@ -39,7 +39,7 @@
 #include "net_print.h"  
 #endif
 
-#ifdef WII
+#if defined (WII) && !defined(WRC)
 // Redefine these so we don't see the verbose debug output.
 // Comment this block out if you want to see debug info.
 #define MDFN_malloc(size,name) malloc(size)

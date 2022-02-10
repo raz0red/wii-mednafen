@@ -23,7 +23,7 @@
 #include "asm_arm.h"
 #include <stdlib.h> /* for abs() */
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include <gctypes.h>
 #endif
   

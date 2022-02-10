@@ -49,7 +49,7 @@
 #include "net_print.h"  
 #endif
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include "wii_util.h"
 #endif
 
@@ -595,7 +595,7 @@ static CDRFile *ImageOpen(const char *path)
   bool isutf8 = false;
 #endif
 
-  while(fgets(linebuf, 512, fp) > 0)
+  while(fgets(linebuf, 512, fp) > (char*)0)
   {
 RETRYLINE:
     char cmdbuf[512], raw_args[512], args[4][512];
@@ -835,7 +835,7 @@ RETRYLINE:
           memset(&TmpTrack, 0, sizeof(TmpTrack));
           active_track = -1;
         }
-#ifdef WII        
+#if defined(WII) && !defined(WRC)
         if( !isutf8 )
         {
           Util_ansitoUTF8( (unsigned char*)args[0], (unsigned char*)argutf8 );

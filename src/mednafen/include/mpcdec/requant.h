@@ -35,7 +35,7 @@
 /// \file requant.h
 /// Requantization function definitions.
 
-#ifndef _mpcdec_requant_h
+#ifndef _mpcdec_requant_h_
 #define _mpcdec_requant_h_
 
 #include "mpcdec.h"

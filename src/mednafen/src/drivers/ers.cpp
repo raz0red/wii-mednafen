@@ -32,6 +32,7 @@ void EmuRealSyncher::SetEmuClock(int64 EmuClock_arg)
 
 bool EmuRealSyncher::NeedFrameSkip(void)
 {
+#ifndef WRC  
   int64 RealTime = (int64)SDL_GetTicks() * EmuClock / 1000;
 
   // If emulation time has fallen behind real time a bit(due to Mednafen not getting enough host CPU time),
@@ -44,6 +45,7 @@ bool EmuRealSyncher::NeedFrameSkip(void)
   }
 
   LastNoFrameSkipTime = RealTime;
+#endif  
   return(false);
 }
 
@@ -76,9 +78,10 @@ void EmuRealSyncher::SetETtoRT(void)
 
 void EmuRealSyncher::Sync(void)
 {
+#ifdef WRC  
   int64 RealTime;
 
-  do
+  do 
   {
     int64 SleepTime;
 
@@ -98,5 +101,6 @@ void EmuRealSyncher::Sync(void)
       SDL_Delay(SleepTime);
 
   } while(RealTime < EmuTime);
+#endif  
 }
 

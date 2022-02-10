@@ -36,7 +36,7 @@ typedef uint8_t u_int8_t;
 
 #endif
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include <gctypes.h>
 #define u_int32_t u32
 #define u_int16_t u16

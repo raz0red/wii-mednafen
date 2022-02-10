@@ -23,7 +23,9 @@
 #endif
 #include "../endian.h"
 
+#if defined(WII) && !defined(WRC)
 #include "Emulators.h"
+#endif
 
 namespace PCE_Fast
 {

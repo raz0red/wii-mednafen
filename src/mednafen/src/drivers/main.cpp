@@ -54,10 +54,12 @@
 #include "opengl.h"
 #include "video-state.h"
 #else
+#ifndef WRC
 #include "wii_app.h"
 #include "wii_sdl.h"
 #include "wii_mednafen.h"
 #include "Emulators.h"
+#endif
 #endif
 
 #ifdef WII_NETTRACE
@@ -544,7 +546,11 @@ void MDFND_PrintError(const char *s)
     net_print_string( NULL, 0, "Error: %s", s );
   }
 #endif
+#ifdef WRC
+  printf("%s\n", s);
+#else
   wii_set_status_message( s );
+#endif  
 #endif
 }
 
@@ -565,6 +571,9 @@ void MDFND_Message(const char *s)
       SDL_mutexV(StdoutMutex);
   }
 #else
+#ifdef WRC
+  printf("%s", s);    
+#endif
 #ifdef WII_NETTRACE
   if( s )
   {
@@ -587,7 +596,7 @@ bool CreateDirs(void)
 
   for(unsigned int x = 0; x < sizeof(subs) / sizeof(const char *); x++)
   {
-    tdir = trio_aprintf("%s"PSS"%s",DrBaseDirectory,subs[x]);
+    tdir = trio_aprintf("%s" PSS "%s",DrBaseDirectory,subs[x]);
     if(MDFN_mkdir(tdir, S_IRWXU) == -1 && errno != EEXIST)
     {
       free(tdir);
@@ -859,7 +868,11 @@ static EmuRealSyncher ers;
 #ifndef WII
 static int LoadGame(const char *force_module, const char *path)
 #else
-int LoadGame(const char *force_module, const char *path)
+#ifdef WRC 
+  extern "C" int LoadGame(const char *force_module, const char *path)
+#else 
+  int LoadGame(const char *force_module, const char *path)
+#endif  
 #endif
 {
   MDFNGI *tmp;
@@ -1080,9 +1093,15 @@ int64 Time64(void)
 #endif
 }
 
-int GameLoop(void *arg)
-{
+
+#ifdef WRC  
   int sskip = 0;
+#endif  
+int GameLoop(void *arg)
+{  
+#ifndef WRC  
+  int sskip = 0;
+#endif  
   while(GameThreadRun)
   {
     int16 *sound;
@@ -1110,9 +1129,10 @@ int GameLoop(void *arg)
       ers.SetETtoRT();
 #endif
 
+#ifndef WRC
     fskip = ers.NeedFrameSkip();
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
     if( !emuRegistry.getCurrentEmulator()->getAppliedFrameSkip() )
 #else
     if(!MDFN_GetSettingB("video.frameskip"))
@@ -1126,12 +1146,17 @@ int GameLoop(void *arg)
 
     if(NoWaiting)
       fskip = 1;
+#else 
+    fskip = 0;
+#endif
 
     VTLineWidths[VTBackBuffer][0].w = ~0;
 
     int ThisBackBuffer = VTBackBuffer;
 
+#ifndef WRC
     LockGameMutex(1);
+#endif    
     {
       EmulateSpecStruct espec;
       memset(&espec, 0, sizeof(EmulateSpecStruct));
@@ -1156,7 +1181,7 @@ int GameLoop(void *arg)
       }
       else
       {
-#ifndef WII
+#if !defined(WII) || defined(WRC)
         espec.SoundVolume = (double)MDFN_GetSettingUI("sound.volume") / 100;
 #else
         espec.SoundVolume = 
@@ -1166,15 +1191,12 @@ int GameLoop(void *arg)
 
       int64 before_time = Time64();
       int64 after_time;
-
       static double average_time = 0;
 
       MDFNI_Emulate(&espec);
 
       after_time = Time64();
-
       average_time += ((after_time - before_time) - average_time) * 0.10;
-
       assert(espec.MasterCycles);
       ers.AddEmuTime((espec.MasterCycles - espec.MasterCyclesALMS) / CurGameSpeed);
 
@@ -1186,18 +1208,23 @@ int GameLoop(void *arg)
       ssize = espec.SoundBufSize - espec.SoundBufSizeALMS;
     }
 
+#ifndef WRC
     LockGameMutex(0);
+#endif    
     FPS_IncVirtual();
     if(!fskip)
       FPS_IncDrawn();
 
+#ifndef WRC
     do
     {
+#endif      
 #ifndef WII
       GameThread_HandleEvents();
 #endif
       VTBackBuffer = ThisBackBuffer;
       MDFND_Update(fskip ? NULL : (MDFN_Surface *)VTBuffer[ThisBackBuffer], sound, ssize);
+#ifndef WRC      
       if((InFrameAdvance && !NeedFrameAdvance) || GameLoopPaused)
       {
         if(ssize)
@@ -1205,13 +1232,19 @@ int GameLoop(void *arg)
             sound[x] = 0;
       }
     } while(((InFrameAdvance && !NeedFrameAdvance) || GameLoopPaused) && GameThreadRun);
+#endif          
+
+#ifdef WRC
+    // Only loop once
+    return(1);
+#endif
   }
   return(1);
 }   
 
 char *GetBaseDirectory(void)
 {
-#ifndef WII
+#if !defined(WII) || defined(WRC)
   char *ol;
   char *ret;
 
@@ -1708,7 +1741,9 @@ uint32 MDFND_GetTime(void)
 
 void MDFND_Sleep(uint32 ms)
 {
+#ifndef WRC
   SDL_Delay(ms);
+#endif  
 }
 
 struct MDFN_Thread

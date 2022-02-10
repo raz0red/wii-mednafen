@@ -27,7 +27,7 @@
 
 #include <locale.h>
 
-#ifdef WII
+#if defined (WII) && !defined(WRC)
 #include <ogcsys.h>
 #endif
 
@@ -39,7 +39,7 @@ static CD_TOC toc;
 // Only access from CD reading thread!
 static CDRFile *p_cdrfile = NULL;
 
-#ifndef WII
+#if !defined(WII) || defined(WRC)
 static MDFN_Thread *CDReadThread = NULL;
 #else
 lwp_t CDReadThread;
@@ -168,7 +168,7 @@ static uint32 ra_lba;
 static int ra_count;
 static int32 last_read_lba;
 
-#ifndef WII
+#if !defined(WII) || defined(WRC)
 static int ReadThreadStart(void *arg)
 #else
 void *ReadThreadStart(void *arg)
@@ -290,7 +290,7 @@ void *ReadThreadStart(void *arg)
 #endif
 }
 
-#ifdef WII
+#if defined (WII) && !defined(WRC)
 #define CDR_STACK_SIZE 32*1024
 #endif
 
@@ -309,7 +309,7 @@ bool CDIF_Open(const char *device_name)
  ra_count = 0;
  last_read_lba = -1;
 
-#ifndef WII
+#if !defined(WII) || defined(WRC)
  CDReadThread = MDFND_CreateThread(ReadThreadStart, device_name ? strdup(device_name) : NULL);
 #else
   LWP_CreateThread(&CDReadThread, ReadThreadStart, 
@@ -320,7 +320,7 @@ bool CDIF_Open(const char *device_name)
 
  if(!msg.args[0])
  {
-#ifndef WII
+#if !defined(WII) || defined(WRC)
   MDFND_WaitThread(CDReadThread, NULL);
 #else
   void *v;
@@ -364,7 +364,7 @@ bool CDIF_ValidateRawSector(uint8 *buf)
 bool CDIF_Close(void)
 {
  ReadThreadQueue->Write(CDIF_Message(CDIF_MSG_DIEDIEDIE, 0, 0, 0, 0, NULL));
-#ifndef WII
+#if !defined(WII) || defined(WRC)
  MDFND_WaitThread(CDReadThread, NULL);
 #else
   void *v;

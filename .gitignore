@@ -6,3 +6,6 @@ boot.*
 *.suo
 *.sln
 *.ncb
+*.o
+mednafen.js
+mednafen.wasm

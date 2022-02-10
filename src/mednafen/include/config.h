@@ -5,7 +5,9 @@
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
 
 /* Define if we are compiling for PPC architectures. */
+#if 0
 #define ARCH_POWERPC 1
+#endif
 
 /* Define if we are compiling with AltiVec usage. */
 /* #undef ARCH_POWERPC_ALTIVEC */
@@ -313,9 +315,7 @@
 #define HAVE_STRERROR_R 1
 
 /* Define to 1 if you have the <strings.h> header file. */
-#if 0
 #define HAVE_STRINGS_H 1
-#endif
 
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
@@ -373,9 +373,7 @@
 #define INTDIV0_RAISES_SIGFPE 1
 
 /* Define on little-endian platforms. */
-#if 0
 #define LSB_FIRST 1
-#endif
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
@@ -397,12 +395,12 @@
 #define MPC_FIXED_POINT 1
 
 /* Define on little-endian platforms. */
-#if 0
 #define MPC_LITTLE_ENDIAN 1
-#endif 
 
 /* Define on big-endian platforms. */
+#if 0
 #define MSB_FIRST 1
+#endif
 
 /* Define if we are compiling with network play code. */
 #undef NETWORK
@@ -472,7 +470,7 @@
 
 /* Define as the maximum value of type 'size_t', if the system doesn't define
    it. */
-#ifndef WII
+#if !defined(WII) || defined(WRC)
 #define SIZE_MAX (((1U << 31) - 1) * 2 + 1)
 #endif
 
@@ -541,29 +539,29 @@
 
 /* Define if we are compiling with GBA emulation. */
 /* #undef WANT_GBA_EMU */
-#define WANT_GBA_EMU 1
+#define WANT_GBA_EMU 0
 
 /* Define if we are compiling with GB emulation. */
 /* #undef WANT_GB_EMU */
-#define WANT_GB_EMU 1
+#define WANT_GB_EMU 0
 
 /* Define if we are compiling with internal CJK fonts. */
 /* #undef WANT_INTERNAL_CJK */
 
 /* Define if we are compiling with Lynx emulation. */
-#define WANT_LYNX_EMU 1
+#define WANT_LYNX_EMU 0
 
 /* Define if we are compiling with Sega Genesis/MegaDrive emulation. */
 /* #undef WANT_MD_EMU */
-#define WANT_MD_EMU 1
+#define WANT_MD_EMU 0
 
 /* Define if we are compiling with NES emulation. */
 /* #undef WANT_NES_EMU */
-#define WANT_NES_EMU 1
+#define WANT_NES_EMU 0
 
 /* Define if we are compiling with NGP emulation. */
 /* #undef WANT_NGP_EMU */
-#define WANT_NGP_EMU 1
+#define WANT_NGP_EMU 0
 
 /* Define if we are compiling with PCE emulation. */
 /* #undef WANT_PCE_EMU */
@@ -574,20 +572,20 @@
 
 /* Define if we are compiling with PC-FX emulation. */
 /* #undef WANT_PCFX_EMU */
-#define WANT_PCFX_EMU 1
+#define WANT_PCFX_EMU 0
 
 /* Define if we are compiling with SMS+GG emulation. */
 /* #undef WANT_SMS_EMU */
-#define WANT_SMS_EMU 1
+#define WANT_SMS_EMU 0
 
 /* Define if we are compiling with SNES emulation. */
 /* #undef WANT_SNES_EMU */
 
 /* Define if we are compiling with Virtual Boy emulation. */
-#define WANT_VB_EMU 1
+#define WANT_VB_EMU 0
 
 /* Define if we are compiling with WonderSwan emulation. */
-#define WANT_WSWAN_EMU 1
+#define WANT_WSWAN_EMU 0
 
 /* Define if we are compiling for Win32. */
 /* #undef WIN32 */

@@ -196,7 +196,7 @@ static bool SeekToOurSection(FILE *fp) // Tentacle monster section aisle five, s
 {
   char buf[2048];
 
-  while(fgets(buf,2048,fp) > 0)
+  while(fgets(buf,2048,fp) > (char*)0)
   {
     if(buf[0] == '[')
     {
@@ -248,7 +248,7 @@ void MDFN_LoadGameCheats(FILE *override)
 
   if(SeekToOurSection(fp))
   {
-    while(fgets(linebuf,2048,fp) > 0)
+    while(fgets(linebuf,2048,fp) > (char*)0)
     { 
       char namebuf[2048];
       char *tbuf=linebuf;
@@ -390,7 +390,7 @@ void MDFN_FlushGameCheats(int nosave)
     {
       FILE *tmp_fp = fopen(tmp_fn.c_str(), "wb");
 
-      while(fgets((char*)linebuf, 2048, fp) > 0)
+      while(fgets((char*)linebuf, 2048, fp) > (char*)0)
       {
         if(linebuf[0] == '[' && !insection)
         {

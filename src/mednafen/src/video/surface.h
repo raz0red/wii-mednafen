@@ -1,7 +1,7 @@
 #ifndef __MDFN_SURFACE_H
 #define __MDFN_SURFACE_H
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include "wii_sdl.h"
 #endif
 
@@ -58,7 +58,7 @@ public:
   // Creates a color value for the surface corresponding to the 8-bit R/G/B/A color passed.
   INLINE uint32 MakeColor(uint8 r, uint8 g, uint8 b, uint8 a = 0) const
   {
-#ifdef WII
+#if defined(WII) && !defined(WRC)
     return wii_sdl_rgb( r, g, b );
 #else
     if(colorspace == MDFN_COLORSPACE_YCbCr)

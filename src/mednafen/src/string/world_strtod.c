@@ -22,7 +22,10 @@ that recognizes both "," and "." as valid radix characters.
 # include <config.h>
 #endif
 
+#ifdef WRC
 #include <errno.h>
+#endif
+
 #ifndef errno
 extern int errno;
 #endif

@@ -261,7 +261,7 @@ bool MFDN_LoadSettings(const char *basedir)
 
   char linebuf[1024];
 
-  while(fgets(linebuf, 1024, fp) > 0)
+  while(fgets(linebuf, 1024, fp) > (char*)0)
   {
     MDFNCS *zesetting;
     char *spacepos = strchr(linebuf, ' ');

@@ -19,11 +19,19 @@
 
 #include "video.h"
 
+#if defined(WII) && !defined(WRC)
 #include "Emulators.h"
+#endif
 
 #ifdef WII_NETTRACE
 #include <network.h>
 #include "net_print.h"  
+#endif
+
+#ifdef WRC
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
 #endif
 
 SDL_Surface *screen = NULL;
@@ -33,13 +41,13 @@ static void ScaleLineAvg16(u16 *Target, u16 *Source, int SrcWidth, int TgtWidth,
 static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth, float threshold);
 
 #define COPY_SCREEN                                                 \
-  int indent = ( screen->w - DisplayRect->w ) >> 1;                 \
-  int topindent = ( screen->h - DisplayRect->h ) >> 1;              \
+  int indent = 0; /*( screen->w - DisplayRect->w ) >> 1;*/          \
+  int topindent = 0; /*( screen->h - DisplayRect->h ) >> 1;*/       \
   int destPitch = screen->pitch/screen->format->BytesPerPixel;      \
   int srcPitch = msurface->pitch32;                                 \
   int width = DisplayRect->w * screen->format->BytesPerPixel;       \
   int bpp = screen->format->BytesPerPixel;                          \
-  dest += screen->offset/screen->format->BytesPerPixel +            \
+  dest += /*screen->offset/screen->format->BytesPerPixel +*/        \
   (destPitch * topindent) + indent;                                 \
   src += srcPitch * DisplayRect->y + DisplayRect->x;                \
   if( LineWidths[0].w == ~0 )                                       \
@@ -59,7 +67,7 @@ static void ScaleLineAvg32(u32 *Target, u32 *Source, int SrcWidth, int TgtWidth,
       if( LineWidths[y].w != DisplayRect->w )                       \
       {                                                             \
         scale( dest, src + LineWidths[y].x,                         \
-            LineWidths[y].w, DisplayRect->w, 0.5f );                \
+           LineWidths[y].w, DisplayRect->w, 0.5f );                 \
       }                                                             \
       else                                                          \
       {                                                             \
@@ -74,7 +82,15 @@ void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN
 {
   if(!screen) return;
 
+#if defined(WII) && !defined(WRC)
   u8 bpp = emuRegistry.getCurrentEmulator()->getBpp();
+#endif
+
+#ifdef WRC
+  u8 bpp = 32; // PCE_FAST_BPP;
+#endif
+
+  if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
   switch( bpp )
   {
   case 8:
@@ -86,11 +102,11 @@ void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN
     }
     break;
   case 16:
-    {
+    {      
       u16* dest = (u16*)screen->pixels;
       u16* src = msurface->pixels16;
       void (*scale)(u16*,u16*,int,int,float) = ScaleLineAvg16;
-      COPY_SCREEN
+      COPY_SCREEN      
     }
     break;
   default:
@@ -102,6 +118,7 @@ void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN
     }
     break;
   }
+  if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
 
   SDL_Flip(screen); 
 }

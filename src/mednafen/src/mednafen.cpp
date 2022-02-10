@@ -15,7 +15,8 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include  "mednafen.h"
+#include "config.h"
+#include "mednafen.h"
 
 #include  <string.h>
 #include	<stdarg.h>
@@ -861,55 +862,55 @@ void MDFNI_StopAVRecord(void)
   {
     static MDFNGI *InternalSystems[] =
     {
-#ifdef WANT_NES_EMU
+#if WANT_NES_EMU == 1
       &EmulatedNES,
 #endif
 
-#ifdef WANT_SNES_EMU
+#if WANT_SNES_EMU == 1
       &EmulatedSNES,
 #endif
 
-#ifdef WANT_GB_EMU
+#if WANT_GB_EMU == 1
       &EmulatedGB,
 #endif
 
-#ifdef WANT_GBA_EMU
+#if WANT_GBA_EMU == 1
       &EmulatedGBA,
 #endif
 
-#ifdef WANT_PCE_EMU
+#if WANT_PCE_EMU == 1
       &EmulatedPCE,
 #endif
 
-#ifdef WANT_PCE_FAST_EMU
+#if WANT_PCE_FAST_EMU == 1
       &EmulatedPCE_Fast,
 #endif
 
-#ifdef WANT_LYNX_EMU
+#if WANT_LYNX_EMU == 1
       &EmulatedLynx,
 #endif
 
-#ifdef WANT_MD_EMU
+#if WANT_MD_EMU == 1
       &EmulatedMD,
 #endif
 
-#ifdef WANT_PCFX_EMU
+#if WANT_PCFX_EMU == 1
       &EmulatedPCFX,
 #endif
 
-#ifdef WANT_NGP_EMU
+#if WANT_NGP_EMU == 1
       &EmulatedNGP,
 #endif
 
-#ifdef WANT_VB_EMU
+#if WANT_VB_EMU == 1
       &EmulatedVB,
 #endif
 
-#ifdef WANT_WSWAN_EMU
+#if WANT_WSWAN_EMU == 1
       &EmulatedWSwan,
 #endif
 
-#ifdef WANT_SMS_EMU
+#if WANT_SMS_EMU == 1 
       &EmulatedSMS,
       &EmulatedGG,
 #endif

@@ -35,7 +35,9 @@
 #include "debugger.h"
 #include "help.h"
 #else
+#ifndef WRC
 #include "Emulators.h"
+#endif
 #ifdef WII_NETTRACE
 #include <network.h>
 #include "net_print.h"  
@@ -1389,11 +1391,13 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
     rapid = (rapid + 1) % (autofirefreq + 1);
 
 #ifdef WII
+#if 0
   Emulator* emu = emuRegistry.getCurrentEmulator();
   if( emu != NULL )
   {
     emu->updateControls( rapid >= (autofirefreq + 1) / 2 );
   }
+#endif  
 #endif
 
 #ifndef WII
@@ -1443,8 +1447,10 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       }
     }
 #else
+#if 0
     emuRegistry.getCurrentEmulator()->updateInputDeviceData( 
       x, (uint8*)PortData[x], PortDataSize[x] );
+#endif      
 #endif
 
     // Handle button exclusion!
