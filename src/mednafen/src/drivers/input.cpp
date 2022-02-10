@@ -45,6 +45,7 @@
 #endif
 
 #include <math.h>
+#include <emscripten.h>
 
 #ifndef WII
 static int RewindState = 0;
@@ -1447,9 +1448,22 @@ void MDFND_UpdateInput(bool VirtualDevicesOnly, bool UpdateRapidFire)
       }
     }
 #else
-#if 0
+#ifdef WII
+#ifdef WRC
+    int result = EM_ASM_INT({ 
+      return window.system.updateInputDeviceData($0); 
+    }, x);  
+    uint8* data = (uint8*)PortData[x];    
+    if (PortDataSize[x] >= 1) {
+      data[0] = result & 0xFF;
+    }
+    if (PortDataSize[x] >= 2) {
+      data[1] = (result >> 8) & 0xFF;
+    }
+#else
     emuRegistry.getCurrentEmulator()->updateInputDeviceData( 
       x, (uint8*)PortData[x], PortDataSize[x] );
+#endif      
 #endif      
 #endif
 
