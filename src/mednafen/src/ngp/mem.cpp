@@ -23,7 +23,7 @@
 #include "flash.h"
 #include "rtc.h"
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include "Emulators.h"
 #endif
 
@@ -614,7 +614,8 @@ void reset_memory(void)
 #ifndef WII
 	storeB(0x6F87, MDFN_GetSettingB("ngp.language"));
 #else
-        storeB(0x6F87, !!emuRegistry.NeoGeoPocketEmu.getGameLanguage() );
+		// TODO
+        storeB(0x6F87, 1 /*english*/ /*!!emuRegistry.NeoGeoPocketEmu.getGameLanguage()*/ );
 #endif
 
 	//Color Mode Selection: 0x00 = B&W, 0x10 = Colour

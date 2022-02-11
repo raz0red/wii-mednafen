@@ -561,7 +561,7 @@
 
 /* Define if we are compiling with NGP emulation. */
 /* #undef WANT_NGP_EMU */
-#define WANT_NGP_EMU 0
+#define WANT_NGP_EMU 1
 
 /* Define if we are compiling with PCE emulation. */
 /* #undef WANT_PCE_EMU */

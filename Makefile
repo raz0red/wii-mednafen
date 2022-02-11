@@ -37,9 +37,7 @@ CFILES := \
 	./src/mednafen/src/trio/trio.c \
 	./src/mednafen/src/trio/trionan.c \
 	./src/mednafen/src/trio/triostr.c	
-	
-	
-	
+		
 CPPFILES := \
 	./src/em/em.cpp \
 	./src/mednafen/src/pce_fast/hes.cpp \
@@ -66,6 +64,8 @@ CPPFILES := \
 	./src/mednafen/src/drivers/main.cpp \
 	./src/mednafen/src/drivers/sound.cpp \
 	./src/mednafen/src/drivers/video.cpp \
+	./src/mednafen/src/hw_cpu/z80-fuse/z80_ops.cpp \
+	./src/mednafen/src/hw_cpu/z80-fuse/z80fuse.cpp \
 	./src/mednafen/src/hw_misc/arcade_card/arcade_card.cpp \
 	./src/mednafen/src/hw_sound/pce_psg/pce_psg.cpp	\
 	./src/mednafen/src/sexyal/convert.cpp \
@@ -73,6 +73,7 @@ CPPFILES := \
 	./src/mednafen/src/sexyal/drivers/em.cpp \
 	./src/mednafen/src/sound/Blip_Buffer.cpp \
 	./src/mednafen/src/sound/Fir_Resampler.cpp \
+	./src/mednafen/src/sound/Stereo_Buffer.cpp \
 	./src/mednafen/src/string/ConvertUTF.cpp \
 	./src/mednafen/src/vb/timer.cpp \
 	./src/mednafen/src/vb/vb.cpp \
@@ -96,9 +97,28 @@ CPPFILES := \
 	./src/mednafen/src/player.cpp \
 	./src/mednafen/src/settings.cpp \
 	./src/mednafen/src/state.cpp \
-	./src/mednafen/src/tests.cpp			
-
-	
+	./src/mednafen/src/tests.cpp \
+	./src/mednafen/src/ngp/biosHLE.cpp \
+	./src/mednafen/src/ngp/dma.cpp \
+	./src/mednafen/src/ngp/gfx_scanline_colour.cpp \
+	./src/mednafen/src/ngp/gfx_scanline_mono.cpp \
+	./src/mednafen/src/ngp/mem.cpp \
+    ./src/mednafen/src/ngp/neopop.cpp \
+	./src/mednafen/src/ngp/ngpbios.cpp \
+	./src/mednafen/src/ngp/ngpflash.cpp \
+	./src/mednafen/src/ngp/ngpgfx.cpp \
+	./src/mednafen/src/ngp/ngpinterrupt.cpp \
+	./src/mednafen/src/ngp/ngprom.cpp \
+	./src/mednafen/src/ngp/ngprtc.cpp \
+	./src/mednafen/src/ngp/ngpsound.cpp \
+	./src/mednafen/src/ngp/T6W28_Apu.cpp \
+	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret.cpp \
+	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_dst.cpp \
+	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_src.cpp \
+  	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_single.cpp \
+	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_reg.cpp \
+	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_registers.cpp \
+	./src/mednafen/src/ngp/Z80_interface.cpp				
 
 FILES := $(patsubst %.c,%.o,$(CFILES)) $(patsubst %.cpp,%.o,$(CPPFILES))
 
@@ -110,8 +130,11 @@ FLAGS := \
 	-I./src/mednafen/include/ \
 	-I./src/mednafen/src/drivers/ \
 	-I./src/mednafen/src/pce_fast/ \
+	-I./src/mednafen/src/hw_cpu/ \
 	-I./src/mednafen/src/hw_misc/ \
 	-I./src/mednafen/src/hw_sound/ \
+	-I./src/mednafen/src/ngp/ \
+	-I./src/mednafen/src/ngp/TLCS-900h/ \
     -DWRC -DWII \
  	-DHAVE_CONFIG_H -DHAVE_FLOAT_H \
   	-Winline \
