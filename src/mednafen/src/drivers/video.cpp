@@ -87,7 +87,7 @@ void BlitScreen(MDFN_Surface *msurface, const MDFN_Rect *DisplayRect, const MDFN
 #endif
 
 #ifdef WRC
-  u8 bpp = 32; // PCE_FAST_BPP;
+  u8 bpp = 32;
 #endif
 
   if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);

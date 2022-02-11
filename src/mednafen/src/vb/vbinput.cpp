@@ -18,7 +18,9 @@
 #include "vb.h"
 #include "input.h"
 
+#ifndef WRC
 #include "Emulators.h"
+#endif
 
 namespace MDFN_IEN_VB
 {

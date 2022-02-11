@@ -24,9 +24,13 @@
 #include "net_print.h"  
 #endif
 
+#include <SDL.h>
+
 #ifdef WII
+#ifndef WRC
 #include "wii_mednafen.h"
 #include "Emulators.h"
+#endif
 extern SDL_Surface* screen;
 extern SDL_Palette orig_8bpp_palette;
 #endif

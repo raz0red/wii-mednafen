@@ -9,6 +9,7 @@ CFILES := \
 	./src/mednafen/src/compress/unzip.c \
 	./src/mednafen/src/compress/ioapi.c \
 	./src/mednafen/src/compress/quicklz.c \
+	./src/mednafen/src/hw_cpu/v810/fpu-new/softfloat.c \
 	./src/mednafen/src/mpcdec/huffsv46.c \
 	./src/mednafen/src/mpcdec/huffsv7.c \
 	./src/mednafen/src/mpcdec/idtag.c \
@@ -36,6 +37,7 @@ CFILES := \
 	./src/mednafen/src/trio/trio.c \
 	./src/mednafen/src/trio/trionan.c \
 	./src/mednafen/src/trio/triostr.c	
+	
 	
 	
 CPPFILES := \
@@ -72,6 +74,11 @@ CPPFILES := \
 	./src/mednafen/src/sound/Blip_Buffer.cpp \
 	./src/mednafen/src/sound/Fir_Resampler.cpp \
 	./src/mednafen/src/string/ConvertUTF.cpp \
+	./src/mednafen/src/vb/timer.cpp \
+	./src/mednafen/src/vb/vb.cpp \
+	./src/mednafen/src/vb/vbinput.cpp \
+	./src/mednafen/src/vb/vip.cpp \
+	./src/mednafen/src/vb/vsu.cpp \
 	./src/mednafen/src/video/font-data.cpp \
 	./src/mednafen/src/video/surface.cpp \
 	./src/mednafen/src/video/text.cpp \
@@ -80,6 +87,7 @@ CPPFILES := \
 	./src/mednafen/src/error.cpp \
 	./src/mednafen/src/file.cpp \
 	./src/mednafen/src/general.cpp \
+	./src/mednafen/src/math_ops.cpp	\
 	./src/mednafen/src/md5.cpp \
 	./src/mednafen/src/mednafen.cpp \
 	./src/mednafen/src/memory.cpp \
@@ -88,7 +96,9 @@ CPPFILES := \
 	./src/mednafen/src/player.cpp \
 	./src/mednafen/src/settings.cpp \
 	./src/mednafen/src/state.cpp \
-	./src/mednafen/src/tests.cpp				
+	./src/mednafen/src/tests.cpp			
+
+	
 
 FILES := $(patsubst %.c,%.o,$(CFILES)) $(patsubst %.cpp,%.o,$(CPPFILES))
 
@@ -110,10 +120,8 @@ FLAGS := \
 	-fsigned-char \
   	-Wno-strict-aliasing \
   	-Wno-narrowing \
-  	-DVB_BPP=8 \
   	-DWSWAN_BPP=16 \
   	-DGBA_BPP=16 \
-  	-DPCE_FAST_BPP=16 \
   	-DNES_BPP=16 \
   	-DPCFX_BPP=16 \
   	-DMD_BPP=16 \

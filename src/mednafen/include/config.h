@@ -582,7 +582,7 @@
 /* #undef WANT_SNES_EMU */
 
 /* Define if we are compiling with Virtual Boy emulation. */
-#define WANT_VB_EMU 0
+#define WANT_VB_EMU 1
 
 /* Define if we are compiling with WonderSwan emulation. */
 #define WANT_WSWAN_EMU 0

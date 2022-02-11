@@ -29,7 +29,7 @@
 #include "mem2.h"
 #endif
 
-#ifdef WII
+#if defined(WII) && !defined(WRC)
 #include "wii_mednafen.h"
 #endif
 //#define VB_SUPPORT_BIN_EXT		// Even with this enabled, any *.bin file loaded must be in the internal database to be recognized as a VB game.
@@ -2072,7 +2072,7 @@ static int Load(const char *name, MDFNFILE *fp)
  
  MDFN_printf("\n");
  
- #ifdef WII
+ #if defined(WII) && !defined(WRC)
     uint8 md5NoHeader[16];
     md5_context md5NoHeaderCtx;
     md5NoHeaderCtx.starts();
@@ -2227,7 +2227,11 @@ static int Load(const char *name, MDFNFILE *fp)
   MDFNMP_AddRAM(GPRAM_Mask + 1, 6 << 24, GPRAM);
 
 #ifndef WII
- PatchROM();
+PatchROM();
+#else 
+#ifdef WRC
+PatchROM(true);
+#endif
 #endif
 
  return(1);
