@@ -118,7 +118,16 @@ CPPFILES := \
   	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_single.cpp \
 	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_interpret_reg.cpp \
 	./src/mednafen/src/ngp/TLCS-900h/TLCS900h_registers.cpp \
-	./src/mednafen/src/ngp/Z80_interface.cpp				
+	./src/mednafen/src/ngp/Z80_interface.cpp \
+	./src/mednafen/src/wswan/wsmain.cpp \
+	./src/mednafen/src/wswan/wsmemory.cpp \
+	./src/mednafen/src/wswan/v30mz.cpp \
+	./src/mednafen/src/wswan/eeprom.cpp \
+	./src/mednafen/src/wswan/wsgfx.cpp \
+	./src/mednafen/src/wswan/tcache.cpp \
+	./src/mednafen/src/wswan/wssound.cpp \
+	./src/mednafen/src/wswan/interrupt.cpp \
+	./src/mednafen/src/wswan/rtc.cpp
 
 FILES := $(patsubst %.c,%.o,$(CFILES)) $(patsubst %.cpp,%.o,$(CPPFILES))
 
@@ -143,12 +152,6 @@ FLAGS := \
 	-fsigned-char \
   	-Wno-strict-aliasing \
   	-Wno-narrowing \
-  	-DWSWAN_BPP=16 \
-  	-DGBA_BPP=16 \
-  	-DNES_BPP=16 \
-  	-DPCFX_BPP=16 \
-  	-DMD_BPP=16 \
-  	-DPLAYER_BPP=16 \
     -flto
 
 LINK_FLAGS := \

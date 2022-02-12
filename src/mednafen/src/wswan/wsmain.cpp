@@ -38,8 +38,10 @@
 #include "eeprom.h"
 #include "debug.h"
 
+#ifndef WRC
 #include "wii_mednafen.h"
 #include "Emulators.h"
+#endif
 
 #ifdef MEM2
 #include "mem2.h"
@@ -342,7 +344,8 @@ static int Load(const char *name, MDFNFILE *fp)
 #ifndef WII
   WSwan_MemoryInit(MDFN_GetSettingB("wswan.language"), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
 #else
-  WSwan_MemoryInit(!!emuRegistry.WonderSwanEmu.getGameLanguage(), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+  // TODO: Fix this
+  WSwan_MemoryInit(true /*!!emuRegistry.WonderSwanEmu.getGameLanguage()*/, wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
 #endif
  WSwan_GfxInit();
  MDFNGameInfo->fps = (uint32)((uint64)3072000 * 65536 * 256 / (159*256));

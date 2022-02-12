@@ -585,7 +585,7 @@
 #define WANT_VB_EMU 1
 
 /* Define if we are compiling with WonderSwan emulation. */
-#define WANT_WSWAN_EMU 0
+#define WANT_WSWAN_EMU 1
 
 /* Define if we are compiling for Win32. */
 /* #undef WIN32 */
