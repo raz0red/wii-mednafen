@@ -2140,7 +2140,11 @@ static int Load(const char *name, MDFNFILE *fp)
  memset(GPRAM, 0, GPRAM_Mask + 1);
 
  {
+#ifdef WRC
+  gzFile gp = gzopen("sram.sav", "rb");
+#else       
   gzFile gp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb");
+#endif  
 
   if(gp)
   {
@@ -2235,6 +2239,17 @@ PatchROM(true);
 #endif
 
  return(1);
+}
+
+extern "C" int VB_SramSave() {
+    // Only save cart RAM if it has been modified.
+    for (unsigned int i = 0; i < GPRAM_Mask + 1; i++) {
+        if (GPRAM[i]) {
+            const char* filename = "sram.sav";              
+            return MDFN_DumpToFile(filename, 6, GPRAM, 65536);
+        }
+    }
+    return 0;
 }
 
 static void CloseGame(void)

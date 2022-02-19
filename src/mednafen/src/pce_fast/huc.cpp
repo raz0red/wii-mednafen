@@ -178,7 +178,11 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
   gzFile fp;
   
   memset(PopRAM, 0xFF, 32768);
+#ifdef WRC
+  if((fp = gzopen("sram.sav", "rb")))
+#else
   if((fp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb")))
+#endif  
   {
    gzread(fp, PopRAM, 32768);
    gzclose(fp);
@@ -209,7 +213,11 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
   }
   memset(TsushinRAM, 0xFF, 0x8000);
 
+#ifdef WRC
+  if((fp = gzopen("sram.sav", "rb")))
+#else
   if((fp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb")))
+#endif  
   {
    gzread(fp, TsushinRAM, 32768);
    gzclose(fp);
@@ -231,7 +239,11 @@ int HuCLoad(const uint8 *data, uint32 len, uint32 crc32)
   memset(SaveRAM, 0x00, 2048);
   memcpy(SaveRAM, BRAM_Init_String, 8);    // So users don't have to manually intialize the file cabinet
                                                 // in the CD BIOS screen.
+#ifdef WRC
+  if((fp = gzopen("sram.sav", "rb")))
+#else
   if((fp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb")))
+#endif  
   {
    gzread(fp, SaveRAM, 2048);
    gzclose(fp);
@@ -374,7 +386,11 @@ int HuCLoadCD(const char *bios_path)
  memcpy(SaveRAM, BRAM_Init_String, 8);	// So users don't have to manually intialize the file cabinet
 						// in the CD BIOS screen.
 
+#ifdef WRC
+ if((srp = gzopen("sram.sav", "rb")))
+#else
  if((srp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb")))
+#endif
  {
   gzread(srp, SaveRAM, 2048);
   gzclose(srp);
@@ -408,6 +424,23 @@ int HuC_StateAction(StateMem *sm, int load, int data_only)
    ret &= arcade_card->StateAction(sm, load, data_only);
  }
  return(ret);
+}
+
+extern "C" int Pce_SramSave() {
+    const char* filename = "sram.sav";
+    if (IsPopulous) {
+        return MDFN_DumpToFile(filename, 6,
+                        ROMSpace + 0x40 * 8192, 32768);
+    } else if (IsTsushin) {
+        if (TsushinRAM) {
+          return MDFN_DumpToFile(filename, 6,
+                            TsushinRAM, 32768);
+        }
+    } else if (IsBRAMUsed()) {
+        return MDFN_DumpToFile(filename, 6,
+                        SaveRAM, 2048);
+    }
+    return 0;
 }
 
 void HuCClose(void)

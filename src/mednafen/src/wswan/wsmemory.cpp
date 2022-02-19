@@ -477,6 +477,19 @@ void WSwan_MemorySetRegister(const unsigned int id, uint32 value)
 
 #endif
 
+extern "C" int WSwan_SramSave() {
+    if (sram_size || eeprom_size) {
+        std::vector<PtrLengthPair> EvilRams;
+        if (eeprom_size)
+            EvilRams.push_back(PtrLengthPair(wsEEPROM, eeprom_size));
+        if (sram_size)
+            EvilRams.push_back(PtrLengthPair(wsSRAM, sram_size));
+        const char* filename = "sram.sav";
+        return MDFN_DumpToFile(filename, 6, EvilRams);
+    }
+    return 0;
+}
+
 void WSwan_MemoryKill(void)
 {
  if((sram_size || eeprom_size) && !SkipSL)
@@ -538,7 +551,11 @@ void WSwan_MemoryInit(bool lang, bool IsWSC, uint32 ssize, bool SkipSaveLoad)
  {
   gzFile savegame_fp;
 
+#ifdef WRC
+  savegame_fp = gzopen("sram.sav", "rb");
+#else
   savegame_fp = gzopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "sav").c_str(), "rb");
+#endif  
   if(savegame_fp)
   {
    if(eeprom_size)

@@ -256,3 +256,29 @@ extern "C" void emStep() {
         VTReady = NULL;
     }
 }
+
+extern "C" int Ngp_FlashSave();
+extern "C" int Pce_SramSave();
+extern "C" int VB_SramSave();
+extern "C" int WSwan_SramSave();
+
+extern "C" int emSramSave() {
+    const char* systemName = 
+        MDFNGameInfo && MDFNGameInfo->shortname ?
+            MDFNGameInfo->shortname : NULL;
+    printf("## systemName: %s\n", systemName);
+    if (systemName) {
+        const char* saveName = "sram.sav";        
+        if (!strcmp(systemName, "vb")) {
+            return VB_SramSave();
+        } else if (!strcmp(systemName, "wswan")) {
+            return WSwan_SramSave();
+        } else if (!strcmp(systemName, "ngp")) {
+            return Ngp_FlashSave();
+        } else if (!strcmp(systemName, "pce_fast")) {
+            return Pce_SramSave();
+        }
+    }
+
+    return 0;
+}

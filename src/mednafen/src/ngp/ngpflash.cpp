@@ -275,6 +275,19 @@ static uint8 *make_flash_commit(int32 *length)
 	return(flashdata);
 }
 
+extern "C" int Ngp_FlashSave() {
+ int32 length = 0;
+ uint8 *flashdata = make_flash_commit(&length);
+
+ if(flashdata)
+ {
+  int ret = system_io_flash_write(flashdata, length);
+  MDFN_free(flashdata);
+  return ret;
+ }
+ return 0;
+}
+
 void flash_commit(void)
 {
  int32 length = 0;

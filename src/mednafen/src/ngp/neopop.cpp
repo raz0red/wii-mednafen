@@ -270,7 +270,11 @@ static MDFNSetting NGPSettings[] =
 
 bool system_io_flash_read(uint8* buffer, uint32 bufferLength)
 {
+#ifdef WRC	
+ FILE *fp = fopen("flash.sav", "rb");
+#else
  FILE *fp = fopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "flash").c_str(), "rb");
+#endif
  if(!fp) return(0);
 
  if(!fread(buffer, 1, bufferLength, fp))
@@ -286,7 +290,11 @@ bool system_io_flash_read(uint8* buffer, uint32 bufferLength)
 
 bool system_io_flash_write(uint8* buffer, uint32 bufferLength)
 {
+#ifdef WRC
+ FILE *fp = fopen("flash.sav", "wb");
+#else
  FILE *fp = fopen(MDFN_MakeFName(MDFNMKF_SAV, 0, "flash").c_str(), "wb");
+#endif 
  if(!fp) return(0);
 
  if(!fwrite(buffer, 1, bufferLength, fp))
