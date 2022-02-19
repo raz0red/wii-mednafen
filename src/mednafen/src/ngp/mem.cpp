@@ -562,6 +562,11 @@ static const uint8 systemMemory[] =
 
 //=============================================================================
 
+static int is_english_lang = 1;
+extern "C" void Ngp_SetLanguage(int is_english) {
+	is_english_lang = is_english;
+}
+
 void reset_memory(void)
 {
 	unsigned int i;
@@ -614,8 +619,11 @@ void reset_memory(void)
 #ifndef WII
 	storeB(0x6F87, MDFN_GetSettingB("ngp.language"));
 #else
-		// TODO
-        storeB(0x6F87, 1 /*english*/ /*!!emuRegistry.NeoGeoPocketEmu.getGameLanguage()*/ );
+#ifdef WRC
+	storeB(0x6F87, !!is_english_lang);
+#else
+	storeB(0x6F87, !!emuRegistry.NeoGeoPocketEmu.getGameLanguage() );
+#endif
 #endif
 
 	//Color Mode Selection: 0x00 = B&W, 0x10 = Colour

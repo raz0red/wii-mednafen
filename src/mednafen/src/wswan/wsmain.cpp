@@ -218,6 +218,11 @@ static bool TestMagic(const char *name, MDFNFILE *fp)
  return(TRUE);
 }
 
+static int is_english_lang = 1;
+extern "C" void Wswan_SetLanguage(int is_english) {
+	is_english_lang = is_english;
+}
+
 int WS_SramSize = 0;
 
 static int Load(const char *name, MDFNFILE *fp)
@@ -344,8 +349,11 @@ static int Load(const char *name, MDFNFILE *fp)
 #ifndef WII
   WSwan_MemoryInit(MDFN_GetSettingB("wswan.language"), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
 #else
-  // TODO: Fix this
-  WSwan_MemoryInit(true /*!!emuRegistry.WonderSwanEmu.getGameLanguage()*/, wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+#ifdef WRC
+  WSwan_MemoryInit(!!is_english_lang, wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+#else
+  WSwan_MemoryInit(!!emuRegistry.WonderSwanEmu.getGameLanguage(), wsc, SRAMSize, IsWSR); // EEPROM and SRAM are loaded in this func.	
+#endif  
 #endif
  WSwan_GfxInit();
  MDFNGameInfo->fps = (uint32)((uint64)3072000 * 65536 * 256 / (159*256));
