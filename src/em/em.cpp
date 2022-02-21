@@ -266,7 +266,7 @@ extern "C" int emSramSave() {
     const char* systemName = 
         MDFNGameInfo && MDFNGameInfo->shortname ?
             MDFNGameInfo->shortname : NULL;
-    printf("## systemName: %s\n", systemName);
+    //printf("## systemName: %s\n", systemName);
     if (systemName) {
         const char* saveName = "sram.sav";        
         if (!strcmp(systemName, "vb")) {

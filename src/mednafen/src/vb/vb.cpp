@@ -1984,7 +1984,9 @@ bool PatchROM(bool checkROM)
       uint8 code_ex = raw >> 9;
       uint8 replace_code_ex = code_ex;
 
+#ifndef WRC
       MDFN_printf("%02x -- %04x\n", code_ex, raw);
+#endif      
 
       switch(code_ex)
       {

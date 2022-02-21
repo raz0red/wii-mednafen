@@ -51,6 +51,7 @@ SexyAL_device *SexyALI_SDL_Open(const char *id, SexyAL_format *format, SexyAL_bu
 SexyAL_device *SexyALI_DSound_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 SexyAL_device *SexyALI_Dummy_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 SexyAL_device *SexyALI_WII_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
+SexyAL_device *SexyALI_EM_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering);
 
 #ifdef HAVE_ALSA
 SexyAL_enumdevice *SexyALI_ALSA_EnumerateDevices(void);
@@ -193,7 +194,11 @@ static SexyAL_driver drivers[] =
 #endif
 
 #ifdef WII
+#ifdef WRC
+  { SEXYAL_TYPE_WII, "EM", "em", SexyALI_EM_Open, NULL },
+#else
   { SEXYAL_TYPE_WII, "WII", "wii", SexyALI_WII_Open, NULL },
+#endif  
 #endif
 
 #ifndef WRC

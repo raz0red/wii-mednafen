@@ -82,7 +82,7 @@ static int RawClose(SexyAL_device *device)
   return(0);
 }
 
-SexyAL_device *SexyALI_WII_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering)
+SexyAL_device *SexyALI_EM_Open(const char *id, SexyAL_format *format, SexyAL_buffering *buffering)
 {  
   SexyAL_device *device;
 
