@@ -127,7 +127,15 @@ CPPFILES := \
 	./src/mednafen/src/wswan/tcache.cpp \
 	./src/mednafen/src/wswan/wssound.cpp \
 	./src/mednafen/src/wswan/interrupt.cpp \
-	./src/mednafen/src/wswan/rtc.cpp
+	./src/mednafen/src/wswan/rtc.cpp \
+	./src/mednafen/src/lynx/c65c02.cpp \
+	./src/mednafen/src/lynx/cart.cpp \
+	./src/mednafen/src/lynx/memmap.cpp \
+	./src/mednafen/src/lynx/mikie.cpp \
+	./src/mednafen/src/lynx/ram.cpp \
+	./src/mednafen/src/lynx/rom.cpp \
+	./src/mednafen/src/lynx/susie.cpp \
+	./src/mednafen/src/lynx/system.cpp
 
 FILES := $(patsubst %.c,%.o,$(CFILES)) $(patsubst %.cpp,%.o,$(CPPFILES))
 

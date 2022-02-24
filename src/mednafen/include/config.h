@@ -549,7 +549,7 @@
 /* #undef WANT_INTERNAL_CJK */
 
 /* Define if we are compiling with Lynx emulation. */
-#define WANT_LYNX_EMU 0
+#define WANT_LYNX_EMU 1
 
 /* Define if we are compiling with Sega Genesis/MegaDrive emulation. */
 /* #undef WANT_MD_EMU */

@@ -53,8 +53,11 @@
 #include "../state.h"
 #include "../md5.h"
 
+#if defined(WII) && !defined(WRC)
 #include "wii_hash.h"
 #include "wii_mednafen.h"
+#endif
+
 LYNX_HEADER CCart::DecodeHeader(const uint8 *data)
 {
  LYNX_HEADER header;

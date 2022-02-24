@@ -63,8 +63,14 @@
 #include "../mempatcher.h"
 #include "../md5.h"
 
+#if defined(WII) && !defined(WRC)
 #include "Emulators.h"
 #include "wii_mednafen.h"
+#endif
+
+#ifdef WRC
+#include <emscripten.h>
+#endif
 
 CSystem::CSystem(const uint8 *filememory, int32 filesize)
 	:mCart(NULL),
@@ -105,7 +111,11 @@ CSystem::CSystem(const uint8 *filememory, int32 filesize)
 
 	// Attempt to load the cartridge errors caught above here...
 
+#ifdef WRC
+	mRom = new CRom("lynxboot.img");
+#else
 	mRom = new CRom(MDFN_MakeFName(MDFNMKF_FIRMWARE, 0, "lynxboot.img").c_str());
+#endif	
 
 	// An exception from this will be caught by the level above
 
@@ -260,6 +270,9 @@ static void CloseGame(void)
  }
 }
 
+#ifdef WRC
+static float lastRate = 0;
+#endif
 static uint8 *chee;
 static void Emulate(EmulateSpecStruct *espec)
 {
@@ -315,6 +328,16 @@ static void Emulate(EmulateSpecStruct *espec)
  }
 
  espec->MasterCycles = gSystemCycleCount - lynxie->mMikie->startTS;
+
+#ifdef WRC
+	float rate = (round((16000000.0/espec->MasterCycles) * 10)) / 10.0;
+	if (rate != lastRate) {
+		lastRate = rate;
+		EM_ASM({ 
+			window.system.setRefreshRate($0); 
+		}, rate);
+	}
+#endif	  	
 
  if(espec->SoundBuf)
  {
