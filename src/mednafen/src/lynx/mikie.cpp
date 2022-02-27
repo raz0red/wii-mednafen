@@ -391,6 +391,10 @@ void CMikie::DisplaySetAttributes(const MDFN_PixelFormat &format, uint32 Pitch)
 	{
 		mColourMap[Spot.Index]= format.MakeColor(((Spot.Colours.Red * 15) + 30), ((Spot.Colours.Green * 15) + 30),
 							 ((Spot.Colours.Blue * 15) + 30));
+#ifdef WRC
+		if (Spot.Colours.Red == 0 && Spot.Colours.Blue == 0 && Spot.Colours.Green == 0)
+			mColourMap[Spot.Index]= format.MakeColor(0, 0, 0);
+#endif
 	}
 
 	// Reset screen related counters/vars

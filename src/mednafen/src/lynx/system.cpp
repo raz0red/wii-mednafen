@@ -313,7 +313,11 @@ static void Emulate(EmulateSpecStruct *espec)
 
  {
   // FIXME, we should integrate this into mikie.*
+#ifndef WRC  
   uint32 color_black = espec->surface->MakeColor(30, 30, 30);
+#else
+  uint32 color_black = espec->surface->MakeColor(0, 0, 0);
+#endif  
 
   for(int y = 0; y < 102; y++)
   {

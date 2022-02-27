@@ -57,6 +57,8 @@
 #include "net_print.h"  
 #endif
 
+#include <emscripten.h>
+
 static const char *CSD_forcemono = gettext_noop("Force monophonic sound output.");
 static const char *CSD_enable = gettext_noop("Enable (automatic) usage of this module.");
 static const char *CSD_tblur = gettext_noop("Enable video temporal blur(50/50 previous/current frame by default).");
@@ -687,8 +689,12 @@ void MDFNI_StopAVRecord(void)
 
       if(force_module)
         MDFN_PrintError(_("Unrecognized system \"%s\"!"), force_module);
-      else
+      else {
+#ifdef WRC        
+        exit(1212);
+#endif        
         MDFN_PrintError(_("Unrecognized file format.  Sorry."));
+      }
 
       MDFN_indent(-1);
       MDFNGameInfo = NULL;
