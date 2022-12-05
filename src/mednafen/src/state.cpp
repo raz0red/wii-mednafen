@@ -36,7 +36,7 @@
 
 #ifdef WII_NETTRACE
 #include <network.h>
-#include "net_print.h"  
+#include "net_print.h"
 #endif
 
 #if defined (WII) && !defined(WRC)
@@ -170,7 +170,7 @@ static bool ValidateSFStructure(SFORMAT *sf)
 static bool SubWrite(StateMem *st, SFORMAT *sf, int data_only, const char *name_prefix = NULL)
 {
  // FIXME?  It's kind of slow, and we definitely don't want it on with state rewinding...
- if(!data_only) 
+ if(!data_only)
   ValidateSFStructure(sf);
 
  while(sf->size || sf->name)	// Size can sometimes be zero, so also check for the text name.  These two should both be zero only at the end of a struct.
@@ -199,7 +199,7 @@ static bool SubWrite(StateMem *st, SFORMAT *sf, int data_only, const char *name_
   {
    bytesize *= sizeof(bool);
   }
-  
+
   if(!data_only)
   {
    char nameo[1 + 256];
@@ -231,7 +231,7 @@ static bool SubWrite(StateMem *st, SFORMAT *sf, int data_only, const char *name_
    else if(sf->flags & RLSB)
     Endian_V_NE_to_LE(sf->v, bytesize);
   }
-    
+
   // Special case for the evil bool type, to convert bool to 1-byte elements.
   // Don't do it if we're only saving the raw data.
   if((sf->flags & MDFNSTATE_BOOL) && !data_only)
@@ -262,7 +262,7 @@ static bool SubWrite(StateMem *st, SFORMAT *sf, int data_only, const char *name_
    else if(sf->flags & RLSB)
     Endian_V_LE_to_NE(sf->v, bytesize);
   }
-  sf++; 
+  sf++;
  }
 
  return(TRUE);
@@ -344,7 +344,7 @@ static void MakeSFMap(SFORMAT *sf, SFMap_t &sfmap)
 // Fast raw chunk reader
 static void DOReadChunk(StateMem *st, SFORMAT *sf)
 {
- while(sf->size || sf->name)       // Size can sometimes be zero, so also check for the text name.  
+ while(sf->size || sf->name)       // Size can sometimes be zero, so also check for the text name.
 				// These two should both be zero only at the end of a struct.
  {
   if(!sf->size || !sf->v)
@@ -508,7 +508,7 @@ int MDFNSS_StateAction(StateMem *st, int load, int data_only, std::vector <SSDes
       }
       found = 1;
       break;
-     } 
+     }
      else
      {
       // puts("SEEK");
@@ -775,7 +775,7 @@ int MDFNSS_LoadFP(gzFile fp)
 {
  uint8 header[32];
  StateMem st;
- 
+
  memset(&st, 0, sizeof(StateMem));
 
  if(gzread(fp, header, 32) != 32)
@@ -842,7 +842,7 @@ int MDFNSS_Load(const char *fname, const char *suffix)
 	 }
 	 gzclose(st);
          return(1);
-        }   
+        }
         else
         {
          SaveStateStatus[CurrentState]=1;
@@ -856,7 +856,7 @@ void MDFNSS_CheckStates(void)
 {
 	time_t last_time = 0;
 
-        if(!MDFNGameInfo->StateAction) 
+        if(!MDFNGameInfo->StateAction)
          return;
 
 
@@ -914,7 +914,7 @@ net_print_string( NULL, 0, "GetStateInfo: %s, %d\n", filename, fp );
    gzread(fp, previewbuffer, 3 * width * height);
 
    StateShowPBWidth = width;
-   StateShowPBHeight = height;   
+   StateShowPBHeight = height;
   }
 
   gzclose(fp);
@@ -932,13 +932,13 @@ net_print_string( NULL, 0, "GetStateInfo: %s, %d\n", filename, fp );
 
 StateStatusStruct* MDFNI_SelectState(int w)
 {
- if(!MDFNGameInfo->StateAction) 
+ if(!MDFNGameInfo->StateAction)
   return NULL;
 
- if(w == -1) 
- {  
+ if(w == -1)
+ {
   MDFND_SetStateStatus(NULL);
-  return NULL; 
+  return NULL;
  }
 #ifndef WII
  MDFNI_SelectMovie(-1);
@@ -959,9 +959,9 @@ StateStatusStruct* MDFNI_SelectState(int w)
  MDFN_ResetMessages();
 
  StateStatusStruct *status = (StateStatusStruct*)MDFN_calloc(1, sizeof(StateStatusStruct), _("Save state status"));
- 
+
  memcpy(status->status, SaveStateStatus, 10 * sizeof(int));
- 
+
  status->current = CurrentState;
  status->recently_saved = RecentlySavedState;
  status->gfx = NULL;
@@ -971,11 +971,11 @@ StateStatusStruct* MDFNI_SelectState(int w)
  MDFND_SetStateStatus(status);
 #endif
  return status;
-}  
+}
 
 int MDFNI_SaveState(const char *fname, const char *suffix, const MDFN_Surface *surface, const MDFN_Rect *DisplayRect, const MDFN_Rect *LineWidths)
 {
- if(!MDFNGameInfo->StateAction) 
+ if(!MDFNGameInfo->StateAction)
   return 0;
 
  MDFND_SetStateStatus(NULL);
@@ -984,7 +984,7 @@ int MDFNI_SaveState(const char *fname, const char *suffix, const MDFN_Surface *s
 
 int MDFNI_LoadState(const char *fname, const char *suffix)
 {
- if(!MDFNGameInfo->StateAction) 
+ if(!MDFNGameInfo->StateAction)
   return 0;
 
  MDFND_SetStateStatus(NULL);
@@ -999,7 +999,7 @@ int MDFNI_LoadState(const char *fname, const char *suffix)
 #ifndef WII
   if(MDFNnetplay)
    MDFNNET_SendState();
-  
+
   if(MDFNMOV_IsRecording())
    MDFNMOV_RecordState();
 #endif
@@ -1293,7 +1293,7 @@ int MDFN_StateEvil(int rewind)
 
 void MDFNI_EnableStateRewind(int enable)
 {
- if(!MDFNGameInfo->StateAction) 
+ if(!MDFNGameInfo->StateAction)
   return;
 
  MDFN_StateEvilEnd();

@@ -36,8 +36,8 @@ CFILES := \
 	./src/mednafen/src/tremor/window.c \
 	./src/mednafen/src/trio/trio.c \
 	./src/mednafen/src/trio/trionan.c \
-	./src/mednafen/src/trio/triostr.c	
-		
+	./src/mednafen/src/trio/triostr.c
+
 CPPFILES := \
 	./src/em/em.cpp \
 	./src/mednafen/src/pce_fast/hes.cpp \
@@ -172,7 +172,7 @@ LINK_FLAGS := \
 	-s ASSERTIONS=0 \
 	-s EXIT_RUNTIME=0 \
 	-s EXPORTED_RUNTIME_METHODS="['FS', 'cwrap']" \
-    -s EXPORTED_FUNCTIONS="['_LoadGame', '_emInit', '_emStep', '_emPceSet6PadEnabled', '_emSramSave', '_Ngp_SetLanguage', '_Wswan_SetLanguage']" \
+    -s EXPORTED_FUNCTIONS="['_LoadGame', '_emInit', '_emStep', '_emPceSet6PadEnabled', '_emSramSave', '_Ngp_SetLanguage', '_Wswan_SetLanguage', '_emSaveState', '_emLoadState']" \
 	-s INVOKE_RUN=0 \
     -flto
 
@@ -183,7 +183,7 @@ mednafen:
 	$(MAKE) mednafen.js
 
 mednafen.js: $(FILES)
-	emcc -o $@ $(FILES) $(LINK_FLAGS) 	
+	emcc -o $@ $(FILES) $(LINK_FLAGS)
 
 %.o : %.cpp
 	emcc -c $< -o $@ \
@@ -196,4 +196,4 @@ mednafen.js: $(FILES)
 clean:
 	@echo "Cleaning"
 	@echo $(FILES)
-	rm -fr *.o */*.o */*/*.o */*/*/*.o */*/*/*/*.o	
+	rm -fr *.o */*.o */*/*.o */*/*/*.o */*/*/*/*.o

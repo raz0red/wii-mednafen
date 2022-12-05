@@ -76,7 +76,7 @@ static int initSdl() {
            ncolors * sizeof(SDL_Color));
     orig_8bpp_palette.colors = orig_8bpp_colors;
     orig_8bpp_palette.ncolors = ncolors;
-#endif    
+#endif
 
     return 1;
 }
@@ -84,15 +84,15 @@ static int initSdl() {
 /**
  * Resets the current video mode
  */
-static void resetVideo() {    
+static void resetVideo() {
 #ifndef WRC
     free_video();
 #else
     uint8 bpp =  32;
-#endif    
+#endif
 
     back_surface = SDL_SetVideoMode(
-        MDFNGameInfo->fb_width, MDFNGameInfo->fb_height, 
+        MDFNGameInfo->fb_width, MDFNGameInfo->fb_height,
         bpp, SDL_HWSURFACE);
 
     MDFN_PixelFormat nf;
@@ -129,11 +129,11 @@ static void resetVideo() {
 }
 
 static void preLoop() {
-#if 0    
+#if 0
     Emulator* emu = emuRegistry.getCurrentEmulator();
     update_ports();
     wii_mednafen_enable_rewind(wii_rewind);  // Update rewind
-#endif    
+#endif
 
     resetVideo();
 
@@ -144,14 +144,14 @@ static void preLoop() {
     if (MDFN_GetSettingB("cheats") != wii_cheats) {
         MDFNI_SetSettingB("cheats", wii_cheats);
     }
-#endif    
+#endif
 
     for (int i = 0; i < 2; i++)
         ((MDFN_Surface*)VTBuffer[i])->Fill(0, 0, 0, 0);
 
 #if 0
     WII_SetRotation(emu->getRotation() * 90);
-#endif    
+#endif
 
     ClearSound();
     PauseSound(0);
@@ -162,7 +162,7 @@ static void preLoop() {
 #if 0
     GameLoop(NULL);
     PauseSound(1);
-#endif        
+#endif
 }
 
 
@@ -202,7 +202,7 @@ extern "C" void emInit() {
     MakeMednafenArgsStruct();
     CreateDirs();
 
-    FPS_Init();        
+    FPS_Init();
 }
 
 // Mednafen extern
@@ -224,7 +224,7 @@ static int lastHeight = 0;
 extern "C" void emStep() {
     if (firstLoop) {
         preLoop();
-        firstLoop = false;                        
+        firstLoop = false;
         PauseSound(0);
     }
 
@@ -263,12 +263,12 @@ extern "C" int VB_SramSave();
 extern "C" int WSwan_SramSave();
 
 extern "C" int emSramSave() {
-    const char* systemName = 
+    const char* systemName =
         MDFNGameInfo && MDFNGameInfo->shortname ?
             MDFNGameInfo->shortname : NULL;
     //printf("## systemName: %s\n", systemName);
     if (systemName) {
-        const char* saveName = "sram.sav";        
+        const char* saveName = "sram.sav";
         if (!strcmp(systemName, "vb")) {
             return VB_SramSave();
         } else if (!strcmp(systemName, "wswan")) {
@@ -281,4 +281,13 @@ extern "C" int emSramSave() {
     }
 
     return 0;
+}
+
+extern "C" void emSaveState() {
+    MDFNI_SaveState("/state", "out", (const MDFN_Surface*)VTReady,
+                    (const MDFN_Rect*)VTDRReady, (const MDFN_Rect*)VTLWReady);
+}
+
+extern "C" void emLoadState() {
+    MDFNI_LoadState("/state", "out");
 }
